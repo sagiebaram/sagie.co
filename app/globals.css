@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .font-bebas {
+    font-family: var(--font-bebas);
+  }
+
+  .font-dm {
+    font-family: var(--font-dm-sans);
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+}
