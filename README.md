@@ -1,6 +1,6 @@
 # sagie.co
 
-Marketing site for **S.A.G.I.E** — built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4.
+**S.A.G.I.E** Website — built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4.
 
 ## Tech Stack
 
