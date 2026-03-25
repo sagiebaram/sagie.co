@@ -4,12 +4,12 @@ export const SITE = {
   name: 'SAGIE',
   tagline: 'Shape a Great Impact Everywhere',
   url: 'https://sagie.co',
-  email: 'hello@sagie.co',
+  email: 'contact@sagie.co',
   founderUrl: 'https://sagiebaram.com',
 } as const
 
 export const METADATA = {
-  title: 'SAGIE — Shape a Great Impact Everywhere',
+  title: 'SAGIE \u2014 Shape a Great Impact Everywhere',
   description:
     'A curated ecosystem for operators, founders & builders. Where founders and operators come to build cross-cultural impact.',
   ogDescription: 'A curated ecosystem for operators, founders & builders.',
@@ -19,13 +19,13 @@ export const NAV_LINKS = ['ECO', 'Solutions', 'Ventures'] as const
 
 export const HERO = {
   headingLines: [
-    { text: 'A VISION.', colorClass: 'text-ink-8' },
-    { text: 'A MOVEMENT.', colorClass: 'text-ink-13' },
-    { text: 'AN ECOSYSTEM.', colorClass: 'text-white' },
+    { text: 'A VISION.', colorClass: 'text-foreground-dim' },
+    { text: 'A MOVEMENT.', colorClass: 'text-foreground-secondary' },
+    { text: 'AN ECOSYSTEM.', colorClass: 'text-foreground whitespace-nowrap' },
   ],
   subtitle:
     'Where people and ideas connect. Where trust builds ecosystems. Where the collective creates impact.',
-  primaryCta: 'Apply to Join →',
+  primaryCta: 'Apply to Join \u2192',
   secondaryCta: 'What is this?',
 } as const
 
@@ -50,16 +50,16 @@ export const SOCIAL_STATS: readonly SocialStat[] = [
 ] as const
 
 export const CHAPTERS: readonly Chapter[] = [
-  { city: 'Miami', badge: 'Live', borderColor: 'var(--color-accent-green)', textColor: 'var(--color-accent-green)' },
-  { city: 'Tel Aviv', badge: 'Coming Soon', borderColor: 'var(--color-ink-3)', textColor: 'var(--color-ink-10)' },
-  { city: 'Your City', badge: 'Open', borderColor: 'var(--color-ink-6)', textColor: 'var(--color-ink-6)' },
+  { city: 'Miami', badge: 'Live', borderColor: 'var(--color-eco)', textColor: 'var(--color-eco)' },
+  { city: 'Tel Aviv', badge: 'Coming Soon', borderColor: 'var(--border-default)', textColor: 'var(--text-muted)' },
+  { city: 'Your City', badge: 'Open', borderColor: 'var(--text-dim)', textColor: 'var(--text-dim)' },
 ] as const
 
 export const CHAPTER_SECTION = {
   eyebrow: 'The chapters',
   heading: 'IS YOUR CITY\nON THE MAP?',
   body: "SAGIE ECO operates through local chapters \u2014 each one rooted in its city, connected to the global ecosystem. If your city isn\u2019t here yet, that\u2019s your invitation.",
-  cta: 'Start a Chapter →',
+  cta: 'Start a Chapter \u2192',
 } as const
 
 export const TIERS_EYEBROW = 'Tiers are earned, not purchased' as const
@@ -75,7 +75,7 @@ export const FOUNDER = {
     "What you give is what you receive. That\u2019s not a tagline. It\u2019s what made all of this real.",
     'What started as a vision became a system. What started as a system became a movement.',
   ],
-  link: 'Meet the founder → sagiebaram.com',
+  link: 'Meet the founder \u2192 sagiebaram.com',
 } as const
 
 export const FAQ_EYEBROW = 'Common questions' as const
@@ -92,18 +92,22 @@ export const FINAL_CTA = {
   ],
   subtitle:
     'Where people and ideas connect. Where trust builds ecosystems.\nWhere the collective creates impact.',
-  cta: 'Apply to Join →',
+  cta: 'Apply to Join \u2192',
 } as const
 
 export const FOOTER = {
   navigate: {
     label: 'Navigate',
     links: ['SAGIE ECO', 'SAGIE Solutions', 'SAGIE Ventures'],
-    founderLink: 'Work with Sagie →',
+    founderLink: 'Work with Sagie \u2192',
   },
   follow: {
     label: 'Follow',
-    links: ['LinkedIn', 'Instagram', 'X'],
+    links: [
+      { label: 'LinkedIn', url: 'https://www.linkedin.com/company/sagie-co' },
+      { label: 'Instagram', url: 'https://www.instagram.com/sagie.co/' },
+      { label: 'X', url: '#' },
+    ],
   },
   contact: {
     label: 'Contact',

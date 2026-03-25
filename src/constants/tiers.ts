@@ -9,7 +9,7 @@ export const TIERS: readonly Tier[] = [
     ctaActive: true,
   },
   {
-    name: 'Builder \u2605',
+    name: 'Builder',
     tag: 'Earned',
     desc: "You consistently show up and create value for others. The community feels the difference you make. That\u2019s how you get here.",
     cta: 'This is earned \u2192',

@@ -11,32 +11,32 @@ export function Tiers() {
         <Eyebrow>{TIERS_EYEBROW}</Eyebrow>
       </AnimatedSection>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-px mt-8 bg-border-subtle">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-px mt-8 bg-border-default">
         {TIERS.map((tier, i) => (
           <AnimatedSection
             key={tier.name}
             delay={i * 0.08}
-            className="group flex flex-col gap-5 p-10 transition-colors duration-200 hover:bg-surface-hover bg-surface"
+            className="group flex flex-col gap-5 p-10 transition-colors duration-200 hover:bg-background-card-featured bg-background"
           >
             <div>
-              <p className="font-dm uppercase mb-1.5 text-ink-7 group-hover:text-ink-11 transition-colors duration-150 text-label tracking-spaced">
+              <p className="font-body uppercase mb-1.5 text-foreground-dim group-hover:text-foreground-muted transition-colors duration-150 text-label tracking-spaced">
                 {tier.tag}
               </p>
-              <p className="font-bebas uppercase text-ink-11 group-hover:text-silver transition-colors duration-150 text-tier tracking-heading">
+              <p className="font-display uppercase text-foreground-muted group-hover:text-silver transition-colors duration-150 text-tier tracking-heading">
                 {tier.name}
               </p>
             </div>
 
-            <p className="font-dm flex-1 text-ink-7 group-hover:text-ink-10 transition-colors duration-150 text-body font-light leading-[1.75]">
+            <p className="font-body flex-1 text-foreground-dim group-hover:text-foreground-muted transition-colors duration-150 text-body font-light leading-[1.75]">
               {tier.desc}
             </p>
 
             <span
-              className="font-dm uppercase inline-block text-caption tracking-mid"
+              className="font-body uppercase inline-block text-caption tracking-mid"
               style={{
-                color: tier.ctaActive ? 'var(--color-silver)' : 'var(--color-ink-2)',
+                color: tier.ctaActive ? 'var(--silver)' : 'var(--text-ghost)',
                 cursor: tier.ctaActive ? 'pointer' : 'default',
-                borderBottom: tier.ctaActive ? '0.5px solid var(--color-ink-10)' : 'none',
+                borderBottom: tier.ctaActive ? '0.5px solid var(--text-muted)' : 'none',
               }}
             >
               {tier.cta}

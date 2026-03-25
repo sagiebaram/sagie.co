@@ -7,7 +7,7 @@ export function FinalCTA() {
   return (
     <Section className="py-[140px]">
       <AnimatedSection className="text-center mx-auto max-w-[700px]">
-        <h2 className="font-bebas uppercase text-white mb-10 text-hero-cta leading-[0.9]">
+        <h2 className="font-display uppercase text-foreground mb-10 text-hero-cta leading-[0.9]">
           {FINAL_CTA.heading.split('\n').map((line, i) => (
             <span key={i}>
               {line}
@@ -16,7 +16,7 @@ export function FinalCTA() {
           ))}
         </h2>
 
-        <p className="font-bebas uppercase mb-6 text-quote tracking-ultra">
+        <p className="font-display uppercase mb-6 text-quote tracking-ultra">
           {FINAL_CTA.acronym.map((part, i) => (
             <span key={i}>
               {part.letter === ' ' ? (
@@ -24,14 +24,14 @@ export function FinalCTA() {
               ) : (
                 <>
                   <span className="text-silver">{part.letter}</span>
-                  <span className="text-ink-1">{part.rest}</span>
+                  <span className="text-foreground-ghost">{part.rest}</span>
                 </>
               )}
             </span>
           ))}
         </p>
 
-        <p className="font-dm text-ink-10 mb-12 text-subhead font-light leading-[1.7]">
+        <p className="font-body text-foreground-muted mb-12 text-subhead font-light leading-[1.7]">
           {FINAL_CTA.subtitle.split('\n').map((line, i) => (
             <span key={i}>
               {line}

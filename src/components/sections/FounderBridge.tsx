@@ -11,42 +11,40 @@ export function FounderBridge() {
         <Eyebrow>{FOUNDER.eyebrow}</Eyebrow>
       </AnimatedSection>
 
-      <AnimatedSection
-        delay={0.1}
-        className="grid mt-2"
-        style={{ gridTemplateColumns: '96px 1fr' }}
-      >
-        <div className="pt-1">
-          <div
-            className="relative overflow-hidden rounded-full border border-ink-2"
-            style={{ width: 72, height: 72 }}
-          >
-            <Image src="/founder-portrait.png" alt={FOUNDER.name} fill className="object-cover" />
+      <AnimatedSection delay={0.1} className="mt-2">
+        <div className="flex gap-6 items-start">
+          <div className="shrink-0">
+            <div
+              className="relative overflow-hidden rounded-full border border-border-default"
+              style={{ width: 72, height: 72 }}
+            >
+              <Image src="/founder-portrait.png" alt={FOUNDER.name} fill sizes="72px" className="object-cover" />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <p className="font-bebas text-silver text-founder tracking-heading mb-0.5">
-            {FOUNDER.name}
-          </p>
-          <p className="font-dm uppercase text-ink-4 text-label tracking-label mb-5">
-            {FOUNDER.title}
-          </p>
-          <div className="flex flex-col gap-2.5">
-            {FOUNDER.paragraphs.map((para, i) => (
-              <p key={i} className="font-dm text-ink-8 text-body-lg font-light leading-[1.75]">
-                {para}
-              </p>
-            ))}
+          <div className="min-w-0">
+            <p className="font-display text-silver text-founder tracking-heading mb-0.5">
+              {FOUNDER.name}
+            </p>
+            <p className="font-body uppercase text-foreground-dim text-label tracking-label mb-5">
+              {FOUNDER.title}
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {FOUNDER.paragraphs.map((para, i) => (
+                <p key={i} className="font-body text-foreground-muted text-body-lg font-light leading-[1.75]">
+                  {para}
+                </p>
+              ))}
+            </div>
+            <a
+              href={SITE.founderUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body uppercase text-foreground-dim hover:text-foreground-muted transition-colors duration-150 mt-6 inline-block text-caption tracking-label border-b border-border-subtle"
+            >
+              {FOUNDER.link}
+            </a>
           </div>
-          <a
-            href={SITE.founderUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-dm uppercase text-ink-5 hover:text-ink-11 transition-colors duration-150 mt-6 inline-block text-caption tracking-label border-b border-ink-1"
-          >
-            {FOUNDER.link}
-          </a>
         </div>
       </AnimatedSection>
     </Section>

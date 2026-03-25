@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${bebasNeue.variable} ${dmSans.variable} scroll-smooth`}
       suppressHydrationWarning
     >
-      <body className="bg-surface text-white font-dm antialiased">
+      <body>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

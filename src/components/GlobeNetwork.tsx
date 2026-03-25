@@ -7,8 +7,8 @@ import dynamic from 'next/dynamic'
 const Globe = dynamic(() => import('react-globe.gl').then((mod) => mod.default) as any, {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-surface-elevated">
-      <div className="w-8 h-8 border-2 border-border-faint border-t-globe-cyan rounded-full animate-spin" />
+    <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-background-card">
+      <div className="w-8 h-8 border-2 border-border-subtle border-t-globe-cyan rounded-full animate-spin" />
     </div>
   ),
 }) as any
@@ -112,7 +112,7 @@ export function GlobeNetwork() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden flex justify-center items-center min-h-[400px] bg-surface-globe border border-border-faint mt-px"
+      className="relative w-full overflow-hidden flex justify-center items-center min-h-[400px] bg-globe-bg border border-border-subtle mt-px"
     >
       <div
         className="relative"
@@ -128,16 +128,16 @@ export function GlobeNetwork() {
           width={dimensions.width}
           height={dimensions.height}
           backgroundColor="rgba(0,0,0,0)"
-          globeColor="var(--color-surface-globe)"
+          globeColor="#040d14"
           showAtmosphere
-          atmosphereColor="var(--color-globe-cyan)"
+          atmosphereColor="#00ffff"
           atmosphereAltitude={0.25}
           polygonsData={countries.features}
           polygonCapColor={() => 'rgba(0,0,0,0)'}
           polygonSideColor={() => 'rgba(0,0,0,0)'}
-          polygonStrokeColor={() => 'var(--color-globe-cyan)'}
+          polygonStrokeColor={() => '#00ffff'}
           pointsData={[...MOCK_CITIES]}
-          pointColor={() => 'var(--color-globe-cyan)'}
+          pointColor={() => '#00ffff'}
           pointAltitude={0.02}
           pointRadius={(d: any) => (d.isChapter ? 0.6 : 0.3)}
           pointsMerge={false}
@@ -157,7 +157,7 @@ export function GlobeNetwork() {
           htmlElement={(d: any) => {
             const el = document.createElement('div')
             el.innerHTML = `
-              <div style="color: #fff; font-family: var(--font-bebas-neue, sans-serif); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); padding-bottom: 6px; pointer-events: none; text-shadow: 0 0 10px var(--color-globe-cyan), 0 0 20px var(--color-globe-cyan), 0 0 30px var(--color-globe-blue);">
+              <div style="color: var(--text-primary); font-family: var(--font-bebas-neue, sans-serif); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); padding-bottom: 6px; pointer-events: none; text-shadow: 0 0 10px var(--color-globe-cyan), 0 0 20px var(--color-globe-cyan), 0 0 30px var(--color-globe-blue);">
                 <div style="font-size: 24px; letter-spacing: 0.1em; line-height: 1;">${d.name}</div>
                 <div style="font-family: var(--font-dm-sans, sans-serif); font-size: 11px; color: var(--color-globe-label); text-transform: uppercase; letter-spacing: var(--tracking-mid);">${d.members} Members</div>
                 ${d.isChapter ? `<div style="font-family: var(--font-dm-sans, sans-serif); font-size: 9px; color: var(--color-globe-cyan); letter-spacing: 0.25em; text-transform: uppercase; margin-top: 4px; font-weight: bold;">\u2605 Active Chapter</div>` : ''}

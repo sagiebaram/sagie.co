@@ -9,7 +9,7 @@ export function Section({ children, id, className, style, ...rest }: SectionProp
   return (
     <section
       id={id}
-      className={cn('relative overflow-hidden border-t border-border py-20 px-8', className)}
+      className={cn('relative overflow-hidden border-t border-border-subtle py-20 px-8', className)}
       style={style}
       {...rest}
     >

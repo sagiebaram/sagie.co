@@ -8,11 +8,11 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<'a'> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-silver text-surface hover:bg-white text-button tracking-button px-[34px] py-4',
+    'bg-white text-[#0A0A0A] hover:bg-gray-200 text-button tracking-button px-[34px] py-4',
   ghost:
-    'text-ink-10 hover:text-silver text-button tracking-button border-b border-ink-3',
+    'text-foreground-muted hover:text-silver text-button tracking-button border-b border-border-default',
   outline:
-    'border border-silver text-silver hover:bg-silver hover:text-surface text-button tracking-button px-[34px] py-4',
+    'border border-silver text-silver hover:bg-silver hover:text-background text-button tracking-button px-[34px] py-4',
 }
 
 export function Button({ variant = 'primary', children, className, href = '#', ...rest }: ButtonProps) {
@@ -20,7 +20,7 @@ export function Button({ variant = 'primary', children, className, href = '#', .
     <a
       href={href}
       className={cn(
-        'inline-block font-dm uppercase transition-colors duration-150',
+        'inline-block font-body uppercase transition-colors duration-150',
         variants[variant],
         className,
       )}

@@ -1,43 +1,34 @@
 @import "tailwindcss";
 
-@theme {
+@theme inline {
   /* ── Fonts ── */
-  --font-bebas: var(--font-bebas-neue), sans-serif;
-  --font-dm: var(--font-dm-sans), sans-serif;
+  --font-display: var(--font-bebas-neue);
+  --font-body: var(--font-dm-sans);
 
-  /* ── Surfaces ── */
-  --color-surface: #080808;
-  --color-surface-alt: #050505;
-  --color-surface-elevated: #0a0a0a;
-  --color-surface-hover: #0c0c0c;
-  --color-surface-globe: #040d14;
-  --color-surface-nav: rgb(8 8 8 / 0.85);
+  /* ── Semantic color tokens (resolved via :root / .dark) ── */
+  --color-background: var(--bg);
+  --color-background-subtle: var(--bg-subtle);
+  --color-background-card: var(--bg-card);
+  --color-background-card-featured: var(--bg-card-featured);
+  --color-background-nav: var(--nav-bg);
+  --color-foreground: var(--text-primary);
+  --color-foreground-secondary: var(--text-secondary);
+  --color-foreground-muted: var(--text-muted);
+  --color-foreground-dim: var(--text-dim);
+  --color-foreground-ghost: var(--text-ghost);
+  --color-silver: var(--silver);
+  --color-silver-bright: var(--silver-bright);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
 
-  /* ── Borders ── */
-  --color-border: #1a1a1a;
-  --color-border-subtle: #141414;
-  --color-border-faint: #111111;
+  /* ── Pillar accents — fixed in both modes ── */
+  --color-eco: #2E7D32;
+  --color-solutions: #1565C0;
+  --color-ventures: #757575;
 
-  /* ── Brand ── */
-  --color-silver: #c0c0c0;
-  --color-accent-green: #2e7d32;
-
-  /* ── Ink scale (dark → light) ── */
-  --color-ink-1: #1c1c1c;
-  --color-ink-2: #1e1e1e;
-  --color-ink-3: #222222;
-  --color-ink-4: #252525;
-  --color-ink-5: #2a2a2a;
-  --color-ink-6: #2d2d2d;
-  --color-ink-7: #333333;
-  --color-ink-8: #3a3a3a;
-  --color-ink-9: #3d3d3d;
-  --color-ink-10: #444444;
-  --color-ink-11: #555555;
-  --color-ink-12: #777777;
-  --color-ink-13: #888888;
-
-  /* ── Globe ── */
+  /* ── Globe — always dark themed ── */
+  --color-globe-bg: #040d14;
   --color-globe-cyan: #00ffff;
   --color-globe-blue: #0055ff;
   --color-globe-label: #ccffff;
@@ -71,6 +62,46 @@
   --tracking-ultra: 0.3em;
 }
 
+/* ── Light mode ── */
+:root {
+  --bg: #F8F7F4;
+  --bg-subtle: #F0EEE9;
+  --bg-card: #FFFFFF;
+  --bg-card-featured: #F5F4F1;
+  --nav-bg: rgba(248, 247, 244, 0.85);
+  --text-primary: #0A0A0A;
+  --text-secondary: #3D3D3A;
+  --text-muted: #6B6B66;
+  --text-dim: #9A9A94;
+  --text-ghost: #C4C4BC;
+  --silver: #8A8A85;
+  --silver-bright: #3A3A38;
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-default: rgba(0, 0, 0, 0.09);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --grid-line: rgba(0, 0, 0, 0.04);
+}
+
+/* ── Dark mode — improved contrast ── */
+.dark {
+  --bg: #0C0C0C;
+  --bg-subtle: #131313;
+  --bg-card: #111111;
+  --bg-card-featured: #181818;
+  --nav-bg: rgba(12, 12, 12, 0.85);
+  --text-primary: #EDECEA;
+  --text-secondary: #B0AFAB;
+  --text-muted: #6E6D69;
+  --text-dim: #3E3E3C;
+  --text-ghost: #242422;
+  --silver: #C0C0C0;
+  --silver-bright: #E0E0DC;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --grid-line: rgba(255, 255, 255, 0.025);
+}
+
 @layer base {
   *,
   *::before,
@@ -79,20 +110,24 @@
   }
 
   ::selection {
-    background: #ffffff;
-    color: #000000;
+    background: var(--text-primary);
+    color: var(--bg);
   }
 
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
 }
 
 /* ── Grid background pattern ── */
 .grid-bg {
   background-image:
-    linear-gradient(rgb(192 192 192 / 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(192 192 192 / 0.025) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 28px 28px;
 }
