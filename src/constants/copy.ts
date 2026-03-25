@@ -1,0 +1,113 @@
+import type { Chapter, SocialStat } from '@/types'
+
+export const SITE = {
+  name: 'SAGIE',
+  tagline: 'Shape a Great Impact Everywhere',
+  url: 'https://sagie.co',
+  email: 'hello@sagie.co',
+  founderUrl: 'https://sagiebaram.com',
+} as const
+
+export const METADATA = {
+  title: 'SAGIE — Shape a Great Impact Everywhere',
+  description:
+    'A curated ecosystem for operators, founders & builders. Where founders and operators come to build cross-cultural impact.',
+  ogDescription: 'A curated ecosystem for operators, founders & builders.',
+} as const
+
+export const NAV_LINKS = ['ECO', 'Solutions', 'Ventures'] as const
+
+export const HERO = {
+  headingLines: [
+    { text: 'A VISION.', colorClass: 'text-ink-8' },
+    { text: 'A MOVEMENT.', colorClass: 'text-ink-13' },
+    { text: 'AN ECOSYSTEM.', colorClass: 'text-white' },
+  ],
+  subtitle:
+    'Where people and ideas connect. Where trust builds ecosystems. Where the collective creates impact.',
+  primaryCta: 'Apply to Join →',
+  secondaryCta: 'What is this?',
+} as const
+
+export const MANIFESTO = {
+  statements: [
+    {
+      text: "The world doesn\u2019t need more competition. ",
+      highlight: 'It needs more collaboration.',
+    },
+    {
+      text: 'People, ideas, and the collective belief that ',
+      highlight: 'building together beats building alone.',
+    },
+  ],
+  closer: "It\u2019s already working.",
+  tagline: '\u00B7 Shape a Great Impact Everywhere \u00B7',
+} as const
+
+export const SOCIAL_STATS: readonly SocialStat[] = [
+  { value: '200+', label: 'Community Members' },
+  { value: '1', label: 'Active Chapter \u2014 Miami' },
+] as const
+
+export const CHAPTERS: readonly Chapter[] = [
+  { city: 'Miami', badge: 'Live', borderColor: 'var(--color-accent-green)', textColor: 'var(--color-accent-green)' },
+  { city: 'Tel Aviv', badge: 'Coming Soon', borderColor: 'var(--color-ink-3)', textColor: 'var(--color-ink-10)' },
+  { city: 'Your City', badge: 'Open', borderColor: 'var(--color-ink-6)', textColor: 'var(--color-ink-6)' },
+] as const
+
+export const CHAPTER_SECTION = {
+  eyebrow: 'The chapters',
+  heading: 'IS YOUR CITY\nON THE MAP?',
+  body: "SAGIE ECO operates through local chapters \u2014 each one rooted in its city, connected to the global ecosystem. If your city isn\u2019t here yet, that\u2019s your invitation.",
+  cta: 'Start a Chapter →',
+} as const
+
+export const TIERS_EYEBROW = 'Tiers are earned, not purchased' as const
+
+export const FOUNDER = {
+  eyebrow: "Who\u2019s behind this",
+  name: 'Sagie Baram',
+  title: 'Ecosystem Architect \u00B7 Fractional Executive \u00B7 Startup Consultant',
+  paragraphs: [
+    'Community building started early. Gaming communities of 10, then 100, then 1,000+. The lesson learned then still drives everything today \u2014 shared vision and real engagement create something that lasts.',
+    'That principle deepened through open source work. Trust, accountability, collaboration, transparency \u2014 not values on a wall, but an actual operating system for how people build together. The collective always outlasts the individual.',
+    "SAGIE was built from that belief. Shaped by philosophies, by the people met along the way, by a neurodivergent mind that connects dots others don\u2019t see \u2014 ideas, people, industries, cultures.",
+    "What you give is what you receive. That\u2019s not a tagline. It\u2019s what made all of this real.",
+    'What started as a vision became a system. What started as a system became a movement.',
+  ],
+  link: 'Meet the founder → sagiebaram.com',
+} as const
+
+export const FAQ_EYEBROW = 'Common questions' as const
+
+export const FINAL_CTA = {
+  heading: 'A VISION.\nA MOVEMENT.\nAN ECOSYSTEM.',
+  acronym: [
+    { letter: 'S', rest: 'HAPE ' },
+    { letter: 'A', rest: '' },
+    { letter: ' ', rest: '' },
+    { letter: 'G', rest: 'REAT ' },
+    { letter: 'I', rest: 'MPACT ' },
+    { letter: 'E', rest: 'VERYWHERE' },
+  ],
+  subtitle:
+    'Where people and ideas connect. Where trust builds ecosystems.\nWhere the collective creates impact.',
+  cta: 'Apply to Join →',
+} as const
+
+export const FOOTER = {
+  navigate: {
+    label: 'Navigate',
+    links: ['SAGIE ECO', 'SAGIE Solutions', 'SAGIE Ventures'],
+    founderLink: 'Work with Sagie →',
+  },
+  follow: {
+    label: 'Follow',
+    links: ['LinkedIn', 'Instagram', 'X'],
+  },
+  contact: {
+    label: 'Contact',
+    links: ['Apply to Join', 'Start a Chapter'],
+  },
+  copyright: '\u00A9 2026 SAGIE \u00B7 All rights reserved \u00B7 Privacy Policy',
+} as const

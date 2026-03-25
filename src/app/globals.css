@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Fonts ── */
+  --font-bebas: var(--font-bebas-neue), sans-serif;
+  --font-dm: var(--font-dm-sans), sans-serif;
+
+  /* ── Surfaces ── */
+  --color-surface: #080808;
+  --color-surface-alt: #050505;
+  --color-surface-elevated: #0a0a0a;
+  --color-surface-hover: #0c0c0c;
+  --color-surface-globe: #040d14;
+  --color-surface-nav: rgb(8 8 8 / 0.85);
+
+  /* ── Borders ── */
+  --color-border: #1a1a1a;
+  --color-border-subtle: #141414;
+  --color-border-faint: #111111;
+
+  /* ── Brand ── */
+  --color-silver: #c0c0c0;
+  --color-accent-green: #2e7d32;
+
+  /* ── Ink scale (dark → light) ── */
+  --color-ink-1: #1c1c1c;
+  --color-ink-2: #1e1e1e;
+  --color-ink-3: #222222;
+  --color-ink-4: #252525;
+  --color-ink-5: #2a2a2a;
+  --color-ink-6: #2d2d2d;
+  --color-ink-7: #333333;
+  --color-ink-8: #3a3a3a;
+  --color-ink-9: #3d3d3d;
+  --color-ink-10: #444444;
+  --color-ink-11: #555555;
+  --color-ink-12: #777777;
+  --color-ink-13: #888888;
+
+  /* ── Globe ── */
+  --color-globe-cyan: #00ffff;
+  --color-globe-blue: #0055ff;
+  --color-globe-label: #ccffff;
+
+  /* ── Font sizes ── */
+  --text-label: 13px;
+  --text-caption: 14px;
+  --text-button: 15px;
+  --text-body: 16px;
+  --text-body-lg: 17px;
+  --text-subhead: 18px;
+  --text-quote: 22px;
+  --text-manifesto: 24px;
+  --text-persona: 28px;
+  --text-founder: 32px;
+  --text-pillar: 36px;
+  --text-tier: 40px;
+  --text-chapter: 52px;
+  --text-stat: 96px;
+  --text-hero: clamp(60px, 8vw, 90px);
+  --text-hero-cta: clamp(72px, 10vw, 110px);
+
+  /* ── Letter spacing ── */
+  --tracking-heading: 0.04em;
+  --tracking-copyright: 0.1em;
+  --tracking-button: 0.12em;
+  --tracking-mid: 0.15em;
+  --tracking-label: 0.18em;
+  --tracking-spaced: 0.2em;
+  --tracking-eyebrow: 0.22em;
+  --tracking-ultra: 0.3em;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ── Grid background pattern ── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgb(192 192 192 / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(192 192 192 / 0.025) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
