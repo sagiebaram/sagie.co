@@ -128,6 +128,7 @@ function FounderContent() {
         href={SITE.founderUrl}
         target="_blank"
         rel="noopener noreferrer"
+        className="hover:-translate-y-px transition-transform duration-150"
         style={{
           fontSize: '11px',
           letterSpacing: '0.12em',

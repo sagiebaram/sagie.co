@@ -20,7 +20,7 @@ export function Button({ variant = 'primary', children, className, href = '#', .
     <a
       href={href}
       className={cn(
-        'inline-block font-body uppercase transition-colors duration-150',
+        'inline-block font-body uppercase transition-all duration-150 hover:-translate-y-px',
         variants[variant],
         className,
       )}

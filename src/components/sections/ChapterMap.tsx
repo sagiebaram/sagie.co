@@ -78,6 +78,7 @@ export function ChapterMap() {
                 </span>
                 <a
                   href={chapter.action.href}
+                  className="hover:text-silver hover:-translate-y-px transition-all duration-150"
                   style={{
                     fontSize: '11px',
                     letterSpacing: '0.1em',

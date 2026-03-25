@@ -16,7 +16,7 @@ export function Footer() {
             <ul className="space-y-4">
               {FOOTER.navigate.links.map((item) => (
                 <li key={item}>
-                  <a href="#" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-body">
+                  <a href="#" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                     {item}
                   </a>
                 </li>
@@ -45,7 +45,7 @@ export function Footer() {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-body"
+                    className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body"
                   >
                     {item.label}
                   </a>
@@ -62,14 +62,14 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${SITE.email}`}
-                  className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-body"
+                  className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body"
                 >
                   {SITE.email}
                 </a>
               </li>
               {FOOTER.contact.links.map((item) => (
                 <li key={item}>
-                  <a href="#" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-body">
+                  <a href="#" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                     {item}
                   </a>
                 </li>

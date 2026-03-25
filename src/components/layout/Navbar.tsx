@@ -31,7 +31,7 @@ export function Navbar() {
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
-              className="font-body uppercase text-foreground-muted hover:text-silver transition-colors duration-150 text-label tracking-label"
+              className="font-body uppercase text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-label tracking-label"
             >
               {item}
             </a>
@@ -41,7 +41,7 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <a
             href="#"
-            className="font-body uppercase bg-white [color:black] hover:opacity-85 transition-colors duration-150 text-label tracking-button px-[22px] py-2.5"
+            className="font-body uppercase bg-white [color:black] hover:opacity-85 hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5"
           >
             Apply
           </a>
