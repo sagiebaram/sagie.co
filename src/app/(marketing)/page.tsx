@@ -2,7 +2,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { Hero } from '@/components/sections/Hero'
-import { Manifesto } from '@/components/sections/Manifesto'
+import { Belief } from '@/components/sections/Belief'
 import { Pillars } from '@/components/sections/Pillars'
 import { WhoItsFor } from '@/components/sections/WhoItsFor'
 import { SocialProof } from '@/components/sections/SocialProof'
@@ -18,7 +18,7 @@ export default function HomePage() {
       <CircuitBackground />
       <Navbar />
       <Hero />
-      <Manifesto />
+      <Belief />
       <Pillars />
       <WhoItsFor />
       <SocialProof />

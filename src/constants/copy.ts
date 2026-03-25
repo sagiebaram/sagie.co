@@ -28,7 +28,7 @@ export const HERO = {
   primaryCta: 'Apply to Join \u2192',
 } as const
 
-export const MANIFESTO = {
+export const BELIEF = {
   statements: [
     {
       text: "The world doesn\u2019t need more competition. ",
@@ -37,6 +37,10 @@ export const MANIFESTO = {
     {
       text: 'People, ideas, and the collective belief that ',
       highlight: 'building together beats building alone.',
+    },
+    {
+      text: 'Across borders. Across backgrounds. ',
+      highlight: 'Across industries.',
     },
   ],
   closer: "It\u2019s already working.",

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Logo } from '@/components/ui/Logo'
+import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
 
 export function Navbar() {
@@ -23,7 +23,14 @@ export function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 bg-background-nav backdrop-blur-[12px] border-b border-border-strong"
     >
       <div className="max-w-[880px] mx-auto px-6 md:px-8 flex items-center justify-between h-16">
-        <Logo width={100} height={28} maxHeight={36} priority />
+        <Image
+          src="/sagie_logo_nav.png"
+          alt="SAGIE"
+          width={180}
+          height={40}
+          priority
+          style={{ width: 'auto', height: '38px' }}
+        />
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-8">
