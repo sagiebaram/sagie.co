@@ -1,20 +1,22 @@
+'use client'
+
 import { Section } from '@/components/ui/Section'
-import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { FAQAccordion } from '@/components/ui/FAQAccordion'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { FAQS } from '@/constants/faq'
 import { FAQ_EYEBROW } from '@/constants/copy'
 
 export function FAQ() {
+  const ref = useScrollReveal({ y: 24, duration: 0.6 })
+
   return (
     <Section>
-      <AnimatedSection>
-        <Eyebrow>{FAQ_EYEBROW}</Eyebrow>
-      </AnimatedSection>
+      <Eyebrow>{FAQ_EYEBROW}</Eyebrow>
 
-      <AnimatedSection delay={0.1}>
+      <div ref={ref}>
         <FAQAccordion items={FAQS} />
-      </AnimatedSection>
+      </div>
     </Section>
   )
 }

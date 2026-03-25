@@ -124,6 +124,13 @@
   }
 }
 
+/* ── GSAP hero initial state ── */
+.hero-line,
+.hero-body,
+.hero-cta {
+  opacity: 0;
+}
+
 /* ── Grid background pattern ── */
 .grid-bg {
   background-image:

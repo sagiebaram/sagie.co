@@ -1,22 +1,28 @@
+'use client'
+
 import { Section } from '@/components/ui/Section'
-import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { TIERS } from '@/constants/tiers'
 import { TIERS_EYEBROW } from '@/constants/copy'
 
 export function Tiers() {
+  const ref = useScrollReveal({
+    selector: '.tier-card',
+    stagger: 0.12,
+    y: 24,
+    duration: 0.6,
+  })
+
   return (
     <Section>
-      <AnimatedSection>
-        <Eyebrow>{TIERS_EYEBROW}</Eyebrow>
-      </AnimatedSection>
+      <Eyebrow>{TIERS_EYEBROW}</Eyebrow>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-px mt-8 bg-border-default">
-        {TIERS.map((tier, i) => (
-          <AnimatedSection
+      <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-px mt-8 bg-border-default">
+        {TIERS.map((tier) => (
+          <div
             key={tier.name}
-            delay={i * 0.08}
-            className="group flex flex-col gap-5 p-10 transition-colors duration-200 hover:bg-background-card-featured bg-background"
+            className="tier-card group flex flex-col gap-5 p-10 transition-colors duration-200 hover:bg-background-card-featured bg-background"
           >
             <div>
               <p className="font-body uppercase mb-1.5 text-foreground-dim group-hover:text-foreground-muted transition-colors duration-150 text-label tracking-spaced">
@@ -41,7 +47,7 @@ export function Tiers() {
             >
               {tier.cta}
             </span>
-          </AnimatedSection>
+          </div>
         ))}
       </div>
     </Section>

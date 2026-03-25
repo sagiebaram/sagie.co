@@ -1,17 +1,19 @@
+'use client'
+
 import Image from 'next/image'
 import { Section } from '@/components/ui/Section'
-import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { FOUNDER, SITE } from '@/constants/copy'
 
 export function FounderBridge() {
+  const ref = useScrollReveal({ y: 24, duration: 0.6 })
+
   return (
     <Section>
-      <AnimatedSection>
-        <Eyebrow>{FOUNDER.eyebrow}</Eyebrow>
-      </AnimatedSection>
+      <Eyebrow>{FOUNDER.eyebrow}</Eyebrow>
 
-      <AnimatedSection delay={0.1} className="mt-2">
+      <div ref={ref} className="mt-2">
         <div className="flex gap-6 items-start">
           <div className="shrink-0">
             <div
@@ -46,7 +48,7 @@ export function FounderBridge() {
             </a>
           </div>
         </div>
-      </AnimatedSection>
+      </div>
     </Section>
   )
 }

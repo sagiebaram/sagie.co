@@ -1,14 +1,19 @@
+'use client'
+
 import { Section } from '@/components/ui/Section'
-import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { CHAPTERS, CHAPTER_SECTION } from '@/constants/copy'
 
 export function ChapterMap() {
+  const leftRef = useScrollReveal({ y: 24, duration: 0.6 })
+  const rightRef = useScrollReveal({ y: 24, duration: 0.6, delay: 0.15 })
+
   return (
     <Section>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
-        <AnimatedSection>
+        <div ref={leftRef}>
           <Eyebrow>{CHAPTER_SECTION.eyebrow}</Eyebrow>
           <h2 className="font-display uppercase text-foreground mb-6 text-chapter leading-[0.95]">
             {CHAPTER_SECTION.heading.split('\n').map((line, i) => (
@@ -22,9 +27,9 @@ export function ChapterMap() {
             {CHAPTER_SECTION.body}
           </p>
           <Button variant="primary">{CHAPTER_SECTION.cta}</Button>
-        </AnimatedSection>
+        </div>
 
-        <AnimatedSection delay={0.15}>
+        <div ref={rightRef}>
           {CHAPTERS.map((item) => (
             <div
               key={item.city}
@@ -41,7 +46,7 @@ export function ChapterMap() {
               </span>
             </div>
           ))}
-        </AnimatedSection>
+        </div>
       </div>
     </Section>
   )

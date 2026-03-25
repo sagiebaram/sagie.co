@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { Hero } from '@/components/sections/Hero'
 import { Manifesto } from '@/components/sections/Manifesto'
 import { Pillars } from '@/components/sections/Pillars'
@@ -13,7 +14,8 @@ import { FinalCTA } from '@/components/sections/FinalCTA'
 
 export default function HomePage() {
   return (
-    <div className="bg-surface">
+    <main className="relative">
+      <CircuitBackground />
       <Navbar />
       <Hero />
       <Manifesto />
@@ -26,6 +28,6 @@ export default function HomePage() {
       <FounderBridge />
       <FinalCTA />
       <Footer />
-    </div>
+    </main>
   )
 }

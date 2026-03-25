@@ -1,12 +1,44 @@
+'use client'
+
+import { useLayoutEffect, useRef } from 'react'
 import { Section } from '@/components/ui/Section'
-import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { Button } from '@/components/ui/Button'
+import { gsap } from '@/lib/gsap'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { FINAL_CTA } from '@/constants/copy'
 
 export function FinalCTA() {
+  const sectionRef = useScrollReveal({ y: 24, duration: 0.6 })
+  const taglineRef = useRef<HTMLParagraphElement>(null)
+
+  useLayoutEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.tagline-letter-hi',
+        { opacity: 0.1 },
+        {
+          opacity: 1,
+          duration: 0.3,
+          stagger: 0.08,
+          ease: 'power1.out',
+          scrollTrigger: {
+            trigger: taglineRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      )
+    }, taglineRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
     <Section className="py-[140px]">
-      <AnimatedSection className="text-center mx-auto max-w-[700px]">
+      <div ref={sectionRef} className="text-center mx-auto max-w-[700px]">
         <h2 className="font-display uppercase text-foreground mb-10 text-hero-cta leading-[0.9]">
           {FINAL_CTA.heading.split('\n').map((line, i) => (
             <span key={i}>
@@ -16,14 +48,14 @@ export function FinalCTA() {
           ))}
         </h2>
 
-        <p className="font-display uppercase mb-6 text-quote tracking-ultra">
+        <p ref={taglineRef} className="font-display uppercase mb-6 text-quote tracking-ultra">
           {FINAL_CTA.acronym.map((part, i) => (
             <span key={i}>
               {part.letter === ' ' ? (
-                <span className="text-silver">{part.letter}</span>
+                <span className="tagline-letter-hi text-silver">{part.letter}</span>
               ) : (
                 <>
-                  <span className="text-silver">{part.letter}</span>
+                  <span className="tagline-letter-hi text-silver">{part.letter}</span>
                   <span className="text-foreground-ghost">{part.rest}</span>
                 </>
               )}
@@ -41,7 +73,7 @@ export function FinalCTA() {
         </p>
 
         <Button variant="primary">{FINAL_CTA.cta}</Button>
-      </AnimatedSection>
+      </div>
     </Section>
   )
 }
