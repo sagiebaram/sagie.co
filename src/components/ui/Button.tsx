@@ -8,7 +8,7 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<'a'> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-white text-[#0A0A0A] hover:bg-gray-200 text-button tracking-button px-[34px] py-4',
+    'bg-white [color:black] hover:opacity-85 text-button tracking-button px-[34px] py-4',
   ghost:
     'text-foreground-muted hover:text-silver text-button tracking-button border-b border-border-default',
   outline:

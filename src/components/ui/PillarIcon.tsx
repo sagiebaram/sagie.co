@@ -2,9 +2,11 @@ interface PillarIconProps {
   name: string
 }
 
+const ICON_CLASS = 'stroke-silver group-hover:stroke-silver-bright transition-[stroke] duration-200'
+
 function IconFounders() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="stroke-foreground-ghost" strokeWidth="1.2">
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" className={ICON_CLASS} strokeWidth="1.5">
       {/* Lightbulb — ideas & creation */}
       <path d="M16 4a8 8 0 0 1 5 14.3V22H11v-3.7A8 8 0 0 1 16 4z" />
       <line x1="12" y1="25" x2="20" y2="25" />
@@ -15,7 +17,7 @@ function IconFounders() {
 
 function IconInvestors() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="stroke-foreground-ghost" strokeWidth="1.2">
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" className={ICON_CLASS} strokeWidth="1.5">
       {/* Growth chart — investment & returns */}
       <polyline points="4,26 12,16 18,20 28,6" />
       <polyline points="22,6 28,6 28,12" />
@@ -26,7 +28,7 @@ function IconInvestors() {
 
 function IconOperators() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="stroke-foreground-ghost" strokeWidth="1.2">
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" className={ICON_CLASS} strokeWidth="1.5">
       {/* Gears — systems & operations */}
       <circle cx="12" cy="14" r="5" />
       <circle cx="22" cy="20" r="4" />
@@ -37,7 +39,7 @@ function IconOperators() {
 
 function IconEcosystem() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="stroke-foreground-ghost" strokeWidth="1.2">
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" className={ICON_CLASS} strokeWidth="1.5">
       {/* Network nodes — connecting people & resources */}
       <circle cx="16" cy="8" r="3" />
       <circle cx="6" cy="24" r="3" />
@@ -51,7 +53,7 @@ function IconEcosystem() {
 
 function IconAcademics() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="stroke-foreground-ghost" strokeWidth="1.2">
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" className={ICON_CLASS} strokeWidth="1.5">
       {/* Graduation cap — research & knowledge */}
       <polygon points="16,4 30,12 16,20 2,12" />
       <polyline points="6,14 6,24 16,28 26,24 26,14" />
@@ -62,7 +64,7 @@ function IconAcademics() {
 
 function IconPartners() {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="stroke-foreground-ghost" strokeWidth="1.2">
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none" className={ICON_CLASS} strokeWidth="1.5">
       {/* Handshake — partnership & collaboration */}
       <path d="M4 18l6-6 4 2 6-6" />
       <path d="M28 18l-6-6-4 2" />

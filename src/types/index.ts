@@ -8,6 +8,9 @@ export interface Pillar {
 export interface Persona {
   readonly name: string
   readonly line: string
+  readonly expanded: string
+  readonly frontLabel: string
+  readonly backLabel: string
 }
 
 export interface Tier {
@@ -23,11 +26,14 @@ export interface FAQItem {
   readonly a: string
 }
 
+export type ChapterStatus = 'live' | 'soon' | 'open'
+
 export interface Chapter {
   readonly city: string
+  readonly detail: string
+  readonly status: ChapterStatus
   readonly badge: string
-  readonly borderColor: string
-  readonly textColor: string
+  readonly action: { readonly label: string; readonly href: string }
 }
 
 export interface SocialStat {

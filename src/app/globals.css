@@ -62,28 +62,8 @@
   --tracking-ultra: 0.3em;
 }
 
-/* ── Light mode ── */
+/* ── Dark mode only ── */
 :root {
-  --bg: #F8F7F4;
-  --bg-subtle: #F0EEE9;
-  --bg-card: #FFFFFF;
-  --bg-card-featured: #F5F4F1;
-  --nav-bg: rgba(248, 247, 244, 0.85);
-  --text-primary: #0A0A0A;
-  --text-secondary: #3D3D3A;
-  --text-muted: #6B6B66;
-  --text-dim: #9A9A94;
-  --text-ghost: #C4C4BC;
-  --silver: #8A8A85;
-  --silver-bright: #3A3A38;
-  --border-subtle: rgba(0, 0, 0, 0.05);
-  --border-default: rgba(0, 0, 0, 0.09);
-  --border-strong: rgba(0, 0, 0, 0.16);
-  --grid-line: rgba(0, 0, 0, 0.04);
-}
-
-/* ── Dark mode — improved contrast ── */
-.dark {
   --bg: #0C0C0C;
   --bg-subtle: #131313;
   --bg-card: #111111;
@@ -103,6 +83,7 @@
 }
 
 @layer base {
+
   *,
   *::before,
   *::after {

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
-import { useTheme } from 'next-themes'
 
 interface CircuitPoint {
   x: number
@@ -33,13 +32,6 @@ const DARK_COLORS: CircuitColors = {
   pulse: 'rgba(224, 224, 220, 0.35)',
   dot: 'rgba(192, 192, 192, 0.12)',
   dotActive: 'rgba(224, 224, 220, 0.5)',
-}
-
-const LIGHT_COLORS: CircuitColors = {
-  line: 'rgba(58, 58, 56, 0.07)',
-  pulse: 'rgba(10, 10, 10, 0.2)',
-  dot: 'rgba(58, 58, 56, 0.1)',
-  dotActive: 'rgba(10, 10, 10, 0.3)',
 }
 
 const PULSE_LENGTH = 40
@@ -257,13 +249,10 @@ function draw(
 
 export function CircuitBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { resolvedTheme } = useTheme()
   const animationRef = useRef<number>(0)
   const pathsRef = useRef<CircuitPath[]>([])
   const colorsRef = useRef<CircuitColors>(DARK_COLORS)
   const lastTimeRef = useRef<number>(0)
-
-  colorsRef.current = resolvedTheme === 'light' ? LIGHT_COLORS : DARK_COLORS
 
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current

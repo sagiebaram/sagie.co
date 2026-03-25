@@ -26,7 +26,6 @@ export const HERO = {
   subtitle:
     'Where people and ideas connect. Where trust builds ecosystems. Where the collective creates impact.',
   primaryCta: 'Apply to Join \u2192',
-  secondaryCta: 'What is this?',
 } as const
 
 export const MANIFESTO = {
@@ -46,13 +45,52 @@ export const MANIFESTO = {
 
 export const SOCIAL_STATS: readonly SocialStat[] = [
   { value: '200+', label: 'Community Members' },
-  { value: '1', label: 'Active Chapter \u2014 Miami' },
+  { value: '1', label: 'Active Chapters' },
 ] as const
 
 export const CHAPTERS: readonly Chapter[] = [
-  { city: 'Miami', badge: 'Live', borderColor: 'var(--color-eco)', textColor: 'var(--color-eco)' },
-  { city: 'Tel Aviv', badge: 'Coming Soon', borderColor: 'var(--border-default)', textColor: 'var(--text-muted)' },
-  { city: 'Your City', badge: 'Open', borderColor: 'var(--text-dim)', textColor: 'var(--text-dim)' },
+  {
+    city: 'Miami',
+    detail: 'Founded 2024 \u00B7 Active Chapter',
+    status: 'live',
+    badge: 'Live',
+    action: { label: 'View Chapter \u2192', href: '#' },
+  },
+  {
+    city: 'Tel Aviv',
+    detail: 'Launching 2025',
+    status: 'soon',
+    badge: 'Coming Soon',
+    action: { label: 'Join Waitlist \u2192', href: '#' },
+  },
+  {
+    city: 'Texas',
+    detail: 'Interest building',
+    status: 'soon',
+    badge: 'Coming Soon',
+    action: { label: 'Join Waitlist \u2192', href: '#' },
+  },
+  {
+    city: 'Singapore',
+    detail: 'Interest building',
+    status: 'soon',
+    badge: 'Coming Soon',
+    action: { label: 'Join Waitlist \u2192', href: '#' },
+  },
+  {
+    city: 'New York',
+    detail: 'Interest building',
+    status: 'soon',
+    badge: 'Coming Soon',
+    action: { label: 'Join Waitlist \u2192', href: '#' },
+  },
+  {
+    city: 'Dubai',
+    detail: 'Interest building',
+    status: 'soon',
+    badge: 'Coming Soon',
+    action: { label: 'Join Waitlist \u2192', href: '#' },
+  },
 ] as const
 
 export const CHAPTER_SECTION = {

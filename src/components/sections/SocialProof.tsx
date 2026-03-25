@@ -16,14 +16,14 @@ export function SocialProof() {
   const ref = useScrollReveal({ y: 24, duration: 0.6 })
 
   return (
-    <Section>
+    <Section className="overflow-visible">
       <Eyebrow>The Network</Eyebrow>
 
-      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border-default mt-8">
+      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 mt-8">
         {SOCIAL_STATS.map((stat) => {
           const parsed = STAT_VALUES[stat.value]
           return (
-            <div key={stat.label} className="bg-background px-10 py-12">
+            <div key={stat.label} className="py-12 text-center">
               <p className="font-display text-silver text-stat leading-none">
                 {parsed ? (
                   <CountUp end={parsed.end} suffix={parsed.suffix} />
@@ -31,7 +31,7 @@ export function SocialProof() {
                   stat.value
                 )}
               </p>
-              <p className="font-body uppercase text-foreground-ghost mt-3 text-caption tracking-label">
+              <p className="font-body uppercase text-foreground-muted mt-3 text-caption tracking-label">
                 {stat.label}
               </p>
             </div>

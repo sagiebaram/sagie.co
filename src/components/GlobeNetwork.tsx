@@ -27,7 +27,6 @@ interface Arc {
   startLng: number
   endLat: number
   endLng: number
-  color: [string, string]
 }
 
 const MOCK_CITIES: readonly City[] = [
@@ -38,10 +37,10 @@ const MOCK_CITIES: readonly City[] = [
 ]
 
 const MOCK_ARCS: readonly Arc[] = [
-  { startLat: 25.7617, startLng: -80.1918, endLat: 40.7128, endLng: -74.006, color: ['#00ffff', '#0055ff'] },
-  { startLat: 40.7128, startLng: -74.006, endLat: 51.5074, endLng: -0.1278, color: ['#0055ff', '#00ffff'] },
-  { startLat: 51.5074, startLng: -0.1278, endLat: 32.0853, endLng: 34.7818, color: ['#00ffff', '#0055ff'] },
-  { startLat: 32.0853, startLng: 34.7818, endLat: 25.7617, endLng: -80.1918, color: ['#0055ff', '#00ffff'] },
+  { startLat: 25.7617, startLng: -80.1918, endLat: 40.7128, endLng: -74.006 },
+  { startLat: 40.7128, startLng: -74.006, endLat: 51.5074, endLng: -0.1278 },
+  { startLat: 51.5074, startLng: -0.1278, endLat: 32.0853, endLng: 34.7818 },
+  { startLat: 32.0853, startLng: 34.7818, endLat: 25.7617, endLng: -80.1918 },
 ]
 
 export function GlobeNetwork() {
@@ -50,14 +49,24 @@ export function GlobeNetwork() {
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 })
   const [countries, setCountries] = useState<{ features: any[] }>({ features: [] })
   
+  const globeColors = {
+    globeColor: '#000000',
+    showAtmosphere: true,
+    atmosphereColor: '#ffffff',
+    atmosphereAltitude: 0.25,
+    polygonCapColor: () => 'rgba(0,0,0,0)',
+    polygonSideColor: () => 'rgba(0,0,0,0)',
+    polygonStrokeColor: () => 'rgba(255,255,255,0.35)',
+    pointColor: (d: any) => d.isChapter ? '#ffffff' : 'rgba(255,255,255,0.3)',
+    arcColorConnected: ['#ffffff', '#ffffff'] as [string, string],
+    arcColorIdle: ['rgba(255,255,255,0.15)', 'rgba(255,255,255,0.15)'] as [string, string],
+    ringColor: () => (t: number) => `rgba(255,255,255,${1 - t})`,
+  }
+
   const [isZoomedIn, setIsZoomedIn] = useState(false)
   const [hoveredCity, setHoveredCity] = useState<string | null>(null)
   const [selectedCity, setSelectedCity] = useState<City | null>(null)
 
-  const handleDismiss = () => {
-    setSelectedCity(null)
-    globeRef.current?.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }, 800)
-  }
 
   useEffect(() => {
     fetch(
@@ -93,9 +102,11 @@ export function GlobeNetwork() {
         controls.enableZoom = true
 
         controls.addEventListener('change', () => {
-          const altitude = globeRef.current?.camera().position.distanceTo(controls.target) / globeRef.current?.getGlobeRadius() - 1
-          if (altitude !== undefined) {
-            setIsZoomedIn(altitude < 1.8)
+          if (globeRef.current) {
+            const pov = globeRef.current.pointOfView()
+            if (pov && typeof pov.altitude === 'number') {
+              setIsZoomedIn(pov.altitude < 1.8)
+            }
           }
         })
       }
@@ -125,18 +136,27 @@ export function GlobeNetwork() {
     [],
   )
 
+  useEffect(() => {
+    // Imperatively update the labels to bypass globe.gl's re-rendering logic
+    const labels = document.querySelectorAll('.globe-zoom-label')
+    labels.forEach((label) => {
+      (label as HTMLElement).style.opacity = isZoomedIn ? '1' : '0'
+    })
+  }, [isZoomedIn])
+
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden flex justify-center items-center min-h-[400px] bg-transparent border border-border-subtle mt-px"
+      className="relative w-full overflow-visible flex justify-center items-center min-h-[400px] bg-transparent border border-border-subtle mt-px"
     >
       <div
         className="relative"
         style={{
           width: dimensions.width,
           height: dimensions.height,
-          maskImage: 'radial-gradient(circle, black 40%, transparent 75%)',
-          WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 75%)',
+          maskImage: isZoomedIn ? 'none' : 'radial-gradient(circle, black 40%, transparent 75%)',
+          WebkitMaskImage: isZoomedIn ? 'none' : 'radial-gradient(circle, black 40%, transparent 75%)',
+          transition: 'mask-image 0.3s ease',
         }}
       >
         <Globe
@@ -144,19 +164,20 @@ export function GlobeNetwork() {
           width={dimensions.width}
           height={dimensions.height}
           backgroundColor="rgba(0,0,0,0)"
-          globeColor="#020d18"
-          showAtmosphere={true}
-          atmosphereColor="#00ccff"
-          atmosphereAltitude={0.35}
+          globeColor={globeColors.globeColor}
+          showAtmosphere={globeColors.showAtmosphere}
+          atmosphereColor={globeColors.atmosphereColor}
+          atmosphereAltitude={globeColors.atmosphereAltitude}
           polygonsData={countries.features}
-          polygonCapColor={() => 'rgba(0,0,0,0)'}
-          polygonSideColor={() => 'rgba(0,0,0,0)'}
-          polygonStrokeColor={() => 'rgba(255,255,255,0.35)'}
+          polygonCapColor={globeColors.polygonCapColor}
+          polygonSideColor={globeColors.polygonSideColor}
+          polygonStrokeColor={globeColors.polygonStrokeColor}
           pointsData={[...MOCK_CITIES]}
           pointColor={(d: any) => {
             if (hoveredCity === d.id) return '#ffffff'
-            if (d.isChapter) return '#00ffff'
-            return hoveredCity ? 'rgba(0,255,255,0.3)' : '#00ffff'
+            return hoveredCity
+              ? 'rgba(255,255,255,0.15)'
+              : globeColors.pointColor(d)
           }}
           pointAltitude={0.02}
           pointRadius={(d: any) => {
@@ -165,25 +186,23 @@ export function GlobeNetwork() {
           }}
           pointsMerge={false}
           ringsData={ringsData}
-          ringColor={() => (t: number) => `rgba(0,255,255,${1 - t})`}
+          ringColor={globeColors.ringColor}
           ringMaxRadius="maxR"
           ringPropagationSpeed="propagationSpeed"
           ringRepeatPeriod="repeatPeriod"
           arcsData={[...MOCK_ARCS]}
           arcColor={(arc: any) => {
-            if (!hoveredCity) return arc.color
+            if (!hoveredCity) return globeColors.arcColorIdle
+            const city = MOCK_CITIES.find(c => c.id === hoveredCity)
             const isConnected =
-              (arc.startLat === MOCK_CITIES.find(c => c.id === hoveredCity)?.lat) ||
-              (arc.endLat === MOCK_CITIES.find(c => c.id === hoveredCity)?.lat)
-            return isConnected
-              ? ['#00ffff', '#ffffff']
-              : ['rgba(0,85,255,0.15)', 'rgba(0,255,255,0.15)']
+              arc.startLat === city?.lat || arc.endLat === city?.lat
+            return isConnected ? globeColors.arcColorConnected : globeColors.arcColorIdle
           }}
           arcDashLength={0.4}
           arcDashGap={0.2}
           arcDashAnimateTime={3000}
           arcAltitudeAutoScale={0.3}
-          arcStroke={1.2}
+          arcStroke={0.5}
           onPointHover={(point: any) => setHoveredCity(point ? point.id : null)}
           onPointClick={(point: any) => {
             const city = MOCK_CITIES.find(c => c.id === point.id)
@@ -198,15 +217,12 @@ export function GlobeNetwork() {
           htmlElementsData={[...MOCK_CITIES]}
           htmlElement={(d: any) => {
             const el = document.createElement('div')
-            const showMembers = isZoomedIn
             el.innerHTML = `
               <div style="font-family: var(--font-bebas-neue, sans-serif); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); padding-bottom: 6px; pointer-events: auto; cursor: pointer;">
                 <div style="font-size: 24px; letter-spacing: 0.1em; line-height: 1; ${
-                  d.isChapter ? 'color: #00ffff;' : 'color: rgba(255,255,255,0.8);'
+                  d.isChapter ? 'color: var(--text-primary);' : 'color: var(--text-secondary);'
                 }">${d.isChapter ? '★ ' : ''}${d.name}</div>
-                <div style="font-family: var(--font-dm-sans, sans-serif); font-size: 11px; color: rgba(0,255,255,0.6); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; transition: opacity 0.3s; opacity: ${
-                  showMembers ? '1' : '0'
-                };">${d.members} Members</div>
+                <div class="globe-zoom-label" style="font-family: var(--font-dm-sans, sans-serif); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; transition: opacity 0.3s; opacity: 0;">${d.members} Members</div>
               </div>
             `
             el.onclick = () => {
@@ -223,46 +239,75 @@ export function GlobeNetwork() {
         />
       </div>
 
-      {selectedCity && (
-        <div
-          className="absolute bottom-6 left-6 z-10 border border-border-default bg-background-card p-4"
-          style={{ minWidth: '180px' }}
-        >
-          <div
-            className="text-xs uppercase tracking-widest mb-2"
-            style={{ color: selectedCity.isChapter ? '#00ffff' : 'var(--text-muted)' }}
-          >
-            {selectedCity.isChapter ? '★ Active Chapter' : 'Community Members'}
-          </div>
-          <div
-            className="font-display text-2xl"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            {selectedCity.name}
-          </div>
-          <div
-            className="text-sm mt-1"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            {selectedCity.members} Members
-          </div>
-          {selectedCity.isChapter && (
-            <div
-              className="text-xs mt-3 uppercase tracking-widest"
-              style={{ color: '#00ffff', borderTop: '0.5px solid rgba(0,255,255,0.2)', paddingTop: '8px' }}
-            >
-              Live · {selectedCity.name}
-            </div>
-          )}
+      {/* Legend */}
+      <div
+        className="absolute bottom-6 right-6 z-10"
+        style={{ minWidth: '160px' }}
+      >
+        {MOCK_CITIES.map((city) => (
           <button
-            onClick={handleDismiss}
-            className="absolute top-2 right-3 text-xs"
-            style={{ color: 'var(--text-ghost)' }}
+            key={city.id}
+            onClick={() => {
+              setSelectedCity(prev => prev?.id === city.id ? null : city)
+              globeRef.current?.pointOfView(
+                { lat: city.lat, lng: city.lng, altitude: 1.4 },
+                800
+              )
+            }}
+            onMouseEnter={() => setHoveredCity(city.id)}
+            onMouseLeave={() => setHoveredCity(null)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '5px 0',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              width: '100%',
+              textAlign: 'left',
+              transition: 'opacity 0.15s',
+              opacity: hoveredCity && hoveredCity !== city.id ? 0.4 : 1,
+            }}
           >
-            ✕
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: city.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '13px',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: selectedCity?.id === city.id
+                  ? 'var(--text-primary)'
+                  : city.isChapter
+                    ? 'var(--silver)'
+                    : 'var(--text-muted)',
+                transition: 'color 0.15s',
+              }}
+            >
+              {city.name}
+            </span>
+            <span
+              style={{
+                fontSize: '10px',
+                color: 'var(--text-dim)',
+                letterSpacing: '0.06em',
+                marginLeft: 'auto',
+              }}
+            >
+              {city.members}
+            </span>
           </button>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   )
 }

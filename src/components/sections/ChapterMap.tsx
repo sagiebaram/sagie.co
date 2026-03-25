@@ -23,27 +23,78 @@ export function ChapterMap() {
               </span>
             ))}
           </h2>
-          <p className="font-body text-foreground-dim mb-10 text-body-lg font-light leading-[1.75] max-w-[380px]">
+          <p className="font-body text-foreground-muted mb-10 text-body-lg font-light leading-[1.75] max-w-[380px]">
             {CHAPTER_SECTION.body}
           </p>
           <Button variant="primary">{CHAPTER_SECTION.cta}</Button>
         </div>
 
-        <div ref={rightRef}>
-          {CHAPTERS.map((item) => (
+        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-[340px] overflow-y-auto">
+          {CHAPTERS.map((chapter) => (
             <div
-              key={item.city}
-              className="flex items-center justify-between px-2 py-5 group hover:bg-background-card-featured transition-colors duration-150 -mx-2 border-b border-border-subtle"
+              key={chapter.city}
+              className="py-5 border-b border-border-subtle"
             >
-              <p className="font-body text-foreground-muted group-hover:text-silver transition-colors duration-150 text-subhead">
-                {item.city}
-              </p>
-              <span
-                className="font-body uppercase px-2.5 py-1 text-label tracking-label"
-                style={{ border: `0.5px solid ${item.borderColor}`, color: item.textColor }}
-              >
-                {item.badge}
-              </span>
+              <div className="flex items-center justify-between mb-1">
+                <span
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '20px',
+                    letterSpacing: '0.06em',
+                    color: 'var(--text-primary)',
+                  }}
+                >
+                  {chapter.city}
+                </span>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    padding: '3px 8px',
+                    border: `0.5px solid ${
+                      chapter.status === 'live'
+                        ? 'var(--text-primary)'
+                        : chapter.status === 'soon'
+                          ? 'var(--border-default)'
+                          : 'var(--border-subtle)'
+                    }`,
+                    color:
+                      chapter.status === 'live'
+                        ? 'var(--text-primary)'
+                        : chapter.status === 'soon'
+                          ? 'var(--text-muted)'
+                          : 'var(--text-dim)',
+                  }}
+                >
+                  {chapter.badge}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--text-muted)',
+                    fontWeight: 300,
+                  }}
+                >
+                  {chapter.detail}
+                </span>
+                <a
+                  href={chapter.action.href}
+                  style={{
+                    fontSize: '11px',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    color: 'var(--text-muted)',
+                    borderBottom: '0.5px solid var(--border-subtle)',
+                    paddingBottom: '1px',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {chapter.action.label}
+                </a>
+              </div>
             </div>
           ))}
         </div>

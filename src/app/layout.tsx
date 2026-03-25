@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
-import { ThemeProvider } from '@/components/layout/ThemeProvider'
 import { GSAPCleanup } from '@/components/ui/GSAPCleanup'
 import { METADATA, SITE } from '@/constants/copy'
 import './globals.css'
@@ -44,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         <GSAPCleanup />
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
       </body>
     </html>
   )

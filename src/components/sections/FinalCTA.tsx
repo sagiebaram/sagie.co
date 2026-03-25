@@ -39,14 +39,32 @@ export function FinalCTA() {
   return (
     <Section className="py-[140px]">
       <div ref={sectionRef} className="text-center mx-auto max-w-[700px]">
-        <h2 className="font-display uppercase text-foreground mb-10 text-hero-cta leading-[0.9]">
-          {FINAL_CTA.heading.split('\n').map((line, i) => (
-            <span key={i}>
-              {line}
-              {i < 2 && <br />}
-            </span>
-          ))}
-        </h2>
+        <div style={{ marginBottom: '40px' }}>
+          <span style={{
+            display: 'block',
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(60px, 8vw, 90px)',
+            color: 'var(--text-primary)',
+            lineHeight: '0.92',
+            letterSpacing: '0.02em',
+          }}>A VISION.</span>
+          <span style={{
+            display: 'block',
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(60px, 8vw, 90px)',
+            color: 'var(--text-secondary)',
+            lineHeight: '0.92',
+            letterSpacing: '0.02em',
+          }}>A MOVEMENT.</span>
+          <span style={{
+            display: 'block',
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(60px, 8vw, 90px)',
+            color: 'var(--text-dim)',
+            lineHeight: '0.92',
+            letterSpacing: '0.02em',
+          }}>AN ECOSYSTEM.</span>
+        </div>
 
         <p ref={taglineRef} className="font-display uppercase mb-6 text-quote tracking-ultra">
           {FINAL_CTA.acronym.map((part, i) => (
@@ -56,7 +74,7 @@ export function FinalCTA() {
               ) : (
                 <>
                   <span className="tagline-letter-hi text-silver">{part.letter}</span>
-                  <span className="text-foreground-ghost">{part.rest}</span>
+                  <span className="text-foreground-dim">{part.rest}</span>
                 </>
               )}
             </span>

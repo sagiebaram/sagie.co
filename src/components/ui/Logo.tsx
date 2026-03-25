@@ -1,14 +1,11 @@
-'use client'
-
-import { useTheme } from 'next-themes'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
 
 interface LogoProps {
   width?: number
   height?: number
   priority?: boolean
   className?: string
+  maxHeight?: number
 }
 
 export function Logo({
@@ -17,16 +14,10 @@ export function Logo({
   priority = false,
   className,
   maxHeight,
-}: LogoProps & { maxHeight?: number }) {
-  const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-
-  const src = !mounted || resolvedTheme === 'dark' ? '/logo-white.png' : '/logo-black.png'
-
+}: LogoProps) {
   return (
     <Image
-      src={src}
+      src="/logo-white.png"
       alt="SAGIE"
       width={width}
       height={height}

@@ -32,7 +32,7 @@ export function Pillars() {
                     {pillar.word}
                   </span>
                 </p>
-                <p className="font-body uppercase text-foreground-dim mt-2 text-label tracking-label">
+                <p className="font-body uppercase text-foreground-muted mt-2 text-label tracking-label">
                   {pillar.subtitle}
                 </p>
               </div>
@@ -52,7 +52,7 @@ export function Pillars() {
                 <span className="text-foreground-muted">SAGIE </span>
                 <span className="text-silver">{pillar.word}</span>
               </p>
-              <p className="font-body uppercase text-foreground-dim text-label tracking-mid">
+              <p className="font-body uppercase text-foreground-muted text-label tracking-mid">
                 {pillar.subtitle}
               </p>
               <p className="font-body text-foreground text-subhead leading-[1.5]">
