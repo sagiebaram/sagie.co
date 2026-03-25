@@ -67,6 +67,26 @@ export function GlobeNetwork() {
   const [hoveredCity, setHoveredCity] = useState<string | null>(null)
   const [selectedCity, setSelectedCity] = useState<City | null>(null)
 
+  const handleSelect = (city: City | null) => {
+    setSelectedCity(city)
+    const controls = globeRef.current?.controls()
+    if (city) {
+      if (controls) controls.autoRotate = false
+      globeRef.current?.pointOfView(
+        { lat: city.lat, lng: city.lng, altitude: 1.4 },
+        800
+      )
+    } else {
+      if (controls) controls.autoRotate = true
+      globeRef.current?.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }, 800)
+    }
+  }
+
+  // Refs so imperative DOM click handlers always use latest values
+  const handleSelectRef = useRef(handleSelect)
+  handleSelectRef.current = handleSelect
+  const selectedCityRef = useRef(selectedCity)
+  selectedCityRef.current = selectedCity
 
   useEffect(() => {
     fetch(
@@ -91,38 +111,37 @@ export function GlobeNetwork() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  useEffect(() => {
-    if (globeRef.current) {
-      const controls = globeRef.current.controls()
-      const camera = globeRef.current.camera()
-
-      if (controls) {
-        controls.autoRotate = true
-        controls.autoRotateSpeed = 0.8
-        controls.enableZoom = true
-
-        controls.addEventListener('change', () => {
-          if (globeRef.current) {
-            const pov = globeRef.current.pointOfView()
-            if (pov && typeof pov.altitude === 'number') {
-              setIsZoomedIn(pov.altitude < 1.8)
-            }
-          }
-        })
-      }
-
-      globeRef.current.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }, 2000)
-
-      const timeout = setTimeout(() => {
-        if (controls && camera) {
-          controls.maxDistance = camera.position.distanceTo(controls.target)
-        }
-      }, 2100)
-
-      return () => clearTimeout(timeout)
+  const initGlobe = () => {
+    if (!globeRef.current) {
+      setTimeout(initGlobe, 100)
+      return
     }
-    return undefined
-  }, [])
+    const controls = globeRef.current.controls()
+    const camera = globeRef.current.camera()
+
+    if (controls) {
+      controls.autoRotate = true
+      controls.autoRotateSpeed = 0.8
+      controls.enableZoom = true
+
+      controls.addEventListener('change', () => {
+        if (globeRef.current) {
+          const pov = globeRef.current.pointOfView()
+          if (pov && typeof pov.altitude === 'number') {
+            setIsZoomedIn(pov.altitude < 1.8)
+          }
+        }
+      })
+    }
+
+    globeRef.current.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }, 2000)
+
+    setTimeout(() => {
+      if (controls && camera) {
+        controls.maxDistance = camera.position.distanceTo(controls.target)
+      }
+    }, 2100)
+  }
 
   const ringsData = useMemo(
     () =>
@@ -150,7 +169,7 @@ export function GlobeNetwork() {
       className="relative w-full overflow-visible flex justify-center items-center min-h-[400px] bg-transparent border border-border-subtle mt-px"
     >
       <div
-        className="relative"
+        className="relative z-0"
         style={{
           width: dimensions.width,
           height: dimensions.height,
@@ -161,6 +180,7 @@ export function GlobeNetwork() {
       >
         <Globe
           ref={globeRef}
+          onGlobeReady={initGlobe}
           width={dimensions.width}
           height={dimensions.height}
           backgroundColor="rgba(0,0,0,0)"
@@ -207,11 +227,7 @@ export function GlobeNetwork() {
           onPointClick={(point: any) => {
             const city = MOCK_CITIES.find(c => c.id === point.id)
             if (city) {
-              setSelectedCity(prev => prev?.id === city.id ? null : city)
-              globeRef.current?.pointOfView(
-                { lat: point.lat, lng: point.lng, altitude: 1.4 },
-                800
-              )
+              handleSelect(selectedCity?.id === city.id ? null : city)
             }
           }}
           htmlElementsData={[...MOCK_CITIES]}
@@ -225,12 +241,11 @@ export function GlobeNetwork() {
                 <div class="globe-zoom-label" style="font-family: var(--font-dm-sans, sans-serif); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; transition: opacity 0.3s; opacity: 0;">${d.members} Members</div>
               </div>
             `
-            el.onclick = () => {
-              if (globeRef.current) {
-                const city = MOCK_CITIES.find(c => c.id === d.id) || null
-                setSelectedCity(prev => prev?.id === city?.id ? null : city)
-                globeRef.current.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.4 }, 800)
-              }
+            el.onclick = (e: MouseEvent) => {
+              e.stopPropagation()
+              const city = MOCK_CITIES.find(c => c.id === d.id) || null
+              const prev = selectedCityRef.current
+              handleSelectRef.current(prev?.id === city?.id ? null : city)
             }
             el.onmouseenter = () => setHoveredCity(d.id)
             el.onmouseleave = () => setHoveredCity(null)
@@ -239,21 +254,53 @@ export function GlobeNetwork() {
         />
       </div>
 
+      {/* Info card — bottom left */}
+      {selectedCity && (
+        <div
+          className="absolute bottom-6 left-6 z-20 border border-border-default bg-background-card p-4"
+          style={{ maxWidth: '240px' }}
+        >
+          <div
+            className="text-xs uppercase tracking-widest mb-2"
+            style={{ color: selectedCity.isChapter ? 'var(--silver)' : 'var(--text-muted)' }}
+          >
+            {selectedCity.isChapter ? 'Active Chapter' : 'Community Hub'}
+          </div>
+          <div className="font-display text-2xl" style={{ color: 'var(--text-primary)' }}>
+            {selectedCity.name}
+          </div>
+          <div className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+            {selectedCity.members} Members
+          </div>
+          <div
+            className="text-xs mt-3 uppercase tracking-widest"
+            style={{
+              color: selectedCity.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
+              borderTop: '0.5px solid var(--border-subtle)',
+              paddingTop: '8px',
+            }}
+          >
+            {selectedCity.isChapter ? 'Live' : 'Coming Soon'} &middot; {selectedCity.name}
+          </div>
+          <button
+            onClick={() => handleSelect(null)}
+            className="absolute top-2 right-3 text-xs cursor-pointer"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            &#x2715;
+          </button>
+        </div>
+      )}
+
       {/* Legend */}
       <div
-        className="absolute bottom-6 right-6 z-10"
+        className="absolute bottom-6 right-6 z-20"
         style={{ minWidth: '160px' }}
       >
         {MOCK_CITIES.map((city) => (
           <button
             key={city.id}
-            onClick={() => {
-              setSelectedCity(prev => prev?.id === city.id ? null : city)
-              globeRef.current?.pointOfView(
-                { lat: city.lat, lng: city.lng, altitude: 1.4 },
-                800
-              )
-            }}
+            onClick={() => handleSelect(selectedCity?.id === city.id ? null : city)}
             onMouseEnter={() => setHoveredCity(city.id)}
             onMouseLeave={() => setHoveredCity(null)}
             style={{

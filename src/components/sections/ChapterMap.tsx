@@ -29,7 +29,7 @@ export function ChapterMap() {
           <Button variant="primary">{CHAPTER_SECTION.cta}</Button>
         </div>
 
-        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[340px] md:overflow-y-auto">
+        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto">
           {CHAPTERS.map((chapter) => (
             <div
               key={chapter.city}
@@ -55,16 +55,12 @@ export function ChapterMap() {
                     border: `0.5px solid ${
                       chapter.status === 'live'
                         ? 'var(--text-primary)'
-                        : chapter.status === 'soon'
-                          ? 'var(--border-default)'
-                          : 'var(--border-subtle)'
+                        : 'rgba(255,255,255,0.2)'
                     }`,
                     color:
                       chapter.status === 'live'
                         ? 'var(--text-primary)'
-                        : chapter.status === 'soon'
-                          ? 'var(--text-muted)'
-                          : 'var(--text-dim)',
+                        : 'var(--text-muted)',
                   }}
                 >
                   {chapter.badge}
