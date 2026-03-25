@@ -22,8 +22,8 @@ export default function HomePage() {
       <SocialProof />
       <ChapterMap />
       <Tiers />
-      <FounderBridge />
       <FAQ />
+      <FounderBridge />
       <FinalCTA />
       <Footer />
     </div>
