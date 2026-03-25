@@ -52,7 +52,7 @@ export function FounderBridge() {
       <div className="flex flex-col md:hidden border border-border-default">
         <div
           style={{
-            height: '280px',
+            height: '360px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -63,8 +63,8 @@ export function FounderBridge() {
             src="/founder-portrait.png"
             alt={FOUNDER.name}
             width={400}
-            height={280}
-            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+            height={360}
+            style={{ objectFit: 'cover', objectPosition: 'top', width: '100%', height: '100%' }}
           />
         </div>
 

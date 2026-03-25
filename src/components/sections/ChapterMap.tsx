@@ -29,7 +29,7 @@ export function ChapterMap() {
           <Button variant="primary">{CHAPTER_SECTION.cta}</Button>
         </div>
 
-        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-[340px] overflow-y-auto">
+        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[340px] md:overflow-y-auto">
           {CHAPTERS.map((chapter) => (
             <div
               key={chapter.city}

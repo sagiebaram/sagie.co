@@ -18,6 +18,12 @@ export function Hero() {
           </div>
 
           <div className="flex flex-col justify-center py-16">
+            {/* Mobile-only logo */}
+            <div className="flex md:hidden mb-8">
+              <div className="relative w-full max-w-[260px]" style={{ aspectRatio: '1 / 0.6' }}>
+                <Logo width={260} height={156} className="hero-line object-contain" />
+              </div>
+            </div>
             <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
               {HERO.headingLines.map((line) => (
                 <span key={line.text} className={`hero-line block ${line.colorClass}`}>
