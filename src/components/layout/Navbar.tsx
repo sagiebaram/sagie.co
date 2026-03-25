@@ -4,6 +4,17 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
 
+const NAV_ROUTES: Record<string, string> = {
+  Solutions: '/solutions',
+  Events: '/events',
+  Resources: '/resources',
+  Blog: '/blog',
+}
+
+function navHref(item: string) {
+  return NAV_ROUTES[item] ?? `#${item.toLowerCase()}`
+}
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -37,7 +48,7 @@ export function Navbar() {
           {NAV_LINKS.map((item) => (
             <a
               key={item}
-              href={`#${item.toLowerCase()}`}
+              href={navHref(item)}
               className="font-body uppercase text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-label tracking-label"
             >
               {item}
@@ -98,7 +109,7 @@ export function Navbar() {
           {NAV_LINKS.map((item, i) => (
             <a
               key={item}
-              href={`#${item.toLowerCase()}`}
+              href={navHref(item)}
               onClick={() => setIsOpen(false)}
               className="font-body uppercase text-foreground-muted hover:text-silver transition-all duration-200 text-label tracking-label py-3 border-b border-border-subtle"
               style={{
