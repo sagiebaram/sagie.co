@@ -61,7 +61,7 @@ export function FounderBridge() {
       <div ref={sectionRef}>
         {/* Desktop: side-by-side */}
         <div
-          className="hidden md:grid border border-border-default"
+          className="hidden md:grid"
           style={{
             gridTemplateColumns: '220px 1fr',
             gap: 0,
@@ -100,7 +100,7 @@ export function FounderBridge() {
         </div>
 
         {/* Mobile: stacked */}
-        <div className="flex flex-col md:hidden border border-border-default">
+        <div className="flex flex-col md:hidden">
           <div
             className="founder-photo"
             style={{
