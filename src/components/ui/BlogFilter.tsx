@@ -4,14 +4,19 @@ import { useState } from 'react'
 import { BLOG_CATEGORIES, BLOG_AUTHORS, MOCK_POSTS } from '@/constants/blog'
 import type { BlogPost } from '@/constants/blog'
 import Link from 'next/link'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
 export function BlogFilter() {
   const [activeCategory, setActiveCategory] = useState<string>('All')
   const [activeAuthor, setActiveAuthor] = useState<string>('All')
+
+  const filterRef = useScrollReveal({ y: 10, duration: 0.35 })
+  const featuredRef = useScrollReveal({ y: 24, duration: 0.6 })
+  const gridRef = useScrollReveal({ selector: '.post-card', stagger: 0.07, y: 20, duration: 0.5 })
 
   const featuredPost = MOCK_POSTS.find(p => p.featured)
 
@@ -27,27 +32,61 @@ export function BlogFilter() {
 
   return (
     <>
+      {/* Featured post */}
+      {featuredPost && (
+        <div ref={featuredRef}>
+          <Link href={`/blog/${featuredPost.slug}`} className="block mb-14 group">
+            <div className="grid md:grid-cols-2 gap-10 border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
+              <div className="bg-background-card border border-border-subtle aspect-[16/10] flex items-center justify-center">
+                <span className="font-body text-foreground-dim text-label tracking-label uppercase">Cover Image</span>
+              </div>
+              <div className="flex flex-col justify-center py-2">
+                <p className="font-body text-caption tracking-spaced mb-4">
+                  <span className="text-foreground-muted uppercase">{featuredPost.category}</span>
+                  <span className="text-foreground-dim mx-2">·</span>
+                  <span className="text-foreground-muted">{formatDate(featuredPost.publishDate)}</span>
+                  <span className="text-foreground-dim mx-2">·</span>
+                  <span className="text-foreground-muted">{featuredPost.readTime} min read</span>
+                </p>
+                <h3 className="font-display uppercase text-founder leading-none text-foreground-secondary group-hover:text-silver transition-colors duration-150 mb-4">
+                  {featuredPost.title}
+                </h3>
+                <p className="font-body text-foreground-muted font-light text-body leading-[1.75] mb-6">
+                  {featuredPost.excerpt}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="font-body text-foreground-dim text-caption tracking-label uppercase">{featuredPost.author}</span>
+                  <span className="font-body text-foreground-secondary text-caption tracking-mid group-hover:translate-x-0.5 transition-transform duration-150">Read →</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
+
+      <hr className="border-border-default mb-10" />
+
       {/* Filters */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 flex-wrap mb-4">
-          <span className="font-body uppercase text-foreground-ghost text-label tracking-label mr-1">Category</span>
+      <div ref={filterRef} className="mb-14 grid gap-4" style={{ gridTemplateColumns: 'auto 1fr' }}>
+        <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Category</span>
+        <div className="flex items-center gap-2 flex-wrap">
           {BLOG_CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className="font-body uppercase text-label tracking-label px-3 py-1.5 transition-all duration-150"
-              style={{
-                color: activeCategory === cat ? 'var(--silver)' : 'var(--text-muted)',
-                border: activeCategory === cat ? '1px solid var(--silver)' : '1px solid transparent',
-              }}
+              className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
+                activeCategory === cat
+                  ? 'text-silver border-border-strong'
+                  : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
+              }`}
             >
               {cat}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="font-body uppercase text-foreground-ghost text-label tracking-label mr-1">Author</span>
+        <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Author</span>
+        <div className="flex items-center gap-2 flex-wrap">
           {BLOG_AUTHORS.map(author => {
             const isActive = activeAuthor === author
             const isCommunity = author === 'Community Members'
@@ -55,15 +94,13 @@ export function BlogFilter() {
               <button
                 key={author}
                 onClick={() => setActiveAuthor(author)}
-                className="font-body uppercase text-label tracking-label px-3 py-1.5 transition-all duration-150"
-                style={{
-                  color: isActive
-                    ? isCommunity ? '#2a4a2a' : 'var(--silver)'
-                    : 'var(--text-muted)',
-                  border: isActive
-                    ? isCommunity ? '1px solid #1a3a1a' : '1px solid var(--silver)'
-                    : '1px solid transparent',
-                }}
+                className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
+                  isActive
+                    ? isCommunity
+                      ? 'text-eco border-eco/30'
+                      : 'text-silver border-border-strong'
+                    : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
+                }`}
               >
                 {author}
               </button>
@@ -72,43 +109,11 @@ export function BlogFilter() {
         </div>
       </div>
 
-      <hr className="border-border-subtle mb-10" />
-
-      {/* Featured post */}
-      {featuredPost && (
-        <Link href={`/blog/${featuredPost.slug}`} className="block mb-14 group">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-background-card border border-border-subtle aspect-[16/10] flex items-center justify-center">
-              <span className="font-body text-foreground-ghost text-label tracking-label uppercase">Cover Image</span>
-            </div>
-            <div className="flex flex-col justify-center">
-              <p className="font-body text-label tracking-label mb-3">
-                <span className="text-silver uppercase">{featuredPost.category}</span>
-                <span className="text-foreground-ghost mx-2">·</span>
-                <span className="text-foreground-muted">{formatDate(featuredPost.publishDate)}</span>
-                <span className="text-foreground-ghost mx-2">·</span>
-                <span className="text-foreground-muted">{featuredPost.readTime} min read</span>
-              </p>
-              <h3 className="font-display uppercase text-[26px] leading-none text-silver group-hover:text-foreground transition-colors duration-150 mb-3">
-                {featuredPost.title}
-              </h3>
-              <p className="font-body text-foreground-muted font-light text-[13px] leading-[1.7] mb-4">
-                {featuredPost.excerpt}
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="font-body text-foreground-ghost text-label tracking-label uppercase">{featuredPost.author}</span>
-                <span className="font-body text-silver text-label tracking-label group-hover:translate-x-0.5 transition-transform duration-150">Read →</span>
-              </div>
-            </div>
-          </div>
-        </Link>
-      )}
-
       {/* Post grid */}
       {filtered.length === 0 ? (
         <p className="font-body text-foreground-muted text-center py-16">No posts match this filter.</p>
       ) : (
-        <div className="grid md:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid md:grid-cols-3 gap-px">
           {filtered.map(post => (
             <PostCard key={post.id} post={post} />
           ))}
@@ -123,38 +128,35 @@ function PostCard({ post }: { post: BlogPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col p-5 bg-background-card border border-border-subtle hover:border-border-default transition-all duration-150"
-      style={isCommunity ? { borderLeft: '1px solid #1a2a1a' } : undefined}
+      className={`post-card group flex flex-col p-8 border border-border-default hover:bg-background-card-featured transition-colors duration-200 ${
+        isCommunity ? 'border-l-eco/20' : ''
+      }`}
     >
-      <div className="flex items-center gap-2 mb-3">
-        <span className="font-body uppercase text-foreground-ghost text-[10px] tracking-label">{post.category}</span>
+      <div className="flex items-center gap-2.5 mb-4">
+        <span className="font-body uppercase text-foreground-muted text-label tracking-spaced">{post.category}</span>
         {isCommunity && (
-          <span className="font-body uppercase text-[10px] tracking-label px-1.5 py-0.5" style={{ color: '#2a4a2a', border: '1px solid #1a3a1a' }}>
+          <span className="font-body uppercase text-label tracking-spaced text-eco border border-eco/20 px-2 py-0.5">
             Community
           </span>
         )}
       </div>
 
-      <h3 className="font-display uppercase text-[17px] leading-tight text-silver group-hover:text-foreground transition-colors duration-150 mb-2">
+      <h3 className="font-display uppercase text-quote leading-tight text-foreground-secondary group-hover:text-silver transition-colors duration-150 mb-3">
         {post.title}
       </h3>
 
-      <p className="font-body text-foreground-muted font-light text-[10px] leading-[1.7] mb-4 flex-1">
+      <p className="font-body text-foreground-muted font-light text-caption leading-[1.75] mb-6 flex-1 line-clamp-2">
         {post.excerpt}
       </p>
 
-      <div className="flex items-center justify-between">
-        <div className="font-body text-foreground-ghost text-[10px] tracking-label">
-          <span>{formatDate(post.publishDate)}</span>
-          <span className="mx-1.5">·</span>
-          <span>{post.readTime} min</span>
-          <span className="mx-1.5">·</span>
-          <span>{post.author}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-foreground-ghost text-[10px]">↗</span>
-          <span className="font-body text-silver text-[10px] tracking-label group-hover:translate-x-0.5 transition-transform duration-150">Read →</span>
-        </div>
+      <div className="mt-auto pt-3 border-t border-border-subtle">
+        <p className="font-body text-foreground-dim text-label tracking-label mb-1">
+          {formatDate(post.publishDate)} · {post.readTime} min
+        </p>
+        <p className="font-body text-foreground-muted text-label tracking-label mb-3">
+          {post.author}
+        </p>
+        <span className="font-body text-foreground-secondary text-label tracking-mid group-hover:translate-x-0.5 transition-transform duration-150 inline-block">Read →</span>
       </div>
     </Link>
   )

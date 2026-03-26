@@ -37,7 +37,7 @@ export function Hero() {
             </p>
 
             <div className="flex flex-wrap items-center gap-5">
-              <Button variant="primary" className="hero-cta">{HERO.primaryCta}</Button>
+              <Button variant="primary" href="/apply" className="hero-cta">{HERO.primaryCta}</Button>
             </div>
           </div>
 

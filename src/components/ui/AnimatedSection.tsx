@@ -1,6 +1,7 @@
 'use client'
 
-import { motion, useReducedMotion } from 'motion/react'
+import { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 interface AnimatedSectionProps {
@@ -11,7 +12,11 @@ interface AnimatedSectionProps {
 }
 
 export function AnimatedSection({ children, className, delay = 0, style }: AnimatedSectionProps) {
-  const shouldReduce = useReducedMotion()
+  const [shouldReduce, setShouldReduce] = useState(false)
+
+  useEffect(() => {
+    setShouldReduce(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }, [])
 
   const inner = (
     <motion.div

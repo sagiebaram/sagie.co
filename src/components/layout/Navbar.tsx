@@ -5,7 +5,9 @@ import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
 
 const NAV_ROUTES: Record<string, string> = {
+  ECO: '/#eco',
   Solutions: '/solutions',
+  Ventures: '/#ventures',
   Events: '/events',
   Resources: '/resources',
   Blog: '/blog',
@@ -33,15 +35,17 @@ export function Navbar() {
     <nav
       className="fixed top-0 left-0 right-0 z-50 bg-background-nav backdrop-blur-[12px] border-b border-border-strong"
     >
-      <div className="max-w-[880px] mx-auto px-6 md:px-8 flex items-center justify-between h-16">
-        <Image
-          src="/sagie_logo_nav.png"
-          alt="SAGIE"
-          width={180}
-          height={40}
-          priority
-          style={{ width: 'auto', height: '38px' }}
-        />
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
+        <a href="/">
+          <Image
+            src="/sagie_logo_nav.png"
+            alt="SAGIE"
+            width={180}
+            height={40}
+            priority
+            style={{ width: 'auto', height: '38px' }}
+          />
+        </a>
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-8">
@@ -58,10 +62,10 @@ export function Navbar() {
 
         <div className="flex items-center gap-4">
           <a
-            href="#"
-            className="font-body uppercase bg-white [color:black] hover:opacity-85 hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5"
+            href="/apply"
+            className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5"
           >
-            Apply
+            Apply to Join
           </a>
 
           {/* Mobile burger */}
@@ -122,7 +126,7 @@ export function Navbar() {
             </a>
           ))}
           <a
-            href="#"
+            href="/apply"
             onClick={() => setIsOpen(false)}
             className="font-body uppercase text-silver hover:text-foreground transition-all duration-200 text-label tracking-label py-3"
             style={{
@@ -131,7 +135,7 @@ export function Navbar() {
               opacity: isOpen ? 1 : 0,
             }}
           >
-            Contact
+            Apply to Join
           </a>
         </div>
       </div>

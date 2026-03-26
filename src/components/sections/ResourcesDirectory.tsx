@@ -1,11 +1,34 @@
 'use client'
 
-import { useState } from 'react'
-import { Section } from '@/components/ui/Section'
+import { useLayoutEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
+import { gsap } from '@/lib/gsap'
+import { GridBackground } from '@/components/ui/GridBackground'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { ResourceFilter } from '@/components/ui/ResourceFilter'
 import { SubmitResourceForm } from '@/components/ui/SubmitResourceForm'
+import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { MOCK_RESOURCES } from '@/constants/resources'
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex gap-4">
+      <span
+        className="font-body uppercase shrink-0"
+        style={{ fontSize: '13px', letterSpacing: '0.18em', color: 'var(--text-ghost)', width: '100px' }}
+      >
+        {label}
+      </span>
+      <span
+        className="font-body"
+        style={{ fontSize: '15px', color: 'var(--text-secondary)' }}
+      >
+        {value}
+      </span>
+    </div>
+  )
+}
 
 export function ResourcesDirectory() {
   const [activeCategory, setActiveCategory] = useState('All')
@@ -16,173 +39,299 @@ export function ResourcesDirectory() {
     ? MOCK_RESOURCES
     : MOCK_RESOURCES.filter((r) => r.category === activeCategory)
 
+  const featuredRef = useRef<HTMLDivElement>(null)
+  const filterRef = useScrollReveal({ y: 10, duration: 0.35 })
+  const gridRef = useScrollReveal({ selector: '.res-card', stagger: 0.05, y: 16, duration: 0.45 })
+  const submitRef = useScrollReveal({ y: 16, duration: 0.5 })
+
+  useLayoutEffect(() => {
+    if (!featuredRef.current) return
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        featuredRef.current,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: featuredRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      )
+    }, featuredRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
     <>
       {/* Hero */}
-      <section className="relative z-[1] overflow-hidden pt-32 pb-16 px-6 md:px-8">
-        <div className="relative z-10 mx-auto max-w-[880px]">
-          <Eyebrow>Resources</Eyebrow>
-          <h1 className="font-display uppercase text-hero leading-[0.9] mb-6">
-            <span className="block text-foreground-dim">TOOLS FOR THE</span>
-            <span className="block text-foreground">ECOSYSTEM.</span>
-          </h1>
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[440px] mb-3">
-            Curated by SAGIE and contributed by the community. Accelerators, incubators, providers and more.
-          </p>
-          <p className="font-body text-[9px] tracking-label uppercase" style={{ color: 'var(--text-ghost)' }}>
-            Directory last updated March 2026
-          </p>
-        </div>
+      <section className="relative z-[1] overflow-hidden">
+        <GridBackground />
+        <PageHeroAnimation>
+          <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-0 pt-32 pb-8 md:pt-40 md:pb-10">
+            <Eyebrow>Resources</Eyebrow>
+            <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
+              <span className="page-hero-line block text-foreground-secondary">TOOLS FOR THE</span>
+              <span className="page-hero-line block text-foreground">ECOSYSTEM.</span>
+            </h1>
+            <p className="page-hero-sub font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[520px]">
+              Curated by SAGIE and contributed by the community. Accelerators, incubators, providers and more.
+            </p>
+            <p
+              className="page-hero-sub font-body uppercase"
+              style={{ fontSize: '11px', letterSpacing: '0.18em', color: 'var(--text-secondary)' }}
+            >
+              Directory last updated March 2026
+            </p>
+          </div>
+        </PageHeroAnimation>
       </section>
 
       {/* Featured resource */}
       {featured && (
-        <Section>
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
-            <div>
-              <p className="font-body uppercase text-[10px] tracking-eyebrow text-silver mb-3">
-                Featured resource
-              </p>
-              <h2 className="font-display uppercase text-[28px] leading-[1] text-foreground mb-3">
-                {featured.name}
-              </h2>
-              <p className="font-body text-foreground-muted text-[11px] font-light leading-[1.7] mb-4 max-w-[480px]">
-                {featured.description}
-              </p>
-              <div className="flex items-center gap-2 font-body text-foreground-dim text-[10px] tracking-wide uppercase">
-                <span>{featured.category}</span>
-                <span className="text-foreground-dim/40">·</span>
-                <span>{featured.location}</span>
-                <span className="text-foreground-dim/40">·</span>
-                <span>Curated by SAGIE</span>
+        <section className="relative z-[1] overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
+          <GridBackground />
+          <div ref={featuredRef} className="relative z-10 max-w-[880px] mx-auto" style={{ opacity: 0 }}>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
+              <div>
+                <p
+                  className="font-body uppercase mb-3"
+                  style={{ fontSize: '12px', letterSpacing: '0.22em', color: 'var(--silver)' }}
+                >
+                  Featured resource
+                </p>
+                <p
+                  className="font-display uppercase mb-3"
+                  style={{ fontSize: '32px', color: 'var(--text-primary)', letterSpacing: '0.04em' }}
+                >
+                  {featured.name}
+                </p>
+                <p className="font-body text-foreground-muted text-body font-light leading-[1.7] mb-5 max-w-[480px]">
+                  {featured.description}
+                </p>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="font-body uppercase"
+                    style={{ fontSize: '12px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
+                  >
+                    {featured.category}
+                  </span>
+                  <span style={{ color: 'var(--text-dim)' }}>·</span>
+                  <span
+                    className="font-body uppercase"
+                    style={{ fontSize: '12px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
+                  >
+                    {featured.location}
+                  </span>
+                  <span style={{ color: 'var(--text-dim)' }}>·</span>
+                  <span
+                    className="font-body uppercase"
+                    style={{ fontSize: '12px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
+                  >
+                    Curated by SAGIE
+                  </span>
+                </div>
               </div>
+              <a
+                href={featured.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body uppercase bg-white hover:opacity-85 hover:-translate-y-px transition-all duration-150 shrink-0 self-start md:self-center"
+                style={{
+                  color: 'black',
+                  fontSize: '13px',
+                  letterSpacing: '0.12em',
+                  padding: '12px 28px',
+                }}
+              >
+                Visit resource →
+              </a>
             </div>
-            <a
-              href={featured.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-body uppercase bg-white text-black text-[10px] tracking-button px-6 py-2.5 hover:opacity-85 hover:-translate-y-px transition-all duration-150 shrink-0 self-start md:self-center"
-            >
-              Visit resource →
-            </a>
           </div>
-        </Section>
+        </section>
       )}
 
-      {/* Filter + Grid */}
-      <Section>
-        <div className="mb-8">
+      {/* Filter bar */}
+      <section className="relative z-[1] border-t border-border-strong md:border-border-subtle px-6 md:px-8 py-6">
+        <div ref={filterRef} className="max-w-[880px] mx-auto">
           <ResourceFilter
             resources={MOCK_RESOURCES}
             active={activeCategory}
             onChange={setActiveCategory}
           />
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border-default">
-          {filtered.map((resource) => {
-            const isExpanded = expandedId === resource.id
-            return (
-              <div
-                key={resource.id}
-                className="bg-background flex flex-col"
-              >
-                {/* Collapsed card */}
-                <button
-                  type="button"
-                  onClick={() => setExpandedId(isExpanded ? null : resource.id)}
-                  className="text-left p-5 flex flex-col gap-3 group hover:bg-background-card transition-colors duration-150 flex-1"
+      {/* Resource grid */}
+      <section className="relative z-[1] overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
+        <GridBackground />
+        <div ref={gridRef} className="relative z-10 max-w-[880px] mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
+            {filtered.map((resource) => {
+              const isExpanded = expandedId === resource.id
+              return (
+                <div
+                  key={resource.id}
+                  className="res-card"
+                  style={{ border: '1px solid var(--border-default)' }}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-display uppercase text-[17px] leading-[1.1] text-silver">
-                      {resource.name}
-                    </h3>
-                    <span className="font-body text-foreground-dim text-[14px] shrink-0 mt-0.5">
-                      {isExpanded ? '\u2212' : '+'}
-                    </span>
-                  </div>
-                  <p className="font-body text-foreground-muted text-[10px] font-light leading-[1.6]">
-                    {resource.description}
-                  </p>
-                  <div className="flex items-center justify-between gap-2 mt-auto pt-2">
-                    <div className="flex items-center gap-1.5 font-body text-foreground-dim text-[9px] tracking-wide uppercase">
-                      <span>{resource.category}</span>
-                      <span className="text-foreground-dim/40">·</span>
-                      <span>{resource.location}</span>
+                  {/* Collapsed card */}
+                  <button
+                    type="button"
+                    onClick={() => setExpandedId(isExpanded ? null : resource.id)}
+                    className="w-full text-left p-7 flex flex-col gap-4 transition-colors duration-200"
+                    style={{
+                      background: isExpanded ? 'var(--bg-card-featured)' : 'transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isExpanded) e.currentTarget.style.background = 'var(--bg-card-featured)'
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isExpanded) e.currentTarget.style.background = 'transparent'
+                    }}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <span
+                        className="font-display uppercase"
+                        style={{ fontSize: '20px', color: 'var(--silver)', letterSpacing: '0.04em' }}
+                      >
+                        {resource.name}
+                      </span>
+                      <span
+                        className="font-body shrink-0 mt-0.5"
+                        style={{ fontSize: '16px', color: 'var(--text-muted)' }}
+                      >
+                        {isExpanded ? '\u2212' : '+'}
+                      </span>
                     </div>
-                    <span className={`font-body text-[8px] tracking-label uppercase px-2 py-0.5 border ${
-                      resource.source === 'Curated'
-                        ? 'text-silver border-silver/20'
-                        : 'text-foreground-dim border-border-default'
-                    }`}>
-                      {resource.source}
-                    </span>
-                  </div>
-                </button>
-
-                {/* Expanded panel */}
-                {isExpanded && (
-                  <div className="border-t border-border-default px-5 py-5 bg-background-card">
-                    <div className="space-y-3 mb-5">
-                      {[
-                        ['Category', resource.category],
-                        ['Location', resource.location],
-                        ['Best for', resource.bestFor],
-                        ['Source', resource.source],
-                      ].map(([label, value]) => (
-                        <div key={label} className="flex items-start gap-4">
-                          <span className="font-body uppercase text-foreground-dim text-[9px] tracking-label w-16 shrink-0 pt-px">
-                            {label}
-                          </span>
-                          <span className="font-body text-foreground-secondary text-[11px] font-light leading-[1.5]">
-                            {value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-4">
+                    <p
+                      className="font-body font-light leading-[1.7]"
+                      style={{ fontSize: '14px', color: 'var(--text-muted)' }}
+                    >
+                      {resource.description}
+                    </p>
+                    <div className="flex items-center justify-between gap-3 mt-auto pt-1">
+                      <span
+                        className="font-body uppercase truncate"
+                        style={{ fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
+                      >
+                        {resource.category}
+                      </span>
                       <a
                         href={resource.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-body uppercase text-silver text-[10px] tracking-button hover:text-foreground hover:-translate-y-px transition-all duration-150"
-                      >
-                        Visit {resource.name} →
-                      </a>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigator.clipboard.writeText(resource.url)
+                        onClick={(e) => e.stopPropagation()}
+                        className="font-body uppercase shrink-0 hover:text-silver transition-colors duration-150"
+                        style={{
+                          fontSize: '11px',
+                          letterSpacing: '0.1em',
+                          color: 'var(--text-muted)',
+                          borderBottom: '0.5px solid var(--border-subtle)',
+                          paddingBottom: '1px',
                         }}
-                        className="font-body uppercase text-foreground-dim text-[10px] tracking-button hover:text-foreground-muted transition-colors duration-150"
                       >
-                        Share resource
-                      </button>
+                        Visit →
+                      </a>
                     </div>
-                  </div>
-                )}
-              </div>
-            )
-          })}
+                  </button>
+
+                  {/* Expanded panel */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        className="overflow-hidden"
+                      >
+                        <div
+                          className="px-7 py-7"
+                          style={{
+                            borderTop: '1px solid var(--border-subtle)',
+                            background: 'var(--bg-card)',
+                          }}
+                        >
+                          <div className="flex flex-col gap-3 mb-6">
+                            <DetailRow label="Category" value={resource.category} />
+                            <DetailRow label="Location" value={resource.location} />
+                            <DetailRow label="Best for" value={resource.bestFor} />
+                            <DetailRow label="Source" value={resource.source} />
+                          </div>
+                          <div className="flex flex-wrap items-center gap-5">
+                            <a
+                              href={resource.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-body uppercase hover:text-silver hover:-translate-y-px transition-all duration-150"
+                              style={{
+                                fontSize: '13px',
+                                letterSpacing: '0.12em',
+                                color: 'var(--text-muted)',
+                                borderBottom: '0.5px solid var(--border-subtle)',
+                                paddingBottom: '2px',
+                              }}
+                            >
+                              Visit {resource.name} →
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => navigator.clipboard.writeText(resource.url)}
+                              className="font-body uppercase hover:text-foreground-muted transition-colors duration-150"
+                              style={{
+                                fontSize: '13px',
+                                letterSpacing: '0.12em',
+                                color: 'var(--text-dim)',
+                                borderBottom: '0.5px solid var(--border-subtle)',
+                                paddingBottom: '2px',
+                              }}
+                            >
+                              Share resource
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )
+            })}
+          </div>
         </div>
-      </Section>
+      </section>
 
       {/* Submit section */}
-      <Section>
-        <div className="max-w-[600px]">
-          <h2 className="font-display uppercase text-[28px] leading-[1] text-foreground mb-3">
+      <section className="relative z-[1] overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
+        <GridBackground />
+        <div ref={submitRef} className="relative z-10 max-w-[880px] mx-auto">
+          <Eyebrow>Contribute</Eyebrow>
+          <h2
+            className="font-display uppercase mb-4"
+            style={{ fontSize: '36px', color: 'var(--text-primary)', letterSpacing: '0.04em', lineHeight: 1 }}
+          >
             Know something the ecosystem should know about?
           </h2>
-          <p className="font-body text-foreground-muted text-[11px] font-light leading-[1.7] mb-6">
+          <p className="font-body text-foreground-muted text-body-lg font-light leading-[1.7] mb-10 max-w-[520px]">
             Submit a resource and we&apos;ll review it for the directory.
           </p>
           <SubmitResourceForm />
-          <p className="font-body text-foreground-dim text-[9px] tracking-wide mt-4">
+          <p
+            className="font-body uppercase mt-5"
+            style={{ fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
+          >
             Category · Description · Your name collected on next step
           </p>
         </div>
-      </Section>
+      </section>
     </>
   )
 }

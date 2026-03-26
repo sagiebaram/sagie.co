@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { FILTER_OPTIONS, MOCK_PROVIDERS } from '@/constants/solutions'
-import type { SolutionCategory } from '@/constants/solutions'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 
 export function SolutionsFilter() {
   const [active, setActive] = useState<string>('all')
+
+  const gridRef = useScrollReveal({ selector: '.dir-card', stagger: 0.08, y: 20, duration: 0.5 })
 
   const filtered = active === 'all'
     ? MOCK_PROVIDERS
@@ -19,10 +21,10 @@ export function SolutionsFilter() {
           <button
             key={opt.value}
             onClick={() => setActive(opt.value)}
-            className={`font-body uppercase text-label tracking-label px-4 py-2 border transition-colors duration-150 ${
+            className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
               active === opt.value
-                ? 'border-silver text-silver'
-                : 'border-border-subtle text-foreground-muted hover:text-silver hover:border-border-default'
+                ? 'text-silver border-border-strong'
+                : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
             }`}
           >
             {opt.label}
@@ -36,48 +38,46 @@ export function SolutionsFilter() {
           Community providers coming soon.
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-px">
           {filtered.map((provider) => (
             <div
               key={provider.id}
-              className="border border-border-subtle flex flex-col"
+              className="dir-card border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200 flex flex-col"
             >
-              <div className="p-5 flex-1">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 border border-border-subtle flex items-center justify-center shrink-0">
-                    <span className="font-display text-foreground-dim text-[14px] leading-none">
-                      {provider.initials}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-display text-silver text-[16px] leading-none">
-                      {provider.name}
-                    </p>
-                    <p className="font-body uppercase text-foreground-ghost text-[8px] tracking-label mt-1">
-                      {provider.category}
-                    </p>
-                  </div>
+              {/* Header */}
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 border border-border-default flex items-center justify-center shrink-0">
+                  <span className="font-display text-foreground-muted text-[14px] leading-none">
+                    {provider.initials}
+                  </span>
                 </div>
-
-                {/* Bio */}
-                <p className="font-body text-foreground-muted text-[10px] font-light leading-[1.6] line-clamp-3">
-                  {provider.bio}
-                </p>
+                <div>
+                  <p className="font-display uppercase text-foreground-secondary text-subhead leading-none">
+                    {provider.name}
+                  </p>
+                  <p className="font-body uppercase text-foreground-muted text-label tracking-spaced mt-1">
+                    {provider.category}
+                  </p>
+                </div>
               </div>
 
+              {/* Bio */}
+              <p className="font-body text-foreground-muted text-caption font-light leading-[1.75] mb-6 flex-1 line-clamp-3">
+                {provider.bio}
+              </p>
+
               {/* Footer */}
-              <div className="border-t border-border-subtle px-5 py-3 flex items-center justify-between">
+              <div className="border-t border-border-subtle pt-4 flex items-center justify-between">
                 <span
-                  className={`font-body uppercase text-[8px] tracking-label px-2 py-0.5 border ${
+                  className={`font-body uppercase text-label tracking-label px-2 py-0.5 border ${
                     provider.memberTier === 'Shaper'
-                      ? 'border-silver text-silver'
+                      ? 'border-border-strong text-foreground-secondary'
                       : 'border-border-default text-foreground-muted'
                   }`}
                 >
                   {provider.memberTier}
                 </span>
-                <span className="font-body text-foreground-dim text-[10px]">
+                <span className="font-body text-foreground-muted text-caption tracking-mid">
                   Work with me →
                 </span>
               </div>

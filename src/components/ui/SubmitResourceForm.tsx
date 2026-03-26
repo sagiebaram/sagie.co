@@ -29,21 +29,34 @@ export function SubmitResourceForm() {
 
   if (status === 'success') {
     return (
-      <p className="font-body text-silver text-[11px] tracking-label uppercase">
+      <p
+        className="font-body uppercase"
+        style={{ fontSize: '15px', letterSpacing: '0.18em', color: 'var(--silver)' }}
+      >
         Submitted. We&apos;ll review it shortly.
       </p>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
       <input
         type="text"
         placeholder="Resource name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
-        className="font-body bg-transparent border border-border-default text-foreground-secondary text-[11px] tracking-wide px-4 py-2.5 placeholder:text-foreground-dim focus:outline-none focus:border-silver transition-colors flex-1 min-w-0"
+        className="font-body bg-transparent flex-1 min-w-0"
+        style={{
+          border: '1px solid var(--border-default)',
+          fontSize: '15px',
+          color: 'var(--text-secondary)',
+          letterSpacing: '0.04em',
+          padding: '14px 18px',
+          outline: 'none',
+        }}
+        onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--silver)' }}
+        onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border-default)' }}
       />
       <input
         type="url"
@@ -51,12 +64,28 @@ export function SubmitResourceForm() {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         required
-        className="font-body bg-transparent border border-border-default text-foreground-secondary text-[11px] tracking-wide px-4 py-2.5 placeholder:text-foreground-dim focus:outline-none focus:border-silver transition-colors flex-1 min-w-0"
+        className="font-body bg-transparent flex-1 min-w-0"
+        style={{
+          border: '1px solid var(--border-default)',
+          fontSize: '15px',
+          color: 'var(--text-secondary)',
+          letterSpacing: '0.04em',
+          padding: '14px 18px',
+          outline: 'none',
+        }}
+        onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--silver)' }}
+        onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border-default)' }}
       />
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="font-body uppercase bg-white text-black text-[10px] tracking-button px-6 py-2.5 hover:opacity-85 hover:-translate-y-px transition-all duration-150 disabled:opacity-50 shrink-0"
+        className="font-body uppercase bg-white hover:opacity-85 hover:-translate-y-px transition-all duration-150 disabled:opacity-50 shrink-0"
+        style={{
+          color: 'black',
+          fontSize: '13px',
+          letterSpacing: '0.12em',
+          padding: '14px 28px',
+        }}
       >
         {status === 'submitting' ? 'Submitting...' : 'Submit'}
       </button>

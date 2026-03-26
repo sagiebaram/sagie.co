@@ -90,7 +90,7 @@ export function FinalCTA() {
           ))}
         </p>
 
-        <Button variant="primary">{FINAL_CTA.cta}</Button>
+        <Button variant="primary" href="/apply">{FINAL_CTA.cta}</Button>
       </div>
     </Section>
   )

@@ -2,12 +2,15 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { Section } from '@/components/ui/Section'
+import { BlogPostHeaderAnimation } from '@/components/ui/BlogPostHeaderAnimation'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { MOCK_POSTS } from '@/constants/blog'
 import { ShareButton } from './ShareButton'
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
 export function generateStaticParams() {
@@ -31,86 +34,95 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <main className="relative">
+      <CircuitBackground />
       <Navbar />
 
       <Section className="pt-28 md:pt-36">
-        <Link
-          href="/blog"
-          className="font-body text-foreground-muted text-label tracking-label uppercase hover:text-silver transition-colors duration-150 mb-8 inline-block"
-        >
-          ← Back to Blog
-        </Link>
+        <BlogPostHeaderAnimation>
+          <Link
+            href="/blog"
+            className="post-back font-body text-foreground-muted text-label tracking-label uppercase hover:text-silver hover:-translate-y-px transition-all duration-150 mb-8 inline-block"
+          >
+            ← Back to Blog
+          </Link>
 
-        <div className="flex items-center gap-2 mb-4 font-body text-label tracking-label">
-          <span className="text-silver uppercase">{post.category}</span>
-          <span className="text-foreground-ghost">·</span>
-          <span className="text-foreground-muted">{formatDate(post.publishDate)}</span>
-          <span className="text-foreground-ghost">·</span>
-          <span className="text-foreground-muted">{post.readTime} min read</span>
-        </div>
+          <div className="post-meta flex items-center gap-2 mb-4 font-body text-label tracking-spaced">
+            <span className="text-foreground-muted uppercase">{post.category}</span>
+            <span className="text-foreground-dim">·</span>
+            <span className="text-foreground-muted">{formatDate(post.publishDate)}</span>
+            <span className="text-foreground-dim">·</span>
+            <span className="text-foreground-muted">{post.readTime} min read</span>
+          </div>
 
-        <h1 className="font-display uppercase text-[40px] leading-[0.95] tracking-heading text-silver mb-4">
-          {post.title}
-        </h1>
+          <h1 className="post-title font-display uppercase text-[40px] leading-[0.95] tracking-heading text-foreground-secondary mb-4">
+            {post.title}
+          </h1>
 
-        <p className="font-body text-foreground-muted text-[9px] uppercase tracking-eyebrow mb-2">
-          {post.author}
-        </p>
-        <p className="font-body text-foreground-ghost text-[9px] uppercase tracking-eyebrow mb-4">
-          {post.authorType === 'Community Member' ? 'Community Member' : 'Founder · Ecosystem Architect'}
-        </p>
-
-        <ShareButton />
-
-        <hr className="border-border-subtle my-8" />
-
-        <div className="max-w-[600px]">
-          {paragraphs.map((p, i) => (
-            <p key={i} className="font-body text-foreground-secondary font-light text-[13px] leading-[1.85] mb-6">
-              {p}
+          <div className="post-author">
+            <p className="font-body text-foreground-muted text-label uppercase tracking-eyebrow mb-1">
+              {post.author}
             </p>
-          ))}
-        </div>
+            <p className="font-body text-foreground-dim text-label uppercase tracking-eyebrow mb-4">
+              {post.authorType === 'Community Member' ? 'Community Member' : 'Founder · Ecosystem Architect'}
+            </p>
+
+            <ShareButton />
+          </div>
+        </BlogPostHeaderAnimation>
+
+        <hr className="border-border-default my-8" />
+
+        <ScrollReveal y={16} duration={0.5}>
+          <div className="max-w-[600px]">
+            {paragraphs.map((p, i) => (
+              <p key={i} className="font-body text-foreground-muted font-light text-caption leading-[1.85] mb-6">
+                {p}
+              </p>
+            ))}
+          </div>
+        </ScrollReveal>
 
         {/* Related posts */}
         {related.length > 0 && (
-          <div className="mt-16">
-            <p className="font-body uppercase text-foreground-ghost text-label tracking-eyebrow mb-6">Related</p>
-            <div className="grid md:grid-cols-3 gap-6">
+          <ScrollReveal selector=".related-card" stagger={0.1} y={16} duration={0.45} className="mt-16">
+            <p className="font-body uppercase text-foreground-dim text-label tracking-eyebrow mb-6">Related</p>
+            <div className="grid md:grid-cols-3 gap-px">
               {related.map(r => (
                 <Link
                   key={r.id}
                   href={`/blog/${r.slug}`}
-                  className="group p-5 border border-border-subtle hover:border-border-default transition-all duration-150"
+                  className="related-card group p-6 border border-border-default hover:bg-background-card-featured transition-colors duration-200"
                 >
-                  <span className="font-body uppercase text-foreground-ghost text-[10px] tracking-label block mb-2">{r.category}</span>
-                  <h4 className="font-display uppercase text-[14px] leading-tight text-foreground-dim group-hover:text-silver transition-colors duration-150 mb-3">
+                  <span className="font-body uppercase text-foreground-muted text-label tracking-spaced block mb-2">{r.category}</span>
+                  <h4 className="font-display uppercase text-[14px] leading-tight text-foreground-dim group-hover:text-foreground-secondary transition-colors duration-150 mb-3">
                     {r.title}
                   </h4>
-                  <span className="font-body text-silver text-[10px] tracking-label group-hover:translate-x-0.5 transition-transform duration-150 inline-block">Read →</span>
+                  <span className="font-body text-foreground-secondary text-label tracking-mid group-hover:translate-x-0.5 transition-transform duration-150 inline-block">Read →</span>
                 </Link>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
         )}
       </Section>
 
       {/* Next post bar */}
       {nextPost && nextPost.id !== post.id && (
-        <Link
-          href={`/blog/${nextPost.slug}`}
-          className="group block border-t border-border-strong"
-        >
-          <div className="max-w-[880px] mx-auto px-6 md:px-8 py-6 flex items-center justify-between">
-            <div>
-              <span className="font-body uppercase text-foreground-ghost text-[10px] tracking-label block mb-1">Next post</span>
-              <span className="font-display uppercase text-[18px] text-foreground-muted group-hover:text-silver transition-colors duration-150">
-                {nextPost.title}
-              </span>
+        <ScrollReveal y={12} duration={0.4}>
+          <Link
+            href={`/blog/${nextPost.slug}`}
+            className="group block border-t border-border-strong"
+          >
+            <div className="max-w-[880px] mx-auto px-6 md:px-8 py-6 flex items-center justify-between">
+              <div>
+                <span className="font-body uppercase text-foreground-dim text-label tracking-label block mb-1">Next post</span>
+                <span className="font-display uppercase text-[18px] text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150">
+                  {nextPost.title}
+                </span>
+              </div>
+              <span className="font-display text-foreground-dim text-[24px] group-hover:text-foreground-muted group-hover:translate-x-1 transition-all duration-150">→</span>
             </div>
-            <span className="font-display text-foreground-muted text-[24px] group-hover:translate-x-1 transition-transform duration-150">→</span>
-          </div>
-        </Link>
+          </Link>
+        </ScrollReveal>
       )}
 
       <Footer />

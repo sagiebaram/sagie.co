@@ -112,6 +112,33 @@
   opacity: 0;
 }
 
+/* ── Page hero initial states ── */
+.page-hero-eyebrow,
+.page-hero-line,
+.page-hero-sub {
+  opacity: 0;
+}
+
+/* ── Blog post header initial states ── */
+.post-back,
+.post-meta,
+.post-title,
+.post-author {
+  opacity: 0;
+}
+
+/* ── Scroll reveal initial states ── */
+.event-item,
+.step,
+.cat-card,
+.dir-card,
+.res-card,
+.post-card,
+.related-card,
+.type-divider {
+  opacity: 0;
+}
+
 /* ── Grid background pattern ── */
 .grid-bg {
   background-image:

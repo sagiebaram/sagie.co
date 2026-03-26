@@ -67,13 +67,16 @@ export function Footer() {
                   {SITE.email}
                 </a>
               </li>
-              {FOOTER.contact.links.map((item) => (
-                <li key={item}>
-                  <a href="#" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
-                    {item}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a href="/apply" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                  Apply to Join
+                </a>
+              </li>
+              <li>
+                <a href="/apply/chapter" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                  Start a Chapter
+                </a>
+              </li>
             </ul>
           </div>
 

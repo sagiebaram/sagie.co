@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import type { Resource } from '@/constants/resources'
 
 interface ResourceFilterProps {
@@ -16,33 +15,26 @@ export function ResourceFilter({ resources, active, onChange }: ResourceFilterPr
     return acc
   }, {})
 
+  const items = [
+    { label: 'All', count: resources.length },
+    ...categories.map((cat) => ({ label: cat, count: counts[cat] })),
+  ]
+
   return (
-    <div className="flex flex-wrap gap-2">
-      <button
-        type="button"
-        onClick={() => onChange('All')}
-        className={cn(
-          'font-body uppercase text-[10px] tracking-label px-3 py-1.5 border transition-colors duration-150',
-          active === 'All'
-            ? 'text-silver border-silver'
-            : 'text-foreground-dim border-border-default hover:text-foreground-muted hover:border-border-strong'
-        )}
-      >
-        All<span className={cn(active === 'All' ? 'text-foreground-dim' : 'text-foreground-dim/50', 'ml-0.5')}>({resources.length})</span>
-      </button>
-      {categories.map((cat) => (
+    <div className="flex flex-wrap gap-3">
+      {items.map(({ label, count }) => (
         <button
-          key={cat}
+          key={label}
           type="button"
-          onClick={() => onChange(cat)}
-          className={cn(
-            'font-body uppercase text-[10px] tracking-label px-3 py-1.5 border transition-colors duration-150',
-            active === cat
-              ? 'text-silver border-silver'
-              : 'text-foreground-dim border-border-default hover:text-foreground-muted hover:border-border-strong'
-          )}
+          onClick={() => onChange(label)}
+          className="font-body uppercase text-label tracking-label px-4 py-2 transition-all duration-150"
+          style={{
+            border: active === label ? '1px solid var(--silver)' : '1px solid var(--border-default)',
+            color: active === label ? 'var(--silver)' : 'var(--text-muted)',
+          }}
         >
-          {cat}<span className={cn(active === cat ? 'text-foreground-dim' : 'text-foreground-dim/50', 'ml-0.5')}>({counts[cat]})</span>
+          {label}
+          <span style={{ color: 'var(--text-dim)', marginLeft: '2px' }}>({count})</span>
         </button>
       ))}
     </div>
