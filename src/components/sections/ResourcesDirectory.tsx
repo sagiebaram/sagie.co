@@ -9,7 +9,7 @@ import { ResourceFilter } from '@/components/ui/ResourceFilter'
 import { SubmitResourceForm } from '@/components/ui/SubmitResourceForm'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
-import { MOCK_RESOURCES } from '@/constants/resources'
+import type { Resource } from '@/lib/resources'
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
@@ -30,14 +30,14 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   )
 }
 
-export function ResourcesDirectory() {
+export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
   const [activeCategory, setActiveCategory] = useState('All')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  const featured = MOCK_RESOURCES.find((r) => r.featured)
+  const featured = resources.find((r) => r.featured) ?? resources[0]
   const filtered = activeCategory === 'All'
-    ? MOCK_RESOURCES
-    : MOCK_RESOURCES.filter((r) => r.category === activeCategory)
+    ? resources
+    : resources.filter((r) => r.category === activeCategory)
 
   const featuredRef = useRef<HTMLDivElement>(null)
   const filterRef = useScrollReveal({ y: 10, duration: 0.35 })
@@ -141,7 +141,7 @@ export function ResourcesDirectory() {
                 </div>
               </div>
               <a
-                href={featured.url}
+                href={featured.url ?? '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-body uppercase bg-white hover:opacity-85 hover:-translate-y-px transition-all duration-150 shrink-0 self-start md:self-center"
@@ -163,7 +163,7 @@ export function ResourcesDirectory() {
       <section className="relative z-[1] border-t border-border-strong md:border-border-subtle px-6 md:px-8 py-6">
         <div ref={filterRef} className="max-w-[880px] mx-auto">
           <ResourceFilter
-            resources={MOCK_RESOURCES}
+            resources={resources}
             active={activeCategory}
             onChange={setActiveCategory}
           />
@@ -226,7 +226,7 @@ export function ResourcesDirectory() {
                         {resource.category}
                       </span>
                       <a
-                        href={resource.url}
+                        href={resource.url ?? '#'}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
@@ -263,13 +263,13 @@ export function ResourcesDirectory() {
                         >
                           <div className="flex flex-col gap-3 mb-6">
                             <DetailRow label="Category" value={resource.category} />
-                            <DetailRow label="Location" value={resource.location} />
-                            <DetailRow label="Best for" value={resource.bestFor} />
+                            {resource.location && <DetailRow label="Location" value={resource.location} />}
+                            {resource.bestFor && <DetailRow label="Best for" value={resource.bestFor} />}
                             <DetailRow label="Source" value={resource.source} />
                           </div>
                           <div className="flex flex-wrap items-center gap-5">
                             <a
-                              href={resource.url}
+                              href={resource.url ?? '#'}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="font-body uppercase hover:text-silver hover:-translate-y-px transition-all duration-150"
@@ -285,7 +285,7 @@ export function ResourcesDirectory() {
                             </a>
                             <button
                               type="button"
-                              onClick={() => navigator.clipboard.writeText(resource.url)}
+                              onClick={() => navigator.clipboard.writeText(resource.url ?? '')}
                               className="font-body uppercase hover:text-foreground-muted transition-colors duration-150"
                               style={{
                                 fontSize: '13px',

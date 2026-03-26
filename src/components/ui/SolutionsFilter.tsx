@@ -1,17 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { FILTER_OPTIONS, MOCK_PROVIDERS } from '@/constants/solutions'
+import { FILTER_OPTIONS } from '@/constants/solutions'
+import type { SolutionProvider } from '@/lib/solutions'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 
-export function SolutionsFilter() {
+export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }) {
   const [active, setActive] = useState<string>('all')
 
   const gridRef = useScrollReveal({ selector: '.dir-card', stagger: 0.08, y: 20, duration: 0.5 })
 
   const filtered = active === 'all'
-    ? MOCK_PROVIDERS
-    : MOCK_PROVIDERS.filter((p) => p.category === active)
+    ? providers
+    : providers.filter((p) => p.category === active)
 
   return (
     <div>

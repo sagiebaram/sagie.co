@@ -9,6 +9,9 @@ import { SolutionsFilter } from '@/components/ui/SolutionsFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { SERVICE_CATEGORIES } from '@/constants/solutions'
+import { getSolutionProviders, type SolutionProvider } from '@/lib/solutions'
+
+export const revalidate = 3600
 
 const STEPS = [
   { num: '01', title: 'Join as a Builder', desc: 'Membership is the entry point. Builders are vetted before offering services.' },
@@ -16,13 +19,21 @@ const STEPS = [
   { num: '03', title: 'Revenue funds the mission', desc: 'Every engagement through SAGIE Solutions supports the ecosystem. Builder members access services at a discounted rate.' },
 ]
 
-export default function SolutionsPage() {
+export default async function SolutionsPage() {
+  let providers: SolutionProvider[] = []
+
+  try {
+    providers = await getSolutionProviders()
+  } catch (e) {
+    console.error('Failed to fetch solution providers:', e)
+  }
+
   return (
     <main className="relative">
       <CircuitBackground />
       <Navbar />
 
-      {/* ── Hero ── */}
+      {/* Hero */}
       <section className="relative z-[1] overflow-hidden">
         <GridBackground />
         <PageHeroAnimation>
@@ -41,7 +52,7 @@ export default function SolutionsPage() {
         </PageHeroAnimation>
       </section>
 
-      {/* ── How it works ── */}
+      {/* How it works */}
       <Section>
         <Eyebrow>How it works</Eyebrow>
         <ScrollReveal selector=".step" stagger={0.12} y={20} duration={0.55}>
@@ -63,7 +74,7 @@ export default function SolutionsPage() {
         </ScrollReveal>
       </Section>
 
-      {/* ── Service categories ── */}
+      {/* Service categories */}
       <Section>
         <Eyebrow>Service categories</Eyebrow>
         <ScrollReveal selector=".cat-card" stagger={0.06} y={16} duration={0.45}>
@@ -82,7 +93,7 @@ export default function SolutionsPage() {
         </ScrollReveal>
       </Section>
 
-      {/* ── Gated bar ── */}
+      {/* Gated bar */}
       <section className="relative z-[1] border-t border-border-strong border-b border-b-border-strong">
         <ScrollReveal y={12} duration={0.4}>
           <div className="max-w-[880px] mx-auto px-6 md:px-8 py-10 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -104,13 +115,13 @@ export default function SolutionsPage() {
         </ScrollReveal>
       </section>
 
-      {/* ── Community Providers ── */}
+      {/* Community Providers */}
       <Section>
         <Eyebrow>Community Providers</Eyebrow>
-        <SolutionsFilter />
+        <SolutionsFilter providers={providers} />
       </Section>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <section className="relative z-[1] overflow-hidden">
         <GridBackground />
         <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-20 md:py-32">

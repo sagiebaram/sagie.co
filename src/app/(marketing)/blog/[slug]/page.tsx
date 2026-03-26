@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -6,31 +6,43 @@ import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { Section } from '@/components/ui/Section'
 import { BlogPostHeaderAnimation } from '@/components/ui/BlogPostHeaderAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
-import { MOCK_POSTS } from '@/constants/blog'
+import { BlogContent } from '@/components/mdx/BlogContent'
+import { getAllPosts, getPostBySlug } from '@/lib/blog'
 import { ShareButton } from './ShareButton'
+
+export const revalidate = 3600
 
 function formatDate(dateStr: string) {
   return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
-export function generateStaticParams() {
-  return MOCK_POSTS.map(post => ({ slug: post.slug }))
+export async function generateStaticParams() {
+  try {
+    const posts = await getAllPosts()
+    return posts.map(post => ({ slug: post.slug }))
+  } catch {
+    return []
+  }
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = MOCK_POSTS.find(p => p.slug === slug)
-  if (!post) redirect('/blog')
+  const post = await getPostBySlug(slug)
+  if (!post) notFound()
 
-  const sortedPosts = [...MOCK_POSTS].sort((a, b) => new Date(a.publishDate).getTime() - new Date(b.publishDate).getTime())
+  const allPosts = await getAllPosts()
+
+  const sortedPosts = [...allPosts].sort((a, b) => {
+    const aDate = a.publishDate ? new Date(a.publishDate).getTime() : 0
+    const bDate = b.publishDate ? new Date(b.publishDate).getTime() : 0
+    return aDate - bDate
+  })
   const currentIdx = sortedPosts.findIndex(p => p.id === post.id)
   const nextPost = sortedPosts[currentIdx + 1] || sortedPosts[0]
 
-  const related = MOCK_POSTS
+  const related = allPosts
     .filter(p => p.category === post.category && p.id !== post.id)
     .slice(0, 3)
-
-  const paragraphs = post.content.split('\n').filter(Boolean)
 
   return (
     <main className="relative">
@@ -49,7 +61,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="post-meta flex items-center gap-2 mb-4 font-body text-label tracking-spaced">
             <span className="text-foreground-muted uppercase">{post.category}</span>
             <span className="text-foreground-dim">·</span>
-            <span className="text-foreground-muted">{formatDate(post.publishDate)}</span>
+            <span className="text-foreground-muted">{post.publishDate ? formatDate(post.publishDate) : ''}</span>
             <span className="text-foreground-dim">·</span>
             <span className="text-foreground-muted">{post.readTime} min read</span>
           </div>
@@ -74,11 +86,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         <ScrollReveal y={16} duration={0.5}>
           <div className="max-w-[600px]">
-            {paragraphs.map((p, i) => (
-              <p key={i} className="font-body text-foreground-muted font-light text-caption leading-[1.85] mb-6">
-                {p}
-              </p>
-            ))}
+            <BlogContent markdown={post.markdown} />
           </div>
         </ScrollReveal>
 

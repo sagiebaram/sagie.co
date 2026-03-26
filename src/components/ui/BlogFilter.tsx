@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { BLOG_CATEGORIES, BLOG_AUTHORS, MOCK_POSTS } from '@/constants/blog'
-import type { BlogPost } from '@/constants/blog'
+import { BLOG_CATEGORIES, BLOG_AUTHORS } from '@/constants/blog'
+import type { BlogPost } from '@/lib/blog'
 import Link from 'next/link'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 
@@ -10,7 +10,7 @@ function formatDate(dateStr: string) {
   return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
-export function BlogFilter() {
+export function BlogFilter({ posts }: { posts: BlogPost[] }) {
   const [activeCategory, setActiveCategory] = useState<string>('All')
   const [activeAuthor, setActiveAuthor] = useState<string>('All')
 
@@ -18,9 +18,9 @@ export function BlogFilter() {
   const featuredRef = useScrollReveal({ y: 24, duration: 0.6 })
   const gridRef = useScrollReveal({ selector: '.post-card', stagger: 0.07, y: 20, duration: 0.5 })
 
-  const featuredPost = MOCK_POSTS.find(p => p.featured)
+  const featuredPost = posts.find(p => p.featured)
 
-  const filtered = MOCK_POSTS.filter(p => {
+  const filtered = posts.filter(p => {
     if (p.featured) return false
     const catMatch = activeCategory === 'All' || p.category === activeCategory
     const authorMatch =
@@ -44,7 +44,7 @@ export function BlogFilter() {
                 <p className="font-body text-caption tracking-spaced mb-4">
                   <span className="text-foreground-muted uppercase">{featuredPost.category}</span>
                   <span className="text-foreground-dim mx-2">·</span>
-                  <span className="text-foreground-muted">{formatDate(featuredPost.publishDate)}</span>
+                  <span className="text-foreground-muted">{featuredPost.publishDate ? formatDate(featuredPost.publishDate) : ''}</span>
                   <span className="text-foreground-dim mx-2">·</span>
                   <span className="text-foreground-muted">{featuredPost.readTime} min read</span>
                 </p>
@@ -151,7 +151,7 @@ function PostCard({ post }: { post: BlogPost }) {
 
       <div className="mt-auto pt-3 border-t border-border-subtle">
         <p className="font-body text-foreground-dim text-label tracking-label mb-1">
-          {formatDate(post.publishDate)} · {post.readTime} min
+          {post.publishDate ? formatDate(post.publishDate) : ''} · {post.readTime} min
         </p>
         <p className="font-body text-foreground-muted text-label tracking-label mb-3">
           {post.author}

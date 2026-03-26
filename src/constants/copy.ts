@@ -15,7 +15,7 @@ export const METADATA = {
   ogDescription: 'A curated ecosystem for operators, founders & builders.',
 } as const
 
-export const NAV_LINKS = ['ECO', 'Solutions', 'Ventures', 'Events', 'Resources', 'Blog'] as const
+export const NAV_LINKS = ['Solutions', 'Events', 'Resources', 'Blog'] as const
 
 export const HERO = {
   headingLines: [

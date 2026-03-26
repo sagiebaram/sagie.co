@@ -1,6 +1,6 @@
 'use client'
 
-import type { Resource } from '@/constants/resources'
+import type { Resource } from '@/lib/resources'
 
 interface ResourceFilterProps {
   resources: Resource[]

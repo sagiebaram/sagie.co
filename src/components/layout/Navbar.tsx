@@ -5,9 +5,7 @@ import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
 
 const NAV_ROUTES: Record<string, string> = {
-  ECO: '/#eco',
   Solutions: '/solutions',
-  Ventures: '/#ventures',
   Events: '/events',
   Resources: '/resources',
   Blog: '/blog',
@@ -35,7 +33,7 @@ export function Navbar() {
     <nav
       className="fixed top-0 left-0 right-0 z-50 bg-background-nav backdrop-blur-[12px] border-b border-border-strong"
     >
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
+      <div className="max-w-[800px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
         <a href="/">
           <Image
             src="/sagie_logo_nav.png"

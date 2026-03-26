@@ -5,8 +5,19 @@ import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { BlogFilter } from '@/components/ui/BlogFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { getAllPosts, type BlogPost } from '@/lib/blog'
 
-export default function BlogPage() {
+export const revalidate = 3600
+
+export default async function BlogPage() {
+  let posts: BlogPost[] = []
+
+  try {
+    posts = await getAllPosts()
+  } catch (e) {
+    console.error('Failed to fetch blog posts:', e)
+  }
+
   return (
     <main className="relative">
       <CircuitBackground />
@@ -24,7 +35,7 @@ export default function BlogPage() {
           </p>
         </PageHeroAnimation>
 
-        <BlogFilter />
+        <BlogFilter posts={posts} />
       </Section>
 
       <Footer />
