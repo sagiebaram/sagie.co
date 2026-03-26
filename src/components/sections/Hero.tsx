@@ -13,7 +13,7 @@ export function Hero() {
 
           <div className="hidden md:flex items-center justify-center">
             <div className="relative w-full max-w-[420px]" style={{ aspectRatio: '1 / 0.6' }}>
-              <Logo width={420} height={252} className="object-contain" />
+              <Logo width={420} height={252} priority className="object-contain" />
             </div>
           </div>
 
@@ -21,7 +21,7 @@ export function Hero() {
             {/* Mobile-only logo */}
             <div className="flex md:hidden mb-8">
               <div className="relative w-full max-w-[260px]" style={{ aspectRatio: '1 / 0.6' }}>
-                <Logo width={260} height={156} className="hero-line object-contain" />
+                <Logo width={260} height={156} priority className="hero-line object-contain" />
               </div>
             </div>
             <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
