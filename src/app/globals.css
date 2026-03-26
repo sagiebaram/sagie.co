@@ -135,7 +135,12 @@
 .res-card,
 .post-card,
 .related-card,
-.type-divider {
+.type-divider,
+.founder-photo,
+.founder-name,
+.founder-title,
+.founder-body,
+.founder-link {
   opacity: 0;
 }
 
