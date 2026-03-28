@@ -122,29 +122,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FIX-01 | TBD | Pending |
-| FIX-02 | TBD | Pending |
-| FIX-03 | TBD | Pending |
-| FIX-04 | TBD | Pending |
-| EVT-01 | TBD | Pending |
-| EVT-02 | TBD | Pending |
-| EVT-03 | TBD | Pending |
-| EVT-04 | TBD | Pending |
-| EVT-05 | TBD | Pending |
-| FORM-01 | TBD | Pending |
-| FORM-02 | TBD | Pending |
-| FORM-03 | TBD | Pending |
-| POL-01 | TBD | Pending |
-| POL-02 | TBD | Pending |
-| POL-03 | TBD | Pending |
+| FIX-01 | Phase 5 | Pending |
+| FIX-02 | Phase 5 | Pending |
+| FIX-03 | Phase 5 | Pending |
+| FIX-04 | Phase 5 | Pending |
+| EVT-01 | Phase 6 | Pending |
+| EVT-02 | Phase 6 | Pending |
+| EVT-03 | Phase 6 | Pending |
+| EVT-04 | Phase 6 | Pending |
+| EVT-05 | Phase 6 | Pending |
+| FORM-01 | Phase 7 | Pending |
+| FORM-02 | Phase 7 | Pending |
+| FORM-03 | Phase 7 | Pending |
+| POL-01 | Phase 8 | Pending |
+| POL-02 | Phase 8 | Pending |
+| POL-03 | Phase 8 | Pending |
 
 **Coverage:**
 
 - v2.0 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15
+- Mapped to phases: 15
+- Unmapped: 0
 
 ---
 
 *Requirements defined: 2026-03-28*
-*Last updated: 2026-03-28 after initial definition*
+*Last updated: 2026-03-28 — traceability complete for v2.0 roadmap*

@@ -5,9 +5,9 @@ milestone_name: Polish & Interactivity
 status: planning
 stopped_at: null
 last_updated: "2026-03-28"
-last_activity: 2026-03-28 — Milestone v2.0 started
+last_activity: 2026-03-28 — Roadmap created for v2.0 milestone
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,14 +21,18 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Community members and prospective members can discover SAGIE's value, consume content, and apply to join — with every submission reliably reaching the team and every piece of content appearing promptly.
-**Current focus:** Defining requirements for v2.0
+**Current focus:** Phase 5 — Bug Fixes (first v2.0 phase)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-28 — Milestone v2.0 started
+Phase: 5 — Bug Fixes
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
+
+```
+v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0% (0/4 phases)
+```
 
 ## Performance Metrics
 
@@ -42,7 +46,10 @@ Last activity: 2026-03-28 — Milestone v2.0 started
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 5. Bug Fixes | TBD | - | - |
+| 6. Event Interactivity | TBD | - | - |
+| 7. Form Redesign | TBD | - | - |
+| 8. Admin Polish + 404 | TBD | - | - |
 
 **Recent Trend:**
 
@@ -81,17 +88,21 @@ Recent decisions affecting current work:
 - [Phase 03-features-globe]: revalidateTag(tag, 'max') two-arg form used — single-arg deprecated in Next.js 16
 - [Phase 03-features-globe]: Revalidation endpoint returns 401 when REVALIDATE_SECRET is undefined — safe default, endpoint disabled until configured
 - [Phase 03-features-globe]: Only /blog/[slug] added as dynamic sitemap routes — events/resources/solutions have no individual slug pages
+- [v2.0-roadmap]: nuqs adopted for filter URL params (FIX-01) — requirements confirmed shareability as user need
+- [v2.0-roadmap]: Phases 6 and 7 are independent (disjoint code areas) and can be executed in parallel
+- [v2.0-roadmap]: Only two new packages needed for v2.0 — react-hook-form@^7.72.0 and @hookform/resolvers@^5.2.2 (Phase 7 only); nuqs covers Phase 5 filter fix using existing patterns
 
 ### Pending Todos
 
-None yet.
+- Verify whether registrationLink, moreInfoLink, recapLink Notion properties already exist in the events database or need to be created (Phase 6 dependency)
+- Check CSP blob: allowance before shipping client-side ICS download in Phase 6 — if blocked, pivot to /api/events/[id]/ics route handler
 
 ### Blockers/Concerns
 
-None yet.
+None active.
 
 ## Session Continuity
 
 Last session: 2026-03-28
-Stopped at: null
+Stopped at: Roadmap complete — ready for plan-phase 5
 Resume file: None
