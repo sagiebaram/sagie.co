@@ -4,7 +4,7 @@ export const MembershipSchema = z.object({
   fullName: z.string().min(1, 'What should we call you?').max(100).trim(),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
   role: z.enum(['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner'], {
-    errorMap: () => ({ message: 'Please select your role' }),
+    error: 'Please select your role',
   }),
   company: z.string().max(100).trim().optional(),
   location: z.string().min(1, 'Where are you based?').max(100).trim(),
@@ -38,10 +38,10 @@ export const VenturesSchema = z.object({
   linkedIn: z.string().url('Please enter a valid LinkedIn URL').optional(),
   pitchDeckUrl: z.string().url('Please enter a valid URL').optional(),
   sector: z.enum(['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other'], {
-    errorMap: () => ({ message: 'Please select a sector' }),
+    error: 'Please select a sector',
   }).optional(),
   stage: z.enum(['Pre-Seed', 'Seed', 'Series A', 'Series B+', 'Revenue-Stage'], {
-    errorMap: () => ({ message: 'Please select your stage' }),
+    error: 'Please select your stage',
   }).optional(),
   raiseAmount: z.string().max(50).trim().optional(),
   oneLineDescription: z.string().min(1, 'Give us the elevator pitch').max(200).trim(),
@@ -52,7 +52,7 @@ export const SolutionsSchema = z.object({
   providerName: z.string().min(1, 'What should we call you?').max(100).trim(),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
   category: z.enum(['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People'], {
-    errorMap: () => ({ message: 'Please select a category' }),
+    error: 'Please select a category',
   }),
   bio: z.string().min(10, 'Tell us a bit more about yourself').max(1000).trim(),
   servicesOffered: z.string().min(10, 'Tell us more about what you offer').max(1000).trim(),
