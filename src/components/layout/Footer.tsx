@@ -4,7 +4,7 @@ import { FOOTER, SITE } from '@/constants/copy'
 
 export function Footer() {
   return (
-    <footer className="relative z-[1] overflow-hidden border-t border-border-strong">
+    <footer className="relative z-1 overflow-hidden border-t border-border-strong">
       <GridBackground />
       <div className="relative z-10 max-w-[880px] mx-auto px-8">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-16 py-16 border-b border-border-subtle">
