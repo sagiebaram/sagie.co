@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: planning
+stopped_at: Completed 01-stabilize 01-02-PLAN.md
+last_updated: "2026-03-28T13:25:32.235Z"
+last_activity: 2026-03-28 — Roadmap created
+progress:
+  total_phases: 4
+  completed_phases: 1
+  total_plans: 2
+  completed_plans: 2
+  percent: 100
+---
+
 # Project State
 
 ## Project Reference
@@ -14,7 +30,7 @@ Plan: 0 of TBD in current phase
 Status: Ready to plan
 Last activity: 2026-03-28 — Roadmap created
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -34,6 +50,8 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01-stabilize P01 | 15 | 2 tasks | 6 files |
+| Phase 01-stabilize P02 | 3 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -45,6 +63,12 @@ Recent decisions affecting current work:
 - Init: Fix bugs before adding features — broken forms are losing real user data now
 - Init: Vitest for unit testing — already referenced in CI, lightweight, Vite-native
 - Init: Keep Notion as sole backend — already deeply integrated, team uses it daily
+- [Phase 01-stabilize]: tier field given default('Explorer') — admin-assigned at review time, not user-facing
+- [Phase 01-stabilize]: referral field added to MembershipSchema and Notion write — previously collected by form but silently dropped
+- [Phase 01-stabilize]: NOTION_DEAL_PIPELINE_DB_ID and REVALIDATE_SECRET made optional — no routes consume them yet, will be needed in future phases
+- [Phase 01-stabilize]: Deleted constants/events.ts and constants/resources.ts entirely — zero external imports confirmed before deletion
+- [Phase 01-stabilize]: MOCK_CITIES and MOCK_ARCS kept in GlobeNetwork.tsx — local presentation data, not cross-file mock constants targeted by CLN-01
+- [Phase 01-stabilize]: cancelledRef pattern established for guarding setTimeout loops in React components on unmount
 
 ### Pending Todos
 
@@ -57,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28
-Stopped at: Roadmap created, STATE.md initialized. Ready to plan Phase 1.
+Last session: 2026-03-28T13:25:32.233Z
+Stopped at: Completed 01-stabilize 01-02-PLAN.md
 Resume file: None

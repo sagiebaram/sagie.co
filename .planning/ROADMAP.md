@@ -12,7 +12,7 @@ The site already works — forms submit, content renders, CI runs. This mileston
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Stabilize** - Fix data loss, crashes, and dead code before anything else ships
+- [x] **Phase 1: Stabilize** - Fix data loss, crashes, and dead code before anything else ships (completed 2026-03-28)
 - [ ] **Phase 2: Harden** - Lock down security and add error/loading boundaries site-wide
 - [ ] **Phase 3: Features + Globe** - Revalidation endpoint, email notifications, sitemap, and a live globe
 - [ ] **Phase 4: Testing** - Install Vitest, write unit and E2E tests, make CI fully green
@@ -29,7 +29,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. The app starts up without crashing when NOTION_DEAL_PIPELINE_DB_ID or REVALIDATE_SECRET are absent from the environment
   4. No MOCK_POSTS, MOCK_EVENTS, MOCK_RESOURCES, or MOCK_PROVIDERS constants remain in the codebase
   5. @typeform/embed-react and dotenv are absent from package.json and node_modules
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 01-01-PLAN.md — Fix form field mismatches (BUG-01) and optional env vars (BUG-03)
@@ -77,7 +77,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Stabilize | 0/2 | Planning complete | - |
+| 1. Stabilize | 2/2 | Complete   | 2026-03-28 |
 | 2. Harden | 0/TBD | Not started | - |
 | 3. Features + Globe | 0/TBD | Not started | - |
 | 4. Testing | 0/TBD | Not started | - |
