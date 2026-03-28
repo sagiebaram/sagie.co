@@ -2,8 +2,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
-import { TypeformEmbed } from '@/components/ui/TypeformEmbed'
-import { FORM_IDS } from '@/constants/forms'
+import { MembershipForm } from '@/components/forms/MembershipForm'
 
 export default function ApplyPage() {
   return (
@@ -24,7 +23,7 @@ export default function ApplyPage() {
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
             Every application is reviewed. The community is curated by design.
           </p>
-          <TypeformEmbed formId={FORM_IDS.membership} />
+          <MembershipForm />
         </div>
       </section>
 

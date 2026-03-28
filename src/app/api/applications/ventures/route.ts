@@ -5,21 +5,18 @@ const DEAL_PIPELINE_DB_ID = process.env.NOTION_DEAL_PIPELINE_DB_ID ?? ''
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const answers = body.form_response?.answers ?? []
+    const { fullName, email, companyName, building, stage, whySagie, website } = await request.json()
 
-    const name = answers[0]?.text ?? answers[0]?.value ?? ''
-    const email = answers[1]?.email ?? answers[1]?.text ?? answers[1]?.value ?? ''
-    const company = answers[2]?.text ?? answers[2]?.value ?? ''
-    const description = answers[3]?.text ?? answers[3]?.value ?? ''
+    const notes = `${building}\n\nWhy SAGIE Ventures: ${whySagie}`
 
     await notion.pages.create({
       parent: { database_id: DEAL_PIPELINE_DB_ID },
       properties: {
-        Name: { title: [{ text: { content: company || name } }] },
+        Name: { title: [{ text: { content: companyName } }] },
         Email: { email },
-        'Contact Name': { rich_text: [{ text: { content: name } }] },
-        Description: { rich_text: [{ text: { content: description } }] },
+        'Contact Name': { rich_text: [{ text: { content: fullName } }] },
+        Stage: { select: { name: stage } },
+        Description: { rich_text: [{ text: { content: notes } }] },
         Source: { select: { name: 'Website Application' } },
       },
     })

@@ -5,21 +5,17 @@ const SOLUTIONS_DB_ID = 'f13af2979d1d455d960fdd962721401d'
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const answers = body.form_response?.answers ?? []
-
-    const name = answers[0]?.text ?? answers[0]?.value ?? ''
-    const email = answers[1]?.email ?? answers[1]?.text ?? answers[1]?.value ?? ''
-    const category = answers[2]?.text ?? answers[2]?.choice?.label ?? answers[2]?.value ?? ''
-    const bio = answers[3]?.text ?? answers[3]?.value ?? ''
+    const { fullName, email, category, bio, servicesOffered, website, memberStatus } = await request.json()
 
     await notion.pages.create({
       parent: { database_id: SOLUTIONS_DB_ID },
       properties: {
-        'Provider Name': { title: [{ text: { content: name } }] },
+        'Provider Name': { title: [{ text: { content: fullName } }] },
         Email: { email },
         Category: { select: { name: category || 'General' } },
         Bio: { rich_text: [{ text: { content: bio } }] },
+        'Services Offered': { rich_text: [{ text: { content: servicesOffered } }] },
+        ...(website ? { Website: { url: website } } : {}),
         Status: { select: { name: 'Pending Vetting' } },
       },
     })
