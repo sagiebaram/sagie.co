@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 05-bug-fixes
 source: 05-01-SUMMARY.md, 05-02-SUMMARY.md, 05-03-SUMMARY.md
 started: 2026-03-28T22:00:00Z
@@ -93,27 +93,38 @@ skipped: 8
   reason: "User reported: URL updates to /blog?category=Personal but it's the same behaviour (filter bug still present). Also node deprecation warning about url.parse()."
   severity: major
   test: 1
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "globals.css sets opacity:0 on .post-card/.dir-card classes. GSAP useLayoutEffect doesn't re-run on filter change (filterKey not in deps). filterKey useEffect fades container but not children — new cards stay invisible."
+  artifacts:
+    - path: "src/app/globals.css"
+      issue: "opacity:0 on card classes conflicts with filter re-renders"
+    - path: "src/hooks/useScrollReveal.ts"
+      issue: "filterKey not in useLayoutEffect deps; filterKey useEffect targets container not children"
+  missing:
+    - "filterKey useEffect must target child elements (using selector + gsap.utils.toArray) to set inline opacity:1"
+  debug_session: ".planning/debug/filter-blank-content.md"
 
 - truth: "Select category AND author on /blog. Both URL params appear. Changing one does not reset the other."
   status: failed
   reason: "User reported: It shows both params, but the behavior is still the same."
   severity: major
   test: 2
-  root_cause: ""
+  root_cause: "Same root cause as test 1 — GSAP/CSS opacity mismatch on filter change"
   artifacts: []
   missing: []
-  debug_session: ""
+  debug_session: ".planning/debug/filter-blank-content.md"
 
 - truth: "Form at /apply submits successfully and shows success or error feedback."
   status: failed
-  reason: "User reported: Form won't submit at all — no indication of what's wrong. No console errors. Pre-existing Zod type error in schemas.ts may be causing API route to fail silently."
+  reason: "User reported: Form won't submit at all — no indication of what's wrong. No console errors."
   severity: blocker
   test: 11
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "linkedIn field sends empty string '' which fails Zod .url().optional() (optional accepts undefined, not ''). Server returns 422 but client shows generic 11px error message that's nearly invisible on dark background."
+  artifacts:
+    - path: "src/lib/schemas.ts"
+      issue: "linkedIn: z.string().url().optional() rejects empty string"
+    - path: "src/components/forms/MembershipForm.tsx"
+      issue: "!res.ok branch shows generic error, ignores fieldErrors from 422 body"
+  missing:
+    - "Transform empty strings to undefined before Zod parsing, or add .or(z.literal('')) to linkedIn"
+    - "Parse 422 response body and map fieldErrors to per-field error state"
+  debug_session: ".planning/debug/apply-form-silent-fail.md"
