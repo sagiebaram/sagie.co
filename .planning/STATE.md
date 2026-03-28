@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-harden-03-PLAN.md
-last_updated: "2026-03-28T14:29:04.488Z"
+stopped_at: "Checkpoint 04-03 Task 3: awaiting human verification of E2E test HTML report"
+last_updated: "2026-03-28T14:35:18.691Z"
 last_activity: 2026-03-28 — Roadmap created
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 8
-  completed_plans: 5
+  completed_plans: 7
   percent: 100
 ---
 
@@ -55,6 +55,8 @@ Progress: [██████████] 100%
 | Phase 02-harden P01 | 2 | 2 tasks | 6 files |
 | Phase 02-harden P02 | 3 | 2 tasks | 12 files |
 | Phase 02-harden P03 | 2 | 2 tasks | 8 files |
+| Phase 04-testing P03 | 2 | 2 tasks | 2 files |
+| Phase 04-testing P01 | 8 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -79,6 +81,10 @@ Recent decisions affecting current work:
 - [Phase 02-harden]: ErrorPage shared component with optional onRetry — not-found.tsx stays as server component
 - [Phase 02-harden]: All loading.tsx files are pure server components (no use client) — shimmer presentation needs no state or hooks
 - [Phase 02-harden]: Each skeleton mirrors actual page layout: blog uses 3-col card grid, events uses accordion rows with type dividers, forms mirror exact field grid layout
+- [Phase 04-testing]: vitest include pattern restricted to src/**/*.test.ts to prevent Playwright specs being discovered by Vitest
+- [Phase 04-testing]: Rate limiter tests use unique IP per describe block to isolate module-level rateStore state across tests
+- [Phase 04-testing]: Forms mocked via page.route() POST interception — tests form UI flow without Notion dependency
+- [Phase 04-testing]: Content page assertions use regex text matching against static heading copy — tolerates any Notion data state
 
 ### Pending Todos
 
@@ -91,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T14:24:41.030Z
-Stopped at: Completed 02-harden-03-PLAN.md
+Last session: 2026-03-28T14:35:18.689Z
+Stopped at: Checkpoint 04-03 Task 3: awaiting human verification of E2E test HTML report
 Resume file: None
