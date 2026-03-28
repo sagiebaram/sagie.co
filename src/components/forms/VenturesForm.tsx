@@ -1,26 +1,42 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { VenturesSchema } from '@/lib/schemas'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
+type FormData = z.input<typeof VenturesSchema>
+
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <div style={{
+      borderTop: '0.5px solid var(--border-default)',
+      paddingTop: '16px',
+      marginTop: '4px',
+    }}>
+      <span style={{
+        fontSize: '9px',
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+        color: 'var(--text-muted)',
+        fontFamily: 'var(--font-body)',
+      }}>
+        {label}
+      </span>
+    </div>
+  )
+}
+
 export function VenturesForm() {
-  const [fields, setFields] = useState({
-    fullName: '',
-    email: '',
-    companyName: '',
-    building: '',
-    stage: '',
-    whySagie: '',
-    website: '',
-  })
   const trapRef = useRef('')
   const loadTime = useRef(Date.now())
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [rateLimitUntil, setRateLimitUntil] = useState<number | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!rateLimitUntil) return
@@ -30,32 +46,26 @@ export function VenturesForm() {
     return () => clearTimeout(timer)
   }, [rateLimitUntil])
 
-  const set = (key: string) => (value: string) =>
-    setFields(prev => ({ ...prev, [key]: value }))
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(VenturesSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
+  })
 
-  const validate = () => {
-    const e: Record<string, string> = {}
-    if (!fields.fullName) e.fullName = 'Required'
-    if (!fields.email) e.email = 'Required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email'
-    if (!fields.companyName) e.companyName = 'Required'
-    if (!fields.building) e.building = 'Required'
-    if (!fields.stage) e.stage = 'Required'
-    if (!fields.whySagie) e.whySagie = 'Required'
-    if (fields.website && !/^https?:\/\/.+/.test(fields.website)) e.website = 'Enter a full URL (https://...)'
-    return e
-  }
-
-  const handleSubmit = async () => {
-    const e = validate()
-    if (Object.keys(e).length) { setErrors(e); return }
-    setLoading(true)
+  const onSubmit = async (data: FormData) => {
+    if (rateLimitUntil !== null && Date.now() < rateLimitUntil) return
     setSubmitWarning(null)
+    setSubmitError(null)
     try {
       const res = await fetch('/api/applications/ventures', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
+        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime.current }),
       })
 
       if (res.status === 429) {
@@ -68,15 +78,13 @@ export function VenturesForm() {
       }
 
       if (!res.ok) {
-        setErrors({ submit: 'Something went wrong. Please try again.' })
+        setSubmitError('Something went wrong. Please try again.')
         return
       }
 
       setSuccess(true)
     } catch {
-      setErrors({ submit: 'Something went wrong. Please try again.' })
-    } finally {
-      setLoading(false)
+      setSubmitError('Something went wrong. Please try again.')
     }
   }
 
@@ -90,40 +98,141 @@ export function VenturesForm() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+      <SectionHeader label="Company" />
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Full Name" name="fullName" placeholder="Your full name" required value={fields.fullName} onChange={set('fullName')} error={errors.fullName} />
-        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required value={fields.email} onChange={set('email')} error={errors.email} />
+        <FormField
+          label="Company Name"
+          name="companyName"
+          placeholder="Your company or project name"
+          required
+          registration={register('companyName')}
+          error={errors.companyName?.message}
+        />
+        <FormField
+          label="Founder Name"
+          name="founderName"
+          placeholder="Your full name"
+          required
+          registration={register('founderName')}
+          error={errors.founderName?.message}
+        />
       </div>
-      <FormField label="Company Name" name="companyName" placeholder="Your company or project name" required value={fields.companyName} onChange={set('companyName')} error={errors.companyName} />
-      <FormField label="What are you building?" name="building" type="textarea" placeholder="Tell us about your product or service." required value={fields.building} onChange={set('building')} error={errors.building} />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <FormField
+          label="Email"
+          name="email"
+          type="email"
+          placeholder="your@email.com"
+          required
+          registration={register('email')}
+          error={errors.email?.message}
+        />
+        <FormField
+          label="Website"
+          name="website"
+          type="url"
+          placeholder="https://yoursite.com"
+          registration={register('website')}
+          error={errors.website?.message}
+        />
+      </div>
+
       <FormField
-        label="Stage"
-        name="stage"
-        type="select"
-        options={['Idea', 'Pre-seed', 'Seed', 'Series A', 'Series B+']}
-        required
-        value={fields.stage}
-        onChange={set('stage')}
-        error={errors.stage}
+        label="LinkedIn URL"
+        name="linkedIn"
+        type="url"
+        placeholder="https://linkedin.com/in/yourname"
+        registration={register('linkedIn')}
+        error={errors.linkedIn?.message}
       />
-      <FormField label="Why SAGIE Ventures?" name="whySagie" type="textarea" placeholder="What kind of alignment are you looking for?" required value={fields.whySagie} onChange={set('whySagie')} error={errors.whySagie} />
-      <FormField label="Website / Deck URL" name="website" type="url" placeholder="yoursite.com or deck link" value={fields.website} onChange={set('website')} />
-      <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
-      <input type="hidden" name="_t" value={loadTime.current.toString()} />
+
+      <SectionHeader label="Details" />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <FormField
+          label="Sector"
+          name="sector"
+          type="select"
+          options={['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other']}
+          registration={register('sector')}
+          error={errors.sector?.message}
+        />
+        <FormField
+          label="Stage"
+          name="stage"
+          type="select"
+          options={['Pre-Seed', 'Seed', 'Series A', 'Series B+', 'Revenue-Stage']}
+          registration={register('stage')}
+          error={errors.stage?.message}
+        />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <FormField
+          label="Raise Amount"
+          name="raiseAmount"
+          placeholder="e.g. $500K, $2M"
+          registration={register('raiseAmount')}
+          error={errors.raiseAmount?.message}
+        />
+        <FormField
+          label="Pitch Deck URL"
+          name="pitchDeckUrl"
+          type="url"
+          placeholder="https://deck.link/yourpitch"
+          registration={register('pitchDeckUrl')}
+          error={errors.pitchDeckUrl?.message}
+        />
+      </div>
+
+      <FormField
+        label="One-line description"
+        name="oneLineDescription"
+        placeholder="Give us the elevator pitch — one sentence."
+        required
+        registration={register('oneLineDescription')}
+        error={errors.oneLineDescription?.message}
+      />
+
+      <SectionHeader label="About SAGIE" />
+
+      <FormField
+        label="Why SAGIE Ventures?"
+        name="whySAGIE"
+        type="textarea"
+        placeholder="What kind of alignment are you looking for?"
+        registration={register('whySAGIE')}
+        error={errors.whySAGIE?.message}
+      />
+
+      <input
+        type="text"
+        name="_trap"
+        autoComplete="off"
+        tabIndex={-1}
+        aria-hidden="true"
+        style={{ display: 'none' }}
+        onChange={e => { trapRef.current = e.target.value }}
+      />
+
       {submitWarning && (
         <span style={{ fontSize: '11px', color: '#B8860B', lineHeight: '1.5' }}>
           {submitWarning}
         </span>
       )}
-      {errors.submit && (
-        <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
+      {submitError && (
+        <span style={{ fontSize: '11px', color: '#c0392b' }}>{submitError}</span>
       )}
+
       <button
-        onClick={handleSubmit}
-        disabled={loading || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
+        type="submit"
+        disabled={isSubmitting || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
         style={{
-          background: loading ? 'var(--border-default)' : 'var(--silver)',
+          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',
           fontFamily: 'var(--font-display)',
           fontSize: '14px',
@@ -131,12 +240,12 @@ export function VenturesForm() {
           textTransform: 'uppercase',
           padding: '14px 32px',
           border: 'none',
-          cursor: loading ? 'not-allowed' : 'pointer',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
           alignSelf: 'flex-start',
         }}
       >
-        {loading ? 'Submitting...' : 'Submit Application →'}
+        {isSubmitting ? 'Submitting...' : 'Submit Application →'}
       </button>
-    </div>
+    </form>
   )
 }
