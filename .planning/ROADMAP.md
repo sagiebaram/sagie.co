@@ -154,7 +154,12 @@ Plans:
 2. Fixed-choice fields (e.g. country, membership tier, chapter role) are rendered as dropdown selects or checkbox groups — no free-text inputs for constrained choices
 3. A form submission that passes client-side validation results in every field appearing correctly in the corresponding Notion database entry — no silent field loss
 
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Install react-hook-form, update FormField (registration prop + checkbox-group), add friendly error messages to schemas, role enum
+- [ ] 07-02-PLAN.md — Migrate MembershipForm and VenturesForm (complex forms with new fields, dropdowns, checkbox group, sections)
+- [ ] 07-03-PLAN.md — Migrate ChapterForm, SolutionsForm, SubmitPostForm, SuggestEventForm, SubmitResourceForm + update E2E tests
 
 ### Phase 8: Admin Polish + 404
 
@@ -184,5 +189,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
 | 5. Bug Fixes | 3/3 | Complete   | 2026-03-28 |
 | 6. Event Interactivity | 0/2 | Not started | - |
-| 7. Form Redesign | 0/? | Not started | - |
+| 7. Form Redesign | 0/3 | Not started | - |
 | 8. Admin Polish + 404 | 0/? | Not started | - |
