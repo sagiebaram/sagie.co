@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-03-28T21:10:37.919Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-28T21:16:27.528Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -56,6 +56,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 - Trend: —
 | Phase 05-bug-fixes P01 | 5 | 2 tasks | 4 files |
 | Phase 05-bug-fixes P03 | 4 | 2 tasks | 7 files |
+| Phase 05-bug-fixes P02 | 15 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,9 @@ Recent decisions affecting current work:
 - [Phase 05-bug-fixes]: filterKey useEffect uses isFirstRender ref to skip mount — GSAP useLayoutEffect owns initial animation
 - [Phase 05-bug-fixes]: submitWarning is separate state from errors object — amber warning persists through field validation cycles
 - [Phase 05-bug-fixes]: SubmitResourceForm uses Math.max(0,...) in useEffect and rateLimitUntil !== null for disabled prop — avoids react-hooks/set-state-in-effect and react-hooks/purity lint errors in ui/ directory
+- [Phase Phase 05-bug-fixes]: EventFilter is a controlled component consistent with ResourceFilter — parent (EventsPageClient) owns nuqs location state
+- [Phase Phase 05-bug-fixes]: EventsPageClient location filter matches against event.chapter field (graceful degradation — shows all events when chapter is null)
+- [Phase Phase 05-bug-fixes]: filterKey concatenation for BlogFilter: category|author — any change triggers fade
 
 ### Pending Todos
 
@@ -109,6 +113,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T21:10:37.917Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-03-28T21:16:27.526Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None

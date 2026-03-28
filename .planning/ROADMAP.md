@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Harden** - Lock down security and add error/loading boundaries site-wide (completed 2026-03-28)
 - [x] **Phase 3: Features + Globe** - Revalidation endpoint, email notifications, sitemap, and a live globe (completed 2026-03-28)
 - [x] **Phase 4: Testing** - Install Vitest, write unit and E2E tests, make CI fully green (completed 2026-03-28)
-- [ ] **Phase 5: Bug Fixes** - Fix filter state, back/forward nav, GSAP re-trigger, and rate limit feedback
+- [x] **Phase 5: Bug Fixes** - Fix filter state, back/forward nav, GSAP re-trigger, and rate limit feedback (completed 2026-03-28)
 - [ ] **Phase 6: Event Interactivity** - Wire event action buttons and build Add to Calendar modal
 - [ ] **Phase 7: Form Redesign** - Schema audit, react-hook-form adoption, inline validation, dropdowns/checkboxes
 - [ ] **Phase 8: Admin Polish + 404** - Revalidation UI feedback, key rotation fix, custom 404 illustration
@@ -117,7 +117,7 @@ Plans:
 3. User who submits a form and triggers the rate limit sees a clear, readable error message on the form rather than a silent failure
 4. Filter selections appear in the URL so the filtered view can be bookmarked or shared
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 05-01-PLAN.md — Install nuqs, NuqsAdapter, bfcache fix in GSAPCleanup, filterKey in useScrollReveal
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 2. Harden | 3/3 | Complete | 2026-03-28 |
 | 3. Features + Globe | 3/3 | Complete | 2026-03-28 |
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
-| 5. Bug Fixes | 2/3 | In Progress|  |
+| 5. Bug Fixes | 3/3 | Complete   | 2026-03-28 |
 | 6. Event Interactivity | 0/? | Not started | - |
 | 7. Form Redesign | 0/? | Not started | - |
 | 8. Admin Polish + 404 | 0/? | Not started | - |
