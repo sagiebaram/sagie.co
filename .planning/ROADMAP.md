@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Stabilize** - Fix data loss, crashes, and dead code before anything else ships (completed 2026-03-28)
 - [x] **Phase 2: Harden** - Lock down security and add error/loading boundaries site-wide (completed 2026-03-28)
-- [ ] **Phase 3: Features + Globe** - Revalidation endpoint, email notifications, sitemap, and a live globe
+- [x] **Phase 3: Features + Globe** - Revalidation endpoint, email notifications, sitemap, and a live globe (completed 2026-03-28)
 - [x] **Phase 4: Testing** - Install Vitest, write unit and E2E tests, make CI fully green (completed 2026-03-28)
 
 ## Phase Details
@@ -94,5 +94,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Stabilize | 2/2 | Complete   | 2026-03-28 |
 | 2. Harden | 3/3 | Complete   | 2026-03-28 |
-| 3. Features + Globe | 0/3 | Not started | - |
+| 3. Features + Globe | 3/3 | Complete | 2026-03-28 |
 | 4. Testing | 3/3 | Complete   | 2026-03-28 |

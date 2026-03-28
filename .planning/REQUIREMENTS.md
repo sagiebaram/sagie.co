@@ -29,15 +29,15 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Features
 
 - [x] **FEAT-01**: /api/revalidate endpoint accepts secret and invalidates cache tags on demand
-- [ ] **FEAT-02**: Email confirmation sent to applicant after form submission
-- [ ] **FEAT-03**: Email alert sent to admin after form submission
+- [x] **FEAT-02**: Email confirmation sent to applicant after form submission
+- [x] **FEAT-03**: Email alert sent to admin after form submission
 - [x] **FEAT-04**: Sitemap includes all routes and dynamic blog/content pages
 - [x] **FEAT-05**: error.tsx and loading.tsx boundaries exist for all route segments
 
 ### Globe
 
-- [ ] **GLOBE-01**: GeoJSON served from /public/ instead of fetched from GitHub at runtime
-- [ ] **GLOBE-02**: Globe cities and member counts sourced from Notion data
+- [x] **GLOBE-01**: GeoJSON served from /public/ instead of fetched from GitHub at runtime
+- [x] **GLOBE-02**: Globe cities and member counts sourced from Notion data
 
 ### Testing
 
@@ -91,12 +91,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-03 | Phase 2 | Complete |
 | SEC-04 | Phase 2 | Complete |
 | FEAT-01 | Phase 3 | Complete |
-| FEAT-02 | Phase 3 | Pending |
-| FEAT-03 | Phase 3 | Pending |
+| FEAT-02 | Phase 3 | Complete |
+| FEAT-03 | Phase 3 | Complete |
 | FEAT-04 | Phase 3 | Complete |
 | FEAT-05 | Phase 2 | Complete |
-| GLOBE-01 | Phase 3 | Pending |
-| GLOBE-02 | Phase 3 | Pending |
+| GLOBE-01 | Phase 3 | Complete |
+| GLOBE-02 | Phase 3 | Complete |
 | TEST-01 | Phase 4 | Complete |
 | TEST-02 | Phase 4 | Complete |
 | TEST-03 | Phase 4 | Complete |
