@@ -62,7 +62,12 @@ Plans:
   3. The admin team receives an alert email for every new form submission
   4. A sitemap.xml is reachable at /sitemap.xml and includes all static routes plus dynamic blog, events, solutions, and resources URLs
   5. The globe on the homepage loads GeoJSON from /public/ and plots city markers sourced from Notion membership data
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Email system: Resend + React Email templates, sendEmails helper, hook into all 7 API routes
+- [ ] 03-02-PLAN.md — Globe data pipeline: bundle GeoJSON, Notion members/chapters libs, refactor GlobeNetwork to real data
+- [ ] 03-03-PLAN.md — Revalidation endpoint + admin page, async sitemap with all routes
 
 ### Phase 4: Testing
 **Goal**: The CI pipeline is fully green, core data-fetching and validation logic is covered by unit tests, and critical user flows are covered by E2E tests
@@ -83,11 +88,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Stabilize | 2/2 | Complete   | 2026-03-28 |
 | 2. Harden | 3/3 | Complete   | 2026-03-28 |
-| 3. Features + Globe | 0/TBD | Not started | - |
+| 3. Features + Globe | 0/3 | Not started | - |
 | 4. Testing | 2/3 | In Progress|  |
