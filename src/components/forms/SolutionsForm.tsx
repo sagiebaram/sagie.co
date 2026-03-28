@@ -27,9 +27,11 @@ export function SolutionsForm() {
     const e: Record<string, string> = {}
     if (!fields.fullName) e.fullName = 'Required'
     if (!fields.email) e.email = 'Required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email'
     if (!fields.category) e.category = 'Required'
     if (!fields.bio) e.bio = 'Required'
     if (!fields.servicesOffered) e.servicesOffered = 'Required'
+    if (fields.website && !/^https?:\/\/.+/.test(fields.website)) e.website = 'Enter a full URL (https://...)'
     return e
   }
 

@@ -27,10 +27,12 @@ export function ChapterForm() {
     const e: Record<string, string> = {}
     if (!fields.fullName) e.fullName = 'Required'
     if (!fields.email) e.email = 'Required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email'
     if (!fields.city) e.city = 'Required'
     if (!fields.whyLead) e.whyLead = 'Required'
     if (!fields.background) e.background = 'Required'
     if (!fields.chapterVision) e.chapterVision = 'Required'
+    if (fields.linkedIn && !/^https?:\/\/.+/.test(fields.linkedIn)) e.linkedIn = 'Enter a full URL (https://...)'
     return e
   }
 

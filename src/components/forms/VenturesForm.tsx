@@ -27,10 +27,12 @@ export function VenturesForm() {
     const e: Record<string, string> = {}
     if (!fields.fullName) e.fullName = 'Required'
     if (!fields.email) e.email = 'Required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email'
     if (!fields.companyName) e.companyName = 'Required'
     if (!fields.building) e.building = 'Required'
     if (!fields.stage) e.stage = 'Required'
     if (!fields.whySagie) e.whySagie = 'Required'
+    if (fields.website && !/^https?:\/\/.+/.test(fields.website)) e.website = 'Enter a full URL (https://...)'
     return e
   }
 
