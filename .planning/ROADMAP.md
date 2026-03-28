@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Features + Globe** - Revalidation endpoint, email notifications, sitemap, and a live globe (completed 2026-03-28)
 - [x] **Phase 4: Testing** - Install Vitest, write unit and E2E tests, make CI fully green (completed 2026-03-28)
 - [ ] **Phase 5: Bug Fixes** - Fix filter state, back/forward nav, GSAP re-trigger, and rate limit feedback
-- [ ] **Phase 6: Event Interactivity** - Wire event action buttons and build Add to Calendar modal
+- [x] **Phase 6: Event Interactivity** - Wire event action buttons and build Add to Calendar modal (completed 2026-03-28)
 - [ ] **Phase 7: Form Redesign** - Schema audit, react-hook-form adoption, inline validation, dropdowns/checkboxes
 - [x] **Phase 8: Admin Polish + 404** - Revalidation UI feedback, key rotation fix, custom 404 illustration (completed 2026-03-28)
 
@@ -139,7 +139,7 @@ Plans:
 4. User clicks Read Recap on a past event and lands on the recap content
 5. Action buttons only appear when the corresponding Notion field is populated — no dead or broken buttons appear for events missing those fields
 
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 06-01-PLAN.md — Extend SAGIEEvent data model with URL fields, calendar URL builders, ICS content generator, API route
@@ -194,6 +194,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 3. Features + Globe | 3/3 | Complete | 2026-03-28 |
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
 | 5. Bug Fixes | 4/5 | In Progress|  |
-| 6. Event Interactivity | 1/2 | In Progress| |
+| 6. Event Interactivity | 2/2 | Complete   | 2026-03-28 |
 | 7. Form Redesign | 1/3 | In Progress| |
 | 8. Admin Polish + 404 | 2/2 | Complete   | 2026-03-28 |
