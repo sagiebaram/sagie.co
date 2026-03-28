@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Harden** - Lock down security and add error/loading boundaries site-wide (completed 2026-03-28)
 - [x] **Phase 3: Features + Globe** - Revalidation endpoint, email notifications, sitemap, and a live globe (completed 2026-03-28)
 - [x] **Phase 4: Testing** - Install Vitest, write unit and E2E tests, make CI fully green (completed 2026-03-28)
-- [x] **Phase 5: Bug Fixes** - Fix filter state, back/forward nav, GSAP re-trigger, and rate limit feedback (completed 2026-03-28)
+- [ ] **Phase 5: Bug Fixes** - Fix filter state, back/forward nav, GSAP re-trigger, and rate limit feedback
 - [ ] **Phase 6: Event Interactivity** - Wire event action buttons and build Add to Calendar modal
 - [ ] **Phase 7: Form Redesign** - Schema audit, react-hook-form adoption, inline validation, dropdowns/checkboxes
 - [ ] **Phase 8: Admin Polish + 404** - Revalidation UI feedback, key rotation fix, custom 404 illustration
@@ -117,12 +117,14 @@ Plans:
 3. User who submits a form and triggers the rate limit sees a clear, readable error message on the form rather than a silent failure
 4. Filter selections appear in the URL so the filtered view can be bookmarked or shared
 
-**Plans:** 3/3 plans complete
+**Plans:** 5 plans (3 complete + 2 gap closure)
 
 Plans:
-- [ ] 05-01-PLAN.md — Install nuqs, NuqsAdapter, bfcache fix in GSAPCleanup, filterKey in useScrollReveal
-- [ ] 05-02-PLAN.md — Migrate all 4 filter components from useState to nuqs with URL params and fade animation
-- [ ] 05-03-PLAN.md — Fix 429 rate limit feedback in all 7 form components
+- [x] 05-01-PLAN.md — Install nuqs, NuqsAdapter, bfcache fix in GSAPCleanup, filterKey in useScrollReveal
+- [x] 05-02-PLAN.md — Migrate all 4 filter components from useState to nuqs with URL params and fade animation
+- [x] 05-03-PLAN.md — Fix 429 rate limit feedback in all 7 form components
+- [ ] 05-04-PLAN.md — (gap closure) Fix filterKey useEffect to target child card elements with inline opacity
+- [ ] 05-05-PLAN.md — (gap closure) Transform empty URL strings in schemas, add 422 error parsing to forms
 
 ### Phase 6: Event Interactivity
 
@@ -191,7 +193,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 2. Harden | 3/3 | Complete | 2026-03-28 |
 | 3. Features + Globe | 3/3 | Complete | 2026-03-28 |
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
-| 5. Bug Fixes | 3/3 | Complete   | 2026-03-28 |
-| 6. Event Interactivity | 1/2 | In Progress|  |
-| 7. Form Redesign | 1/3 | In Progress|  |
-| 8. Admin Polish + 404 | 1/2 | In Progress|  |
+| 5. Bug Fixes | 3/5 | Gap Closure | |
+| 6. Event Interactivity | 1/2 | In Progress| |
+| 7. Form Redesign | 1/3 | In Progress| |
+| 8. Admin Polish + 404 | 1/2 | In Progress| |
