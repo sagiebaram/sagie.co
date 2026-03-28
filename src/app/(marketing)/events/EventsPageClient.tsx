@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { AnimatePresence, motion } from 'motion/react'
 import { useQueryState, parseAsString } from 'nuqs'
 import { Navbar } from '@/components/layout/Navbar'
@@ -12,6 +13,7 @@ import { EventFilter } from '@/components/ui/EventFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/lib/events'
+import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/events'
 
 const STATUS_COLORS: Record<string, string> = {
   Confirmed: 'var(--silver)',
@@ -39,6 +41,100 @@ function TypeDivider({ label }: { label: string }) {
         {label}
       </span>
       <div className="flex-1 h-px bg-border-default" />
+    </div>
+  )
+}
+
+const ACTION_LINK_CLASS =
+  'font-body uppercase text-label tracking-label text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 border-b border-border-subtle pb-px'
+
+function ExternalActionLink({ label, href }: { label: string; href: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={ACTION_LINK_CLASS}
+    >
+      {label} -&gt;{' '}
+      <svg
+        viewBox="0 0 10 10"
+        className="inline-block w-2.5 h-2.5 ml-1"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path d="M2 8L8 2M3 2h5v5" stroke="currentColor" strokeWidth="1.5" />
+      </svg>
+    </a>
+  )
+}
+
+function InternalActionLink({ label, href }: { label: string; href: string }) {
+  return (
+    <Link href={href} className={ACTION_LINK_CLASS}>
+      {label} -&gt;
+    </Link>
+  )
+}
+
+function AddToCalendarDropdown({ event }: { event: SAGIEEvent }) {
+  const [open, setOpen] = useState(false)
+  const googleUrl = buildGoogleCalendarUrl(event)
+  const outlookUrl = buildOutlookCalendarUrl(event)
+  const icsUrl = `/api/events/${event.id}/ics`
+
+  return (
+    <div>
+      <button
+        onClick={() => setOpen((prev) => !prev)}
+        className={ACTION_LINK_CLASS}
+      >
+        + Add to Calendar
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col">
+              <a
+                href={googleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body text-label text-foreground-muted hover:text-silver py-1.5 pl-4 block"
+              >
+                Google Calendar
+              </a>
+              <a
+                href={outlookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body text-label text-foreground-muted hover:text-silver py-1.5 pl-4 block"
+              >
+                Outlook
+              </a>
+              <a
+                href={icsUrl}
+                download
+                className="font-body text-label text-foreground-muted hover:text-silver py-1.5 pl-4 block"
+              >
+                Apple Calendar (.ics)
+              </a>
+              <a
+                href={icsUrl}
+                download
+                className="font-body text-label text-foreground-muted hover:text-silver py-1.5 pl-4 block"
+              >
+                Download .ics
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
@@ -98,12 +194,22 @@ function EventAccordion({
                     <div className="grid gap-6" style={{ gridTemplateColumns: '200px 1fr' }}>
                       {/* Image slot */}
                       <div
-                        className="hidden md:flex items-start justify-center rounded bg-background-card border border-border-subtle"
+                        className="hidden md:flex items-start justify-center rounded overflow-hidden bg-background-card border border-border-subtle"
                         style={{ aspectRatio: '4/3' }}
                       >
-                        <span className="font-body text-foreground-ghost text-label mt-auto mb-auto">
-                          {event.eventImage ? 'Image' : 'No image'}
-                        </span>
+                        {event.eventImage ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={event.eventImage}
+                            alt={event.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span className="font-body text-foreground-ghost text-label m-auto">
+                            No image
+                          </span>
+                        )}
                       </div>
 
                       {/* Content */}
@@ -148,31 +254,23 @@ function EventAccordion({
 
                         {/* Action row */}
                         <div className="flex flex-wrap items-center gap-4 mt-2">
-                          {event.status !== 'Complete' && (
-                            <>
-                              {event.status === 'Confirmed' && event.type === 'SAGIE Event' && (
-                                <ActionLink label="Register →" />
-                              )}
-                              {event.status === 'Confirmed' && event.type === 'Webinar' && (
-                                <ActionLink label="Register →" href={event.webinarLink ?? '#'} />
-                              )}
-                              {event.type === 'Local Event' && <ActionLink label="More info →" />}
-                              {event.status === 'Confirmed' && <ActionLink label="+ Add to Calendar" />}
-                              {event.status === 'Planning' && (
-                                <ActionLink label="Notify me when confirmed →" />
-                              )}
-                            </>
+                          {event.registrationLink && (
+                            <ExternalActionLink label="Register" href={event.registrationLink} />
                           )}
-                          {event.status === 'Complete' && (
-                            <>
-                              {event.photoGallery && (
-                                <ActionLink label="View Photo Gallery →" href={event.photoGallery} />
-                              )}
-                              {event.recordingLink && (
-                                <ActionLink label="Watch Recording →" href={event.recordingLink} />
-                              )}
-                              <ActionLink label="Read Recap →" />
-                            </>
+                          {event.moreInfoLink && (
+                            <ExternalActionLink label="More Info" href={event.moreInfoLink} />
+                          )}
+                          {event.recapLink && (
+                            <InternalActionLink label="Read Recap" href={event.recapLink} />
+                          )}
+                          {event.status === 'Confirmed' && event.date && (
+                            <AddToCalendarDropdown event={event} />
+                          )}
+                          {event.photoGallery && (
+                            <ExternalActionLink label="View Photo Gallery" href={event.photoGallery} />
+                          )}
+                          {event.recordingLink && (
+                            <ExternalActionLink label="Watch Recording" href={event.recordingLink} />
                           )}
                         </div>
                       </div>
@@ -196,17 +294,6 @@ function DetailRow({ label, value }: { label: string; value: string }) {
       </span>
       <span className="font-body text-foreground-muted text-label">{value}</span>
     </div>
-  )
-}
-
-function ActionLink({ label, href = '#' }: { label: string; href?: string }) {
-  return (
-    <a
-      href={href}
-      className="font-body uppercase text-label tracking-label text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 border-b border-border-subtle pb-px"
-    >
-      {label}
-    </a>
   )
 }
 
