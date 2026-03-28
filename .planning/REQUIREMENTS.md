@@ -1,0 +1,112 @@
+# Requirements: sagie.co
+
+**Defined:** 2026-03-28
+**Core Value:** Community members and prospective members can discover SAGIE's value, consume content, and apply to join — with every submission reliably reaching the team and every piece of content appearing promptly.
+
+## v1 Requirements
+
+Requirements for this milestone. Each maps to roadmap phases.
+
+### Bug Fixes
+
+- [ ] **BUG-01**: Form field names in ChapterForm and MembershipForm match their Zod schemas so no submitted data is dropped
+- [ ] **BUG-02**: Globe initGlobe setTimeout loop has cleanup flag and max retry limit
+- [ ] **BUG-03**: NOTION_DEAL_PIPELINE_DB_ID and REVALIDATE_SECRET are optional in env schema until their features are built
+
+### Cleanup
+
+- [ ] **CLN-01**: Remove orphaned MOCK_POSTS, MOCK_EVENTS, MOCK_RESOURCES, MOCK_PROVIDERS constants
+- [ ] **CLN-02**: Uninstall @typeform/embed-react and dotenv unused dependencies
+- [ ] **CLN-03**: Remove duplicate SolutionProvider and BlogPost type definitions, keep only lib versions
+
+### Security
+
+- [ ] **SEC-01**: API routes enforce IP-based rate limiting (target: 5 submissions per IP per 10 min)
+- [ ] **SEC-02**: API routes check Origin header against allowedOrigins
+- [ ] **SEC-03**: CSP script-src uses per-request nonces instead of unsafe-inline
+- [ ] **SEC-04**: Sentry tracesSampleRate lowered to 0.1-0.2 in production
+
+### Features
+
+- [ ] **FEAT-01**: /api/revalidate endpoint accepts secret and invalidates cache tags on demand
+- [ ] **FEAT-02**: Email confirmation sent to applicant after form submission
+- [ ] **FEAT-03**: Email alert sent to admin after form submission
+- [ ] **FEAT-04**: Sitemap includes all routes and dynamic blog/content pages
+- [ ] **FEAT-05**: error.tsx and loading.tsx boundaries exist for all route segments
+
+### Globe
+
+- [ ] **GLOBE-01**: GeoJSON served from /public/ instead of fetched from GitHub at runtime
+- [ ] **GLOBE-02**: Globe cities and member counts sourced from Notion data
+
+### Testing
+
+- [ ] **TEST-01**: Vitest installed and configured, CI unit test step passes
+- [ ] **TEST-02**: Unit tests for blog.ts, events.ts, resources.ts, solutions.ts data mapping
+- [ ] **TEST-03**: Unit tests for all Zod schemas and withValidation middleware
+- [ ] **TEST-04**: E2E tests for form submissions and content page rendering
+
+## v2 Requirements
+
+Deferred to future release. Tracked but not in current roadmap.
+
+### Analytics
+
+- **ANLY-01**: Privacy-friendly analytics tracking (e.g. Plausible or Vercel Analytics)
+
+### Moderation
+
+- **MODR-01**: Admin moderation workflow for community submissions
+- **MODR-02**: Content approval queue visible outside Notion
+
+### Notifications
+
+- **NOTF-01**: Webhook from Notion to trigger revalidation automatically on content changes
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| User authentication / accounts | Marketing site, not a logged-in product |
+| Real-time chat | High complexity, not core to community value |
+| Mobile app | Web-first approach |
+| CMS admin panel | Notion serves this role |
+| Payment processing | Not part of current model |
+| Video hosting | Storage/bandwidth costs, external platforms handle this |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| BUG-01 | — | Pending |
+| BUG-02 | — | Pending |
+| BUG-03 | — | Pending |
+| CLN-01 | — | Pending |
+| CLN-02 | — | Pending |
+| CLN-03 | — | Pending |
+| SEC-01 | — | Pending |
+| SEC-02 | — | Pending |
+| SEC-03 | — | Pending |
+| SEC-04 | — | Pending |
+| FEAT-01 | — | Pending |
+| FEAT-02 | — | Pending |
+| FEAT-03 | — | Pending |
+| FEAT-04 | — | Pending |
+| FEAT-05 | — | Pending |
+| GLOBE-01 | — | Pending |
+| GLOBE-02 | — | Pending |
+| TEST-01 | — | Pending |
+| TEST-02 | — | Pending |
+| TEST-03 | — | Pending |
+| TEST-04 | — | Pending |
+
+**Coverage:**
+- v1 requirements: 21 total
+- Mapped to phases: 0
+- Unmapped: 21 ⚠️
+
+---
+*Requirements defined: 2026-03-28*
+*Last updated: 2026-03-28 after initial definition*
