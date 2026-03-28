@@ -49,8 +49,11 @@ export const getMemberCities = unstable_cache(
     const response = await notion.databases.query({
       database_id: env.NOTION_MEMBER_DB_ID,
       filter: {
-        property: 'Status',
-        select: { does_not_equal: 'Rejected' },
+        or: [
+          { property: 'Status', select: { equals: 'Active' } },
+          { property: 'Status', select: { equals: 'New' } },
+          { property: 'Status', select: { equals: 'VIP' } },
+        ],
       },
     })
 
