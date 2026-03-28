@@ -67,8 +67,10 @@ Each task was committed atomically:
 
 1. **Task 1: E2E form submission tests** - `4e3290f` (feat)
 2. **Task 2: E2E content page rendering tests** - `e084ec5` (feat)
+3. **Fix: Scope E2E locators away from Next.js dev overlay** - `217264a` (fix)
+4. **Task 3: Human verify E2E test suite** - checkpoint approved (no code commit)
 
-**Plan metadata:** (pending after human verification)
+**Plan metadata:** (pending docs commit)
 
 ## Files Created/Modified
 - `tests/forms.spec.ts` - 4 form submission tests with API mocking via page.route()
@@ -90,10 +92,19 @@ Each task was committed atomically:
 - **Verification:** All 4 form tests passed after install
 - **Committed in:** 4e3290f (included in Task 1 commit)
 
+**2. [Rule 1 - Bug] Scoped E2E locators to avoid Next.js dev overlay collisions**
+
+- **Found during:** Task 1/2 (form and content page tests)
+- **Issue:** Playwright locators were matching elements inside the Next.js dev overlay popup, causing false positives or ambiguous matches
+- **Fix:** Scoped all form and heading locators to the main page content area, excluding the dev overlay
+- **Files modified:** tests/forms.spec.ts, tests/content-pages.spec.ts
+- **Verification:** All 10 tests pass after scoping change
+- **Committed in:** 217264a
+
 ---
 
-**Total deviations:** 1 auto-fixed (1 blocking)
-**Impact on plan:** Browser install was a necessary infrastructure step. No scope creep.
+**Total deviations:** 2 auto-fixed (1 blocking, 1 bug)
+**Impact on plan:** Both fixes necessary for correct test behavior. No scope creep.
 
 ## Issues Encountered
 - Playwright browser binaries were not installed in this environment — auto-fixed via `npx playwright install`
@@ -103,8 +114,17 @@ None - no external service configuration required.
 
 ## Next Phase Readiness
 - E2E test suite for forms and content pages is complete and passing
-- Human verification of Playwright HTML report is the final gate (Task 3 checkpoint)
-- After verification, phase 04-testing is complete
+- Human verification (Task 3 checkpoint) approved — all 10 tests pass
+- Phase 04-testing plan 03 is fully complete
+
+## Self-Check: PASSED
+
+- tests/forms.spec.ts — FOUND
+- tests/content-pages.spec.ts — FOUND
+- .planning/phases/04-testing/04-03-SUMMARY.md — FOUND
+- Commit 4e3290f — FOUND
+- Commit e084ec5 — FOUND
+- Commit 217264a — FOUND
 
 ---
 *Phase: 04-testing*
