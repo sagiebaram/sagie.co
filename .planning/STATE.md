@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Completed 05-01-PLAN.md — nuqs installed, NuqsAdapter in layout, GSAPCleanup bfcache-hardened, useScrollReveal filterKey added
-last_updated: "2026-03-28T21:07:40.178Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-03-28T21:10:37.919Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -55,6 +55,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 - Last 5 plans: —
 - Trend: —
 | Phase 05-bug-fixes P01 | 5 | 2 tasks | 4 files |
+| Phase 05-bug-fixes P03 | 4 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,8 @@ Recent decisions affecting current work:
 - [Phase 05-bug-fixes]: npm install nuqs used --legacy-peer-deps due to pre-existing @eslint/js@10 vs eslint@9 peer conflict
 - [Phase 05-bug-fixes]: UseScrollRevealOptions exported so Plan 02 filter components can type filterKey usage
 - [Phase 05-bug-fixes]: filterKey useEffect uses isFirstRender ref to skip mount — GSAP useLayoutEffect owns initial animation
+- [Phase 05-bug-fixes]: submitWarning is separate state from errors object — amber warning persists through field validation cycles
+- [Phase 05-bug-fixes]: SubmitResourceForm uses Math.max(0,...) in useEffect and rateLimitUntil !== null for disabled prop — avoids react-hooks/set-state-in-effect and react-hooks/purity lint errors in ui/ directory
 
 ### Pending Todos
 
@@ -106,6 +109,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T21:07:40.176Z
-Stopped at: Completed 05-01-PLAN.md — nuqs installed, NuqsAdapter in layout, GSAPCleanup bfcache-hardened, useScrollReveal filterKey added
+Last session: 2026-03-28T21:10:37.917Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None
