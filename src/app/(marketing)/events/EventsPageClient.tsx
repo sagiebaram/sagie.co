@@ -12,8 +12,8 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { EventFilter } from '@/components/ui/EventFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
-import type { SAGIEEvent } from '@/lib/events'
-import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/events'
+import type { SAGIEEvent } from '@/types/events'
+import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
 
 const STATUS_COLORS: Record<string, string> = {
   Confirmed: 'var(--silver)',
@@ -123,13 +123,6 @@ function AddToCalendarDropdown({ event }: { event: SAGIEEvent }) {
                 className="font-body text-label text-foreground-muted hover:text-silver py-1.5 pl-4 block"
               >
                 Apple Calendar (.ics)
-              </a>
-              <a
-                href={icsUrl}
-                download
-                className="font-body text-label text-foreground-muted hover:text-silver py-1.5 pl-4 block"
-              >
-                Download .ics
               </a>
             </div>
           </motion.div>

@@ -1,5 +1,6 @@
 import { notion } from '@/lib/notion'
-import { mapEvent, buildIcsContent } from '@/lib/events'
+import { mapEvent } from '@/lib/events'
+import { buildIcsContent } from '@/lib/calendar'
 
 export async function GET(
   _request: Request,

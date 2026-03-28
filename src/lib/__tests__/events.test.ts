@@ -23,11 +23,13 @@ vi.mock('@/lib/notion', () => ({
 import {
   getUpcomingEvents,
   getPastEvents,
+} from '@/lib/events'
+import {
   buildGoogleCalendarUrl,
   buildOutlookCalendarUrl,
   buildIcsContent,
   escapeIcsText,
-} from '@/lib/events'
+} from '@/lib/calendar'
 import { notion } from '@/lib/notion'
 
 // ---------------------------------------------------------------------------
