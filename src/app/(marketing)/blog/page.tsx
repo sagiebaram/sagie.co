@@ -5,6 +5,7 @@ import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { BlogFilter } from '@/components/ui/BlogFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { SubmitPostForm } from '@/components/forms/SubmitPostForm'
 import { getAllPosts, type BlogPost } from '@/lib/blog'
 
 export const revalidate = 3600
@@ -25,7 +26,7 @@ export default async function BlogPage() {
 
       <Section className="pt-28 md:pt-36">
         <PageHeroAnimation>
-          <Eyebrow>The Blog</Eyebrow>
+          <Eyebrow className="page-hero-eyebrow">The Blog</Eyebrow>
           <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
             <span className="page-hero-line block text-foreground-dim">IDEAS FROM</span>
             <span className="page-hero-line block text-foreground-secondary">THE ECOSYSTEM.</span>
@@ -36,6 +37,15 @@ export default async function BlogPage() {
         </PageHeroAnimation>
 
         <BlogFilter posts={posts} />
+
+        <section style={{ borderTop: '0.5px solid var(--border-subtle)', padding: '48px 0' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <p style={{ fontSize: '8px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Community</p>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: 'var(--silver)', letterSpacing: '0.04em', marginBottom: '8px' }}>GOT SOMETHING TO SAY?</h2>
+            <p style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 300, maxWidth: '480px' }}>Submit a post and we&apos;ll review it for the blog. Community perspectives are what make this worth reading.</p>
+          </div>
+          <SubmitPostForm />
+        </section>
       </Section>
 
       <Footer />

@@ -18,12 +18,11 @@ export interface BlogPost {
 }
 
 export async function getAllPosts(): Promise<BlogPost[]> {
-  const response = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_BLOG_DB_ID!,
+  const response = await notion.databases.query({
+    database_id: process.env.NOTION_BLOG_DB_ID!,
     filter: { property: 'Status', select: { equals: 'Published' } },
     sorts: [{ property: 'Publish Date', direction: 'descending' }],
   })
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return response.results.map((page: any) => {
     const p = page.properties

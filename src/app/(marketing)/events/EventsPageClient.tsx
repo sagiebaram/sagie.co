@@ -320,7 +320,7 @@ export function EventsPageClient({
             Suggest a local event, workshop or conference and we&apos;ll review it for the calendar.
           </p>
           <a
-            href="/apply/chapter"
+            href="/suggest-event"
             className="font-body uppercase text-button tracking-button text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 border-b border-border-strong pb-px"
           >
             Suggest an Event →

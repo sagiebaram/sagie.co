@@ -16,16 +16,25 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
   const { y = 24, duration = 0.6, delay = 0, stagger = 0, selector } = options
 
   useLayoutEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) return
+    if (!ref.current) return
+    
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (mediaQuery.matches) return
 
     const ctx = gsap.context(() => {
+      const currentRef = ref.current
+      if (!currentRef) return
+
       const target = selector
-        ? gsap.utils.toArray<Element>(selector, ref.current!)
-        : ref.current!
+        ? gsap.utils.toArray<Element>(selector, currentRef)
+        : currentRef
+
+      if (!target || (Array.isArray(target) && target.length === 0)) {
+        return
+      }
 
       gsap.fromTo(
-        target,
+        target as any,
         { opacity: 0, y },
         {
           opacity: 1,
@@ -35,7 +44,7 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
           ease: 'power2.out',
           stagger,
           scrollTrigger: {
-            trigger: ref.current,
+            trigger: currentRef,
             start: 'top 85%',
             toggleActions: 'play none none none',
           },

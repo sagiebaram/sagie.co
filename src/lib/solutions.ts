@@ -13,8 +13,8 @@ export interface SolutionProvider {
 }
 
 export async function getSolutionProviders(): Promise<SolutionProvider[]> {
-  const response = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_SOLUTIONS_DB_ID!,
+  const response = await (notion as any).databases.query({
+    database_id: process.env.NOTION_SOLUTIONS_DB_ID!,
     filter: { property: 'Status', select: { equals: 'Active' } },
     sorts: [{ property: 'Featured', direction: 'descending' }],
   })

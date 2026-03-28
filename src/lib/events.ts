@@ -22,8 +22,8 @@ export interface SAGIEEvent {
 }
 
 export async function getUpcomingEvents(): Promise<SAGIEEvent[]> {
-  const response = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_EVENT_DB_ID!,
+  const response = await (notion as any).databases.query({
+    database_id: process.env.NOTION_EVENT_DB_ID!,
     filter: {
       and: [
         { property: 'Status', select: { does_not_equal: 'Cancelled' } },
@@ -36,8 +36,8 @@ export async function getUpcomingEvents(): Promise<SAGIEEvent[]> {
 }
 
 export async function getPastEvents(): Promise<SAGIEEvent[]> {
-  const response = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_EVENT_DB_ID!,
+  const response = await (notion as any).databases.query({
+    database_id: process.env.NOTION_EVENT_DB_ID!,
     filter: { property: 'Status', select: { equals: 'Complete' } },
     sorts: [{ property: 'Event Date', direction: 'descending' }],
   })

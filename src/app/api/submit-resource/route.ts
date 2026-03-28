@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     await notion.pages.create({
       parent: { database_id: RESOURCES_DB_ID },
       properties: {
-        Name: { title: [{ text: { content: name } }] },
+        'Resource Name': { title: [{ text: { content: name } }] },
         URL: { url },
         Status: { select: { name: 'Pending Review' } },
         Source: { select: { name: 'Community' } },

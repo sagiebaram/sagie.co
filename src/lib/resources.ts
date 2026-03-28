@@ -13,8 +13,8 @@ export interface Resource {
 }
 
 export async function getResources(): Promise<Resource[]> {
-  const response = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_RESOURCES_DB_ID!,
+  const response = await (notion as any).databases.query({
+    database_id: process.env.NOTION_RESOURCES_DB_ID!,
     filter: { property: 'Status', select: { equals: 'Published' } },
     sorts: [{ property: 'Featured', direction: 'descending' }],
   })
