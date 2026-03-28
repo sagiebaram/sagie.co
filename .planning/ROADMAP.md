@@ -29,7 +29,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. The app starts up without crashing when NOTION_DEAL_PIPELINE_DB_ID or REVALIDATE_SECRET are absent from the environment
   4. No MOCK_POSTS, MOCK_EVENTS, MOCK_RESOURCES, or MOCK_PROVIDERS constants remain in the codebase
   5. @typeform/embed-react and dotenv are absent from package.json and node_modules
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Fix form field mismatches (BUG-01) and optional env vars (BUG-03)
+- [ ] 01-02-PLAN.md — Globe setTimeout cleanup (BUG-02), remove mock data (CLN-01), unused packages (CLN-02), duplicate types (CLN-03)
 
 ### Phase 2: Harden
 **Goal**: Every API route is protected from abuse and every page segment handles errors and loading states gracefully
@@ -73,7 +77,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Stabilize | 0/TBD | Not started | - |
+| 1. Stabilize | 0/2 | Planning complete | - |
 | 2. Harden | 0/TBD | Not started | - |
 | 3. Features + Globe | 0/TBD | Not started | - |
 | 4. Testing | 0/TBD | Not started | - |
