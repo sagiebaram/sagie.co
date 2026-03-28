@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-harden-02-PLAN.md
-last_updated: "2026-03-28T14:19:26.461Z"
+stopped_at: Completed 02-harden-03-PLAN.md
+last_updated: "2026-03-28T14:24:41.032Z"
 last_activity: 2026-03-28 — Roadmap created
 progress:
   total_phases: 4
-  completed_phases: 1
-  total_plans: 5
-  completed_plans: 4
+  completed_phases: 2
+  total_plans: 8
+  completed_plans: 5
   percent: 100
 ---
 
@@ -54,6 +54,7 @@ Progress: [██████████] 100%
 | Phase 01-stabilize P02 | 3 | 2 tasks | 7 files |
 | Phase 02-harden P01 | 2 | 2 tasks | 6 files |
 | Phase 02-harden P02 | 3 | 2 tasks | 12 files |
+| Phase 02-harden P03 | 2 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 02-harden]: Rate limiter in withValidation (not proxy.ts) — keeps proxy stateless; in-memory Map sufficient for single-instance community site
 - [Phase 02-harden]: Used GridBackground (not CircuitBackground) in error pages — simpler, no client-side canvas hydration needed
 - [Phase 02-harden]: ErrorPage shared component with optional onRetry — not-found.tsx stays as server component
+- [Phase 02-harden]: All loading.tsx files are pure server components (no use client) — shimmer presentation needs no state or hooks
+- [Phase 02-harden]: Each skeleton mirrors actual page layout: blog uses 3-col card grid, events uses accordion rows with type dividers, forms mirror exact field grid layout
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T14:19:26.460Z
-Stopped at: Completed 02-harden-02-PLAN.md
+Last session: 2026-03-28T14:24:41.030Z
+Stopped at: Completed 02-harden-03-PLAN.md
 Resume file: None

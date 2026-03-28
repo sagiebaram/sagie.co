@@ -13,7 +13,7 @@ The site already works — forms submit, content renders, CI runs. This mileston
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Stabilize** - Fix data loss, crashes, and dead code before anything else ships (completed 2026-03-28)
-- [ ] **Phase 2: Harden** - Lock down security and add error/loading boundaries site-wide
+- [x] **Phase 2: Harden** - Lock down security and add error/loading boundaries site-wide (completed 2026-03-28)
 - [ ] **Phase 3: Features + Globe** - Revalidation endpoint, email notifications, sitemap, and a live globe
 - [ ] **Phase 4: Testing** - Install Vitest, write unit and E2E tests, make CI fully green
 
@@ -45,7 +45,7 @@ Plans:
   3. No unsafe-inline appears in the CSP script-src header — nonces are used instead
   4. Sentry tracesSampleRate is 0.1 or 0.2 in the production config
   5. Every route segment has an error.tsx that renders a user-facing error state and a loading.tsx that renders a skeleton or spinner
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 02-01-PLAN.md — Security middleware: proxy.ts (CSP nonces + origin check), rate limiting in withValidation, Sentry config update
@@ -83,6 +83,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Stabilize | 2/2 | Complete   | 2026-03-28 |
-| 2. Harden | 0/3 | Not started | - |
+| 2. Harden | 3/3 | Complete   | 2026-03-28 |
 | 3. Features + Globe | 0/TBD | Not started | - |
 | 4. Testing | 0/TBD | Not started | - |
