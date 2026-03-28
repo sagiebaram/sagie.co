@@ -8,48 +8,60 @@ The marketing and community platform for SAGIE — a global network for founders
 
 Community members and prospective members can discover SAGIE's value, consume content, and apply to join — with every submission reliably reaching the team and every piece of content appearing promptly.
 
+## Current Milestone: v2.0 Polish & Interactivity
+
+**Goal:** Fix navigation/rendering bugs, make event pages interactive, redesign forms, and polish the admin and error experiences.
+
+**Target features:**
+
+- Fix filter state bug (Blog, Solutions, Resources)
+- Fix page navigation rendering bug (back/forward)
+- Rate limit feedback in forms
+- Event action buttons (Register, Add to Calendar, More Info, Read Recap)
+- Form redesign (fields + UX overhaul)
+- Revalidation UI feedback (success/failure, key rotation fix)
+- Custom 404 illustration
+
 ## Requirements
 
 ### Validated
 
-- ✓ Homepage with hero, pillars, social proof, FAQ, CTA sections — existing
-- ✓ Blog listing and detail pages with Notion CMS — existing
-- ✓ Events listing page with filtering — existing
-- ✓ Solutions marketplace with category filtering — existing
-- ✓ Resources directory with filtering — existing
-- ✓ Membership, chapter, ventures, and solutions application forms — existing
-- ✓ Blog post and resource community submission forms — existing
-- ✓ Event suggestion form — existing
-- ✓ Notion as backend for all content and submissions — existing
-- ✓ Sentry error tracking (client, server, edge) — existing
-- ✓ Zod validation on all API routes — existing
-- ✓ Honeypot + timing bot protection on forms — existing
-- ✓ CSP and security headers — existing
-- ✓ 3D globe visualization on social proof section — existing
-- ✓ GSAP scroll animations — existing
-- ✓ GitHub Actions CI pipeline — existing
+- ✓ Homepage with hero, pillars, social proof, FAQ, CTA sections — v1.0
+- ✓ Blog listing and detail pages with Notion CMS — v1.0
+- ✓ Events listing page with filtering — v1.0
+- ✓ Solutions marketplace with category filtering — v1.0
+- ✓ Resources directory with filtering — v1.0
+- ✓ Membership, chapter, ventures, and solutions application forms — v1.0
+- ✓ Blog post and resource community submission forms — v1.0
+- ✓ Event suggestion form — v1.0
+- ✓ Notion as backend for all content and submissions — v1.0
+- ✓ Sentry error tracking (client, server, edge) — v1.0
+- ✓ Zod validation on all API routes — v1.0
+- ✓ Honeypot + timing bot protection on forms — v1.0
+- ✓ CSP and security headers with nonces — v1.0
+- ✓ 3D globe visualization with live Notion data — v1.0
+- ✓ GSAP scroll animations — v1.0
+- ✓ GitHub Actions CI pipeline — v1.0
+- ✓ Rate limiting on all API routes — v1.0
+- ✓ CORS enforcement on API routes — v1.0
+- ✓ Email notifications on form submissions — v1.0
+- ✓ On-demand cache revalidation endpoint — v1.0
+- ✓ Complete sitemap with dynamic content — v1.0
+- ✓ Error and loading boundaries for all route segments — v1.0
+- ✓ Vitest + Playwright test suites — v1.0
 
 ### Active
 
-- [ ] Fix form/schema field mismatches (ChapterForm, MembershipForm data silently dropped)
-- [ ] Remove dead code: orphaned mock data, unused dependencies (@typeform/embed-react, dotenv)
-- [ ] Remove duplicate type definitions (SolutionProvider, BlogPost)
-- [ ] Fix unused env vars crashing startup (NOTION_DEAL_PIPELINE_DB_ID, REVALIDATE_SECRET)
-- [ ] Add rate limiting on all 7 API routes
-- [ ] Enforce CORS using allowedOrigins on API routes
-- [ ] Replace CSP unsafe-inline with nonces
-- [ ] Build /api/revalidate endpoint for on-demand cache invalidation
-- [ ] Add email notifications on form submissions (applicant confirmation + admin alert)
-- [ ] Build complete sitemap covering all routes and dynamic content
-- [ ] Add error.tsx and loading.tsx boundaries for all route segments
-- [ ] Connect globe to real membership data from Notion
-- [ ] Bundle GeoJSON locally instead of fetching from GitHub at runtime
-- [ ] Fix globe initGlobe infinite setTimeout loop (add cleanup/max retries)
-- [ ] Lower Sentry tracesSampleRate in production
-- [ ] Add unit tests for lib data-fetching functions
-- [ ] Add unit tests for Zod schemas and withValidation middleware
-- [ ] Add E2E tests for form submissions and content pages
-- [ ] Add Vitest as unit test framework (referenced in CI but not installed)
+- [ ] Fix filter state bug — second filter selection wipes rendered components until refresh
+- [ ] Fix navigation rendering bug — pages don't render on browser back/forward until refresh
+- [ ] Add visible rate limit feedback in forms when 429 is returned
+- [ ] Event action buttons: Register opens external event link
+- [ ] Event action buttons: Add to Calendar modal with Google/Outlook/Apple Calendar + .ics download
+- [ ] Event action buttons: More Info and Read Recap functional
+- [ ] Form redesign — rethink fields collected and improve UX (dropdowns, checkboxes, inline validation)
+- [ ] Revalidation admin UI — success/failure indication on refresh
+- [ ] Revalidation admin UI — fix key rotation redirect behavior
+- [ ] Custom 404 page with branded SVG/CSS illustration
 
 ### Out of Scope
 
@@ -58,6 +70,7 @@ Community members and prospective members can discover SAGIE's value, consume co
 - Mobile app — web-first
 - CMS admin panel — Notion serves this role
 - Payment processing — not part of current model
+- Event "Notify me when confirmed" — deferred, requires email capture without accounts
 
 ## Context
 
@@ -85,4 +98,4 @@ Community members and prospective members can discover SAGIE's value, consume co
 | Keep Notion as sole backend | Already deeply integrated, team uses it daily | — Pending |
 
 ---
-*Last updated: 2026-03-28 after initialization*
+*Last updated: 2026-03-28 after milestone v2.0 started*

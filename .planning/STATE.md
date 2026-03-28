@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
+milestone: v2.0
+milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Completed 03-features-globe-03-PLAN.md
-last_updated: "2026-03-28T15:29:02.513Z"
-last_activity: 2026-03-28 — Roadmap created
+stopped_at: null
+last_updated: "2026-03-28"
+last_activity: 2026-03-28 — Milestone v2.0 started
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -21,20 +21,19 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Community members and prospective members can discover SAGIE's value, consume content, and apply to join — with every submission reliably reaching the team and every piece of content appearing promptly.
-**Current focus:** Phase 1 — Stabilize
+**Current focus:** Defining requirements for v2.0
 
 ## Current Position
 
-Phase: 1 of 4 (Stabilize)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-28 — Roadmap created
-
-Progress: [██████████] 100%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-28 — Milestone v2.0 started
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: —
 - Total execution time: 0 hours
@@ -46,20 +45,9 @@ Progress: [██████████] 100%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: —
 - Trend: —
-
-*Updated after each plan completion*
-| Phase 01-stabilize P01 | 15 | 2 tasks | 6 files |
-| Phase 01-stabilize P02 | 3 | 2 tasks | 7 files |
-| Phase 02-harden P01 | 2 | 2 tasks | 6 files |
-| Phase 02-harden P02 | 3 | 2 tasks | 12 files |
-| Phase 02-harden P03 | 2 | 2 tasks | 8 files |
-| Phase 04-testing P03 | 2 | 2 tasks | 2 files |
-| Phase 04-testing P01 | 8 | 2 tasks | 4 files |
-| Phase 04-testing P03 | 525658 | 3 tasks | 2 files |
-| Phase 04-testing P02 | 5 | 2 tasks | 4 files |
-| Phase 03-features-globe P03 | 3 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -88,8 +76,6 @@ Recent decisions affecting current work:
 - [Phase 04-testing]: Rate limiter tests use unique IP per describe block to isolate module-level rateStore state across tests
 - [Phase 04-testing]: Forms mocked via page.route() POST interception — tests form UI flow without Notion dependency
 - [Phase 04-testing]: Content page assertions use regex text matching against static heading copy — tolerates any Notion data state
-- [Phase 04-testing]: Forms mocked via page.route() POST interception — tests form UI flow without Notion dependency
-- [Phase 04-testing]: Content page assertions use regex text matching against static heading copy — tolerates any Notion data state
 - [Phase 04-testing]: Read source files before writing tests — property key names are case-sensitive (Author Type, Cover Image, etc.)
 - [Phase 04-testing]: Fixture pattern FULL_PAGE_FIXTURE + MINIMAL_PAGE_FIXTURE covers all ?? fallback chains across data-mapping modules
 - [Phase 03-features-globe]: revalidateTag(tag, 'max') two-arg form used — single-arg deprecated in Next.js 16
@@ -102,11 +88,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 1: CLN-03 (remove duplicate types) may require touching import paths across multiple files — verify scope before execution
-- Phase 3: FEAT-02/FEAT-03 (email notifications) requires choosing an email service — no constraint specified, resolve during planning
+None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T15:15:18.723Z
-Stopped at: Completed 03-features-globe-03-PLAN.md
+Last session: 2026-03-28
+Stopped at: null
 Resume file: None
