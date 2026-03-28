@@ -190,14 +190,8 @@ export default function RevalidatePage() {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="mb-8">
           <h1 className="font-display text-foreground text-subhead tracking-heading uppercase">Cache Revalidation</h1>
-          <button
-            onClick={() => resetToPrompt(false)}
-            className="text-foreground-muted hover:text-foreground-secondary font-body text-caption transition-colors"
-          >
-            Change secret
-          </button>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
