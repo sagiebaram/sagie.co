@@ -73,7 +73,12 @@ Plans:
   2. Unit tests cover the data-mapping logic in blog.ts, events.ts, resources.ts, and solutions.ts
   3. Unit tests cover all Zod schemas and the withValidation middleware
   4. E2E tests submit each application form and verify the submission reaches Notion, and visit each content page and verify content renders
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Install Vitest, configure vitest.config.ts, unit tests for Zod schemas and withValidation
+- [ ] 04-02-PLAN.md — Unit tests for blog.ts, events.ts, resources.ts, solutions.ts data mapping
+- [ ] 04-03-PLAN.md — E2E tests for form submissions and content page rendering
 
 ## Progress
 
@@ -85,4 +90,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Stabilize | 2/2 | Complete   | 2026-03-28 |
 | 2. Harden | 3/3 | Complete   | 2026-03-28 |
 | 3. Features + Globe | 0/TBD | Not started | - |
-| 4. Testing | 0/TBD | Not started | - |
+| 4. Testing | 0/3 | Not started | - |
