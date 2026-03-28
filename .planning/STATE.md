@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Phase 7 context updated
-last_updated: "2026-03-28T23:48:02.446Z"
+stopped_at: Completed 05-05-PLAN.md
+last_updated: "2026-03-28T23:54:01.705Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 23
-  completed_plans: 21
+  completed_plans: 22
 ---
 
 # Project State
@@ -64,6 +64,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 | Phase 08-admin-polish-404 P02 | 10 | 2 tasks | 1 files |
 | Phase 05-bug-fixes P04 | 2 | 1 tasks | 1 files |
 | Phase 06-event-interactivity P02 | 30 | 2 tasks | 2 files |
+| Phase 05-bug-fixes P05 | 14 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,8 @@ Recent decisions affecting current work:
 - [Phase 05-bug-fixes]: Child card opacity override in filterKey useEffect rAF callback — uses gsap.utils.toArray(selector, el) to set inline opacity:1, overriding CSS opacity:0 on newly rendered cards
 - [Phase 06-event-interactivity]: Calendar helpers extracted from events.ts to calendar.ts — server-only import in events.ts caused runtime error in client component
 - [Phase 06-event-interactivity]: Apple Calendar .ics download uses /api/events/[id]/ics route; duplicate Download .ics option removed from dropdown
+- [Phase 05-bug-fixes]: optionalUrl uses z.string().optional().transform().pipe() — z.preprocess gives unknown input type incompatible with zodResolver; optional-based transform preserves string|undefined input matching resolver output
+- [Phase 05-bug-fixes]: All 6 form components parse 422 fieldErrors from server and display first error at 13px — raised from 11px which was invisible on dark backgrounds
 
 ### Pending Todos
 
@@ -132,6 +135,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T23:48:02.443Z
-Stopped at: Phase 7 context updated
-Resume file: .planning/phases/07-form-redesign/07-CONTEXT.md
+Last session: 2026-03-28T23:54:01.703Z
+Stopped at: Completed 05-05-PLAN.md
+Resume file: None
