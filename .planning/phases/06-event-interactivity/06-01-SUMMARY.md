@@ -106,6 +106,17 @@ None - no external service configuration required. Notion property names used (R
 - ICS download works end-to-end at /api/events/[id]/ics — plan 02 just needs to wire up the Add to Calendar dropdown with this URL
 - No blockers for plan 02
 
+## Self-Check: PASSED
+
+- FOUND: src/lib/events.ts
+- FOUND: src/lib/__tests__/events.test.ts
+- FOUND: src/app/api/events/[id]/ics/route.ts
+- FOUND: .planning/phases/06-event-interactivity/06-01-SUMMARY.md
+- FOUND commit a7cf597: feat(06-01): extend SAGIEEvent model and add calendar helper functions
+- FOUND commit 2cd4714: feat(06-01): create GET /api/events/[id]/ics route handler
+- All 30 tests passing
+- TypeScript: no errors
+
 ---
 *Phase: 06-event-interactivity*
 *Completed: 2026-03-28*

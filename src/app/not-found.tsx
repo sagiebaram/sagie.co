@@ -65,6 +65,7 @@ function CircuitBrokenIllustration() {
   )
 }
 
+// Forcing rebuild to clear possible Turbopack cache issues
 export default function NotFound() {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-background overflow-hidden">
