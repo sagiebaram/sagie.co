@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Completed 07-01-PLAN.md
-last_updated: "2026-03-28T22:33:29.994Z"
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-28T22:37:57.094Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
-  completed_phases: 5
-  total_plans: 21
-  completed_plans: 17
+  completed_phases: 4
+  total_plans: 22
+  completed_plans: 18
 ---
 
 # Project State
@@ -60,6 +60,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 | Phase 06-event-interactivity P01 | 2 | 2 tasks | 3 files |
 | Phase 08-admin-polish-404 P01 | 2 | 1 tasks | 2 files |
 | Phase 07-form-redesign P01 | 8 | 3 tasks | 5 files |
+| Phase 07-form-redesign P02 | 9 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,7 @@ Recent decisions affecting current work:
 - [Phase 08-admin-polish-404]: timersRef keyed by button key clears stale timers before scheduling new ones; resetToPrompt cancels all timers atomically on 401 or manual reset
 - [Phase 07-form-redesign]: Zod v4 uses { error: string } not errorMap for enum error messages — auto-fixed during Task 2
 - [Phase 07-form-redesign]: FormField value/onChange made optional for backward compat — new forms use registration prop only
+- [Phase 07-form-redesign]: z.input<typeof Schema> for useForm generic avoids exactOptionalPropertyTypes incompatibility with .default() fields
 
 ### Pending Todos
 
@@ -123,6 +125,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T22:33:29.992Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-03-28T22:37:57.093Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
