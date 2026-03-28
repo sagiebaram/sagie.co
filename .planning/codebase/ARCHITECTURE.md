@@ -1,80 +1,176 @@
 # Architecture
 
-## Pattern
+**Analysis Date:** 2026-03-28
 
-**Next.js App Router** with server-first rendering. Marketing pages use React Server Components for Notion data fetching; interactive forms and animations are client components.
+## Pattern Overview
+
+**Overall:** Next.js 15 App Router — Server-first with selective client boundaries
+
+**Key Characteristics:**
+- Pages are React Server Components by default; client-side state is pushed to leaf components or dedicated `*Client.tsx` files
+- Notion acts as the single backend data store (CMS + application intake) — no database other than Notion
+- API routes are thin: validate input via Zod schema → write to Notion → return JSON
+- Data-fetching is always cached via `unstable_cache` from `next/cache`, with per-resource TTLs
+- All environment configuration is validated at startup via Zod in `src/env/server.ts`
 
 ## Layers
 
-```
-Browser
-  └── Next.js App Router (src/app/)
-        ├── Server Components (pages) ── fetch from Notion via src/lib/*
-        ├── Client Components (forms, animations) ── POST to API routes
-        └── API Routes (src/app/api/) ── validate with Zod, write to Notion
-              └── Notion API (@notionhq/client)
-              └── Sentry (error tracking)
-```
+**Pages (App Router):**
+- Purpose: Compose layout from server-fetched data and section components
+- Location: `src/app/(marketing)/`
+- Contains: Async server components, `generateStaticParams`, `revalidate` exports
+- Depends on: `src/lib/*` for data, `src/components/*` for rendering
+- Used by: Next.js routing
 
-### Presentation Layer
-- **Pages:** `src/app/(marketing)/` — server components that call lib functions
-- **Sections:** `src/components/sections/` — large page sections (Hero, Pillars, FAQ, etc.)
-- **UI:** `src/components/ui/` — reusable primitives (Button, FormField, Section, etc.)
-- **Forms:** `src/components/forms/` — client-side form components with honeypot protection
-- **Layout:** `src/components/layout/` — Navbar, Footer
+**API Routes:**
+- Purpose: Accept form submissions, validate, write to Notion
+- Location: `src/app/api/`
+- Contains: `route.ts` files, each exporting `POST = withValidation(Schema, handler)`
+- Depends on: `src/lib/validation.ts`, `src/lib/schemas.ts`, `src/lib/notion.ts`, `src/lib/notion-monitor.ts`
+- Used by: Client-side forms via `fetch`
 
-### Data Layer
-- **Notion client:** `src/lib/notion.ts` — singleton `@notionhq/client` instance
-- **Domain modules:** `src/lib/blog.ts`, `src/lib/events.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`
-- **Caching:** `unstable_cache()` with 1-hour revalidation and tag-based keys (`notion:blog`, `notion:events`, etc.)
+**Data Access (lib):**
+- Purpose: Read from Notion databases, shape to typed interfaces, cache results
+- Location: `src/lib/`
+- Contains: `blog.ts`, `events.ts`, `resources.ts`, `solutions.ts` — each exporting typed `unstable_cache`-wrapped functions
+- Depends on: `src/lib/notion.ts` (Notion client), `src/env/server.ts`
+- Used by: Pages and server components
 
-### Validation Layer
-- **Schemas:** `src/lib/schemas.ts` — Zod schemas for all form submissions (Membership, Chapter, Ventures, Solutions, EventSuggestion, SubmitPost)
-- **Middleware:** `src/lib/validation.ts` — `withValidation()` HOF wrapping all API route handlers
-- **Bot protection:** Honeypot field (`_trap`) + timing check (`_t`, 3s minimum)
+**Components:**
+- Purpose: Render UI; sections compose ui primitives; forms handle client state
+- Location: `src/components/`
+- Contains: `sections/` (full-page content blocks), `forms/` (client form components), `ui/` (reusable atoms), `layout/` (Navbar, Footer), `mdx/` (blog rendering)
+- Depends on: `src/hooks/`, `src/lib/gsap.ts`, `src/constants/*`
+- Used by: Pages
 
-### Monitoring Layer
-- **Sentry:** Client (`sentry.client.config.ts`), server (`sentry.server.config.ts`), edge (`sentry.edge.config.ts`)
-- **Notion writes:** `src/lib/notion-monitor.ts` — `notionWrite()` wrapper captures exceptions to Sentry
+**Constants:**
+- Purpose: Static copy, site data, and configuration that does not come from Notion
+- Location: `src/constants/`
+- Contains: `copy.ts` (all marketing text, nav links, social stats, chapters), `pillars.ts`, `tiers.ts`, `faq.ts`, `personas.ts`, `solutions.ts`, `blog.ts`, `resources.ts`, `events.ts`
+- Depends on: `src/types/index.ts`
+- Used by: Components and pages
+
+**Types:**
+- Purpose: Shared TypeScript interfaces for UI-level domain objects
+- Location: `src/types/index.ts`
+- Contains: `Pillar`, `Persona`, `Tier`, `FAQItem`, `Chapter`, `SocialStat`, `ButtonVariant`, `ChapterStatus`
+- Depends on: nothing
+- Used by: Constants, components
+
+**Env:**
+- Purpose: Validated, typed access to environment variables; server-only enforced
+- Location: `src/env/server.ts`
+- Contains: Zod schema parsed against `process.env`; exports `env` object and `allowedOrigins` set
+- Depends on: `server-only` package (prevents client import)
+- Used by: All `src/lib/*` files and API routes
 
 ## Data Flow
 
-### Read Path (Server Components)
-```
-Page (RSC) → lib module (e.g. getAllPosts()) → unstable_cache → Notion API → map response → typed interface
-```
+**Read Flow (Notion → Page → User):**
 
-### Write Path (Form Submissions)
-```
-Client form → POST /api/* → withValidation(ZodSchema) → honeypot check → Zod parse → notionWrite() → Notion pages.create()
-```
+1. Page component (server) calls a lib function, e.g. `getUpcomingEvents()`
+2. `unstable_cache` checks the Next.js data cache; cache key is `['notion:events:upcoming']`
+3. On cache miss, Notion SDK queries the relevant database with filters and sorts
+4. Results are mapped to typed interfaces (e.g. `SAGIEEvent[]`) via inline mapper functions
+5. Page passes typed data as props to RSC or client sections (e.g. `<EventsPageClient upcoming={...} />`)
+6. Client components render with Framer Motion / GSAP animations
 
-### Content Pipeline
-- Blog posts: Notion → notion-to-md → markdown string → MDX rendering via `<BlogContent>`
-- Resources, Solutions, Events: Notion → typed interfaces → filter/sort in client components
+**Write Flow (Form → API → Notion):**
 
-## Entry Points
+1. `'use client'` form component (e.g. `MembershipForm`) maintains state with `useState`
+2. On submit, honeypot field `_trap` and timestamp `_t` are included in JSON body
+3. `fetch('/api/applications/membership', { method: 'POST', body: JSON.stringify({...}) })`
+4. API route wraps handler in `withValidation(Schema, handler)` — validates honeypot, elapsed time, then Zod schema
+5. Valid data is written to Notion via `notionWrite(() => notion.pages.create({...}))`
+6. `notionWrite` wraps the call in a try/catch that forwards errors to Sentry
+7. API returns `{ success: true }` on success; form shows `<FormSuccess>` component
 
-- `src/app/layout.tsx` — Root layout with Google Fonts (Bebas Neue, DM Sans), GSAP cleanup
-- `src/app/(marketing)/page.tsx` — Homepage with section components
-- `src/app/api/` — 7 API routes for form submissions
-- `next.config.ts` — CSP headers, Sentry config, React Compiler enabled
+**Cache Revalidation TTLs:**
+- Blog posts: 3600s (1 hour)
+- Events: 300s (5 minutes)
+- Resources: 21600s (6 hours)
+- Solutions: 43200s (12 hours)
+
+**State Management:**
+- No global state manager; local component state only via `useState`
+- Animation state managed by GSAP context per component via `useLayoutEffect`
+- No React Context or Zustand/Redux used
 
 ## Key Abstractions
 
-| Abstraction | Location | Purpose |
-|------------|----------|---------|
-| `withValidation()` | `src/lib/validation.ts` | HOF: Zod validation + honeypot for all API routes |
-| `notionWrite()` | `src/lib/notion-monitor.ts` | Sentry-wrapped Notion write operations |
-| `unstable_cache()` | All lib modules | Next.js caching with hourly revalidation |
-| `useScrollReveal()` | `src/hooks/useScrollReveal.ts` | GSAP scroll-triggered animations |
-| `FormField` | `src/components/ui/FormField.tsx` | Shared form input component |
-| `Section` | `src/components/ui/Section.tsx` | Consistent page section wrapper |
+**`withValidation` (API middleware):**
+- Purpose: Wrap API route handlers with bot protection and Zod validation
+- File: `src/lib/validation.ts`
+- Pattern: Higher-order function — `withValidation(Schema, handler)` returns a Next.js `POST` handler
+- Includes honeypot check (`_trap` field) and minimum elapsed time check (3000ms)
 
-## Security
+**`unstable_cache` wrappers (data layer):**
+- Purpose: Cache Notion reads with TTL and revalidation tags
+- Examples: `getAllPosts` in `src/lib/blog.ts`, `getUpcomingEvents` in `src/lib/events.ts`
+- Pattern: Export a named async function wrapped in `unstable_cache(fn, [key], { revalidate, tags })`
 
-- **CSP headers:** Configured in `next.config.ts` (note: `'unsafe-inline'` for scripts/styles)
-- **Environment validation:** `src/env/server.ts` — Zod schema validates all env vars at startup
-- **CORS:** `allowedOrigins` defined but not currently enforced in API routes
-- **API headers:** `Cache-Control: no-store` on all `/api/*` routes
-- **Frame protection:** `X-Frame-Options: DENY`, `frame-ancestors 'none'`
+**`notionWrite` (error boundary):**
+- Purpose: Wrap Notion write calls to capture exceptions in Sentry
+- File: `src/lib/notion-monitor.ts`
+- Pattern: `await notionWrite(() => notion.pages.create({...}))` — rethrows after capture
+
+**`useScrollReveal` hook:**
+- Purpose: Apply GSAP scroll-triggered fade-up animations
+- File: `src/hooks/useScrollReveal.ts`
+- Pattern: Returns a `ref` to attach to a container; animates children matching optional `selector`; `ScrollReveal` component at `src/components/ui/ScrollReveal.tsx` wraps this as JSX
+
+**`src/env/server.ts` (typed env):**
+- Purpose: Single source of truth for server environment variables with startup validation
+- Pattern: Zod schema defines all required vars; `process.env` is parsed at module load; any missing var crashes the server at startup
+
+## Entry Points
+
+**Root Layout:**
+- Location: `src/app/layout.tsx`
+- Triggers: Every page render
+- Responsibilities: Font injection (`Bebas_Neue`, `DM_Sans`), global CSS, metadata defaults, `<GSAPCleanup>` to prevent memory leaks
+
+**Home Page:**
+- Location: `src/app/(marketing)/page.tsx`
+- Triggers: `GET /`
+- Responsibilities: Composes all marketing sections sequentially; no data fetching (sections use static constants)
+
+**Route Group:**
+- Location: `src/app/(marketing)/`
+- All public marketing pages are grouped here; the group does not add a URL segment
+
+**API Routes:**
+- Location: `src/app/api/`
+- All are POST-only; no GET routes exist
+- Pattern: `export const POST = withValidation(Schema, async (_req, body) => { ... })`
+
+## Error Handling
+
+**Strategy:** Errors are caught locally; pages fall back to empty state rather than crashing
+
+**Patterns:**
+- Data fetch failures in pages are caught in try/catch, returning empty arrays to client components
+- API route handlers catch Notion errors, log via `console.error`, return `{ error: '...' }` with 500 status
+- Notion write failures are additionally captured in Sentry via `notionWrite`
+- Validation failures return `{ error: 'Validation failed', fieldErrors: {...} }` with 422 status
+- Client forms display a generic error message on network failure; no per-field server error display
+
+## Cross-Cutting Concerns
+
+**Security:**
+- CSP headers set globally in `next.config.ts` (connect-src limited to `api.notion.com` and Sentry)
+- `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` on all routes
+- API routes have `Cache-Control: no-store`
+- Bot protection: honeypot field + 3-second minimum elapsed time in `withValidation`
+
+**Logging:** `console.error` in API route catch blocks; Sentry captures Notion write exceptions with `service: 'notion', type: 'write_failure'` tags
+
+**Validation:** Zod schemas for all form payloads defined in `src/lib/schemas.ts`; applied at API boundary via `withValidation`
+
+**Authentication:** None — the site is fully public; form submissions go directly to Notion for manual review
+
+**Animation:** GSAP (ScrollTrigger, SplitText) registered client-side in `src/lib/gsap.ts`; reduced-motion is respected in `useScrollReveal`
+
+---
+
+*Architecture analysis: 2026-03-28*

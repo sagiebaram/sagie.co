@@ -5,158 +5,152 @@
 ## Naming Patterns
 
 **Files:**
-- React components: PascalCase — `MembershipForm.tsx`, `ScrollReveal.tsx`, `AnimatedSection.tsx`
-- Non-component TypeScript: camelCase — `blog.ts`, `utils.ts`, `notion-monitor.ts`
-- Route handlers: `route.ts` (Next.js App Router convention)
-- Page files: `page.tsx` (Next.js App Router convention)
+- React components: PascalCase matching the exported function name — `MembershipForm.tsx`, `SocialProof.tsx`, `FormField.tsx`
 - Hooks: camelCase prefixed with `use` — `useScrollReveal.ts`
+- Library/utility modules: camelCase — `blog.ts`, `notion-monitor.ts`, `validation.ts`
+- API routes: always `route.ts` inside a named directory — `src/app/api/applications/membership/route.ts`
+- Constants files: camelCase — `copy.ts`, `tiers.ts`, `faq.ts`
+- Schema files: camelCase — `schemas.ts`, `validation.ts`
 
-**Functions and Components:**
-- React components: PascalCase named exports — `export function Hero()`, `export function FormField(...)`
-- Utility functions: camelCase named exports — `export function cn(...)`, `export function withValidation(...)`
-- Internal/private helpers: camelCase — `function mapEvent(...)`, `function mapLocation(...)`
-- Async data fetchers: camelCase describing what they get — `getAllPosts`, `getPostBySlug`, `getUpcomingEvents`
+**Functions:**
+- Exported React components: PascalCase — `export function MembershipForm()`
+- Hooks: camelCase prefixed `use` — `export function useScrollReveal()`
+- Utility/helper functions: camelCase — `export function mapLocation()`, `export function cn()`
+- Data-fetching lib functions: camelCase — `export const getAllPosts`, `export const getUpcomingEvents`
+- API route handlers: exported as named HTTP method constants — `export const POST = withValidation(...)`
 
-**Variables and Constants:**
-- Local variables: camelCase — `const loadTime`, `const fieldErrors`
-- Module-level constants: ALL_CAPS for primitive/object literals exported as const — `HERO`, `BELIEF`, `SITE`, `NAV_LINKS`, `SOCIAL_STATS`
-- Type-mapped constants: PascalCase object names — `ROLE_MAP`, `STAT_VALUES`
+**Variables:**
+- Local variables and state: camelCase — `fullName`, `loadTime`, `trapRef`
+- Module-level constants: SCREAMING_SNAKE_CASE — `ROLE_MAP`, `SOCIAL_STATS`, `NAV_LINKS`
+- Object config constants: SCREAMING_SNAKE_CASE — `SITE`, `METADATA`, `HERO`, `FOUNDER`
 
 **Types and Interfaces:**
-- Interfaces: PascalCase, prefixed with name context — `BlogPost`, `SAGIEEvent`, `FormFieldProps`
+- Interfaces: PascalCase prefixed with noun — `BlogPost`, `SAGIEEvent`, `FormFieldProps`, `SectionProps`
 - Type aliases: PascalCase — `ButtonVariant`, `ChapterStatus`
-- Zod schemas: PascalCase suffixed with `Schema` — `MembershipSchema`, `VenturesSchema`, `EnvSchema`
+- Zod schemas: PascalCase suffixed with `Schema` — `MembershipSchema`, `ChapterSchema`, `VenturesSchema`
 
 ## Code Style
 
 **Formatting:**
-- No Prettier config detected; formatting is consistent but not enforced by a config file
-- Single quotes for strings in most files (`'use client'`, `import { cn } from '@/lib/utils'`)
-- Trailing commas used in multi-line objects and arrays
-- Semicolons used in some files, omitted in others — not fully consistent
+- No Prettier config present — formatting is managed manually or by editor defaults
+- Semicolons: inconsistent; lib files use semicolons, component files use none
+- Quotes: single quotes in most files
+- Trailing commas: used in multi-line objects and arrays
 
 **Linting:**
-- ESLint via `next lint` (Next.js built-in ESLint config)
-- `@typescript-eslint/no-explicit-any` is the most suppressed rule — suppressed with inline comments in `src/lib/blog.ts`, `src/lib/events.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`
-- File-level disable for `any` in `src/components/GlobeNetwork.tsx`
+- No `.eslintrc` config; linting runs via `next lint` (uses Next.js built-in ESLint config)
+- Known suppressions: `@typescript-eslint/no-explicit-any` disabled inline in `src/lib/blog.ts`, `src/lib/events.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`, and file-level in `src/components/GlobeNetwork.tsx`
 
 **TypeScript:**
-- `strict: true` enabled in `tsconfig.json`
-- `noUncheckedIndexedAccess: true` — array/record access returns `T | undefined`
-- `noImplicitReturns: true` — all code paths must return
-- `exactOptionalPropertyTypes: true` — optional props must be `undefined`, not absent
-- `allowJs: false` — TypeScript only, no `.js` files
+- Strict mode enabled — `strict: true` in `tsconfig.json`
+- Additional strict flags: `noUncheckedIndexedAccess`, `noImplicitOverride`, `noImplicitReturns`, `exactOptionalPropertyTypes`
+- `allowJs: false` — no JavaScript files permitted
+- Target: ES2022
+- `as const` used heavily for readonly constant objects
 
 ## Import Organization
 
 **Order (observed pattern):**
-1. Framework/Next.js imports — `import { NextResponse } from 'next/server'`
-2. External libraries — `import { z } from 'zod'`, `import { gsap } from 'gsap'`
-3. Internal aliases starting with `@/` — `import { notion } from '@/lib/notion'`
-4. Relative imports (used only for co-located files) — `import { ShareButton } from './ShareButton'`
+1. Framework imports — `'next/cache'`, `'next/server'`, `'react'`
+2. Internal `@/` alias imports — services, components, lib, constants
+3. No third-party grouping distinction enforced
 
 **Path Aliases:**
-- `@/*` maps to `./src/*` (configured in `tsconfig.json`)
-- All cross-directory imports use `@/` — never `../../`
-- Relative imports only for files in the same directory (e.g., dynamic route segments)
+- `@/*` maps to `./src/*` — used throughout, never relative paths for cross-directory imports
+- Example: `import { env } from '@/env/server'`, `import { notion } from '@/lib/notion'`
+
+**`'use client'` directive:**
+- Placed as the very first line (before imports) in all client components and hooks
+- Required for: all form components, animation components, any `useState`/`useEffect` usage
+- Server components (pages with data fetching) have no directive — default server rendering
+
+## Validation Pattern
+
+**Form validation uses two layers:**
+1. Client-side: manual field presence checks returning `Record<string, string>` error maps
+2. Server-side: Zod schema validation via `withValidation` HOF wrapper in `src/lib/validation.ts`
+
+**Zod schema conventions:**
+- Defined in `src/lib/schemas.ts` — one schema per form/resource
+- String fields: always `.trim()`, often `.max()` bounded
+- Email fields: `.email().max(254).trim().toLowerCase()`
+- URL fields: `.url().optional()`
+- Enum fields: `z.enum([...])` — never `z.string()` for constrained values
+
+**`withValidation` HOF:**
+- Wraps all API POST handlers — `export const POST = withValidation(Schema, async (_req, body) => {...})`
+- Handles: JSON parse errors (400), honeypot detection (silently 200), timing check < 3000ms (silently 200), Zod errors (422 with `fieldErrors`)
+- Validated `body` is fully typed via `z.infer<S>`
 
 ## Error Handling
 
-**API Route Pattern:**
-All API routes use `withValidation()` wrapper from `src/lib/validation.ts`, which handles:
-- JSON parse errors → `400` with `{ error: 'Request body must be valid JSON' }`
-- Validation failures → `422` with `{ error: 'Validation failed', fieldErrors: {...} }`
-- Bot/spam detection → silently returns `200` (honeypot + timing check)
+**API routes:**
+- Top-level try/catch inside the `withValidation` handler
+- Errors logged with `console.error('[context] failed:', error)`
+- Client receives: `NextResponse.json({ error: 'descriptive message' }, { status: 500 })`
+- Success response: `NextResponse.json({ success: true })`
 
-Inside validated handlers, errors are caught with try/catch:
-```typescript
-export const POST = withValidation(SomeSchema, async (_req, body) => {
-  try {
-    await notionWrite(() => notion.pages.create({...}))
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Operation failed:', error)
-    return NextResponse.json({ error: 'Failed to process' }, { status: 500 })
-  }
-})
-```
+**Notion writes:**
+- Always wrapped with `notionWrite()` from `src/lib/notion-monitor.ts`
+- `notionWrite` captures exceptions to Sentry before re-throwing
 
-**Notion Write Pattern:**
-All Notion write operations go through `notionWrite()` from `src/lib/notion-monitor.ts`, which captures exceptions to Sentry before re-throwing.
+**Library functions (data fetching):**
+- Optional fields accessed with `??` null coalescing — never optional chaining alone without a fallback
+- Silent fallbacks: `p['Title']?.title?.[0]?.plain_text ?? 'Untitled'`
+- `getPostBySlug` returns `null` on missing slug, returns empty markdown on conversion failure (silent catch)
 
-**Data Fetching (lib functions):**
-Read operations use `try/catch` with graceful fallbacks:
-```typescript
-try {
-  const mdBlocks = await n2m.pageToMarkdown(post.id)
-  return { ...post, markdown }
-} catch {
-  return { ...post, markdown: '' }
-}
-```
+**Client forms:**
+- Submit errors shown via `errors.submit` state key
+- No error boundary components present
+- Loading state managed with `loading` boolean disabling the submit button
 
-**Form Client-Side:**
-Forms validate locally before submitting, and display field-level and submit-level error states:
-```typescript
-const [errors, setErrors] = useState<Record<string, string>>({})
-// On catch: setErrors({ submit: 'Something went wrong. Please try again.' })
-```
+## Environment Variables
+
+**Validated at startup via Zod:**
+- All server env vars validated in `src/env/server.ts` using `EnvSchema.parse(process.env)`
+- `import 'server-only'` at top of `src/env/server.ts` prevents client import
+- Missing required vars throw at boot time, not at request time
 
 ## Logging
 
-**Server-side:** `console.error(...)` in API route catch blocks, always with a descriptive prefix string: `'Membership application failed:'`, `'Ventures application failed:'`
+**Framework:** `console.error` only — no structured logging library
 
-**Error tracking:** Sentry via `src/lib/notion-monitor.ts` for Notion write failures. Sentry initialized in `sentry.server.config.ts`, `sentry.client.config.ts`, `sentry.edge.config.ts`.
+**Patterns:**
+- `console.error('[Context] failed:', error)` in API route catch blocks
+- Sentry captures all Notion write failures via `notionWrite` wrapper
+- No `console.log` or `console.info` calls in source
 
-**No structured logging library** — plain `console.error` only.
+## Data Constants
 
-## Comments
-
-**When to Comment:**
-- Explain non-obvious logic: `// Honeypot check — bots fill hidden field`
-- Suppress lint rules inline with a comment on the line before
-- Short inline comments for layout/structural sections in JSX: `{/* Mobile-only logo */}`
-
-**No JSDoc/TSDoc** — function signatures are self-documenting via TypeScript types.
+**Pattern:**
+- All copy, UI text, and static data lives in `src/constants/` as `as const` typed exports
+- Interfaces for constant shapes defined in `src/types/index.ts`
+- Constants files import types, never import from lib or components
 
 ## Component Design
 
-**Server vs. Client Components:**
-- Default: Server Components (no directive)
-- Client Components require `'use client'` as first line — used for components with state, effects, event handlers, or browser APIs
-- Examples: all form components, animation components, filter components are `'use client'`
+**Server components (pages):**
+- Export default unnamed function or named function — `export default function HomePage()`
+- Import and compose section/layout components only — no logic
+- Data fetching called directly in the component body (RSC pattern)
 
-**Props Pattern:**
-- Props interfaces are defined inline in the same file, not exported unless reused
-- Interface extends HTML element props when appropriate: `interface ButtonProps extends React.ComponentPropsWithoutRef<'a'>`
-- Optional props use `| undefined` explicitly due to `exactOptionalPropertyTypes`
+**Client components:**
+- Named exports — `export function MembershipForm()`
+- State grouped into a single `fields` object using `useState`
+- Setter curried: `const set = (key: string) => (value: string) => setFields(prev => ({ ...prev, [key]: value }))`
+- Inline `style` props used for form layout (not Tailwind) — forms use CSS-in-JS style objects
+- Tailwind used for section/page layout and typography
 
-**Styling:**
-- Two styling patterns coexist:
-  1. Tailwind CSS via `cn()` utility (preferred for layout/section components): `className={cn('relative z-[1]', className)}`
-  2. Inline `style` objects (used in form components and UI primitives): `style={{ display: 'flex', gap: '20px' }}`
-- `cn()` from `src/lib/utils.ts` combines `clsx` + `tailwind-merge`
-- CSS custom properties (design tokens) for colors and typography: `var(--silver)`, `var(--text-primary)`, `var(--font-display)`
+**UI primitives:**
+- Accept `React.ComponentPropsWithoutRef<'element'>` for full HTML prop passthrough
+- Use `cn()` from `src/lib/utils.ts` for class merging — `clsx` + `tailwind-merge`
+- Extend with `className` and `style` optional props
 
-## Module Design
+## Module Exports
 
-**Exports:**
-- All exports are named exports — no default exports except Next.js required defaults (`page.tsx`, `layout.tsx`, `route.ts`)
-- Constants files export named `const` objects — `export const HERO = {...} as const`
+**Pattern:** Named exports — no default exports from component or lib files (except Next.js pages/layouts which require `export default`)
 
-**Barrel Files:**
-- Not used — each module is imported directly by path
-
-**Environment Variables:**
-- All server-side env vars accessed exclusively through `src/env/server.ts`
-- `src/env/server.ts` imports `server-only` to prevent client-side leakage
-- Env vars validated at startup with Zod schema — crashes fast if missing
-
-**Data Caching:**
-- Notion read functions wrapped with `unstable_cache` from `next/cache`
-- Cache keys follow pattern: `['notion:{entity}:{scope}']` — e.g., `['notion:blog:index']`
-- Tags follow: `['notion:{entity}']` — e.g., `['notion:blog']`
-- Revalidation: 3600s (1hr) for blog/resources, 300s (5min) for events
+**Barrel files:** Not used — each file imported directly by path
 
 ---
 

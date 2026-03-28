@@ -1,48 +1,143 @@
-# Testing
+# Testing Patterns
 
-## Current State
+**Analysis Date:** 2026-03-28
 
-Testing infrastructure is **configured but largely unused**. Only a single smoke test exists.
+## Test Framework
 
-## Frameworks
+**Runner:**
+- Playwright `^1.58.2`
+- Config: `playwright.config.ts` (excluded from `tsconfig.json` compilation)
 
-| Framework | Purpose | Status |
-|-----------|---------|--------|
-| Playwright | E2E testing | Configured, 1 smoke test |
-| Vitest | Unit/integration | Referenced in CI but **not installed** |
+**Assertion Library:**
+- Playwright built-in `expect`
 
-## Test Files
+**Run Commands:**
+```bash
+npx playwright test              # Run all tests
+npx playwright test --ui         # Interactive UI mode
+npx playwright test --reporter=html  # HTML report
+```
 
-### Playwright E2E
-- `tests/smoke.spec.ts` — Single test checking homepage title loads
-- Config: `playwright.config.ts` — Chromium only, `baseURL: http://localhost:3000`
+**No unit test framework present** — Jest, Vitest, and similar are not installed. There are no `.test.ts` or `.test.tsx` files.
 
-### Unit Tests
-- **None exist.** No `*.test.ts` or `*.spec.ts` files in `src/`.
+## Test File Organization
 
-## CI Pipeline
+**Location:**
+- All tests in `tests/` directory at project root
+- Single file currently: `tests/smoke.spec.ts`
 
-- `.github/workflows/ci.yml` — Runs lint, type-check, and references unit tests
-- `.github/workflows/e2e-preview.yml` — Playwright E2E against Vercel preview deployments
+**Naming:**
+- Pattern: `[description].spec.ts`
 
-## Coverage Gaps
+**Structure:**
+```
+tests/
+└── smoke.spec.ts     # Smoke/E2E tests only
+```
 
-### Critical (no tests at all)
-- **API routes:** 7 endpoints with Zod validation, Notion writes, honeypot logic — zero test coverage
-- **Zod schemas:** `src/lib/schemas.ts` — 6 schemas untested
-- **Data fetching:** `src/lib/blog.ts`, `events.ts`, `resources.ts`, `solutions.ts` — Notion response mapping untested
-- **Form components:** 6 forms with client-side validation — untested
-- **`withValidation()` HOF:** Core middleware wrapping all API routes — untested
+## Test Structure
 
-### Infrastructure Issues
-- `vitest` referenced in CI workflow but not in `package.json` — unit test CI step would fail
-- No mocking strategy for Notion API
-- No test fixtures or factories
-- No coverage thresholds configured
+**Suite Organization:**
+```typescript
+import { test, expect } from '@playwright/test';
 
-## Recommended Expansion
+test('homepage loads', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveTitle(/SAGIE/i);
+});
+```
 
-1. Install Vitest and add unit tests for Zod schemas and data mapping functions
-2. Add API route integration tests using Playwright's `request` API
-3. Add form interaction E2E tests
-4. Set up Notion API mocking for lib module tests
+**Patterns:**
+- Tests use individual `test()` calls — no `describe` blocks in current code
+- Async/await throughout
+- No setup/teardown hooks present
+
+## Playwright Configuration
+
+```typescript
+// playwright.config.ts
+export default defineConfig({
+  testDir: './tests',
+  use: {
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL ?? 'http://localhost:3000',
+    extraHTTPHeaders: {
+      'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET ?? '',
+    },
+  },
+  workers: process.env.CI ? 1 : undefined,
+});
+```
+
+**Key details:**
+- Base URL configurable via `PLAYWRIGHT_TEST_BASE_URL` env var — defaults to `http://localhost:3000`
+- Vercel preview protection bypass via `VERCEL_AUTOMATION_BYPASS_SECRET` header — allows running against Vercel preview deployments
+- CI mode: single worker (`workers: 1`) to prevent flakiness
+- No browser projects configured explicitly — uses Playwright defaults (Chromium)
+
+## Mocking
+
+**Framework:** None
+
+**Patterns:**
+- No mocking infrastructure present — tests run against live server
+- No API mocking (MSW, etc.) configured
+
+## Fixtures and Factories
+
+**Test Data:**
+- None — current tests navigate to live pages only
+
+**Location:**
+- No fixtures directory
+
+## Coverage
+
+**Requirements:** None enforced
+
+**View Coverage:**
+- Not configured
+
+## Test Types
+
+**Unit Tests:**
+- Not present — no unit test framework installed
+
+**Integration Tests:**
+- Not present
+
+**E2E Tests:**
+- Framework: Playwright
+- Scope: Smoke tests only — verifies page title loads
+- File: `tests/smoke.spec.ts`
+
+## Common Patterns
+
+**Async Testing:**
+```typescript
+test('homepage loads', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveTitle(/SAGIE/i);
+});
+```
+
+**Adding New Tests:**
+- Add `.spec.ts` files to `tests/`
+- Use `page.goto('/')` with relative paths — base URL injected from config
+- Use `expect(page).toHaveTitle()`, `expect(page.locator(...)).toBeVisible()`, etc.
+- For Vercel preview testing, set `PLAYWRIGHT_TEST_BASE_URL` and `VERCEL_AUTOMATION_BYPASS_SECRET` env vars
+
+## Testing Gaps
+
+**Not tested:**
+- Form submissions and API route behavior
+- Client-side validation logic in form components
+- Notion data fetching (`src/lib/blog.ts`, `src/lib/events.ts`, etc.)
+- Animation and scroll reveal behavior
+- All apply pages (`/apply/*`)
+- Error states and 404 page
+
+**Coverage is minimal** — only a single homepage title check exists. The test suite is a placeholder skeleton.
+
+---
+
+*Testing analysis: 2026-03-28*
