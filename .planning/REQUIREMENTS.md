@@ -32,7 +32,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [ ] **FEAT-02**: Email confirmation sent to applicant after form submission
 - [ ] **FEAT-03**: Email alert sent to admin after form submission
 - [ ] **FEAT-04**: Sitemap includes all routes and dynamic blog/content pages
-- [ ] **FEAT-05**: error.tsx and loading.tsx boundaries exist for all route segments
+- [x] **FEAT-05**: error.tsx and loading.tsx boundaries exist for all route segments
 
 ### Globe
 
@@ -94,7 +94,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FEAT-02 | Phase 3 | Pending |
 | FEAT-03 | Phase 3 | Pending |
 | FEAT-04 | Phase 3 | Pending |
-| FEAT-05 | Phase 2 | Pending |
+| FEAT-05 | Phase 2 | Complete |
 | GLOBE-01 | Phase 3 | Pending |
 | GLOBE-02 | Phase 3 | Pending |
 | TEST-01 | Phase 4 | Pending |
