@@ -8,7 +8,7 @@ import { VenturesSchema } from '@/lib/schemas'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
-type FormData = z.input<typeof VenturesSchema>
+type FormData = z.infer<typeof VenturesSchema>
 
 function SectionHeader({ label }: { label: string }) {
   return (

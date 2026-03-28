@@ -79,8 +79,9 @@ test('membership form shows blur validation errors', async ({ page }) => {
   // Error message should appear
   await expect(page.getByText('What should we call you?')).toBeVisible({ timeout: 5000 });
 
-  // Type a valid value — error should clear
+  // Type a valid value — error should clear (blur triggers revalidation)
   await page.locator('[name="fullName"]').fill('Ada Lovelace');
+  await page.locator('[name="fullName"]').blur();
   await expect(page.getByText('What should we call you?')).not.toBeVisible({ timeout: 5000 });
 });
 
