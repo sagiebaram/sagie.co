@@ -20,7 +20,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **EVT-02**: Add to Calendar modal offers Google Calendar, Outlook, Apple Calendar links and .ics download
 - [x] **EVT-03**: More Info button links to event's detail/info URL from Notion
 - [x] **EVT-04**: Read Recap button links to event's recap URL from Notion
-- [ ] **EVT-05**: Event action buttons show/hide based on data availability (no dead buttons)
+- [x] **EVT-05**: Event action buttons show/hide based on data availability (no dead buttons)
 
 ### Forms
 
@@ -130,7 +130,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EVT-02 | Phase 6 | Complete |
 | EVT-03 | Phase 6 | Complete |
 | EVT-04 | Phase 6 | Complete |
-| EVT-05 | Phase 6 | Pending |
+| EVT-05 | Phase 6 | Complete |
 | FORM-01 | Phase 7 | Complete |
 | FORM-02 | Phase 7 | Complete |
 | FORM-03 | Phase 7 | Complete |
