@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import dynamic from 'next/dynamic'
+import type { CityData } from '@/lib/members'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Globe = dynamic(() => import('react-globe.gl').then((mod) => mod.default) as any, {
@@ -13,15 +14,6 @@ const Globe = dynamic(() => import('react-globe.gl').then((mod) => mod.default) 
   ),
 }) as any
 
-interface City {
-  id: string
-  name: string
-  lat: number
-  lng: number
-  members: number
-  isChapter: boolean
-}
-
 interface Arc {
   startLat: number
   startLng: number
@@ -29,27 +21,13 @@ interface Arc {
   endLng: number
 }
 
-const MOCK_CITIES: readonly City[] = [
-  { id: 'mia', name: 'Miami', lat: 25.7617, lng: -80.1918, members: 82, isChapter: true },
-  { id: 'nyc', name: 'New York', lat: 40.7128, lng: -74.006, members: 45, isChapter: false },
-  { id: 'lon', name: 'London', lat: 51.5074, lng: -0.1278, members: 24, isChapter: false },
-  { id: 'tlv', name: 'Tel Aviv', lat: 32.0853, lng: 34.7818, members: 38, isChapter: false },
-]
-
-const MOCK_ARCS: readonly Arc[] = [
-  { startLat: 25.7617, startLng: -80.1918, endLat: 40.7128, endLng: -74.006 },
-  { startLat: 40.7128, startLng: -74.006, endLat: 51.5074, endLng: -0.1278 },
-  { startLat: 51.5074, startLng: -0.1278, endLat: 32.0853, endLng: 34.7818 },
-  { startLat: 32.0853, startLng: 34.7818, endLat: 25.7617, endLng: -80.1918 },
-]
-
-export function GlobeNetwork() {
+export function GlobeNetwork({ cities }: { cities: CityData[] }) {
   const globeRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const cancelledRef = useRef(false)
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 })
   const [countries, setCountries] = useState<{ features: any[] }>({ features: [] })
-  
+
   const globeColors = {
     globeColor: '#000000',
     showAtmosphere: true,
@@ -66,9 +44,9 @@ export function GlobeNetwork() {
 
   const [isZoomedIn, setIsZoomedIn] = useState(false)
   const [hoveredCity, setHoveredCity] = useState<string | null>(null)
-  const [selectedCity, setSelectedCity] = useState<City | null>(null)
+  const [selectedCity, setSelectedCity] = useState<CityData | null>(null)
 
-  const handleSelect = (city: City | null) => {
+  const handleSelect = (city: CityData | null) => {
     setSelectedCity(city)
     const controls = globeRef.current?.controls()
     if (city) {
@@ -90,9 +68,7 @@ export function GlobeNetwork() {
   selectedCityRef.current = selectedCity
 
   useEffect(() => {
-    fetch(
-      'https://raw.githubusercontent.com/vasturiano/react-globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson',
-    )
+    fetch('/data/ne_110m_admin_0_countries.geojson')
       .then((res) => res.json())
       .then(setCountries)
       .catch((err: unknown) => console.error('Failed to fetch country polygons:', err))
@@ -155,15 +131,33 @@ export function GlobeNetwork() {
 
   const ringsData = useMemo(
     () =>
-      MOCK_CITIES.filter((c) => c.isChapter).map((c) => ({
+      cities.filter((c) => c.isChapter).map((c) => ({
         lat: c.lat,
         lng: c.lng,
-        maxR: 18,
+        maxR: 14 + Math.log10(Math.max(c.members, 1) + 1) * 6,
         propagationSpeed: 1.2,
         repeatPeriod: 1400,
       })),
-    [],
+    [cities],
   )
+
+  // Generate arcs dynamically between chapter cities
+  const arcsData = useMemo((): Arc[] => {
+    const chapterCities = cities.filter((c) => c.isChapter)
+    if (chapterCities.length < 2) return []
+    const arcs: Arc[] = []
+    for (let i = 0; i < chapterCities.length; i++) {
+      for (let j = i + 1; j < chapterCities.length; j++) {
+        arcs.push({
+          startLat: chapterCities[i]!.lat,
+          startLng: chapterCities[i]!.lng,
+          endLat: chapterCities[j]!.lat,
+          endLng: chapterCities[j]!.lng,
+        })
+      }
+    }
+    return arcs
+  }, [cities])
 
   useEffect(() => {
     // Imperatively update the labels to bypass globe.gl's re-rendering logic
@@ -202,17 +196,19 @@ export function GlobeNetwork() {
           polygonCapColor={globeColors.polygonCapColor}
           polygonSideColor={globeColors.polygonSideColor}
           polygonStrokeColor={globeColors.polygonStrokeColor}
-          pointsData={[...MOCK_CITIES]}
+          pointsData={[...cities]}
           pointColor={(d: any) => {
             if (hoveredCity === d.id) return '#ffffff'
             return hoveredCity
               ? 'rgba(255,255,255,0.15)'
               : globeColors.pointColor(d)
           }}
-          pointAltitude={0.02}
+          pointAltitude={(d: any) => 0.02 + (d.members / 200) * 0.04}
           pointRadius={(d: any) => {
             if (hoveredCity === d.id) return 0.8
-            return d.isChapter ? 0.6 : 0.3
+            const base = d.isChapter ? 0.6 : 0.3
+            const scale = Math.log10(Math.max(d.members, 1) + 1) * 0.4
+            return base + scale
           }}
           pointsMerge={false}
           ringsData={ringsData}
@@ -220,10 +216,10 @@ export function GlobeNetwork() {
           ringMaxRadius="maxR"
           ringPropagationSpeed="propagationSpeed"
           ringRepeatPeriod="repeatPeriod"
-          arcsData={[...MOCK_ARCS]}
+          arcsData={arcsData}
           arcColor={(arc: any) => {
             if (!hoveredCity) return globeColors.arcColorIdle
-            const city = MOCK_CITIES.find(c => c.id === hoveredCity)
+            const city = cities.find(c => c.id === hoveredCity)
             const isConnected =
               arc.startLat === city?.lat || arc.endLat === city?.lat
             return isConnected ? globeColors.arcColorConnected : globeColors.arcColorIdle
@@ -235,12 +231,12 @@ export function GlobeNetwork() {
           arcStroke={0.5}
           onPointHover={(point: any) => setHoveredCity(point ? point.id : null)}
           onPointClick={(point: any) => {
-            const city = MOCK_CITIES.find(c => c.id === point.id)
+            const city = cities.find(c => c.id === point.id)
             if (city) {
               handleSelect(selectedCity?.id === city.id ? null : city)
             }
           }}
-          htmlElementsData={[...MOCK_CITIES]}
+          htmlElementsData={[...cities]}
           htmlElement={(d: any) => {
             const el = document.createElement('div')
             el.innerHTML = `
@@ -253,7 +249,7 @@ export function GlobeNetwork() {
             `
             el.onclick = (e: MouseEvent) => {
               e.stopPropagation()
-              const city = MOCK_CITIES.find(c => c.id === d.id) || null
+              const city = cities.find(c => c.id === d.id) || null
               const prev = selectedCityRef.current
               handleSelectRef.current(prev?.id === city?.id ? null : city)
             }
@@ -307,7 +303,7 @@ export function GlobeNetwork() {
         className="absolute bottom-6 right-6 z-20"
         style={{ minWidth: '160px' }}
       >
-        {MOCK_CITIES.map((city) => (
+        {cities.map((city) => (
           <button
             key={city.id}
             onClick={() => handleSelect(selectedCity?.id === city.id ? null : city)}
