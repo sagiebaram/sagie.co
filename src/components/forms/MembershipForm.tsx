@@ -30,6 +30,7 @@ export function MembershipForm() {
     if (!fields.email) e.email = 'Required'
     if (!fields.location) e.location = 'Required'
     if (!fields.whatTheyNeed) e.whatTheyNeed = 'Required'
+    if (!fields.role) e.role = 'Required'
     if (!fields.howTheyKnowSagie) e.howTheyKnowSagie = 'Required'
     return e
   }
@@ -74,8 +75,10 @@ export function MembershipForm() {
           name="role"
           type="select"
           options={['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']}
+          required
           value={fields.role}
           onChange={set('role')}
+          error={errors.role}
         />
       </div>
       <FormField label="What are you building or working on?" name="whatTheyNeed" type="textarea" placeholder="Tell us what you're focused on right now." required value={fields.whatTheyNeed} onChange={set('whatTheyNeed')} error={errors.whatTheyNeed} />
