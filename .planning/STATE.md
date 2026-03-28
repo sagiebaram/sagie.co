@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-28T14:07:34.077Z"
+stopped_at: Completed 02-harden-01-PLAN.md
+last_updated: "2026-03-28T14:18:14.955Z"
 last_activity: 2026-03-28 — Roadmap created
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
   percent: 100
 ---
 
@@ -52,6 +52,7 @@ Progress: [██████████] 100%
 *Updated after each plan completion*
 | Phase 01-stabilize P01 | 15 | 2 tasks | 6 files |
 | Phase 01-stabilize P02 | 3 | 2 tasks | 7 files |
+| Phase 02-harden P01 | 2 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - [Phase 01-stabilize]: Deleted constants/events.ts and constants/resources.ts entirely — zero external imports confirmed before deletion
 - [Phase 01-stabilize]: MOCK_CITIES and MOCK_ARCS kept in GlobeNetwork.tsx — local presentation data, not cross-file mock constants targeted by CLN-01
 - [Phase 01-stabilize]: cancelledRef pattern established for guarding setTimeout loops in React components on unmount
+- [Phase 02-harden]: proxy.ts owns full CSP; next.config.ts retains only static security headers to avoid duplicate CSP header conflicts
+- [Phase 02-harden]: Origin check only rejects when origin header is present AND not in ALLOWED_ORIGINS — missing origin (same-origin/server-to-server) allowed through
+- [Phase 02-harden]: Rate limiter in withValidation (not proxy.ts) — keeps proxy stateless; in-memory Map sufficient for single-instance community site
 
 ### Pending Todos
 
@@ -81,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T14:07:34.070Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-testing/04-CONTEXT.md
+Last session: 2026-03-28T14:18:14.953Z
+Stopped at: Completed 02-harden-01-PLAN.md
+Resume file: None

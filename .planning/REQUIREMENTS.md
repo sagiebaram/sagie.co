@@ -21,10 +21,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Security
 
-- [ ] **SEC-01**: API routes enforce IP-based rate limiting (target: 5 submissions per IP per 10 min)
-- [ ] **SEC-02**: API routes check Origin header against allowedOrigins
-- [ ] **SEC-03**: CSP script-src uses per-request nonces instead of unsafe-inline
-- [ ] **SEC-04**: Sentry tracesSampleRate lowered to 0.1-0.2 in production
+- [x] **SEC-01**: API routes enforce IP-based rate limiting (target: 5 submissions per IP per 10 min)
+- [x] **SEC-02**: API routes check Origin header against allowedOrigins
+- [x] **SEC-03**: CSP script-src uses per-request nonces instead of unsafe-inline
+- [x] **SEC-04**: Sentry tracesSampleRate lowered to 0.1-0.2 in production
 
 ### Features
 
@@ -86,10 +86,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLN-01 | Phase 1 | Complete |
 | CLN-02 | Phase 1 | Complete |
 | CLN-03 | Phase 1 | Complete |
-| SEC-01 | Phase 2 | Pending |
-| SEC-02 | Phase 2 | Pending |
-| SEC-03 | Phase 2 | Pending |
-| SEC-04 | Phase 2 | Pending |
+| SEC-01 | Phase 2 | Complete |
+| SEC-02 | Phase 2 | Complete |
+| SEC-03 | Phase 2 | Complete |
+| SEC-04 | Phase 2 | Complete |
 | FEAT-01 | Phase 3 | Pending |
 | FEAT-02 | Phase 3 | Pending |
 | FEAT-03 | Phase 3 | Pending |
