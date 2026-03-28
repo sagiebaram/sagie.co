@@ -337,9 +337,16 @@ export function CircuitBackground() {
 
     window.addEventListener('resize', onResize)
 
+    // Re-render canvas when restored from bfcache (back navigation)
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setupCanvas()
+    }
+    window.addEventListener('pageshow', onPageShow)
+
     return () => {
       cancelAnimationFrame(animationRef.current)
       window.removeEventListener('resize', onResize)
+      window.removeEventListener('pageshow', onPageShow)
       clearTimeout(resizeTimer)
     }
   }, [setupCanvas])

@@ -28,10 +28,12 @@ export function MembershipForm() {
     const e: Record<string, string> = {}
     if (!fields.fullName) e.fullName = 'Required'
     if (!fields.email) e.email = 'Required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email'
     if (!fields.location) e.location = 'Required'
     if (!fields.whatTheyNeed) e.whatTheyNeed = 'Required'
     if (!fields.role) e.role = 'Required'
     if (!fields.howTheyKnowSagie) e.howTheyKnowSagie = 'Required'
+    if (fields.linkedIn && !/^https?:\/\/.+/.test(fields.linkedIn)) e.linkedIn = 'Enter a full URL (https://...)'
     return e
   }
 
