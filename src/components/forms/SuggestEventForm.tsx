@@ -1,25 +1,32 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { EventSuggestionSchema } from '@/lib/schemas'
+
+type FormData = z.infer<typeof EventSuggestionSchema>
 
 export function SuggestEventForm() {
-  const [fields, setFields] = useState({
-    eventName: '',
-    eventType: '',
-    proposedDate: '',
-    description: '',
-    yourName: '',
-    yourEmail: '',
-  })
   const trapRef = useRef('')
   const loadTime = useRef(Date.now())
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [rateLimitUntil, setRateLimitUntil] = useState<number | null>(null)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(EventSuggestionSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
+  })
 
   useEffect(() => {
     if (!rateLimitUntil) return
@@ -29,29 +36,13 @@ export function SuggestEventForm() {
     return () => clearTimeout(timer)
   }, [rateLimitUntil])
 
-  const set = (key: string) => (value: string) =>
-    setFields(prev => ({ ...prev, [key]: value }))
-
-  const validate = () => {
-    const e: Record<string, string> = {}
-    if (!fields.eventName) e.eventName = 'Required'
-    if (!fields.eventType) e.eventType = 'Required'
-    if (!fields.description) e.description = 'Required'
-    if (!fields.yourName) e.yourName = 'Required'
-    if (!fields.yourEmail) e.yourEmail = 'Required'
-    return e
-  }
-
-  const handleSubmit = async () => {
-    const e = validate()
-    if (Object.keys(e).length) { setErrors(e); return }
-    setLoading(true)
+  const onSubmit = async (data: FormData) => {
     setSubmitWarning(null)
     try {
       const res = await fetch('/api/suggest-event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
+        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime.current }),
       })
 
       if (res.status === 429) {
@@ -64,15 +55,12 @@ export function SuggestEventForm() {
       }
 
       if (!res.ok) {
-        setErrors({ submit: 'Something went wrong. Please try again.' })
         return
       }
 
       setSuccess(true)
     } catch {
-      setErrors({ submit: 'Something went wrong. Please try again.' })
-    } finally {
-      setLoading(false)
+      // submission error — user can retry
     }
   }
 
@@ -85,27 +73,13 @@ export function SuggestEventForm() {
     )
   }
 
+  const isRateLimited = rateLimitUntil !== null && Date.now() < rateLimitUntil
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Event Name" name="eventName" placeholder="What's the event called?" required value={fields.eventName} onChange={set('eventName')} error={errors.eventName} />
-        <FormField
-          label="Event Type"
-          name="eventType"
-          type="select"
-          options={['SAGIE Event', 'Local Event', 'Webinar']}
-          required
-          value={fields.eventType}
-          onChange={set('eventType')}
-          error={errors.eventType}
-        />
-      </div>
-      <FormField label="Proposed Date" name="proposedDate" placeholder="Approximate date or timeframe" value={fields.proposedDate} onChange={set('proposedDate')} />
-      <FormField label="Description" name="description" type="textarea" placeholder="What's the idea?" required value={fields.description} onChange={set('description')} error={errors.description} />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Your Name" name="yourName" placeholder="Your full name" required value={fields.yourName} onChange={set('yourName')} error={errors.yourName} />
-        <FormField label="Your Email" name="yourEmail" type="email" placeholder="your@email.com" required value={fields.yourEmail} onChange={set('yourEmail')} error={errors.yourEmail} />
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <FormField label="Event Name" name="eventName" placeholder="What's the event called?" required registration={register('eventName')} error={errors.eventName?.message} />
+      <FormField label="Your Name" name="suggestedBy" placeholder="Your full name" required registration={register('suggestedBy')} error={errors.suggestedBy?.message} />
+      <FormField label="Description" name="description" type="textarea" placeholder="What's the idea?" required registration={register('description')} error={errors.description?.message} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.current.toString()} />
       {submitWarning && (
@@ -113,14 +87,11 @@ export function SuggestEventForm() {
           {submitWarning}
         </span>
       )}
-      {errors.submit && (
-        <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
-      )}
       <button
-        onClick={handleSubmit}
-        disabled={loading || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
+        type="submit"
+        disabled={isSubmitting || isRateLimited}
         style={{
-          background: loading ? 'var(--border-default)' : 'var(--silver)',
+          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',
           fontFamily: 'var(--font-display)',
           fontSize: '14px',
@@ -128,12 +99,12 @@ export function SuggestEventForm() {
           textTransform: 'uppercase',
           padding: '14px 32px',
           border: 'none',
-          cursor: loading ? 'not-allowed' : 'pointer',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
           alignSelf: 'flex-start',
         }}
       >
-        {loading ? 'Submitting...' : 'Submit Suggestion →'}
+        {isSubmitting ? 'Submitting...' : 'Submit Suggestion →'}
       </button>
-    </div>
+    </form>
   )
 }

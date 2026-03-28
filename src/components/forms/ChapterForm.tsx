@@ -1,26 +1,32 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { ChapterSchema } from '@/lib/schemas'
+
+type FormData = z.infer<typeof ChapterSchema>
 
 export function ChapterForm() {
-  const [fields, setFields] = useState({
-    fullName: '',
-    email: '',
-    city: '',
-    whyLead: '',
-    background: '',
-    chapterVision: '',
-    linkedIn: '',
-  })
   const trapRef = useRef('')
   const loadTime = useRef(Date.now())
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [rateLimitUntil, setRateLimitUntil] = useState<number | null>(null)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(ChapterSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
+  })
 
   useEffect(() => {
     if (!rateLimitUntil) return
@@ -30,32 +36,13 @@ export function ChapterForm() {
     return () => clearTimeout(timer)
   }, [rateLimitUntil])
 
-  const set = (key: string) => (value: string) =>
-    setFields(prev => ({ ...prev, [key]: value }))
-
-  const validate = () => {
-    const e: Record<string, string> = {}
-    if (!fields.fullName) e.fullName = 'Required'
-    if (!fields.email) e.email = 'Required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email'
-    if (!fields.city) e.city = 'Required'
-    if (!fields.whyLead) e.whyLead = 'Required'
-    if (!fields.background) e.background = 'Required'
-    if (!fields.chapterVision) e.chapterVision = 'Required'
-    if (fields.linkedIn && !/^https?:\/\/.+/.test(fields.linkedIn)) e.linkedIn = 'Enter a full URL (https://...)'
-    return e
-  }
-
-  const handleSubmit = async () => {
-    const e = validate()
-    if (Object.keys(e).length) { setErrors(e); return }
-    setLoading(true)
+  const onSubmit = async (data: FormData) => {
     setSubmitWarning(null)
     try {
       const res = await fetch('/api/applications/chapter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
+        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime.current }),
       })
 
       if (res.status === 429) {
@@ -68,15 +55,12 @@ export function ChapterForm() {
       }
 
       if (!res.ok) {
-        setErrors({ submit: 'Something went wrong. Please try again.' })
         return
       }
 
       setSuccess(true)
     } catch {
-      setErrors({ submit: 'Something went wrong. Please try again.' })
-    } finally {
-      setLoading(false)
+      // submission error — user can retry
     }
   }
 
@@ -89,17 +73,22 @@ export function ChapterForm() {
     )
   }
 
+  const isRateLimited = rateLimitUntil !== null && Date.now() < rateLimitUntil
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Full Name" name="fullName" placeholder="Your full name" required value={fields.fullName} onChange={set('fullName')} error={errors.fullName} />
-        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required value={fields.email} onChange={set('email')} error={errors.email} />
+        <FormField label="Full Name" name="fullName" placeholder="Your full name" required registration={register('fullName')} error={errors.fullName?.message} />
+        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
       </div>
-      <FormField label="Which city do you want to lead?" name="city" placeholder="City name" required value={fields.city} onChange={set('city')} error={errors.city} />
-      <FormField label="Why is this city ready for a SAGIE chapter?" name="whyLead" type="textarea" placeholder="Tell us why this city is ready." required value={fields.whyLead} onChange={set('whyLead')} error={errors.whyLead} />
-      <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." required value={fields.background} onChange={set('background')} error={errors.background} />
-      <FormField label="What does a chapter look like to you?" name="chapterVision" type="textarea" placeholder="Your vision for the chapter." required value={fields.chapterVision} onChange={set('chapterVision')} error={errors.chapterVision} />
-      <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" value={fields.linkedIn} onChange={set('linkedIn')} />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <FormField label="Which city do you want to lead?" name="city" placeholder="City name" required registration={register('city')} error={errors.city?.message} />
+        <FormField label="Community size (approx.)" name="communitySize" placeholder="e.g. 200 people in my network" registration={register('communitySize')} error={errors.communitySize?.message} />
+      </div>
+      <FormField label="Why is this city ready for a SAGIE chapter?" name="whyLead" type="textarea" placeholder="Tell us why this city is ready." required registration={register('whyLead')} error={errors.whyLead?.message} />
+      <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." registration={register('background')} error={errors.background?.message} />
+      <FormField label="What does a chapter look like to you?" name="chapterVision" type="textarea" placeholder="Your vision for the chapter." registration={register('chapterVision')} error={errors.chapterVision?.message} />
+      <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.current.toString()} />
       {submitWarning && (
@@ -107,14 +96,11 @@ export function ChapterForm() {
           {submitWarning}
         </span>
       )}
-      {errors.submit && (
-        <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
-      )}
       <button
-        onClick={handleSubmit}
-        disabled={loading || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
+        type="submit"
+        disabled={isSubmitting || isRateLimited}
         style={{
-          background: loading ? 'var(--border-default)' : 'var(--silver)',
+          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',
           fontFamily: 'var(--font-display)',
           fontSize: '14px',
@@ -122,12 +108,12 @@ export function ChapterForm() {
           textTransform: 'uppercase',
           padding: '14px 32px',
           border: 'none',
-          cursor: loading ? 'not-allowed' : 'pointer',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
           alignSelf: 'flex-start',
         }}
       >
-        {loading ? 'Submitting...' : 'Submit Application →'}
+        {isSubmitting ? 'Submitting...' : 'Submit Application →'}
       </button>
-    </div>
+    </form>
   )
 }
