@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Phase 5 planned — 3 plans in 2 waves, verified
-last_updated: "2026-03-28T20:59:44.848Z"
+stopped_at: Completed 05-01-PLAN.md — nuqs installed, NuqsAdapter in layout, GSAPCleanup bfcache-hardened, useScrollReveal filterKey added
+last_updated: "2026-03-28T21:07:40.178Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 14
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -54,6 +54,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 
 - Last 5 plans: —
 - Trend: —
+| Phase 05-bug-fixes P01 | 5 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,9 @@ Recent decisions affecting current work:
 - [v2.0-roadmap]: nuqs adopted for filter URL params (FIX-01) — requirements confirmed shareability as user need
 - [v2.0-roadmap]: Phases 6 and 7 are independent (disjoint code areas) and can be executed in parallel
 - [v2.0-roadmap]: Only two new packages needed for v2.0 — react-hook-form@^7.72.0 and @hookform/resolvers@^5.2.2 (Phase 7 only); nuqs covers Phase 5 filter fix using existing patterns
+- [Phase 05-bug-fixes]: npm install nuqs used --legacy-peer-deps due to pre-existing @eslint/js@10 vs eslint@9 peer conflict
+- [Phase 05-bug-fixes]: UseScrollRevealOptions exported so Plan 02 filter components can type filterKey usage
+- [Phase 05-bug-fixes]: filterKey useEffect uses isFirstRender ref to skip mount — GSAP useLayoutEffect owns initial animation
 
 ### Pending Todos
 
@@ -102,6 +106,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T20:59:44.842Z
-Stopped at: Phase 5 planned — 3 plans in 2 waves, verified
-Resume file: .planning/phases/05-bug-fixes/05-01-PLAN.md
+Last session: 2026-03-28T21:07:40.176Z
+Stopped at: Completed 05-01-PLAN.md — nuqs installed, NuqsAdapter in layout, GSAPCleanup bfcache-hardened, useScrollReveal filterKey added
+Resume file: None

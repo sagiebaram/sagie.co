@@ -9,9 +9,9 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Bug Fixes
 
-- [ ] **FIX-01**: Filter state stored in URL params (nuqs) so Blog/Solutions/Resources filters persist and are shareable
-- [ ] **FIX-02**: GSAP ScrollTrigger refreshes when filter state changes so filtered components render correctly
-- [ ] **FIX-03**: Browser back/forward navigation renders pages without requiring a manual refresh
+- [x] **FIX-01**: Filter state stored in URL params (nuqs) so Blog/Solutions/Resources filters persist and are shareable
+- [x] **FIX-02**: GSAP ScrollTrigger refreshes when filter state changes so filtered components render correctly
+- [x] **FIX-03**: Browser back/forward navigation renders pages without requiring a manual refresh
 - [ ] **FIX-04**: User sees a clear error message when form submission is rate-limited (429)
 
 ### Events
@@ -122,9 +122,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FIX-01 | Phase 5 | Pending |
-| FIX-02 | Phase 5 | Pending |
-| FIX-03 | Phase 5 | Pending |
+| FIX-01 | Phase 5 | Complete |
+| FIX-02 | Phase 5 | Complete |
+| FIX-03 | Phase 5 | Complete |
 | FIX-04 | Phase 5 | Pending |
 | EVT-01 | Phase 6 | Pending |
 | EVT-02 | Phase 6 | Pending |
