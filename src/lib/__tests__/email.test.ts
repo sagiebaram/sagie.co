@@ -13,13 +13,18 @@ vi.mock('@sentry/nextjs', () => ({
   captureException: vi.fn(),
 }))
 
-const mockSend = vi.fn().mockResolvedValue({ id: 'mock-id' })
+// Using a module-level object so the mock factory can reference it before hoisting
+const resendMockState = {
+  send: vi.fn().mockResolvedValue({ id: 'mock-id' }),
+}
 
-vi.mock('resend', () => ({
-  Resend: vi.fn().mockImplementation(() => ({
-    emails: { send: mockSend },
-  })),
-}))
+vi.mock('resend', () => {
+  return {
+    Resend: class {
+      emails = { send: (...args: unknown[]) => resendMockState.send(...args) }
+    },
+  }
+})
 
 vi.mock('@/emails/ConfirmationEmail', () => ({
   ConfirmationEmail: vi.fn().mockReturnValue(null),
@@ -40,6 +45,7 @@ import { env } from '@/env/server'
 describe('sendEmails', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    resendMockState.send.mockResolvedValue({ id: 'mock-id' })
   })
 
   test('exports FormType values as expected union', () => {
@@ -59,20 +65,20 @@ describe('sendEmails', () => {
   test('sends confirmation and admin alert when applicantEmail provided (production)', async () => {
     await sendEmails('Membership Application', 'user@example.com', { name: 'Test User' })
 
-    expect(mockSend).toHaveBeenCalledTimes(2)
+    expect(resendMockState.send).toHaveBeenCalledTimes(2)
 
-    const calls = mockSend.mock.calls
+    const calls = resendMockState.send.mock.calls
     // Confirmation email goes to the applicant
-    expect(calls[0][0].to).toBe('user@example.com')
+    expect((calls[0]![0] as { to: string }).to).toBe('user@example.com')
     // Admin alert goes to admin
-    expect(calls[1][0].to).toBe('hello@sagie.co')
+    expect((calls[1]![0] as { to: string }).to).toBe('hello@sagie.co')
   })
 
   test('sends only admin alert when applicantEmail is null (no email field)', async () => {
     await sendEmails('Event Suggestion', null, { eventName: 'Test Event' })
 
-    expect(mockSend).toHaveBeenCalledTimes(1)
-    expect(mockSend.mock.calls[0][0].to).toBe('hello@sagie.co')
+    expect(resendMockState.send).toHaveBeenCalledTimes(1)
+    expect((resendMockState.send.mock.calls[0]![0] as { to: string }).to).toBe('hello@sagie.co')
   })
 
   test('skips all sends in non-production environment', async () => {
@@ -83,7 +89,7 @@ describe('sendEmails', () => {
 
     await sendEmails('Resource Submission', null, { name: 'test', url: 'https://example.com' })
 
-    expect(mockSend).not.toHaveBeenCalled()
+    expect(resendMockState.send).not.toHaveBeenCalled()
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('skip (non-production)'))
 
     // Restore
@@ -93,7 +99,7 @@ describe('sendEmails', () => {
 
   test('captures Sentry exception when resend.emails.send rejects', async () => {
     const sendError = new Error('Resend API error')
-    mockSend.mockRejectedValueOnce(sendError)
+    resendMockState.send.mockRejectedValueOnce(sendError)
 
     await sendEmails('Membership Application', 'user@example.com', { name: 'Test User' })
 
@@ -101,7 +107,7 @@ describe('sendEmails', () => {
   })
 
   test('does not throw when resend.emails.send rejects', async () => {
-    mockSend.mockRejectedValue(new Error('Network error'))
+    resendMockState.send.mockRejectedValue(new Error('Network error'))
 
     await expect(
       sendEmails('Membership Application', 'user@example.com', { name: 'Test' })
