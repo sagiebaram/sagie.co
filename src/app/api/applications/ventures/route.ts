@@ -1,29 +1,33 @@
 import { NextResponse } from 'next/server'
 import { notion } from '@/lib/notion'
+import { env } from '@/env/server'
+import { withValidation } from '@/lib/validation'
+import { VenturesSchema } from '@/lib/schemas'
+import { notionWrite } from '@/lib/notion-monitor'
 
-const DEAL_PIPELINE_DB_ID = process.env.NOTION_DEAL_PIPELINE_DB_ID ?? ''
-
-export async function POST(request: Request) {
+export const POST = withValidation(VenturesSchema, async (_req: Request, body) => {
   try {
-    const { fullName, email, companyName, building, stage, whySagie, website } = await request.json()
-
-    const notes = `${building}\n\nWhy SAGIE Ventures: ${whySagie}`
-
-    await notion.pages.create({
-      parent: { database_id: DEAL_PIPELINE_DB_ID },
+    await notionWrite(() => notion.pages.create({
+      parent: { database_id: env.NOTION_VENTURES_INTAKE_DB_ID },
       properties: {
-        Name: { title: [{ text: { content: companyName } }] },
-        Email: { email },
-        'Contact Name': { rich_text: [{ text: { content: fullName } }] },
-        Stage: { select: { name: stage } },
-        Description: { rich_text: [{ text: { content: notes } }] },
+        Name: { title: [{ text: { content: body.companyName } }] },
+        Email: { email: body.email },
+        'Contact Name': { rich_text: [{ text: { content: body.founderName } }] },
+        'One-Line Description': { rich_text: [{ text: { content: body.oneLineDescription } }] },
+        ...(body.sector ? { Sector: { select: { name: body.sector } } } : {}),
+        ...(body.stage ? { Stage: { select: { name: body.stage } } } : {}),
+        ...(body.raiseAmount ? { 'Raise Amount': { rich_text: [{ text: { content: body.raiseAmount } }] } } : {}),
+        ...(body.pitchDeckUrl ? { 'Pitch Deck URL': { url: body.pitchDeckUrl } } : {}),
+        ...(body.website ? { Website: { url: body.website } } : {}),
+        ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
+        ...(body.whySAGIE ? { 'Why SAGIE': { rich_text: [{ text: { content: body.whySAGIE } }] } } : {}),
         Source: { select: { name: 'Website Application' } },
       },
-    })
+    }))
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Ventures application failed:', error)
     return NextResponse.json({ error: 'Failed to process application' }, { status: 500 })
   }
-}
+})

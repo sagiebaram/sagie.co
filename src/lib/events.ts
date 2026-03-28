@@ -1,4 +1,6 @@
+import { unstable_cache } from 'next/cache'
 import { notion } from './notion'
+import { env } from '@/env/server'
 
 export interface SAGIEEvent {
   id: string
@@ -21,28 +23,36 @@ export interface SAGIEEvent {
   eventImage: string | null
 }
 
-export async function getUpcomingEvents(): Promise<SAGIEEvent[]> {
-  const response = await (notion as any).databases.query({
-    database_id: process.env.NOTION_EVENT_DB_ID!,
-    filter: {
-      and: [
-        { property: 'Status', select: { does_not_equal: 'Cancelled' } },
-        { property: 'Status', select: { does_not_equal: 'Complete' } },
-      ],
-    },
-    sorts: [{ property: 'Event Date', direction: 'ascending' }],
-  })
-  return response.results.map(mapEvent)
-}
+export const getUpcomingEvents = unstable_cache(
+  async (): Promise<SAGIEEvent[]> => {
+    const response = await notion.databases.query({
+      database_id: env.NOTION_EVENT_DB_ID,
+      filter: {
+        and: [
+          { property: 'Status', select: { does_not_equal: 'Cancelled' } },
+          { property: 'Status', select: { does_not_equal: 'Complete' } },
+        ],
+      },
+      sorts: [{ property: 'Event Date', direction: 'ascending' }],
+    })
+    return response.results.map(mapEvent)
+  },
+  ['notion:events:upcoming'],
+  { revalidate: 300, tags: ['notion:events'] }
+)
 
-export async function getPastEvents(): Promise<SAGIEEvent[]> {
-  const response = await (notion as any).databases.query({
-    database_id: process.env.NOTION_EVENT_DB_ID!,
-    filter: { property: 'Status', select: { equals: 'Complete' } },
-    sorts: [{ property: 'Event Date', direction: 'descending' }],
-  })
-  return response.results.map(mapEvent)
-}
+export const getPastEvents = unstable_cache(
+  async (): Promise<SAGIEEvent[]> => {
+    const response = await notion.databases.query({
+      database_id: env.NOTION_EVENT_DB_ID,
+      filter: { property: 'Status', select: { equals: 'Complete' } },
+      sorts: [{ property: 'Event Date', direction: 'descending' }],
+    })
+    return response.results.map(mapEvent)
+  },
+  ['notion:events:past'],
+  { revalidate: 300, tags: ['notion:events'] }
+)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapEvent(page: any): SAGIEEvent {

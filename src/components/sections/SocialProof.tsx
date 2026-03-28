@@ -3,7 +3,7 @@
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { CountUp } from '@/components/ui/CountUp'
-import { GlobeNetwork } from '@/components/GlobeNetwork'
+import { GlobeShell } from '@/components/GlobeShell'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { SOCIAL_STATS } from '@/constants/copy'
 
@@ -39,7 +39,9 @@ export function SocialProof() {
         })}
       </div>
 
-      <GlobeNetwork />
+      <div className="hidden md:block">
+        <GlobeShell />
+      </div>
     </Section>
   )
 }

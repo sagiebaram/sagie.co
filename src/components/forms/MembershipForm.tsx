@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
@@ -15,6 +15,8 @@ export function MembershipForm() {
     linkedIn: '',
     referral: '',
   })
+  const trapRef = useRef('')
+  const loadTime = useRef(Date.now())
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -40,7 +42,7 @@ export function MembershipForm() {
       await fetch('/api/applications/membership', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fields),
+        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
       })
       setSuccess(true)
     } catch {
@@ -82,6 +84,8 @@ export function MembershipForm() {
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" value={fields.linkedIn} onChange={set('linkedIn')} />
         <FormField label="How did you hear about us?" name="referral" placeholder="Name, event, social..." value={fields.referral} onChange={set('referral')} />
       </div>
+      <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
+      <input type="hidden" name="_t" value={loadTime.current.toString()} />
       {errors.submit && (
         <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
       )}

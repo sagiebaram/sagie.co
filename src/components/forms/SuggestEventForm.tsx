@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
@@ -13,6 +13,8 @@ export function SuggestEventForm() {
     yourName: '',
     yourEmail: '',
   })
+  const trapRef = useRef('')
+  const loadTime = useRef(Date.now())
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -38,7 +40,7 @@ export function SuggestEventForm() {
       await fetch('/api/suggest-event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fields),
+        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
       })
       setSuccess(true)
     } catch {
@@ -78,6 +80,8 @@ export function SuggestEventForm() {
         <FormField label="Your Name" name="yourName" placeholder="Your full name" required value={fields.yourName} onChange={set('yourName')} error={errors.yourName} />
         <FormField label="Your Email" name="yourEmail" type="email" placeholder="your@email.com" required value={fields.yourEmail} onChange={set('yourEmail')} error={errors.yourEmail} />
       </div>
+      <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
+      <input type="hidden" name="_t" value={loadTime.current.toString()} />
       {errors.submit && (
         <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
       )}

@@ -1,7 +1,7 @@
 import { getUpcomingEvents, getPastEvents, type SAGIEEvent } from '@/lib/events'
 import { EventsPageClient } from './EventsPageClient'
 
-export const revalidate = 3600
+export const revalidate = 300
 
 export default async function EventsPage() {
   let upcoming: SAGIEEvent[] = []

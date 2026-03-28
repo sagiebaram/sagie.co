@@ -1,28 +1,31 @@
 import { NextResponse } from 'next/server'
 import { notion } from '@/lib/notion'
+import { env } from '@/env/server'
+import { withValidation } from '@/lib/validation'
+import { SolutionsSchema } from '@/lib/schemas'
+import { notionWrite } from '@/lib/notion-monitor'
 
-const SOLUTIONS_DB_ID = 'f13af2979d1d455d960fdd962721401d'
-
-export async function POST(request: Request) {
+export const POST = withValidation(SolutionsSchema, async (_req: Request, body) => {
   try {
-    const { fullName, email, category, bio, servicesOffered, website, memberStatus } = await request.json()
-
-    await notion.pages.create({
-      parent: { database_id: SOLUTIONS_DB_ID },
+    await notionWrite(() => notion.pages.create({
+      parent: { database_id: env.NOTION_SOLUTIONS_DB_ID },
       properties: {
-        'Provider Name': { title: [{ text: { content: fullName } }] },
-        Email: { email },
-        Category: { select: { name: category || 'General' } },
-        Bio: { rich_text: [{ text: { content: bio } }] },
-        'Services Offered': { rich_text: [{ text: { content: servicesOffered } }] },
-        ...(website ? { Website: { url: website } } : {}),
+        'Provider Name': { title: [{ text: { content: body.providerName } }] },
+        Email: { email: body.email },
+        Category: { select: { name: body.category } },
+        Bio: { rich_text: [{ text: { content: body.bio } }] },
+        'Services Offered': { rich_text: [{ text: { content: body.servicesOffered } }] },
         Status: { select: { name: 'Pending Vetting' } },
+        ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
+        ...(body.portfolioUrl ? { Website: { url: body.portfolioUrl } } : {}),
+        ...(body.rateRange ? { 'Rate Range': { rich_text: [{ text: { content: body.rateRange } }] } } : {}),
+        ...(body.location ? { Location: { rich_text: [{ text: { content: body.location } }] } } : {}),
       },
-    })
+    }))
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Solutions application failed:', error)
     return NextResponse.json({ error: 'Failed to process application' }, { status: 500 })
   }
-}
+})

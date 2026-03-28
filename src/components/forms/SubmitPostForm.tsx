@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
@@ -13,6 +13,8 @@ export function SubmitPostForm() {
     content: '',
     url: '',
   })
+  const trapRef = useRef('')
+  const loadTime = useRef(Date.now())
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -38,7 +40,7 @@ export function SubmitPostForm() {
       await fetch('/api/submit-post', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fields),
+        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
       })
       setSuccess(true)
     } catch {
@@ -78,6 +80,8 @@ export function SubmitPostForm() {
       </div>
       <FormField label="Write your post" name="content" type="textarea" placeholder="Share your perspective with the ecosystem." required value={fields.content} onChange={set('content')} error={errors.content} />
       <FormField label="LinkedIn or website URL" name="url" type="url" placeholder="linkedin.com/in/yourname" value={fields.url} onChange={set('url')} />
+      <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
+      <input type="hidden" name="_t" value={loadTime.current.toString()} />
       {errors.submit && (
         <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
       )}

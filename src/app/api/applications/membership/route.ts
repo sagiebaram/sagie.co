@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 import { notion } from '@/lib/notion'
-
-const MEMBER_DB_ID = 'ec753df1-ca8d-46d7-8c74-9b6f64cea2d5'
+import { env } from '@/env/server'
+import { withValidation } from '@/lib/validation'
+import { MembershipSchema } from '@/lib/schemas'
+import { notionWrite } from '@/lib/notion-monitor'
 
 const ROLE_MAP: Record<string, string> = {
   Founder: 'Founder',
@@ -23,32 +25,35 @@ function mapLocation(city: string): string {
   return 'International'
 }
 
-export async function POST(request: Request) {
+export const POST = withValidation(MembershipSchema, async (_req: Request, body) => {
   try {
-    const { fullName, email, city, role, building, whySagie, linkedIn, referral } = await request.json()
+    const categoryNames = body.category?.length
+      ? body.category.map((c: string) => ({ name: c }))
+      : [{ name: ROLE_MAP[body.role] || body.role || 'Founder' }]
 
-    const categoryName = ROLE_MAP[role] || role || 'Founder'
-    const notes = [building, whySagie].filter(Boolean).join('\n\n')
-
-    await notion.pages.create({
-      parent: { database_id: MEMBER_DB_ID },
+    await notionWrite(() => notion.pages.create({
+      parent: { database_id: env.NOTION_MEMBER_DB_ID },
       properties: {
-        'Full Name': { title: [{ text: { content: fullName } }] },
-        Email: { email },
-        Category: { multi_select: [{ name: categoryName }] },
-        Location: { select: { name: mapLocation(city || '') } },
-        Tier: { select: { name: 'Explorer' } },
+        'Full Name': { title: [{ text: { content: body.fullName } }] },
+        Email: { email: body.email },
+        Category: { multi_select: categoryNames },
+        Location: { select: { name: mapLocation(body.location || '') } },
+        Tier: { select: { name: body.tier || 'Explorer' } },
         Status: { select: { name: 'New' } },
-        ...(referral ? { 'How They Know Sagie': { rich_text: [{ text: { content: referral } }] } } : {}),
-        ...(linkedIn ? { 'LinkedIn URL': { url: linkedIn } } : {}),
-        ...(notes ? { Notes: { rich_text: [{ text: { content: notes } }] } } : {}),
-        ...(role ? { Role: { rich_text: [{ text: { content: role } }] } } : {}),
+        'Application Status': { select: { name: 'Pending Review' } },
+        'Application Source': { select: { name: 'Website Form' } },
+        ...(body.howTheyKnowSagie ? { 'How They Know Sagie': { rich_text: [{ text: { content: body.howTheyKnowSagie } }] } } : {}),
+        ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
+        ...(body.whatTheyNeed ? { 'What They Need': { rich_text: [{ text: { content: body.whatTheyNeed } }] } } : {}),
+        ...(body.whatTheyOffer ? { 'What They Offer': { rich_text: [{ text: { content: body.whatTheyOffer } }] } } : {}),
+        ...(body.role ? { Role: { rich_text: [{ text: { content: body.role } }] } } : {}),
+        ...(body.company ? { Company: { rich_text: [{ text: { content: body.company } }] } } : {}),
       },
-    })
+    }))
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Membership application failed:', error)
     return NextResponse.json({ error: 'Failed to process application' }, { status: 500 })
   }
-}
+})

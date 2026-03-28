@@ -1,4 +1,6 @@
+import { unstable_cache } from 'next/cache'
 import { notion } from './notion'
+import { env } from '@/env/server'
 import { NotionToMarkdown } from 'notion-to-md'
 
 const n2m = new NotionToMarkdown({ notionClient: notion })
@@ -17,30 +19,34 @@ export interface BlogPost {
   readTime: number
 }
 
-export async function getAllPosts(): Promise<BlogPost[]> {
-  const response = await notion.databases.query({
-    database_id: process.env.NOTION_BLOG_DB_ID!,
-    filter: { property: 'Status', select: { equals: 'Published' } },
-    sorts: [{ property: 'Publish Date', direction: 'descending' }],
-  })
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return response.results.map((page: any) => {
-    const p = page.properties
-    return {
-      id: page.id,
-      title: p['Title']?.title?.[0]?.plain_text ?? 'Untitled',
-      slug: p['Slug']?.rich_text?.[0]?.plain_text ?? page.id,
-      category: p['Category']?.select?.name ?? 'Ecosystem',
-      excerpt: p['Excerpt']?.rich_text?.[0]?.plain_text ?? '',
-      author: p['Author']?.rich_text?.[0]?.plain_text ?? 'Sagie Baram',
-      authorType: p['Author Type']?.select?.name ?? 'Sagie',
-      coverImage: p['Cover Image']?.url ?? null,
-      featured: p['Featured']?.checkbox ?? false,
-      publishDate: p['Publish Date']?.date?.start ?? null,
-      readTime: p['Read Time']?.number ?? 3,
-    }
-  })
-}
+export const getAllPosts = unstable_cache(
+  async (): Promise<BlogPost[]> => {
+    const response = await notion.databases.query({
+      database_id: env.NOTION_BLOG_DB_ID,
+      filter: { property: 'Status', select: { equals: 'Published' } },
+      sorts: [{ property: 'Publish Date', direction: 'descending' }],
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return response.results.map((page: any) => {
+      const p = page.properties
+      return {
+        id: page.id,
+        title: p['Title']?.title?.[0]?.plain_text ?? 'Untitled',
+        slug: p['Slug']?.rich_text?.[0]?.plain_text ?? page.id,
+        category: p['Category']?.select?.name ?? 'Ecosystem',
+        excerpt: p['Excerpt']?.rich_text?.[0]?.plain_text ?? '',
+        author: p['Author']?.rich_text?.[0]?.plain_text ?? 'Sagie Baram',
+        authorType: p['Author Type']?.select?.name ?? 'Sagie',
+        coverImage: p['Cover Image']?.url ?? null,
+        featured: p['Featured']?.checkbox ?? false,
+        publishDate: p['Publish Date']?.date?.start ?? null,
+        readTime: p['Read Time']?.number ?? 3,
+      }
+    })
+  },
+  ['notion:blog:index'],
+  { revalidate: 3600, tags: ['notion:blog'] }
+)
 
 export async function getPostBySlug(slug: string): Promise<(BlogPost & { markdown: string }) | null> {
   const posts = await getAllPosts()

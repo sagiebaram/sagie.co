@@ -1,26 +1,28 @@
 import { NextResponse } from 'next/server'
 import { notion } from '@/lib/notion'
+import { env } from '@/env/server'
+import { withValidation } from '@/lib/validation'
+import { ChapterSchema } from '@/lib/schemas'
+import { notionWrite } from '@/lib/notion-monitor'
 
-const MEMBER_DB_ID = '08ec39a6-865f-4938-bb4d-44f86cd1e967'
-
-export async function POST(request: Request) {
+export const POST = withValidation(ChapterSchema, async (_req: Request, body) => {
   try {
-    const { fullName, email, city, whyCity, background, chapterVision, linkedIn } = await request.json()
-
-    const notes = `Chapter Lead Application — ${city}\n\nWhy this city: ${whyCity}\n\nBackground: ${background}\n\nChapter vision: ${chapterVision}`
-
-    await notion.pages.create({
-      parent: { database_id: MEMBER_DB_ID },
+    await notionWrite(() => notion.pages.create({
+      parent: { database_id: env.NOTION_MEMBER_DB_ID },
       properties: {
-        'Full Name': { title: [{ text: { content: fullName } }] },
-        Email: { email },
-        Notes: { rich_text: [{ text: { content: notes } }] },
+        'Full Name': { title: [{ text: { content: body.fullName } }] },
+        Email: { email: body.email },
+        'Chapter Lead Applicant': { checkbox: true },
+        ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
+        ...(body.communitySize ? { 'Existing Community Size': { rich_text: [{ text: { content: body.communitySize } }] } } : {}),
+        ...(body.whyLead ? { 'Why Lead': { rich_text: [{ text: { content: body.whyLead } }] } } : {}),
+        Notes: { rich_text: [{ text: { content: `Chapter Lead Application — ${body.city}` } }] },
       },
-    })
+    }))
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Chapter application failed:', error)
     return NextResponse.json({ error: 'Failed to process application' }, { status: 500 })
   }
-}
+})

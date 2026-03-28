@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
@@ -14,6 +14,8 @@ export function SolutionsForm() {
     website: '',
     memberStatus: '',
   })
+  const trapRef = useRef('')
+  const loadTime = useRef(Date.now())
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -39,7 +41,7 @@ export function SolutionsForm() {
       await fetch('/api/applications/solutions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fields),
+        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
       })
       setSuccess(true)
     } catch {
@@ -87,6 +89,8 @@ export function SolutionsForm() {
           onChange={set('memberStatus')}
         />
       </div>
+      <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
+      <input type="hidden" name="_t" value={loadTime.current.toString()} />
       {errors.submit && (
         <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
       )}
