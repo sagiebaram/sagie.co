@@ -46,6 +46,7 @@ const MOCK_ARCS: readonly Arc[] = [
 export function GlobeNetwork() {
   const globeRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const cancelledRef = useRef(false)
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 })
   const [countries, setCountries] = useState<{ features: any[] }>({ features: [] })
   
@@ -111,9 +112,18 @@ export function GlobeNetwork() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const initGlobe = () => {
+  useEffect(() => {
+    cancelledRef.current = false
+    return () => {
+      cancelledRef.current = true
+    }
+  }, [])
+
+  const initGlobe = (retries = 0) => {
+    if (cancelledRef.current) return
     if (!globeRef.current) {
-      setTimeout(initGlobe, 100)
+      if (retries >= 50) return  // max 5 seconds (50 x 100ms)
+      setTimeout(() => initGlobe(retries + 1), 100)
       return
     }
     const controls = globeRef.current.controls()
