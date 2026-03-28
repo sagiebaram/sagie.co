@@ -20,8 +20,8 @@ type ButtonStatus = 'idle' | 'loading' | 'success' | 'error'
 function Spinner() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="20"
+      height="20"
       viewBox="0 0 16 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@ function XIcon() {
 }
 
 function ButtonContent({ status, label }: { status: ButtonStatus; label: string }) {
-  if (status === 'loading') return <span className="flex items-center gap-2 justify-center"><Spinner />{label}</span>
+  if (status === 'loading') return <span className="flex items-center justify-center"><Spinner /></span>
   if (status === 'success') return <span className="flex items-center gap-2 justify-center"><CheckIcon />{label}</span>
   if (status === 'error') return <span className="flex items-center gap-2 justify-center"><XIcon />{label}</span>
   return <>{label}</>
