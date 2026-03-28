@@ -74,12 +74,20 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
     const rafId = requestAnimationFrame(() => {
       el.style.transition = 'opacity 200ms ease-out'
       el.style.opacity = '1'
+
+      // Override CSS opacity:0 on child card elements
+      if (selector) {
+        const children = gsap.utils.toArray<HTMLElement>(selector, el)
+        children.forEach((child) => {
+          child.style.opacity = '1'
+        })
+      }
     })
 
     return () => {
       cancelAnimationFrame(rafId)
     }
-  }, [filterKey])
+  }, [filterKey, selector])
 
   return ref
 }
