@@ -68,7 +68,7 @@ describe('getUpcomingEvents', () => {
     const events = await getUpcomingEvents()
 
     expect(events).toHaveLength(1)
-    const event = events[0]
+    const event = events[0]!
     expect(event.id).toBe('event-abc-001')
     expect(event.name).toBe('SAGIE Annual Summit')
     expect(event.date).toBe('2024-09-20')
@@ -95,7 +95,7 @@ describe('getUpcomingEvents', () => {
     const events = await getUpcomingEvents()
 
     expect(events).toHaveLength(1)
-    const event = events[0]
+    const event = events[0]!
     expect(event.id).toBe('event-minimal-002')
     expect(event.name).toBe('Untitled')
     expect(event.date).toBeNull()
@@ -138,7 +138,7 @@ describe('getPastEvents', () => {
     const events = await getPastEvents()
 
     expect(events).toHaveLength(1)
-    const event = events[0]
+    const event = events[0]!
     expect(event.id).toBe('event-abc-001')
     expect(event.name).toBe('SAGIE Annual Summit')
     expect(event.date).toBe('2024-09-20')
@@ -152,8 +152,8 @@ describe('getPastEvents', () => {
     const events = await getPastEvents()
 
     expect(events).toHaveLength(1)
-    expect(events[0].name).toBe('Untitled')
-    expect(events[0].status).toBe('Concept')
+    expect(events[0]!.name).toBe('Untitled')
+    expect(events[0]!.status).toBe('Concept')
   })
 
   test('returns empty array when no results', async () => {

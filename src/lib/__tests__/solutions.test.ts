@@ -73,7 +73,7 @@ describe('getSolutionProviders', () => {
     const providers = await getSolutionProviders()
 
     expect(providers).toHaveLength(1)
-    const provider = providers[0]
+    const provider = providers[0]!
     expect(provider.id).toBe('solution-abc-001')
     expect(provider.name).toBe('John Doe')
     expect(provider.initials).toBe('JD')
@@ -90,7 +90,7 @@ describe('getSolutionProviders', () => {
 
     const providers = await getSolutionProviders()
 
-    expect(providers[0].initials).toBe('JD') // "John Doe" -> "J" + "D"
+    expect(providers[0]!.initials).toBe('JD') // "John Doe" -> "J" + "D"
   })
 
   test('computes initials for single-word name', async () => {
@@ -98,8 +98,8 @@ describe('getSolutionProviders', () => {
 
     const providers = await getSolutionProviders()
 
-    expect(providers[0].name).toBe('Madonna')
-    expect(providers[0].initials).toBe('M') // single word -> only first letter
+    expect(providers[0]!.name).toBe('Madonna')
+    expect(providers[0]!.initials).toBe('M') // single word -> only first letter
   })
 
   test('falls back to defaults when properties are missing', async () => {
@@ -108,7 +108,7 @@ describe('getSolutionProviders', () => {
     const providers = await getSolutionProviders()
 
     expect(providers).toHaveLength(1)
-    const provider = providers[0]
+    const provider = providers[0]!
     expect(provider.id).toBe('solution-minimal-002')
     expect(provider.name).toBe('Community Member')
     expect(provider.initials).toBe('CM') // "Community Member" -> "C" + "M"

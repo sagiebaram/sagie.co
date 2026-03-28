@@ -61,7 +61,7 @@ describe('getResources', () => {
     const resources = await getResources()
 
     expect(resources).toHaveLength(1)
-    const resource = resources[0]
+    const resource = resources[0]!
     expect(resource.id).toBe('resource-abc-001')
     expect(resource.name).toBe('YC Startup School')
     expect(resource.category).toBe('Accelerators')
@@ -79,7 +79,7 @@ describe('getResources', () => {
     const resources = await getResources()
 
     expect(resources).toHaveLength(1)
-    const resource = resources[0]
+    const resource = resources[0]!
     expect(resource.id).toBe('resource-minimal-002')
     expect(resource.name).toBe('')
     expect(resource.category).toBe('Community')

@@ -79,7 +79,7 @@ describe('getAllPosts', () => {
     const posts = await getAllPosts()
 
     expect(posts).toHaveLength(1)
-    const post = posts[0]
+    const post = posts[0]!
     expect(post.id).toBe('page-abc-123')
     expect(post.title).toBe('My Great Post')
     expect(post.slug).toBe('my-great-post')
@@ -99,7 +99,7 @@ describe('getAllPosts', () => {
     const posts = await getAllPosts()
 
     expect(posts).toHaveLength(1)
-    const post = posts[0]
+    const post = posts[0]!
     expect(post.id).toBe('page-minimal-456')
     expect(post.title).toBe('Untitled')
     expect(post.slug).toBe('page-minimal-456') // falls back to page.id
@@ -129,9 +129,9 @@ describe('getAllPosts', () => {
     const posts = await getAllPosts()
 
     expect(posts).toHaveLength(2)
-    expect(posts[0].title).toBe('My Great Post')
-    expect(posts[1].title).toBe('Another Post')
-    expect(posts[1].slug).toBe('another-post')
-    expect(posts[1].readTime).toBe(5)
+    expect(posts[0]!.title).toBe('My Great Post')
+    expect(posts[1]!.title).toBe('Another Post')
+    expect(posts[1]!.slug).toBe('another-post')
+    expect(posts[1]!.readTime).toBe(5)
   })
 })
