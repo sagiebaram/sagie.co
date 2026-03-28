@@ -44,7 +44,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **TEST-01**: Vitest installed and configured, CI unit test step passes
 - [ ] **TEST-02**: Unit tests for blog.ts, events.ts, resources.ts, solutions.ts data mapping
 - [x] **TEST-03**: Unit tests for all Zod schemas and withValidation middleware
-- [ ] **TEST-04**: E2E tests for form submissions and content page rendering
+- [x] **TEST-04**: E2E tests for form submissions and content page rendering
 
 ## v2 Requirements
 
@@ -100,7 +100,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEST-01 | Phase 4 | Complete |
 | TEST-02 | Phase 4 | Pending |
 | TEST-03 | Phase 4 | Complete |
-| TEST-04 | Phase 4 | Pending |
+| TEST-04 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 21 total
