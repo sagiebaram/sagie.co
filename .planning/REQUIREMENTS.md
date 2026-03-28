@@ -10,14 +10,14 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Bug Fixes
 
 - [x] **BUG-01**: Form field names in ChapterForm and MembershipForm match their Zod schemas so no submitted data is dropped
-- [ ] **BUG-02**: Globe initGlobe setTimeout loop has cleanup flag and max retry limit
+- [x] **BUG-02**: Globe initGlobe setTimeout loop has cleanup flag and max retry limit
 - [x] **BUG-03**: NOTION_DEAL_PIPELINE_DB_ID and REVALIDATE_SECRET are optional in env schema until their features are built
 
 ### Cleanup
 
-- [ ] **CLN-01**: Remove orphaned MOCK_POSTS, MOCK_EVENTS, MOCK_RESOURCES, MOCK_PROVIDERS constants
-- [ ] **CLN-02**: Uninstall @typeform/embed-react and dotenv unused dependencies
-- [ ] **CLN-03**: Remove duplicate SolutionProvider and BlogPost type definitions, keep only lib versions
+- [x] **CLN-01**: Remove orphaned MOCK_POSTS, MOCK_EVENTS, MOCK_RESOURCES, MOCK_PROVIDERS constants
+- [x] **CLN-02**: Uninstall @typeform/embed-react and dotenv unused dependencies
+- [x] **CLN-03**: Remove duplicate SolutionProvider and BlogPost type definitions, keep only lib versions
 
 ### Security
 
@@ -81,11 +81,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | BUG-01 | Phase 1 | Complete |
-| BUG-02 | Phase 1 | Pending |
+| BUG-02 | Phase 1 | Complete |
 | BUG-03 | Phase 1 | Complete |
-| CLN-01 | Phase 1 | Pending |
-| CLN-02 | Phase 1 | Pending |
-| CLN-03 | Phase 1 | Pending |
+| CLN-01 | Phase 1 | Complete |
+| CLN-02 | Phase 1 | Complete |
+| CLN-03 | Phase 1 | Complete |
 | SEC-01 | Phase 2 | Pending |
 | SEC-02 | Phase 2 | Pending |
 | SEC-03 | Phase 2 | Pending |
