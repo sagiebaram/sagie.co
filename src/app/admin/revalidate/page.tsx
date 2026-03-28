@@ -124,12 +124,16 @@ export default function RevalidatePage() {
 
   async function handleRevalidate(key: string, tags: string[]) {
     setStatus(key, 'loading')
+    const start = Date.now()
     try {
       const res = await fetch('/api/revalidate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ secret, tags }),
       })
+      // Ensure spinner shows for at least 600ms so the user sees it
+      const elapsed = Date.now() - start
+      if (elapsed < 600) await new Promise((r) => setTimeout(r, 600 - elapsed))
       if (res.status === 401) {
         setStatus(key, 'error')
         scheduleReset(key, 2000, () => resetToPrompt(true))
@@ -148,13 +152,13 @@ export default function RevalidatePage() {
 
   if (!secretEntered) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-8 w-full max-w-sm">
-          <h1 className="text-white text-xl font-semibold mb-6">Cache Admin</h1>
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="bg-background-card border border-border-default rounded-lg p-8 w-full max-w-sm">
+          <h1 className="font-display text-foreground text-subhead tracking-heading mb-6 uppercase">Cache Admin</h1>
           {showSecretHint && (
             <p className="text-amber-400 text-xs mb-3">Secret was invalid or has been rotated. Please re-enter.</p>
           )}
-          <label className="block text-gray-400 text-sm mb-2">Revalidation Secret</label>
+          <label className="block text-foreground-muted font-body text-caption mb-2">Revalidation Secret</label>
           <input
             type="password"
             value={secret}
@@ -165,7 +169,7 @@ export default function RevalidatePage() {
                 setSecretEntered(true)
               }
             }}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white text-sm mb-4 focus:outline-none focus:border-gray-500"
+            className="w-full bg-background-subtle border border-border-default rounded px-3 py-2 text-foreground font-body text-body mb-4 focus:outline-none focus:border-border-strong"
             placeholder="Enter secret..."
           />
           <button
@@ -184,13 +188,13 @@ export default function RevalidatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-background p-8">
       <div className="max-w-xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-white text-xl font-semibold">Cache Revalidation</h1>
+          <h1 className="font-display text-foreground text-subhead tracking-heading uppercase">Cache Revalidation</h1>
           <button
             onClick={() => resetToPrompt(false)}
-            className="text-gray-500 hover:text-gray-300 text-sm transition-colors"
+            className="text-foreground-muted hover:text-foreground-secondary font-body text-caption transition-colors"
           >
             Change secret
           </button>
