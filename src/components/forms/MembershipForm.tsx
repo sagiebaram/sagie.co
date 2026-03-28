@@ -78,7 +78,19 @@ export function MembershipForm() {
       }
 
       if (!res.ok) {
-        setSubmitError('Something went wrong. Please try again.')
+        try {
+          const body = await res.json()
+          if (body.fieldErrors && typeof body.fieldErrors === 'object') {
+            const firstError = Object.values(body.fieldErrors).flat()[0]
+            setSubmitError(typeof firstError === 'string' ? firstError : 'Please check your input and try again.')
+          } else if (body.error && typeof body.error === 'string') {
+            setSubmitError(body.error)
+          } else {
+            setSubmitError('Something went wrong. Please try again.')
+          }
+        } catch {
+          setSubmitError('Something went wrong. Please try again.')
+        }
         return
       }
 
@@ -224,7 +236,7 @@ export function MembershipForm() {
         </span>
       )}
       {submitError && (
-        <span style={{ fontSize: '11px', color: '#c0392b' }}>{submitError}</span>
+        <span style={{ fontSize: '13px', color: '#c0392b', lineHeight: '1.5' }}>{submitError}</span>
       )}
 
       <button
