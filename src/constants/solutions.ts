@@ -19,7 +19,7 @@ export const SERVICE_CATEGORIES: {
 ]
 
 export const FILTER_OPTIONS = [
-  { label: 'All', value: 'all' },
+  { label: 'All', value: 'All' },
   { label: 'Operations', value: 'Operations & Systems' },
   { label: 'Technology', value: 'Technology & Product' },
   { label: 'Strategy', value: 'Strategy & Advisory' },

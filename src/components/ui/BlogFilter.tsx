@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useQueryStates, parseAsString } from 'nuqs'
 import { BLOG_CATEGORIES, BLOG_AUTHORS } from '@/constants/blog'
 import type { BlogPost } from '@/lib/blog'
 import Link from 'next/link'
@@ -11,22 +11,27 @@ function formatDate(dateStr: string) {
 }
 
 export function BlogFilter({ posts }: { posts: BlogPost[] }) {
-  const [activeCategory, setActiveCategory] = useState<string>('All')
-  const [activeAuthor, setActiveAuthor] = useState<string>('All')
+  const [filters, setFilters] = useQueryStates(
+    {
+      category: parseAsString.withDefault('All'),
+      author: parseAsString.withDefault('All'),
+    },
+    { history: 'replace', shallow: true }
+  )
 
   const filterRef = useScrollReveal({ y: 10, duration: 0.35 })
   const featuredRef = useScrollReveal({ y: 24, duration: 0.6 })
-  const gridRef = useScrollReveal({ selector: '.post-card', stagger: 0.07, y: 20, duration: 0.5 })
+  const gridRef = useScrollReveal({ selector: '.post-card', stagger: 0.07, y: 20, duration: 0.5, filterKey: filters.category + '|' + filters.author })
 
   const featuredPost = posts.find(p => p.featured)
 
   const filtered = posts.filter(p => {
     if (p.featured) return false
-    const catMatch = activeCategory === 'All' || p.category === activeCategory
+    const catMatch = filters.category === 'All' || p.category === filters.category
     const authorMatch =
-      activeAuthor === 'All' ||
-      (activeAuthor === 'Sagie Baram' && p.authorType === 'Sagie') ||
-      (activeAuthor === 'Community Members' && p.authorType === 'Community Member')
+      filters.author === 'All' ||
+      (filters.author === 'Sagie Baram' && p.authorType === 'Sagie') ||
+      (filters.author === 'Community Members' && p.authorType === 'Community Member')
     return catMatch && authorMatch
   })
 
@@ -73,9 +78,9 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
           {BLOG_CATEGORIES.map(cat => (
             <button
               key={cat}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => setFilters({ category: cat })}
               className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
-                activeCategory === cat
+                filters.category === cat
                   ? 'text-silver border-border-strong'
                   : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
               }`}
@@ -88,12 +93,12 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
         <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Author</span>
         <div className="flex items-center gap-2 flex-wrap">
           {BLOG_AUTHORS.map(author => {
-            const isActive = activeAuthor === author
+            const isActive = filters.author === author
             const isCommunity = author === 'Community Members'
             return (
               <button
                 key={author}
-                onClick={() => setActiveAuthor(author)}
+                onClick={() => setFilters({ author: author })}
                 className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
                   isActive
                     ? isCommunity

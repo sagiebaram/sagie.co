@@ -1,16 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useQueryState, parseAsString } from 'nuqs'
 import { FILTER_OPTIONS } from '@/constants/solutions'
 import type { SolutionProvider } from '@/lib/solutions'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 
 export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }) {
-  const [active, setActive] = useState<string>('all')
+  const [active, setActive] = useQueryState(
+    'category',
+    parseAsString.withDefault('All').withOptions({ history: 'replace', shallow: true })
+  )
 
-  const gridRef = useScrollReveal({ selector: '.dir-card', stagger: 0.08, y: 20, duration: 0.5 })
+  const gridRef = useScrollReveal({ selector: '.dir-card', stagger: 0.08, y: 20, duration: 0.5, filterKey: active })
 
-  const filtered = active === 'all'
+  const filtered = active === 'All'
     ? providers
     : providers.filter((p) => p.category === active)
 
