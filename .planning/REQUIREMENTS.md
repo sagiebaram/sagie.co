@@ -24,9 +24,9 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Forms
 
-- [ ] **FORM-01**: All form fields validated inline on blur with per-field error messages via react-hook-form
-- [ ] **FORM-02**: Fixed-choice fields use dropdown selects and checkbox groups instead of free-text inputs
-- [ ] **FORM-03**: All form submissions verified to land every field in Notion (schema/field audit)
+- [x] **FORM-01**: All form fields validated inline on blur with per-field error messages via react-hook-form
+- [x] **FORM-02**: Fixed-choice fields use dropdown selects and checkbox groups instead of free-text inputs
+- [x] **FORM-03**: All form submissions verified to land every field in Notion (schema/field audit)
 
 ### Polish
 
@@ -131,9 +131,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EVT-03 | Phase 6 | Complete |
 | EVT-04 | Phase 6 | Complete |
 | EVT-05 | Phase 6 | Pending |
-| FORM-01 | Phase 7 | Pending |
-| FORM-02 | Phase 7 | Pending |
-| FORM-03 | Phase 7 | Pending |
+| FORM-01 | Phase 7 | Complete |
+| FORM-02 | Phase 7 | Complete |
+| FORM-03 | Phase 7 | Complete |
 | POL-01 | Phase 8 | Complete |
 | POL-02 | Phase 8 | Complete |
 | POL-03 | Phase 8 | Pending |

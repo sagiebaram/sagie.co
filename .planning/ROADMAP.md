@@ -154,7 +154,7 @@ Plans:
 2. Fixed-choice fields (e.g. country, membership tier, chapter role) are rendered as dropdown selects or checkbox groups — no free-text inputs for constrained choices
 3. A form submission that passes client-side validation results in every field appearing correctly in the corresponding Notion database entry — no silent field loss
 
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 07-01-PLAN.md — Install react-hook-form, update FormField (registration prop + checkbox-group), add friendly error messages to schemas, role enum
@@ -193,5 +193,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
 | 5. Bug Fixes | 3/3 | Complete   | 2026-03-28 |
 | 6. Event Interactivity | 1/2 | In Progress|  |
-| 7. Form Redesign | 0/3 | Not started | - |
+| 7. Form Redesign | 1/3 | In Progress|  |
 | 8. Admin Polish + 404 | 1/2 | In Progress|  |
