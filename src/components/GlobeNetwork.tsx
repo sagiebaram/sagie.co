@@ -129,6 +129,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
     setTimeout(() => {
       if (controls && camera) {
         controls.maxDistance = camera.position.distanceTo(controls.target)
+        controls.minDistance = 200 // prevent zooming close enough to hit the fade edge
       }
     }, 2100)
   }
