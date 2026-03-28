@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { useQueryState, parseAsString } from 'nuqs'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { EventFilter } from '@/components/ui/EventFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/lib/events'
@@ -216,13 +218,21 @@ export function EventsPageClient({
   past: SAGIEEvent[]
 }) {
   const [openId, setOpenId] = useState<string | null>(null)
+  const [activeLocation, setActiveLocation] = useQueryState(
+    'location',
+    parseAsString.withDefault('All').withOptions({ history: 'replace', shallow: true })
+  )
 
   const upcomingRef = useScrollReveal({ selector: '.type-divider', stagger: 0.15, y: 8 })
   const suggestRef = useScrollReveal({ y: 16, duration: 0.5 })
 
-  const sagieEvents = upcoming.filter((e) => e.type === 'SAGIE Event' || e.type === null)
-  const localEvents = upcoming.filter((e) => e.type === 'Local Event')
-  const webinars = upcoming.filter((e) => e.type === 'Webinar')
+  const locationFiltered = activeLocation === 'All'
+    ? upcoming
+    : upcoming.filter(e => e.chapter === activeLocation)
+
+  const sagieEvents = locationFiltered.filter((e) => e.type === 'SAGIE Event' || e.type === null)
+  const localEvents = locationFiltered.filter((e) => e.type === 'Local Event')
+  const webinars = locationFiltered.filter((e) => e.type === 'Webinar')
 
   function handleToggle(id: string) {
     setOpenId((prev) => (prev === id ? null : id))
@@ -259,6 +269,10 @@ export function EventsPageClient({
           <GridBackground />
           <div ref={upcomingRef} className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Upcoming</Eyebrow>
+
+            <div className="mb-6">
+              <EventFilter active={activeLocation} onChange={(f) => setActiveLocation(f)} />
+            </div>
 
             {sagieEvents.length > 0 && (
               <>

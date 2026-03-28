@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { gsap } from '@/lib/gsap'
+import { useQueryState, parseAsString } from 'nuqs'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { ResourceFilter } from '@/components/ui/ResourceFilter'
@@ -31,7 +32,10 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
-  const [activeCategory, setActiveCategory] = useState('All')
+  const [activeCategory, setActiveCategory] = useQueryState(
+    'category',
+    parseAsString.withDefault('All').withOptions({ history: 'replace', shallow: true })
+  )
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const featured = resources.find((r) => r.featured) ?? resources[0]
@@ -41,7 +45,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
 
   const featuredRef = useRef<HTMLDivElement>(null)
   const filterRef = useScrollReveal({ y: 10, duration: 0.35 })
-  const gridRef = useScrollReveal({ selector: '.res-card', stagger: 0.05, y: 16, duration: 0.45 })
+  const gridRef = useScrollReveal({ selector: '.res-card', stagger: 0.05, y: 16, duration: 0.45, filterKey: activeCategory })
   const submitRef = useScrollReveal({ y: 16, duration: 0.5 })
 
   useLayoutEffect(() => {
