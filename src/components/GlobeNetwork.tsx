@@ -78,7 +78,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
     const handleResize = () => {
       if (containerRef.current) {
         const width = containerRef.current.offsetWidth
-        const height = Math.max(400, width * 0.5)
+        const height = Math.max(500, width * 0.75)
         setDimensions({ width, height })
       }
     }
@@ -170,7 +170,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-visible flex justify-center items-center min-h-[400px] bg-transparent border border-border-subtle mt-px"
+      className="relative w-full overflow-visible flex justify-center items-center min-h-[500px] bg-transparent"
     >
       <div
         className="relative z-0"

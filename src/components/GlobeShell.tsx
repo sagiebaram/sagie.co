@@ -20,7 +20,7 @@ export async function GlobeShell() {
   }))
 
   return (
-    <div className="relative w-full max-w-[800px]">
+    <div className="relative w-full">
       <Suspense fallback={<div className="h-[400px] rounded-full bg-white/5 animate-pulse" />}>
         <GlobeClient cities={mergedCities} />
       </Suspense>
