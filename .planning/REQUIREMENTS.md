@@ -3,9 +3,40 @@
 **Defined:** 2026-03-28
 **Core Value:** Community members and prospective members can discover SAGIE's value, consume content, and apply to join — with every submission reliably reaching the team and every piece of content appearing promptly.
 
-## v1 Requirements
+## v2.0 Requirements
 
 Requirements for this milestone. Each maps to roadmap phases.
+
+### Bug Fixes
+
+- [ ] **FIX-01**: Filter state stored in URL params (nuqs) so Blog/Solutions/Resources filters persist and are shareable
+- [ ] **FIX-02**: GSAP ScrollTrigger refreshes when filter state changes so filtered components render correctly
+- [ ] **FIX-03**: Browser back/forward navigation renders pages without requiring a manual refresh
+- [ ] **FIX-04**: User sees a clear error message when form submission is rate-limited (429)
+
+### Events
+
+- [ ] **EVT-01**: Register button opens the event's external registration URL from Notion
+- [ ] **EVT-02**: Add to Calendar modal offers Google Calendar, Outlook, Apple Calendar links and .ics download
+- [ ] **EVT-03**: More Info button links to event's detail/info URL from Notion
+- [ ] **EVT-04**: Read Recap button links to event's recap URL from Notion
+- [ ] **EVT-05**: Event action buttons show/hide based on data availability (no dead buttons)
+
+### Forms
+
+- [ ] **FORM-01**: All form fields validated inline on blur with per-field error messages via react-hook-form
+- [ ] **FORM-02**: Fixed-choice fields use dropdown selects and checkbox groups instead of free-text inputs
+- [ ] **FORM-03**: All form submissions verified to land every field in Notion (schema/field audit)
+
+### Polish
+
+- [ ] **POL-01**: Revalidation admin page shows per-button loading state and success/failure indication
+- [ ] **POL-02**: Revalidation 401 response correctly resets to access prompt instead of broken redirect
+- [ ] **POL-03**: Custom 404 page with branded SVG/CSS illustration matching site aesthetic
+
+## v1.0 Requirements (Validated)
+
+All requirements from v1.0 milestone — shipped and verified.
 
 ### Bug Fixes
 
@@ -46,7 +77,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **TEST-03**: Unit tests for all Zod schemas and withValidation middleware
 - [x] **TEST-04**: E2E tests for form submissions and content page rendering
 
-## v2 Requirements
+## Future Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
 
@@ -63,7 +94,17 @@ Deferred to future release. Tracked but not in current roadmap.
 
 - **NOTF-01**: Webhook from Notion to trigger revalidation automatically on content changes
 
+### Events (Deferred)
+
+- **EVT-06**: "Notify me when confirmed" captures email and stores in Notion for later notification
+
+### Forms (Deferred)
+
+- **FORM-04**: Multi-step form wizard for membership/ventures applications
+
 ## Out of Scope
+
+Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
@@ -73,6 +114,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CMS admin panel | Notion serves this role |
 | Payment processing | Not part of current model |
 | Video hosting | Storage/bandwidth costs, external platforms handle this |
+| Server-side ICS API route | Client-side Blob covers current need; revisit if CSP blocks it |
 
 ## Traceability
 
@@ -80,33 +122,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUG-01 | Phase 1 | Complete |
-| BUG-02 | Phase 1 | Complete |
-| BUG-03 | Phase 1 | Complete |
-| CLN-01 | Phase 1 | Complete |
-| CLN-02 | Phase 1 | Complete |
-| CLN-03 | Phase 1 | Complete |
-| SEC-01 | Phase 2 | Complete |
-| SEC-02 | Phase 2 | Complete |
-| SEC-03 | Phase 2 | Complete |
-| SEC-04 | Phase 2 | Complete |
-| FEAT-01 | Phase 3 | Complete |
-| FEAT-02 | Phase 3 | Complete |
-| FEAT-03 | Phase 3 | Complete |
-| FEAT-04 | Phase 3 | Complete |
-| FEAT-05 | Phase 2 | Complete |
-| GLOBE-01 | Phase 3 | Complete |
-| GLOBE-02 | Phase 3 | Complete |
-| TEST-01 | Phase 4 | Complete |
-| TEST-02 | Phase 4 | Complete |
-| TEST-03 | Phase 4 | Complete |
-| TEST-04 | Phase 4 | Complete |
+| FIX-01 | TBD | Pending |
+| FIX-02 | TBD | Pending |
+| FIX-03 | TBD | Pending |
+| FIX-04 | TBD | Pending |
+| EVT-01 | TBD | Pending |
+| EVT-02 | TBD | Pending |
+| EVT-03 | TBD | Pending |
+| EVT-04 | TBD | Pending |
+| EVT-05 | TBD | Pending |
+| FORM-01 | TBD | Pending |
+| FORM-02 | TBD | Pending |
+| FORM-03 | TBD | Pending |
+| POL-01 | TBD | Pending |
+| POL-02 | TBD | Pending |
+| POL-03 | TBD | Pending |
 
 **Coverage:**
-- v1 requirements: 21 total
-- Mapped to phases: 21
-- Unmapped: 0
+
+- v2.0 requirements: 15 total
+- Mapped to phases: 0
+- Unmapped: 15
 
 ---
+
 *Requirements defined: 2026-03-28*
-*Last updated: 2026-03-28 after roadmap creation*
+*Last updated: 2026-03-28 after initial definition*
