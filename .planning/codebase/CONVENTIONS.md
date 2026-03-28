@@ -5,152 +5,158 @@
 ## Naming Patterns
 
 **Files:**
-- React components: PascalCase matching the exported function name — `MembershipForm.tsx`, `SocialProof.tsx`, `FormField.tsx`
-- Hooks: camelCase prefixed with `use` — `useScrollReveal.ts`
-- Library/utility modules: camelCase — `blog.ts`, `notion-monitor.ts`, `validation.ts`
-- API routes: always `route.ts` inside a named directory — `src/app/api/applications/membership/route.ts`
-- Constants files: camelCase — `copy.ts`, `tiers.ts`, `faq.ts`
-- Schema files: camelCase — `schemas.ts`, `validation.ts`
+- Lowercase with hyphens for directories: `src/lib/`, `src/components/`, `src/app/`
+- Lowercase filenames for utilities: `validation.ts`, `schemas.ts`, `email.ts`
+- PascalCase for component files: `GlobeClient.tsx`, `GlobeNetwork.tsx`
+- Descriptive names for API routes: `route.ts` within feature directories like `/applications/solutions/`
+- Test files paired with source: `filename.test.ts` in `__tests__/` directory
 
 **Functions:**
-- Exported React components: PascalCase — `export function MembershipForm()`
-- Hooks: camelCase prefixed `use` — `export function useScrollReveal()`
-- Utility/helper functions: camelCase — `export function mapLocation()`, `export function cn()`
-- Data-fetching lib functions: camelCase — `export const getAllPosts`, `export const getUpcomingEvents`
-- API route handlers: exported as named HTTP method constants — `export const POST = withValidation(...)`
+- camelCase for all function names: `withValidation()`, `sendEmails()`, `getAllPosts()`, `getPostBySlug()`
+- Exported functions use descriptive verbs: `get*`, `send*`, `fetch*` prefixes for clarity
+- Higher-order functions follow currying pattern: `withValidation(schema, handler)` returns wrapped handler
+- Helper functions (non-exported) remain camelCase: `getIP()`, `isRateLimited()`
 
 **Variables:**
-- Local variables and state: camelCase — `fullName`, `loadTime`, `trapRef`
-- Module-level constants: SCREAMING_SNAKE_CASE — `ROLE_MAP`, `SOCIAL_STATS`, `NAV_LINKS`
-- Object config constants: SCREAMING_SNAKE_CASE — `SITE`, `METADATA`, `HERO`, `FOUNDER`
+- camelCase for all variables: `mockHandler`, `FIXED_NOW`, `loadTime`, `fieldErrors`
+- UPPER_SNAKE_CASE for constants and configuration values:
+  - `RATE_LIMIT = 5`
+  - `WINDOW_MS = 10 * 60 * 1000`
+  - `FROM_ADDRESS = 'SAGIE <hello@sagie.co>'`
+  - `ADMIN_EMAIL = 'hello@sagie.co'`
+  - `RATE_TEST_IP = '10.0.99.1'`
+- Underscore prefix for private/destructured variables to mark unused: `const { email: _email, ...rest } = validMembership`
 
-**Types and Interfaces:**
-- Interfaces: PascalCase prefixed with noun — `BlogPost`, `SAGIEEvent`, `FormFieldProps`, `SectionProps`
-- Type aliases: PascalCase — `ButtonVariant`, `ChapterStatus`
-- Zod schemas: PascalCase suffixed with `Schema` — `MembershipSchema`, `ChapterSchema`, `VenturesSchema`
+**Types:**
+- PascalCase for all type/interface names: `BlogPost`, `Chapter`, `SAGIEEvent`, `RateEntry`, `Handler<T>`
+- Type union literals as string literals: `FormType = 'Membership Application' | 'Chapter Lead Application'`
+- Use `interface` for exported data structures, `type` for aliases and generics
+- Zod schema names use PascalCase: `MembershipSchema`, `ChapterSchema`, `VenturesSchema`
 
 ## Code Style
 
 **Formatting:**
-- No Prettier config present — formatting is managed manually or by editor defaults
-- Semicolons: inconsistent; lib files use semicolons, component files use none
-- Quotes: single quotes in most files
-- Trailing commas: used in multi-line objects and arrays
+- No explicit formatter configured (relying on TypeScript compiler defaults)
+- Consistent two-space indentation observed
+- Single quotes not enforced; libraries use both single and double quotes
+- Semicolons used throughout
+- Type annotations on all function parameters and return types (strict mode)
 
 **Linting:**
-- No `.eslintrc` config; linting runs via `next lint` (uses Next.js built-in ESLint config)
-- Known suppressions: `@typescript-eslint/no-explicit-any` disabled inline in `src/lib/blog.ts`, `src/lib/events.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`, and file-level in `src/components/GlobeNetwork.tsx`
+- Next.js built-in linting via `npm run lint`
+- Strict TypeScript: `noUncheckedIndexedAccess`, `noImplicitOverride`, `noImplicitReturns`, `exactOptionalPropertyTypes` enabled
+- Comments with eslint directives when needed: `// eslint-disable-next-line @typescript-eslint/no-explicit-any` in `src/lib/blog.ts:29`
+- Type assertions using `as` when mapping external API responses to internal types
 
-**TypeScript:**
-- Strict mode enabled — `strict: true` in `tsconfig.json`
-- Additional strict flags: `noUncheckedIndexedAccess`, `noImplicitOverride`, `noImplicitReturns`, `exactOptionalPropertyTypes`
-- `allowJs: false` — no JavaScript files permitted
-- Target: ES2022
-- `as const` used heavily for readonly constant objects
+**ESLint Comments:**
+- Used sparingly to suppress specific rules when unavoidable (e.g., when dealing with untyped external APIs)
+- Always include explanation or keep to minimum scope
 
 ## Import Organization
 
-**Order (observed pattern):**
-1. Framework imports — `'next/cache'`, `'next/server'`, `'react'`
-2. Internal `@/` alias imports — services, components, lib, constants
-3. No third-party grouping distinction enforced
+**Order:**
+1. External/third-party imports: `import { NextResponse } from 'next/server'`
+2. Internal library imports: `import { notion } from '@/lib/notion'`
+3. Type imports: `import type { CityData } from '@/lib/members'`, `import type { FormType } from '@/lib/email'`
+4. Relative imports (rare): `.nextjs/cache`, `./GlobeNetwork`
 
 **Path Aliases:**
-- `@/*` maps to `./src/*` — used throughout, never relative paths for cross-directory imports
-- Example: `import { env } from '@/env/server'`, `import { notion } from '@/lib/notion'`
+- Single path alias configured: `@/*` maps to `./src/*`
+- All internal imports use `@/` prefix: `@/lib/`, `@/env/`, `@/components/`, `@/lib/__tests__/`
+- Zod imports group together: `import { z, ZodSchema } from 'zod'`
 
-**`'use client'` directive:**
-- Placed as the very first line (before imports) in all client components and hooks
-- Required for: all form components, animation components, any `useState`/`useEffect` usage
-- Server components (pages with data fetching) have no directive — default server rendering
-
-## Validation Pattern
-
-**Form validation uses two layers:**
-1. Client-side: manual field presence checks returning `Record<string, string>` error maps
-2. Server-side: Zod schema validation via `withValidation` HOF wrapper in `src/lib/validation.ts`
-
-**Zod schema conventions:**
-- Defined in `src/lib/schemas.ts` — one schema per form/resource
-- String fields: always `.trim()`, often `.max()` bounded
-- Email fields: `.email().max(254).trim().toLowerCase()`
-- URL fields: `.url().optional()`
-- Enum fields: `z.enum([...])` — never `z.string()` for constrained values
-
-**`withValidation` HOF:**
-- Wraps all API POST handlers — `export const POST = withValidation(Schema, async (_req, body) => {...})`
-- Handles: JSON parse errors (400), honeypot detection (silently 200), timing check < 3000ms (silently 200), Zod errors (422 with `fieldErrors`)
-- Validated `body` is fully typed via `z.infer<S>`
+**Import Syntax:**
+- Named imports for utilities: `import { unstable_cache } from 'next/cache'`
+- Default imports for dynamic components: `import dynamic from 'next/dynamic'`
+- Type-only imports use `type` keyword: `import type { ClassValue } from 'clsx'`
+- Namespace imports for modules: `import * as Sentry from '@sentry/nextjs'`
 
 ## Error Handling
 
-**API routes:**
-- Top-level try/catch inside the `withValidation` handler
-- Errors logged with `console.error('[context] failed:', error)`
-- Client receives: `NextResponse.json({ error: 'descriptive message' }, { status: 500 })`
-- Success response: `NextResponse.json({ success: true })`
+**Patterns:**
+- Try-catch blocks wrap async operations and external API calls
+- Broad `catch` with generic error handling:
+  ```typescript
+  try {
+    // operation
+  } catch (error) {
+    console.error('Context message:', error)
+    return NextResponse.json({ error: 'User-facing message' }, { status: 500 })
+  }
+  ```
+- Sentry error capture for production issues: `Sentry.captureException(err, { tags: { service: 'resend', type: 'confirmation' } })`
+- Promise.allSettled used for multiple async operations to avoid single failure blocking others: `await Promise.allSettled(sends)`
+- Zod safeParse always used with success check: `const result = schema.safeParse(raw); if (!result.success) { ... }`
+- Field-level error collection from Zod validation: `fieldErrors[path] = [...(fieldErrors[path] ?? []), issue.message]`
 
-**Notion writes:**
-- Always wrapped with `notionWrite()` from `src/lib/notion-monitor.ts`
-- `notionWrite` captures exceptions to Sentry before re-throwing
-
-**Library functions (data fetching):**
-- Optional fields accessed with `??` null coalescing — never optional chaining alone without a fallback
-- Silent fallbacks: `p['Title']?.title?.[0]?.plain_text ?? 'Untitled'`
-- `getPostBySlug` returns `null` on missing slug, returns empty markdown on conversion failure (silent catch)
-
-**Client forms:**
-- Submit errors shown via `errors.submit` state key
-- No error boundary components present
-- Loading state managed with `loading` boolean disabling the submit button
-
-## Environment Variables
-
-**Validated at startup via Zod:**
-- All server env vars validated in `src/env/server.ts` using `EnvSchema.parse(process.env)`
-- `import 'server-only'` at top of `src/env/server.ts` prevents client import
-- Missing required vars throw at boot time, not at request time
+**HTTP Status Codes:**
+- 200: Success (including honeypot/timing traps returning silently)
+- 400: Malformed JSON
+- 422: Validation failure (Zod schema violations)
+- 429: Rate limiting exceeded
+- 500: Server error (with generic error message to client)
 
 ## Logging
 
-**Framework:** `console.error` only — no structured logging library
+**Framework:** `console` (built-in, no logger library)
 
 **Patterns:**
-- `console.error('[Context] failed:', error)` in API route catch blocks
-- Sentry captures all Notion write failures via `notionWrite` wrapper
-- No `console.log` or `console.info` calls in source
+- `console.error()` for errors with context: `console.error('Solutions application failed:', error)`
+- `console.log()` for development logging: `console.log('[email] skip (non-production): ${formType}')`
+- Contextual prefixes in brackets: `[email]`, `[service]`
+- Log before attempting recovery or alternative path
 
-## Data Constants
+## Comments
 
-**Pattern:**
-- All copy, UI text, and static data lives in `src/constants/` as `as const` typed exports
-- Interfaces for constant shapes defined in `src/types/index.ts`
-- Constants files import types, never import from lib or components
+**When to Comment:**
+- Section dividers for logical groupings: `// ---------------------------------------------------------------------------`
+- Inline explanations for non-obvious validation logic (e.g., honeypot fields, timing traps)
+- Never used for stating obvious facts (e.g., "get the user" above `getUser()`)
+- Uncommon patterns or business logic get brief explanatory comment
 
-## Component Design
+**JSDoc/TSDoc:**
+- Not used; types are self-documenting via TypeScript interfaces and strict mode
+- Return types and parameter types are explicit in function signatures
+- No @param or @returns comments needed
 
-**Server components (pages):**
-- Export default unnamed function or named function — `export default function HomePage()`
-- Import and compose section/layout components only — no logic
-- Data fetching called directly in the component body (RSC pattern)
+## Function Design
 
-**Client components:**
-- Named exports — `export function MembershipForm()`
-- State grouped into a single `fields` object using `useState`
-- Setter curried: `const set = (key: string) => (value: string) => setFields(prev => ({ ...prev, [key]: value }))`
-- Inline `style` props used for form layout (not Tailwind) — forms use CSS-in-JS style objects
-- Tailwind used for section/page layout and typography
+**Size:**
+- Most functions 20-50 lines
+- Validation functions typically 30-40 lines (including comment sections)
+- Async handlers delegate to composition of smaller helpers
+- No visible enforcement of line limits
 
-**UI primitives:**
-- Accept `React.ComponentPropsWithoutRef<'element'>` for full HTML prop passthrough
-- Use `cn()` from `src/lib/utils.ts` for class merging — `clsx` + `tailwind-merge`
-- Extend with `className` and `style` optional props
+**Parameters:**
+- Always explicitly typed: `async function sendEmails(formType: FormType, applicantEmail: string | null, submissionData: Record<string, unknown>): Promise<void>`
+- Generic type parameters used for reusable utilities: `<T>`, `<S extends ZodSchema>`
+- Request/Response objects passed implicitly in Next.js API patterns: `async (_req: Request, body) => { ... }`
+- Single object parameter preferred over multiple positional: `withValidation(schema, handler)`
 
-## Module Exports
+**Return Values:**
+- Explicit Promise types: `Promise<Response>`, `Promise<void>`, `Promise<BlogPost[]>`
+- No implicit any returns; functions always specify return type
+- Async functions always return Promise (never raw values)
 
-**Pattern:** Named exports — no default exports from component or lib files (except Next.js pages/layouts which require `export default`)
+## Module Design
 
-**Barrel files:** Not used — each file imported directly by path
+**Exports:**
+- Named exports for functions: `export function sendEmails(...) { ... }`
+- Named exports for types: `export interface BlogPost { ... }`
+- Named exports for schemas: `export const MembershipSchema = z.object(...)`
+- Type exports use `type` keyword: `export type FormType = '...' | '...'`
+- Default exports used only for dynamic Next.js components
+
+**Barrel Files:**
+- Not used; imports specify full paths: `@/lib/validation`, `@/lib/email`
+- Each module has single responsibility
+- Encourages explicit dependency tracking
+
+**Module-level State:**
+- Module-level objects for stateful utilities: `const rateStore = new Map<string, RateEntry>()`
+- Module-level constants: `const FROM_ADDRESS = '...'`
+- Single instance pattern: `const resend = new Resend(env.RESEND_API_KEY)`
+- Mocking strategy accommodates module-level state in tests
 
 ---
 

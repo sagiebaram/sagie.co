@@ -4,190 +4,208 @@
 
 ## Tech Debt
 
-**Duplicate type definitions for SolutionProvider:**
-- Issue: `SolutionProvider` interface is declared in both `src/constants/solutions.ts` and `src/lib/solutions.ts` with different shapes. The constants version includes `contactEmail` and uses `SolutionCategory` type alias; the lib version includes `servicesOffered`, `bio`, `featured` fields that match Notion data. Pages import from `@/lib/solutions` but the constants version still exists alongside.
-- Files: `src/constants/solutions.ts`, `src/lib/solutions.ts`
-- Impact: Type confusion, risk of using the wrong type in new code. MOCK_PROVIDERS in constants will never match the shape of live Notion data.
-- Fix approach: Delete the interface from `src/constants/solutions.ts`, keep only the lib version.
+**Loose Type Safety in Notion Integration:**
+- Issue: Multiple files use `@typescript-eslint/no-explicit-any` to bypass type checking when working with Notion API responses
+- Files: `src/lib/members.ts`, `src/lib/events.ts`, `src/lib/blog.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`, `src/lib/chapters.ts`, `src/components/GlobeNetwork.tsx`
+- Impact: Potential runtime errors when Notion API response shape changes; IDE cannot provide autocomplete or catch missing properties
+- Fix approach: Create proper TypeScript types for each Notion API response based on the database schema; use proper type guards instead of `any`
 
-**Duplicate BlogPost interface:**
-- Issue: `BlogPost` is defined identically in `src/constants/blog.ts` and `src/lib/blog.ts` (with minor differences — constants version requires `content` and `publishDate`, lib version makes `publishDate` optional and omits `content`).
-- Files: `src/constants/blog.ts`, `src/lib/blog.ts`
-- Impact: Both interfaces are in use; adding a new field requires changing two places.
-- Fix approach: Remove the interface from `src/constants/blog.ts`, import from `@/lib/blog` everywhere.
+**Rate Limiting Stored in Memory:**
+- Issue: Rate limiting in `src/lib/validation.ts` uses an in-memory Map that is lost on server restart
+- Files: `src/lib/validation.ts` (lines 6-29)
+- Impact: Rate limits reset when server restarts; malicious actors can exploit this; doesn't work with multiple server instances
+- Fix approach: Move rate limiting to persistent storage (Redis) or use a service like Cloudflare for edge-level rate limiting
 
-**Orphaned MOCK data constants:**
-- Issue: `MOCK_POSTS`, `MOCK_EVENTS`, `MOCK_RESOURCES`, `MOCK_PROVIDERS` exist in `src/constants/` but none are imported by any page or component — all pages now fetch from Notion. The mock data in `src/constants/blog.ts` contains placeholder content ("Full post content here.") that was never fleshed out.
-- Files: `src/constants/blog.ts`, `src/constants/events.ts`, `src/constants/resources.ts`, `src/constants/solutions.ts`
-- Impact: Dead code increases maintenance surface. Future developers may accidentally use mock data instead of Notion data. Six of seven MOCK_POSTS have stub content.
-- Fix approach: Delete `MOCK_POSTS`, `MOCK_EVENTS`, `MOCK_RESOURCES`, `MOCK_PROVIDERS` arrays. Keep only interface definitions and category/filter constants needed by UI components.
+**Excessive Use of `setTimeout` for Initialization:**
+- Issue: Globe component uses retry loop with `setTimeout` to wait for initialization (lines 102-108 in `src/components/GlobeNetwork.tsx`)
+- Files: `src/components/GlobeNetwork.tsx` (lines 102-108)
+- Impact: Polling loop up to 5 seconds wastes resources; adds unpredictable delays; no error boundary if init fails
+- Fix approach: Use React lifecycle hooks (onGlobeReady callback) or Promise-based initialization pattern
 
-**`NOTION_DEAL_PIPELINE_DB_ID` required but unused:**
-- Issue: `src/env/server.ts` requires `NOTION_DEAL_PIPELINE_DB_ID` via Zod validation, but no lib file or API route references it. The app crashes at startup in any environment where this env var is not set.
-- Files: `src/env/server.ts`
-- Impact: Unnecessary deployment friction; this env var must be provisioned even though nothing uses it yet.
-- Fix approach: Either make it optional (`z.string().optional()`) or implement the functionality that needs it.
-
-**`REVALIDATE_SECRET` required but no revalidation endpoint exists:**
-- Issue: `src/env/server.ts` requires `REVALIDATE_SECRET` but there is no `/api/revalidate` route that uses it. The secret is validated at startup but serves no current purpose.
-- Files: `src/env/server.ts`
-- Impact: Same startup crash risk as above. The cache tags (`notion:blog`, `notion:events`, etc.) defined on `unstable_cache` calls can never be invalidated on-demand.
-- Fix approach: Create a `/api/revalidate` route that accepts the secret and calls `revalidateTag`, or make the env var optional until the endpoint is built.
-
-**`@typeform/embed-react` is an unused dependency:**
-- Issue: `package.json` lists `@typeform/embed-react: ^5.0.0` as a production dependency. The file that used it (`src/components/ui/TypeformEmbed.tsx`) was deleted per git status. No remaining source file imports it.
-- Files: `package.json`
-- Impact: Adds ~85 KB to the bundle unnecessarily (Typeform's embed SDK is not tree-shakeable).
-- Fix approach: `npm uninstall @typeform/embed-react`
-
-**`dotenv` is an unused production dependency:**
-- Issue: `package.json` lists `dotenv: ^17.3.1` as a production dependency. Next.js handles `.env` file loading natively. No source file imports `dotenv`.
-- Files: `package.json`
-- Impact: Minor bundle weight.
-- Fix approach: `npm uninstall dotenv`
-
-**Hardcoded location mapping in membership route:**
-- Issue: `src/app/api/applications/membership/route.ts` contains a `mapLocation()` function with hardcoded city-name string matching. Any city not in the list falls through to `'International'`. This is fragile and non-exhaustive (e.g. "SF" doesn't match "san francisco").
-- Files: `src/app/api/applications/membership/route.ts`
-- Impact: Incorrect location classification silently stored in Notion without error.
-- Fix approach: Accept a location string from a bounded select input on the form, or remove server-side mapping and store raw user input.
-
-**`unsafe-inline` in CSP script-src:**
-- Issue: `next.config.ts` sets `script-src 'self' 'unsafe-inline'`. This negates the XSS protection that CSP script-src is meant to provide.
-- Files: `next.config.ts`
-- Impact: Content Security Policy provides no practical script injection protection.
-- Fix approach: Generate nonces per-request via Next.js middleware and use `'nonce-{value}'` instead of `'unsafe-inline'`. Next.js 14+ supports this natively.
-
-**Globe fetches external GeoJSON at runtime with no fallback:**
-- Issue: `src/components/GlobeNetwork.tsx` fetches GeoJSON from `raw.githubusercontent.com` on every mount. If the fetch fails, the globe renders without country borders but continues running — the error is only logged.
-- Files: `src/components/GlobeNetwork.tsx` (line 92–98)
-- Impact: Globe visual quality degrades silently in network-restricted environments or if GitHub's CDN is unavailable. No retry logic.
-- Fix approach: Download the GeoJSON file and serve it from `/public/`, eliminating the external dependency.
-
-**Globe city and arc data is hardcoded mock data:**
-- Issue: `MOCK_CITIES` and `MOCK_ARCS` in `src/components/GlobeNetwork.tsx` are static with fictional member counts. The member counts (82, 45, 24, 38) are not sourced from Notion.
-- Files: `src/components/GlobeNetwork.tsx`
-- Impact: Globe will show stale data as the community grows. No connection to real membership data.
-- Fix approach: Accept cities/arcs as props sourced from a Notion query, or accept member counts as props from the parent.
-
-**`initGlobe` uses a recursive `setTimeout` polling pattern:**
-- Issue: `src/components/GlobeNetwork.tsx` `initGlobe()` function calls itself with `setTimeout(initGlobe, 100)` until `globeRef.current` is populated. There is no maximum retry count or cleanup on unmount.
-- Files: `src/components/GlobeNetwork.tsx` (line 114–144)
-- Impact: If the globe never mounts (SSR edge case, component unmounted quickly), this creates an infinite loop of setTimeout callbacks that never resolve.
-- Fix approach: Use a ref cleanup flag (`let cancelled = false`) and check it before each retry, returning early if the component has unmounted.
+**Inconsistent Error Handling in API Routes:**
+- Issue: All API routes use generic error messages and console.error logging without structured error context
+- Files: `src/app/api/applications/membership/route.ts`, `src/app/api/applications/chapter/route.ts`, `src/app/api/applications/ventures/route.ts`, `src/app/api/applications/solutions/route.ts`, `src/app/api/submit-post/route.ts`, `src/app/api/submit-resource/route.ts`, `src/app/api/suggest-event/route.ts`
+- Impact: Difficult to debug production issues; errors sent to Sentry lack context; clients receive no helpful error details
+- Fix approach: Create structured error handler that logs request context and returns meaningful error codes/messages
 
 ## Security Considerations
 
-**No rate limiting on any API route:**
-- Risk: All 7 API routes (`/api/applications/*`, `/api/submit-post`, `/api/submit-resource`, `/api/suggest-event`) accept unlimited requests. The honeypot + timing check in `withValidation` provides anti-bot friction but is bypassable by any developer-level attacker.
-- Files: `src/lib/validation.ts`, all files in `src/app/api/`
-- Current mitigation: Honeypot field, 3-second minimum elapsed time check.
-- Recommendations: Add IP-based rate limiting using Vercel's `@vercel/kv` or an edge middleware with a token bucket. Target: 5 submissions per IP per 10 minutes for application routes.
+**Potential XSS Vulnerability in GlobeNetwork Component:**
+- Risk: HTML injected via `innerHTML` in line 247 of `src/components/GlobeNetwork.tsx`
+- Files: `src/components/GlobeNetwork.tsx` (lines 245-264)
+- Current mitigation: City name data comes from internal Notion database; not user-supplied
+- Recommendations: Replace `innerHTML` with DOM API (`createElement`, `textContent`); add Content Security Policy header; validate/sanitize all dynamic content before rendering
 
-**`allowedOrigins` is parsed but never enforced:**
-- Risk: `src/env/server.ts` exports an `allowedOrigins` Set populated from the `ALLOWED_ORIGINS` env var, but no API route or middleware actually checks the incoming `Origin` header against this set.
-- Files: `src/env/server.ts`, all files in `src/app/api/`
-- Current mitigation: None. Any origin can POST to any form route.
-- Recommendations: Add an origin check in `withValidation` or in a middleware that wraps all `/api` routes.
+**Missing CSRF Protection on Form Submissions:**
+- Risk: POST endpoints don't validate origin or use CSRF tokens
+- Files: `src/app/api/applications/*/route.ts`, `src/app/api/submit-*/route.ts`
+- Current mitigation: Honeypot field and 3-second timing check in `src/lib/validation.ts` (lines 55-67)
+- Recommendations: Implement SameSite cookie policy; add explicit CSRF token validation; use Referer header checks
 
-**`NEXT_PUBLIC_SENTRY_DSN` is public:**
-- Risk: The Sentry DSN is exposed client-side via the `NEXT_PUBLIC_` prefix. This is standard Sentry practice and necessary for client-side error capture, but means anyone can submit arbitrary events to the Sentry project.
-- Files: `sentry.client.config.ts`
-- Current mitigation: Sentry's own rate limiting. This is acceptable unless the Sentry project has no inbound rate limits configured.
-- Recommendations: Set an inbound data filter in Sentry's project settings to block events from non-sagie.co origins.
+**Email Address Validation Already Implemented:**
+- Risk: Email field validation exists both client and server-side
+- Files: `src/lib/schemas.ts` (lines 5, 35, 47, 67) - email fields use `.email()` validation
+- Current mitigation: Server-side Zod validation catches invalid emails; schema enforces max 254 characters
+- Recommendations: Email validation is adequate; ensure client validation matches server regex
 
-**`tracesSampleRate: 1.0` across all Sentry configs:**
-- Risk: 100% trace sampling captures every server request in production, which can expose sensitive request data (form payloads, IP addresses) in Sentry traces.
-- Files: `sentry.client.config.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`
-- Current mitigation: None.
-- Recommendations: Lower `tracesSampleRate` to `0.1` or `0.2` in production. Keep `replaysOnErrorSampleRate: 1.0` which is appropriate.
-
-**Blog post submission stores content directly in Notion without sanitization:**
-- Risk: `src/app/api/submit-post/route.ts` writes raw user-submitted post content to Notion. The content is later rendered via `react-markdown` which is safe, but any downstream process that renders Notion pages directly (e.g. Notion's own web rendering) will show unsanitized content.
-- Files: `src/app/api/submit-post/route.ts`
-- Current mitigation: Zod max-length constraints (5000 chars). Status is set to `Review` so content requires manual approval before publishing.
-- Recommendations: Acceptable for now given the manual review step. No immediate action required.
+**Unvalidated Location Mapping Logic:**
+- Risk: Location data from forms is mapped to predefined locations without validation
+- Files: `src/app/api/applications/membership/route.ts` (lines 18-27)
+- Impact: Malicious input could cause unexpected location mappings; silent fallback to "International"
+- Recommendations: Validate location input against an enum list; return error if location doesn't match expected values
 
 ## Performance Bottlenecks
 
-**Blog post page makes two sequential Notion API calls:**
-- Problem: `src/app/(marketing)/blog/[slug]/page.tsx` calls `getPostBySlug(slug)` which internally calls `getAllPosts()`, then the page also calls `getAllPosts()` again to compute the "next post" navigation. This results in two cache lookups and one uncached `n2m.pageToMarkdown()` call.
-- Files: `src/app/(marketing)/blog/[slug]/page.tsx`, `src/lib/blog.ts`
-- Cause: `getPostBySlug` is not cached; only `getAllPosts` is cached. The page calls `getAllPosts` a second time independently.
-- Improvement path: Deduplicate by passing the already-fetched post list into `getPostBySlug`, or cache `getPostBySlug` with per-slug cache keys.
+**Heavy Globe Rendering with Complex Arcs Calculation:**
+- Problem: GlobeNetwork component generates all possible inter-chapter arcs (O(n²) complexity) on every render
+- Files: `src/components/GlobeNetwork.tsx` (lines 150-165)
+- Cause: `arcsData` useMemo recalculates all arcs when `cities` changes; no limit on arc count
+- Improvement path: Add a maximum arc limit; use spatial partitioning to only show nearby connections; memoize arc calculation more efficiently
 
-**`react-globe.gl` and `three` add significant bundle weight:**
-- Problem: `react-globe.gl` depends on `three.js` (~600 KB gzipped). The globe is only shown in the `SocialProof` section on desktop (`hidden md:block`).
-- Files: `src/components/GlobeShell.tsx`, `src/components/GlobeNetwork.tsx`
-- Cause: Three.js cannot be tree-shaken. Even with `next/dynamic` and `ssr: false`, it is included in the client bundle for all desktop visitors regardless of whether they scroll to the globe.
-- Improvement path: The `dynamic` import already defers the load; current approach is acceptable. Consider additionally lazy-loading `GlobeShell` itself with `next/dynamic` from `SocialProof` to defer the bundle until the section is visible.
+**Notion Query Without Pagination:**
+- Problem: All Notion queries retrieve all results without pagination
+- Files: `src/lib/members.ts` (line 49), `src/lib/events.ts` (lines 28, 48), `src/lib/blog.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`
+- Cause: Notion API is queried directly without handling pagination; if a database has 1000+ items, response becomes slow
+- Improvement path: Implement pagination with database_id and start_cursor; add filtering to reduce result set
 
-**Solutions cache TTL is 12 hours (`revalidate: 43200`):**
-- Problem: New solution providers approved in Notion won't appear on the site for up to 12 hours without manual cache busting.
-- Files: `src/lib/solutions.ts`
-- Cause: No on-demand revalidation endpoint exists (see REVALIDATE_SECRET concern above).
-- Improvement path: Build the `/api/revalidate` endpoint and trigger it from a Notion automation on provider status changes.
+**Expensive Path Generation in CircuitBackground:**
+- Problem: Circuit background generates up to 60 paths with ~10 segments each, recalculated on resize
+- Files: `src/components/ui/CircuitBackground.tsx` (lines 40-110)
+- Cause: No caching of generated paths; random generation makes it non-deterministic between renders
+- Improvement path: Cache generated paths; use fixed random seed for consistency; debounce resize handler
+
+**Fetch GeoJSON on Every Globe Mount:**
+- Problem: Country polygons are fetched from `/data/ne_110m_admin_0_countries.geojson` on every component mount
+- Files: `src/components/GlobeNetwork.tsx` (lines 74-79)
+- Cause: No caching; file is large when uncompressed
+- Improvement path: Use Next.js static data fetching with caching; import as static asset instead of fetch
 
 ## Fragile Areas
 
-**Notion property name coupling:**
-- Files: `src/lib/blog.ts`, `src/lib/events.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`
-- Why fragile: Every data fetch function accesses Notion properties by exact string name (e.g. `p['Event Name']`, `p['Author Type']`, `p['Cover Image']`). Renaming any property in Notion silently breaks data mapping — fields return `undefined` and fall through to defaults without error.
-- Safe modification: When changing a Notion property name, update the corresponding string in the lib file simultaneously. Consider adding a runtime validation step using Zod on the raw Notion response.
-- Test coverage: No unit tests for any lib function. No integration tests for Notion data mapping.
+**GlobeNetwork Three.js Integration:**
+- Files: `src/components/GlobeNetwork.tsx`
+- Why fragile:
+  - Relies on external library `react-globe.gl` with unstable API
+  - Uses dynamic import with type assertions (`as any` on lines 8, 15)
+  - Imperative DOM manipulation (line 169, querySelector)
+  - Complex event listener setup that may leak if component unmounts during initialization
+  - Polling-based initialization with 50 retry attempts
+- Safe modification:
+  - Add cleanup for all event listeners in useEffect return
+  - Test unmount scenarios thoroughly
+  - Create type-safe wrapper types instead of using `any`
+  - Replace polling with onGlobeReady callback
+- Test coverage: No unit tests for GlobeNetwork component; only covered by e2e tests in `tests/forms.spec.ts` and `tests/content-pages.spec.ts`
 
-**`withValidation` timing check is clock-dependent:**
-- Files: `src/lib/validation.ts`
-- Why fragile: The bot-timing check uses `Date.now() - loadTime` where `loadTime` comes from the client-submitted `_t` field. A client can set `_t` to any past timestamp to bypass the 3-second check. The check provides friction against naive bots but not determined ones.
-- Safe modification: Do not rely on this as a security control. Use it as one signal among several.
-- Test coverage: Not tested.
+**Complex Form Submission Flow:**
+- Files: Application form routes in `src/app/api/applications/*/route.ts`, `src/app/api/submit-post/route.ts`, `src/app/api/submit-resource/route.ts`
+- Why fragile:
+  - Notion write failures are caught but emails are fire-and-forget with `void` and `Promise.allSettled`
+  - If email send fails after Notion succeeds, user doesn't know submission failed
+  - Long exception chains with multiple external dependencies (Notion, Resend, Sentry)
+  - Email sending is non-critical but user expects confirmation
+- Safe modification:
+  - Store submission state in database before sending emails
+  - Implement retry mechanism for failed emails
+  - Add transaction-like behavior or explicit user notification
+  - Consider making email send blocking (not fire-and-forget) for critical flows
+- Test coverage: Forms tested with e2e tests (`tests/forms.spec.ts`) but no unit tests for API route logic; mocking is used in tests but real error scenarios not covered
 
-**`SocialProof` stat parsing is hardcoded:**
-- Files: `src/components/sections/SocialProof.tsx`
-- Why fragile: `STAT_VALUES` maps only `'200+'` and `'1'` to animated CountUp values. Any change to stat values in `SOCIAL_STATS` constants that doesn't exactly match these keys will silently render as static text instead of animating.
-- Safe modification: Update `STAT_VALUES` whenever `SOCIAL_STATS` values change, or refactor to parse the suffix and number from the value string dynamically.
-- Test coverage: None.
+**Event Type Casting Without Validation:**
+- Files: `src/lib/events.ts`, `src/lib/members.ts`, `src/lib/blog.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`, `src/lib/chapters.ts` - all use `mapEvent()` pattern
+- Why fragile:
+  - Casts raw Notion response to typed object without validating required fields exist
+  - Falls back to defaults (`?? null`, `?? 'Untitled'`) silently
+  - Changes to Notion schema could produce silently wrong data
+  - Type `any` suppresses all error checking during mapping
+- Safe modification:
+  - Add Zod schema validation to mapEvent functions
+  - Log warnings when fallbacks are used
+  - Add data quality monitoring/metrics
+  - Create strict types for Notion responses with proper validation
+- Test coverage: Unit tests exist (`src/lib/__tests__/`) but don't validate mapping error scenarios
 
-## Test Coverage Gaps
+## Scaling Limits
 
-**No unit tests for any lib function:**
-- What's not tested: All Notion data-fetching and mapping logic in `src/lib/blog.ts`, `src/lib/events.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`.
-- Files: `src/lib/`
-- Risk: Notion property renames or API shape changes break data silently. Pages render empty or with default values.
-- Priority: High
+**In-Memory Rate Limiting Map:**
+- Current capacity: Rate limiting map grows without bound
+- Limit: Server memory will eventually be consumed if rate limiter is not cleared; Map stores one entry per unique IP for 10-minute window
+- Scaling path: Use Redis-backed rate limiting or implement periodic cleanup with TTL; use Cloudflare rate limiting for edge-level protection
 
-**No unit tests for API route validation logic:**
-- What's not tested: `withValidation` middleware, all schemas in `src/lib/schemas.ts`, honeypot/timing bypass logic.
-- Files: `src/lib/validation.ts`, `src/lib/schemas.ts`, `src/app/api/`
-- Risk: Validation regressions allow malformed data into Notion databases.
-- Priority: High
+**Static Geolocation Data Hardcoded:**
+- Current capacity: CITY_COORDS in `src/lib/members.ts` supports ~12 cities (Miami, New York, Dallas, Tel Aviv, Singapore, Dubai, London, Los Angeles, San Francisco, Chicago, Austin, Boston)
+- Limit: Adding new chapters requires code changes and redeployment
+- Scaling path: Move city coordinates to Notion database; fetch dynamically with caching via `unstable_cache`
 
-**Only one smoke test (homepage title):**
-- What's not tested: Form submission flows, events page, blog page, blog post detail, solutions page, resources page. No test for empty-state rendering when Notion returns no results.
-- Files: `tests/smoke.spec.ts`
-- Risk: Any page-level regression goes undetected until production.
-- Priority: Medium
+**Fire-and-Forget Email Sending:**
+- Current capacity: Emails are sent asynchronously without queue management; uses `Promise.allSettled` to allow partial failures
+- Limit: If Resend API is slow or rate-limited, multiple requests could queue up in memory; no retry mechanism
+- Scaling path: Use job queue (BullMQ, AWS SQS) for email delivery; add retry logic and dead-letter queue; monitor email delivery metrics
 
-**No error.tsx or loading.tsx anywhere:**
-- What's not tested: No Next.js error boundaries are defined for any route segment. Unhandled exceptions in server components surface as unformatted Next.js 500 pages.
-- Files: `src/app/` (missing `error.tsx`)
-- Risk: Notion API downtime or misconfiguration shows a generic error page with no recovery path.
-- Priority: Medium
+## Dependencies at Risk
+
+**react-globe.gl (v2.37.0):**
+- Risk: Library depends on Three.js and has complex WebGL rendering; minimal type safety; CityData types are inferred not validated
+- Impact: Major version bumps could break visualization; bugs in library affect core feature
+- Migration plan: Have a fallback map visualization (MapBox, Leaflet); abstract globe logic behind interface; add fallback UI for WebGL failures
+
+**@notionhq/client (v2.2.15):**
+- Risk: Notion API changes could break queries; client library must be updated; no breaking change detection
+- Impact: New Notion features won't be accessible until client is updated; breaking changes require code refactor
+- Migration plan: Wrap Notion calls in adapter layer; use API versioning; monitor Notion changelog; test API integration regularly
+
+**React 19 (^19.2.4):**
+- Risk: Major version with React Compiler enabled; unstable API; caret dependency allows major version jumps
+- Impact: Compiler errors could affect build; unintended behavior changes; babel-plugin-react-compiler used
+- Migration plan: Pin to specific version once stable; test thoroughly before updates; monitor React release notes
 
 ## Missing Critical Features
 
-**No on-demand cache revalidation:**
-- Problem: Cache tags (`notion:blog`, `notion:events`, `notion:solutions`, `notion:resources`) are defined but there is no `/api/revalidate` endpoint to invalidate them. Content updates in Notion are only reflected after TTL expiry (ranging from 5 minutes for events to 12 hours for solutions).
-- Blocks: Operators cannot push content updates immediately without manual deployment or waiting for TTL.
+**No Admin Dashboard for Managing Submissions:**
+- Problem: Applications received via forms go directly to Notion; no built-in admin UI for review/approval
+- Blocks: Admins must manually check Notion to review and approve applications; no workflow automation
+- Impact: Slow turnaround time; no visibility into submission pipeline; can't track approval status or send custom responses
 
-**No confirmation email after form submission:**
-- Problem: When a user submits any application (membership, chapter, ventures, solutions) or suggestion, they receive only a client-side success message. No email confirmation is sent to the applicant or to the admin.
-- Blocks: Applicants have no record of their submission. Admins must check Notion manually to discover new applications.
+**No Email Queue or Retry Mechanism:**
+- Problem: Emails are sent with `Promise.allSettled` but failed sends only log to Sentry via captureException
+- Blocks: Failed email deliveries may go unnoticed; no automatic retry of failed sends
+- Impact: Users may not receive confirmations; admins may not get alerts of new applications; no visibility into email delivery status
 
-**Sitemap only includes the homepage:**
-- Problem: `src/app/sitemap.ts` returns a single entry for the root URL. All other routes (`/blog/*`, `/events`, `/resources`, `/solutions`, `/apply/*`) are excluded from the sitemap.
-- Files: `src/app/sitemap.ts`
-- Blocks: Search engine indexing of content pages.
+**No Protection Against Coordinated Spam:**
+- Problem: Rate limiting in `src/lib/validation.ts` uses in-memory storage and resets on server restart
+- Blocks: Coordinated spam attacks across multiple server instances can bypass limits; no persistence between deploys
+- Impact: Form endpoints vulnerable to spam/DoS attacks; no built-in spam detection or filtering
+
+**Silent Data Quality Issues:**
+- Problem: Form data is validated by Zod but mapping logic (e.g., location mapping) silently falls back to defaults
+- Blocks: Invalid or unexpected data produces incorrect results without error or notification
+- Impact: Data quality issues go undetected; admin doesn't know about malformed submissions
+
+## Test Coverage Gaps
+
+**No Unit Tests for API Routes:**
+- What's not tested: Notion write failures, email send failures, edge cases in form submission, retry behavior
+- Files: `src/app/api/applications/*/route.ts`, `src/app/api/submit-*/route.ts`
+- Risk: Bugs in error handling and data transformation go undetected; regressions happen during refactors
+- Priority: High - these are critical user-facing features that can silently fail
+
+**No Tests for Validation Edge Cases:**
+- What's not tested: Boundary conditions in Zod schemas (max string lengths of 5000, 2000, etc.), honeypot timing edge cases, rate limit boundaries
+- Files: `src/lib/validation.ts`, `src/lib/schemas.ts`
+- Risk: Validation can be bypassed by sending payloads at schema boundaries; off-by-one errors in timing checks
+- Priority: Medium - covered by integration tests but edge cases may slip through
+
+**GlobeNetwork Has No Component Tests:**
+- What's not tested: Component lifecycle, event listener cleanup, resize handling, state management, unmount during loading
+- Files: `src/components/GlobeNetwork.tsx`
+- Risk: Memory leaks from event listeners; undefined behavior during rapid mount/unmount; polling timeout edge cases
+- Priority: Medium - e2e tests cover happy path but edge cases like unmount during loading aren't tested
+
+**No Load Testing for Notion Queries:**
+- What's not tested: Performance with large result sets (>1000 items), behavior when Notion API is slow or rate-limited
+- Files: `src/lib/members.ts`, `src/lib/events.ts`, `src/lib/blog.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`
+- Risk: Site performance degrades if Notion databases grow large; no pagination handling means full fetch every time
+- Priority: Low - not critical until databases scale significantly but should be addressed before growth
 
 ---
 

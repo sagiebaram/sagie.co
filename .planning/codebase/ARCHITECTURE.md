@@ -4,172 +4,166 @@
 
 ## Pattern Overview
 
-**Overall:** Next.js 15 App Router — Server-first with selective client boundaries
+**Overall:** Full-stack Next.js application with a server-centric architecture combining static generation, server-side rendering, and API-driven form submission patterns.
 
 **Key Characteristics:**
-- Pages are React Server Components by default; client-side state is pushed to leaf components or dedicated `*Client.tsx` files
-- Notion acts as the single backend data store (CMS + application intake) — no database other than Notion
-- API routes are thin: validate input via Zod schema → write to Notion → return JSON
-- Data-fetching is always cached via `unstable_cache` from `next/cache`, with per-resource TTLs
-- All environment configuration is validated at startup via Zod in `src/env/server.ts`
+- Server-first data fetching using Next.js `unstable_cache` for content from Notion
+- Client-side form UI with server-side validation and rate limiting
+- API routes as a security boundary for form submissions and webhooks
+- Notion as the single source of truth for all dynamic content (blog, events, resources, applications)
+- Static marketing pages with client-side animations and scroll reveals
+- Email notifications through Resend service with dual-recipient pattern (user + admin)
 
 ## Layers
 
-**Pages (App Router):**
-- Purpose: Compose layout from server-fetched data and section components
-- Location: `src/app/(marketing)/`
-- Contains: Async server components, `generateStaticParams`, `revalidate` exports
-- Depends on: `src/lib/*` for data, `src/components/*` for rendering
-- Used by: Next.js routing
+**Presentation (Client-Side):**
+- Purpose: Render interactive UI, handle animations, manage client state for forms
+- Location: `src/components/` and `src/app/(marketing)/` pages
+- Contains: React components, UI primitives, forms, animations (GSAP/Framer Motion)
+- Depends on: Form validation schemas, API routes, utility hooks
+- Used by: Marketing pages and user-facing application flows
 
-**API Routes:**
-- Purpose: Accept form submissions, validate, write to Notion
+**API Layer:**
+- Purpose: Secure entry point for client requests, validation, and delegation to services
 - Location: `src/app/api/`
-- Contains: `route.ts` files, each exporting `POST = withValidation(Schema, handler)`
-- Depends on: `src/lib/validation.ts`, `src/lib/schemas.ts`, `src/lib/notion.ts`, `src/lib/notion-monitor.ts`
-- Used by: Client-side forms via `fetch`
+- Contains: Route handlers using Next.js App Router pattern
+- Depends on: Validation middleware, notification service, database write handlers
+- Used by: Client-side forms and admin webhooks
 
-**Data Access (lib):**
-- Purpose: Read from Notion databases, shape to typed interfaces, cache results
-- Location: `src/lib/`
-- Contains: `blog.ts`, `events.ts`, `resources.ts`, `solutions.ts` — each exporting typed `unstable_cache`-wrapped functions
-- Depends on: `src/lib/notion.ts` (Notion client), `src/env/server.ts`
-- Used by: Pages and server components
+**Service/Business Logic:**
+- Purpose: Encapsulate domain logic for data fetching, transformation, and external service coordination
+- Location: `src/lib/` (email.ts, blog.ts, events.ts, etc.)
+- Contains: Data loaders with caching, email service wrappers, database mapping functions
+- Depends on: Environment config, external SDKs (Notion, Resend), validation schemas
+- Used by: API routes and server components
 
-**Components:**
-- Purpose: Render UI; sections compose ui primitives; forms handle client state
-- Location: `src/components/`
-- Contains: `sections/` (full-page content blocks), `forms/` (client form components), `ui/` (reusable atoms), `layout/` (Navbar, Footer), `mdx/` (blog rendering)
-- Depends on: `src/hooks/`, `src/lib/gsap.ts`, `src/constants/*`
-- Used by: Pages
+**Data Access:**
+- Purpose: Direct integration with Notion API and query building
+- Location: `src/lib/notion.ts`, `src/lib/notion-monitor.ts`
+- Contains: Client initialization, write monitoring, database operations
+- Depends on: @notionhq/client SDK, environment variables
+- Used by: Service layer functions
 
-**Constants:**
-- Purpose: Static copy, site data, and configuration that does not come from Notion
-- Location: `src/constants/`
-- Contains: `copy.ts` (all marketing text, nav links, social stats, chapters), `pillars.ts`, `tiers.ts`, `faq.ts`, `personas.ts`, `solutions.ts`, `blog.ts`, `resources.ts`, `events.ts`
-- Depends on: `src/types/index.ts`
-- Used by: Components and pages
-
-**Types:**
-- Purpose: Shared TypeScript interfaces for UI-level domain objects
-- Location: `src/types/index.ts`
-- Contains: `Pillar`, `Persona`, `Tier`, `FAQItem`, `Chapter`, `SocialStat`, `ButtonVariant`, `ChapterStatus`
-- Depends on: nothing
-- Used by: Constants, components
-
-**Env:**
-- Purpose: Validated, typed access to environment variables; server-only enforced
-- Location: `src/env/server.ts`
-- Contains: Zod schema parsed against `process.env`; exports `env` object and `allowedOrigins` set
-- Depends on: `server-only` package (prevents client import)
-- Used by: All `src/lib/*` files and API routes
+**Configuration:**
+- Purpose: Type-safe environment variables and constants
+- Location: `src/env/server.ts` and `src/constants/`
+- Contains: Validated env schema, hardcoded strings, metadata, personas, tiers
+- Depends on: Zod for validation
+- Used by: Throughout the application
 
 ## Data Flow
 
-**Read Flow (Notion → Page → User):**
+**Content Delivery (Read-Heavy):**
 
-1. Page component (server) calls a lib function, e.g. `getUpcomingEvents()`
-2. `unstable_cache` checks the Next.js data cache; cache key is `['notion:events:upcoming']`
-3. On cache miss, Notion SDK queries the relevant database with filters and sorts
-4. Results are mapped to typed interfaces (e.g. `SAGIEEvent[]`) via inline mapper functions
-5. Page passes typed data as props to RSC or client sections (e.g. `<EventsPageClient upcoming={...} />`)
-6. Client components render with Framer Motion / GSAP animations
+1. Page request to `/blog`, `/events`, `/resources`, etc.
+2. Server component calls data loader (e.g., `getAllPosts()`)
+3. Data loader uses `unstable_cache()` with Notion API query
+4. Response cached with revalidation tag (e.g., `'notion:blog'`)
+5. Notion returns structured properties mapped to TypeScript interfaces
+6. Server component renders static HTML with cached data
+7. Client hydrates and applies animations via GSAP ScrollTrigger
 
-**Write Flow (Form → API → Notion):**
+**Form Submission (Write Pattern):**
 
-1. `'use client'` form component (e.g. `MembershipForm`) maintains state with `useState`
-2. On submit, honeypot field `_trap` and timestamp `_t` are included in JSON body
-3. `fetch('/api/applications/membership', { method: 'POST', body: JSON.stringify({...}) })`
-4. API route wraps handler in `withValidation(Schema, handler)` — validates honeypot, elapsed time, then Zod schema
-5. Valid data is written to Notion via `notionWrite(() => notion.pages.create({...}))`
-6. `notionWrite` wraps the call in a try/catch that forwards errors to Sentry
-7. API returns `{ success: true }` on success; form shows `<FormSuccess>` component
+1. User fills form on client (e.g., MembershipForm)
+2. Client-side validation with honeypot and time-based bot check
+3. Form POST to `/api/applications/{type}` route
+4. `withValidation()` middleware:
+   - Extracts client IP
+   - Checks rate limit (5 requests per 10 minutes)
+   - Validates JSON structure and honeypot
+   - Parses and validates request body against Zod schema
+   - Returns 429, 400, or 422 on validation failure
+5. Handler receives validated typed data
+6. `notionWrite()` writes page to appropriate Notion database
+7. `sendEmails()` sends confirmation to user + admin alert (non-blocking)
+8. Returns 200 success or 500 error
 
-**Cache Revalidation TTLs:**
-- Blog posts: 3600s (1 hour)
-- Events: 300s (5 minutes)
-- Resources: 21600s (6 hours)
-- Solutions: 43200s (12 hours)
+**Cache Invalidation (Revalidation):**
 
-**State Management:**
-- No global state manager; local component state only via `useState`
-- Animation state managed by GSAP context per component via `useLayoutEffect`
-- No React Context or Zustand/Redux used
+1. Notion database is updated (e.g., new blog post published)
+2. Webhook triggers POST to `/api/revalidate`
+3. Request includes secret token for authorization
+4. Revalidate handler calls `revalidateTag()` for affected tags
+5. Next.js ISR clears cache and regenerates on next request
+6. Users see updated content within revalidation window
+
+**Error Handling:**
+
+**Strategy:** Graceful degradation with Sentry error tracking and user-facing fallbacks.
+
+**Patterns:**
+- Server components wrap data fetches in try-catch, return null or empty arrays on failure
+- API routes return structured error responses with HTTP status codes
+- Email errors are caught and logged to Sentry but don't fail form submission
+- Client-side forms show field-level validation errors immediately
+- Error boundary components (`error.tsx`) display recovery UI with error message
 
 ## Key Abstractions
 
-**`withValidation` (API middleware):**
-- Purpose: Wrap API route handlers with bot protection and Zod validation
-- File: `src/lib/validation.ts`
-- Pattern: Higher-order function — `withValidation(Schema, handler)` returns a Next.js `POST` handler
-- Includes honeypot check (`_trap` field) and minimum elapsed time check (3000ms)
+**Data Loader Pattern (`unstable_cache`):**
+- Purpose: Abstract Notion API polling with built-in HTTP caching
+- Examples: `src/lib/blog.ts:getAllPosts()`, `src/lib/events.ts:getUpcomingEvents()`
+- Pattern: Async function wrapped in `unstable_cache()` with cache key, revalidation time, and tags
 
-**`unstable_cache` wrappers (data layer):**
-- Purpose: Cache Notion reads with TTL and revalidation tags
-- Examples: `getAllPosts` in `src/lib/blog.ts`, `getUpcomingEvents` in `src/lib/events.ts`
-- Pattern: Export a named async function wrapped in `unstable_cache(fn, [key], { revalidate, tags })`
+**Validation Middleware (`withValidation`):**
+- Purpose: Centralize rate limiting, honeypot checks, schema validation, error formatting
+- Examples: `src/app/api/applications/membership/route.ts`
+- Pattern: Higher-order function that wraps handler, performs checks sequentially
 
-**`notionWrite` (error boundary):**
-- Purpose: Wrap Notion write calls to capture exceptions in Sentry
-- File: `src/lib/notion-monitor.ts`
-- Pattern: `await notionWrite(() => notion.pages.create({...}))` — rethrows after capture
+**Email Service (`sendEmails`):**
+- Purpose: Coordinate sending both user confirmation and admin alert emails in parallel
+- Examples: `src/lib/email.ts`
+- Pattern: Accepts form type and data, sends async without blocking form response
 
-**`useScrollReveal` hook:**
-- Purpose: Apply GSAP scroll-triggered fade-up animations
-- File: `src/hooks/useScrollReveal.ts`
-- Pattern: Returns a `ref` to attach to a container; animates children matching optional `selector`; `ScrollReveal` component at `src/components/ui/ScrollReveal.tsx` wraps this as JSX
-
-**`src/env/server.ts` (typed env):**
-- Purpose: Single source of truth for server environment variables with startup validation
-- Pattern: Zod schema defines all required vars; `process.env` is parsed at module load; any missing var crashes the server at startup
+**Notion Monitor (`notionWrite`):**
+- Purpose: Wrap Notion write operations for potential monitoring/debugging
+- Examples: `src/app/api/applications/solutions/route.ts:11`
+- Pattern: HOF that wraps async Notion operation, allows hook points for logging
 
 ## Entry Points
 
-**Root Layout:**
-- Location: `src/app/layout.tsx`
-- Triggers: Every page render
-- Responsibilities: Font injection (`Bebas_Neue`, `DM_Sans`), global CSS, metadata defaults, `<GSAPCleanup>` to prevent memory leaks
+**Marketing Site:**
+- Location: `src/app/(marketing)/page.tsx` (home page) and nested routes
+- Triggers: Direct URL navigation, link clicks
+- Responsibilities: Renders full marketing site with animated sections, navigation, footer
 
-**Home Page:**
-- Location: `src/app/(marketing)/page.tsx`
-- Triggers: `GET /`
-- Responsibilities: Composes all marketing sections sequentially; no data fetching (sections use static constants)
+**Blog/Resources/Events:**
+- Location: `src/app/(marketing)/blog/[slug]/page.tsx` and list pages
+- Triggers: Navigation to `/blog`, `/resources`, `/events` routes
+- Responsibilities: Load content from Notion, render with filters and detail views
 
-**Route Group:**
-- Location: `src/app/(marketing)/`
-- All public marketing pages are grouped here; the group does not add a URL segment
+**Application Forms:**
+- Location: Form pages under `/apply/*` routes
+- Triggers: User clicks apply button or navigates directly
+- Responsibilities: Render form with client-side validation, submit to API
 
-**API Routes:**
-- Location: `src/app/api/`
-- All are POST-only; no GET routes exist
-- Pattern: `export const POST = withValidation(Schema, async (_req, body) => { ... })`
+**Admin Page:**
+- Location: `src/app/admin/revalidate/page.tsx`
+- Triggers: Admin dashboard access
+- Responsibilities: Manual cache revalidation control
 
-## Error Handling
-
-**Strategy:** Errors are caught locally; pages fall back to empty state rather than crashing
-
-**Patterns:**
-- Data fetch failures in pages are caught in try/catch, returning empty arrays to client components
-- API route handlers catch Notion errors, log via `console.error`, return `{ error: '...' }` with 500 status
-- Notion write failures are additionally captured in Sentry via `notionWrite`
-- Validation failures return `{ error: 'Validation failed', fieldErrors: {...} }` with 422 status
-- Client forms display a generic error message on network failure; no per-field server error display
+**API Endpoints:**
+- Locations: `src/app/api/applications/{type}/route.ts`, `src/app/api/submit-{resource}/route.ts`, `src/app/api/revalidate/route.ts`
+- Triggers: Form submissions from client, webhooks from Notion
+- Responsibilities: Validate input, write to Notion, send emails, manage cache
 
 ## Cross-Cutting Concerns
 
-**Security:**
-- CSP headers set globally in `next.config.ts` (connect-src limited to `api.notion.com` and Sentry)
-- `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` on all routes
-- API routes have `Cache-Control: no-store`
-- Bot protection: honeypot field + 3-second minimum elapsed time in `withValidation`
+**Logging:** console.log() for development, structured logs only on form errors sent to Sentry
 
-**Logging:** `console.error` in API route catch blocks; Sentry captures Notion write exceptions with `service: 'notion', type: 'write_failure'` tags
+**Validation:** Multi-layered approach:
+- Client: Regex-based email/URL validation, required field checks
+- Server: Zod schema validation with detailed field errors
+- Security: Honeypot field, submission time check (3-second minimum)
 
-**Validation:** Zod schemas for all form payloads defined in `src/lib/schemas.ts`; applied at API boundary via `withValidation`
+**Authentication:** Not implemented. Admin endpoints lack auth (security concern noted).
 
-**Authentication:** None — the site is fully public; form submissions go directly to Notion for manual review
+**Rate Limiting:** Memory-based in-process rate limiter per IP (5 requests per 10 minutes). Non-persistent, resets on server restart.
 
-**Animation:** GSAP (ScrollTrigger, SplitText) registered client-side in `src/lib/gsap.ts`; reduced-motion is respected in `useScrollReveal`
+**Caching:** Next.js ISR with tag-based revalidation. All Notion queries cached with 5-minute minimum freshness, manual revalidation support.
+
+**Error Tracking:** Sentry integrated via `@sentry/nextjs` for unhandled errors in API routes and email service failures.
 
 ---
 
