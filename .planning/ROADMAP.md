@@ -117,7 +117,7 @@ Plans:
 3. User who submits a form and triggers the rate limit sees a clear, readable error message on the form rather than a silent failure
 4. Filter selections appear in the URL so the filtered view can be bookmarked or shared
 
-**Plans:** 5 plans (3 complete + 2 gap closure)
+**Plans:** 4/5 plans executed
 
 Plans:
 - [x] 05-01-PLAN.md — Install nuqs, NuqsAdapter, bfcache fix in GSAPCleanup, filterKey in useScrollReveal
@@ -193,7 +193,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 2. Harden | 3/3 | Complete | 2026-03-28 |
 | 3. Features + Globe | 3/3 | Complete | 2026-03-28 |
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
-| 5. Bug Fixes | 3/5 | Gap Closure | |
+| 5. Bug Fixes | 4/5 | In Progress|  |
 | 6. Event Interactivity | 1/2 | In Progress| |
 | 7. Form Redesign | 1/3 | In Progress| |
 | 8. Admin Polish + 404 | 2/2 | Complete   | 2026-03-28 |

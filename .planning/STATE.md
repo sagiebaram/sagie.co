@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Completed 08-02-PLAN.md
-last_updated: "2026-03-28T23:29:11.008Z"
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-03-28T23:30:38.196Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 23
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -62,6 +62,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 | Phase 07-form-redesign P01 | 8 | 3 tasks | 5 files |
 | Phase 07-form-redesign P02 | 9 | 2 tasks | 2 files |
 | Phase 08-admin-polish-404 P02 | 10 | 2 tasks | 1 files |
+| Phase 05-bug-fixes P04 | 2 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,7 @@ Recent decisions affecting current work:
 - [Phase 07-form-redesign]: FormField value/onChange made optional for backward compat — new forms use registration prop only
 - [Phase 07-form-redesign]: z.input<typeof Schema> for useForm generic avoids exactOptionalPropertyTypes incompatibility with .default() fields
 - [Phase Phase 08-admin-polish-404]: CircuitBrokenIllustration replaces NotFoundIllustration in not-found.tsx — inline style tag binds .broken-node class to pulse-node animation; keyframes remain in globals.css
+- [Phase 05-bug-fixes]: Child card opacity override in filterKey useEffect rAF callback — uses gsap.utils.toArray(selector, el) to set inline opacity:1, overriding CSS opacity:0 on newly rendered cards
 
 ### Pending Todos
 
@@ -127,6 +129,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T23:29:11.006Z
-Stopped at: Completed 08-02-PLAN.md
+Last session: 2026-03-28T23:30:38.194Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None
