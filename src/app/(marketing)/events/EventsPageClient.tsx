@@ -234,7 +234,7 @@ export function EventsPageClient({
       <Navbar />
 
       {/* Hero */}
-      <section className="relative z-[1] overflow-hidden">
+      <section className="relative z-1 overflow-hidden">
         <GridBackground />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-20">
@@ -255,7 +255,7 @@ export function EventsPageClient({
 
       {/* Upcoming Events */}
       {upcoming.length > 0 && (
-        <section className="relative z-[1] overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
+        <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
           <GridBackground />
           <div ref={upcomingRef} className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Upcoming</Eyebrow>
@@ -286,7 +286,7 @@ export function EventsPageClient({
 
       {/* No upcoming events fallback */}
       {upcoming.length === 0 && (
-        <section className="relative z-[1] overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
+        <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
           <GridBackground />
           <div className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Upcoming</Eyebrow>
@@ -299,7 +299,7 @@ export function EventsPageClient({
 
       {/* Past Events */}
       {past.length > 0 && (
-        <section className="relative z-[1] overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
+        <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
           <GridBackground />
           <div className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Past Events</Eyebrow>
@@ -309,7 +309,7 @@ export function EventsPageClient({
       )}
 
       {/* Suggest an Event */}
-      <section className="relative z-[1] overflow-hidden border-t border-border-strong md:border-border-subtle">
+      <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle">
         <GridBackground />
         <div ref={suggestRef} className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-16 md:py-24">
           <Eyebrow>Contribute</Eyebrow>

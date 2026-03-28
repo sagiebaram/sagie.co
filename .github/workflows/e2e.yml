@@ -1,5 +1,5 @@
-# .github/workflows/e2e-preview.yml
-name: e2e-preview
+# .github/workflows/e2e.yml
+name: e2e
 
 on:
   deployment_status:

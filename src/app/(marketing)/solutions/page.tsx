@@ -34,7 +34,7 @@ export default async function SolutionsPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative z-[1] overflow-hidden">
+      <section className="relative z-1 overflow-hidden">
         <GridBackground />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-24">
@@ -59,7 +59,7 @@ export default async function SolutionsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {STEPS.map((step) => (
               <div key={step.num} className="step py-6 border-t border-border-subtle">
-                <p className="font-display text-foreground-dim text-[14px] tracking-heading mb-2">
+                <p className="font-display text-foreground-dim text-caption tracking-heading mb-2">
                   {step.num}
                 </p>
                 <p className="font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
@@ -94,7 +94,7 @@ export default async function SolutionsPage() {
       </Section>
 
       {/* Gated bar */}
-      <section className="relative z-[1] border-t border-border-strong border-b border-b-border-strong">
+      <section className="relative z-1 border-t border-border-strong border-b border-b-border-strong">
         <ScrollReveal y={12} duration={0.4}>
           <div className="max-w-[880px] mx-auto px-6 md:px-8 py-10 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="max-w-[560px]">
@@ -122,7 +122,7 @@ export default async function SolutionsPage() {
       </Section>
 
       {/* CTA */}
-      <section className="relative z-[1] overflow-hidden">
+      <section className="relative z-1 overflow-hidden">
         <GridBackground />
         <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-20 md:py-32">
           <h2 className="font-display uppercase text-hero leading-[0.9] mb-8">

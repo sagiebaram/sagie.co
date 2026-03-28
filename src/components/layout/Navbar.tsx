@@ -31,7 +31,7 @@ export function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-background-nav backdrop-blur-[12px] border-b border-border-strong"
+      className="fixed top-0 left-0 right-0 z-50 bg-background-nav backdrop-blur-md border-b border-border-strong"
     >
       <div className="max-w-[800px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
         <a href="/">
@@ -107,7 +107,7 @@ export function Navbar() {
           borderTop: isOpen ? '1px solid var(--border-strong)' : '0px solid transparent',
         }}
       >
-        <div className="bg-background-nav backdrop-blur-[12px] px-6 py-6 flex flex-col gap-1">
+        <div className="bg-background-nav backdrop-blur-md px-6 py-6 flex flex-col gap-1">
           {NAV_LINKS.map((item, i) => (
             <a
               key={item}

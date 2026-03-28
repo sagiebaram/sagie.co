@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span className="text-foreground-muted">{post.readTime} min read</span>
           </div>
 
-          <h1 className="post-title font-display uppercase text-[40px] leading-[0.95] tracking-heading text-foreground-secondary mb-4">
+          <h1 className="post-title font-display uppercase text-tier leading-[0.95] tracking-heading text-foreground-secondary mb-4">
             {post.title}
           </h1>
 
@@ -102,7 +102,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   className="related-card group p-6 border border-border-default hover:bg-background-card-featured transition-colors duration-200"
                 >
                   <span className="font-body uppercase text-foreground-muted text-label tracking-spaced block mb-2">{r.category}</span>
-                  <h4 className="font-display uppercase text-[14px] leading-tight text-foreground-dim group-hover:text-foreground-secondary transition-colors duration-150 mb-3">
+                  <h4 className="font-display uppercase text-caption leading-tight text-foreground-dim group-hover:text-foreground-secondary transition-colors duration-150 mb-3">
                     {r.title}
                   </h4>
                   <span className="font-body text-foreground-secondary text-label tracking-mid group-hover:translate-x-0.5 transition-transform duration-150 inline-block">Read →</span>
@@ -123,11 +123,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <div className="max-w-[880px] mx-auto px-6 md:px-8 py-6 flex items-center justify-between">
               <div>
                 <span className="font-body uppercase text-foreground-dim text-label tracking-label block mb-1">Next post</span>
-                <span className="font-display uppercase text-[18px] text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150">
+                <span className="font-display uppercase text-subhead text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150">
                   {nextPost.title}
                 </span>
               </div>
-              <span className="font-display text-foreground-dim text-[24px] group-hover:text-foreground-muted group-hover:translate-x-1 transition-all duration-150">→</span>
+              <span className="font-display text-foreground-dim text-manifesto group-hover:text-foreground-muted group-hover:translate-x-1 transition-all duration-150">→</span>
             </div>
           </Link>
         </ScrollReveal>
