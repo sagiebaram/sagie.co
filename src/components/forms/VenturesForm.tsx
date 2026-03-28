@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
@@ -19,6 +19,16 @@ export function VenturesForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [submitWarning, setSubmitWarning] = useState<string | null>(null)
+  const [rateLimitUntil, setRateLimitUntil] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!rateLimitUntil) return
+    const remaining = rateLimitUntil - Date.now()
+    if (remaining <= 0) { setRateLimitUntil(null); return }
+    const timer = setTimeout(() => setRateLimitUntil(null), remaining)
+    return () => clearTimeout(timer)
+  }, [rateLimitUntil])
 
   const set = (key: string) => (value: string) =>
     setFields(prev => ({ ...prev, [key]: value }))
@@ -40,12 +50,28 @@ export function VenturesForm() {
     const e = validate()
     if (Object.keys(e).length) { setErrors(e); return }
     setLoading(true)
+    setSubmitWarning(null)
     try {
-      await fetch('/api/applications/ventures', {
+      const res = await fetch('/api/applications/ventures', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
       })
+
+      if (res.status === 429) {
+        const retryAfterRaw = res.headers.get('Retry-After')
+        const waitSeconds = retryAfterRaw ? parseInt(retryAfterRaw, 10) : 30
+        const safeWait = isNaN(waitSeconds) ? 30 : waitSeconds
+        setSubmitWarning("You've submitted several times recently. Please wait a few minutes before trying again.")
+        setRateLimitUntil(Date.now() + safeWait * 1000)
+        return
+      }
+
+      if (!res.ok) {
+        setErrors({ submit: 'Something went wrong. Please try again.' })
+        return
+      }
+
       setSuccess(true)
     } catch {
       setErrors({ submit: 'Something went wrong. Please try again.' })
@@ -85,12 +111,17 @@ export function VenturesForm() {
       <FormField label="Website / Deck URL" name="website" type="url" placeholder="yoursite.com or deck link" value={fields.website} onChange={set('website')} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.current.toString()} />
+      {submitWarning && (
+        <span style={{ fontSize: '11px', color: '#B8860B', lineHeight: '1.5' }}>
+          {submitWarning}
+        </span>
+      )}
       {errors.submit && (
         <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
       )}
       <button
         onClick={handleSubmit}
-        disabled={loading}
+        disabled={loading || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
         style={{
           background: loading ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',
