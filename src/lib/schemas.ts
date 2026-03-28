@@ -2,10 +2,7 @@ import { z } from 'zod';
 
 /** Transform empty strings to undefined so .url().optional() works with blank form fields */
 const optionalUrl = (message: string) =>
-  z.preprocess(
-    (val) => (val === '' ? undefined : val),
-    z.string().url(message).optional()
-  )
+  z.string().optional().transform((val) => (val === '' ? undefined : val)).pipe(z.string().url(message).optional())
 
 export const MembershipSchema = z.object({
   fullName: z.string().min(1, 'What should we call you?').max(100).trim(),
