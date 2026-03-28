@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5: Bug Fixes** - Fix filter state, back/forward nav, GSAP re-trigger, and rate limit feedback
 - [ ] **Phase 6: Event Interactivity** - Wire event action buttons and build Add to Calendar modal
 - [ ] **Phase 7: Form Redesign** - Schema audit, react-hook-form adoption, inline validation, dropdowns/checkboxes
-- [ ] **Phase 8: Admin Polish + 404** - Revalidation UI feedback, key rotation fix, custom 404 illustration
+- [x] **Phase 8: Admin Polish + 404** - Revalidation UI feedback, key rotation fix, custom 404 illustration (completed 2026-03-28)
 
 ## Phase Details
 
@@ -174,7 +174,7 @@ Plans:
 2. Admin whose revalidation secret has rotated is returned to the access prompt correctly instead of landing on a broken redirect
 3. Visitor who navigates to a non-existent URL sees a custom 404 page with a branded SVG/CSS illustration matching the site's circuit-board aesthetic
 
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 08-01-PLAN.md — Refactor admin revalidation page to per-button status with 401 reset and Button styling
@@ -196,4 +196,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 5. Bug Fixes | 3/5 | Gap Closure | |
 | 6. Event Interactivity | 1/2 | In Progress| |
 | 7. Form Redesign | 1/3 | In Progress| |
-| 8. Admin Polish + 404 | 1/2 | In Progress| |
+| 8. Admin Polish + 404 | 2/2 | Complete   | 2026-03-28 |

@@ -32,7 +32,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 - [x] **POL-01**: Revalidation admin page shows per-button loading state and success/failure indication
 - [x] **POL-02**: Revalidation 401 response correctly resets to access prompt instead of broken redirect
-- [ ] **POL-03**: Custom 404 page with branded SVG/CSS illustration matching site aesthetic
+- [x] **POL-03**: Custom 404 page with branded SVG/CSS illustration matching site aesthetic
 
 ## v1.0 Requirements (Validated)
 
@@ -136,7 +136,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FORM-03 | Phase 7 | Complete |
 | POL-01 | Phase 8 | Complete |
 | POL-02 | Phase 8 | Complete |
-| POL-03 | Phase 8 | Pending |
+| POL-03 | Phase 8 | Complete |
 
 **Coverage:**
 
