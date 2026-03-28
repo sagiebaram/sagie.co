@@ -45,7 +45,12 @@ Plans:
   3. No unsafe-inline appears in the CSP script-src header — nonces are used instead
   4. Sentry tracesSampleRate is 0.1 or 0.2 in the production config
   5. Every route segment has an error.tsx that renders a user-facing error state and a loading.tsx that renders a skeleton or spinner
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Security middleware: proxy.ts (CSP nonces + origin check), rate limiting in withValidation, Sentry config update
+- [ ] 02-02-PLAN.md — Skeleton component, error.tsx boundaries for all route segments, not-found.tsx redesign
+- [ ] 02-03-PLAN.md — Tailored loading.tsx skeletons for all route segments
 
 ### Phase 3: Features + Globe
 **Goal**: Editors can invalidate the cache on demand, applicants receive email confirmation, the globe shows real member data, and search engines can index every page
@@ -78,6 +83,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Stabilize | 2/2 | Complete   | 2026-03-28 |
-| 2. Harden | 0/TBD | Not started | - |
+| 2. Harden | 0/3 | Not started | - |
 | 3. Features + Globe | 0/TBD | Not started | - |
 | 4. Testing | 0/TBD | Not started | - |
