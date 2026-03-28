@@ -1,9 +1,9 @@
 'use client'
 
+import type { ReactNode } from 'react'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { CountUp } from '@/components/ui/CountUp'
-import { GlobeShell } from '@/components/GlobeShell'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { SOCIAL_STATS } from '@/constants/copy'
 
@@ -12,7 +12,7 @@ const STAT_VALUES: Record<string, { end: number; suffix: string }> = {
   '1': { end: 1, suffix: '' },
 }
 
-export function SocialProof() {
+export function SocialProof({ globe }: { globe?: ReactNode }) {
   const ref = useScrollReveal({ y: 24, duration: 0.6 })
 
   return (
@@ -39,9 +39,11 @@ export function SocialProof() {
         })}
       </div>
 
-      <div className="hidden md:block">
-        <GlobeShell />
-      </div>
+      {globe && (
+        <div className="hidden md:block">
+          {globe}
+        </div>
+      )}
     </Section>
   )
 }

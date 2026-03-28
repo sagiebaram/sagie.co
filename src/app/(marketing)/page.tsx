@@ -6,6 +6,7 @@ import { Belief } from '@/components/sections/Belief'
 import { Pillars } from '@/components/sections/Pillars'
 import { WhoItsFor } from '@/components/sections/WhoItsFor'
 import { SocialProof } from '@/components/sections/SocialProof'
+import { GlobeShell } from '@/components/GlobeShell'
 import { ChapterMap } from '@/components/sections/ChapterMap'
 import { Tiers } from '@/components/sections/Tiers'
 import { FounderBridge } from '@/components/sections/FounderBridge'
@@ -21,7 +22,7 @@ export default function HomePage() {
       <Belief />
       <Pillars />
       <WhoItsFor />
-      <SocialProof />
+      <SocialProof globe={<GlobeShell />} />
       <ChapterMap />
       <Tiers />
       <FAQ />
