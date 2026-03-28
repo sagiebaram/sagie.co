@@ -16,6 +16,8 @@ export const POST = withValidation(ChapterSchema, async (_req: Request, body) =>
         ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
         ...(body.communitySize ? { 'Existing Community Size': { rich_text: [{ text: { content: body.communitySize } }] } } : {}),
         ...(body.whyLead ? { 'Why Lead': { rich_text: [{ text: { content: body.whyLead } }] } } : {}),
+        ...(body.background ? { 'Background': { rich_text: [{ text: { content: body.background } }] } } : {}),
+        ...(body.chapterVision ? { 'Chapter Vision': { rich_text: [{ text: { content: body.chapterVision } }] } } : {}),
         Notes: { rich_text: [{ text: { content: `Chapter Lead Application — ${body.city}` } }] },
       },
     }))

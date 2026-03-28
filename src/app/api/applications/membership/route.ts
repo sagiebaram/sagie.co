@@ -48,6 +48,7 @@ export const POST = withValidation(MembershipSchema, async (_req: Request, body)
         ...(body.whatTheyOffer ? { 'What They Offer': { rich_text: [{ text: { content: body.whatTheyOffer } }] } } : {}),
         ...(body.role ? { Role: { rich_text: [{ text: { content: body.role } }] } } : {}),
         ...(body.company ? { Company: { rich_text: [{ text: { content: body.company } }] } } : {}),
+        ...(body.referral ? { 'Referral': { rich_text: [{ text: { content: body.referral } }] } } : {}),
       },
     }))
 

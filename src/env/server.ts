@@ -7,11 +7,11 @@ const EnvSchema = z.object({
   NOTION_RESOURCES_DB_ID: z.string().min(1),
   NOTION_SOLUTIONS_DB_ID: z.string().min(1),
   NOTION_EVENT_DB_ID: z.string().min(1),
-  NOTION_DEAL_PIPELINE_DB_ID: z.string().min(1),
+  NOTION_DEAL_PIPELINE_DB_ID: z.string().min(1).optional(),
   NOTION_MEMBER_DB_ID: z.string().min(1),
   NOTION_VENTURES_INTAKE_DB_ID: z.string().min(1),
   ALLOWED_ORIGINS: z.string().min(1),
-  REVALIDATE_SECRET: z.string().min(1),
+  REVALIDATE_SECRET: z.string().min(1).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
 });
 
