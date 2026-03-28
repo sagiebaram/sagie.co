@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
@@ -12,11 +12,15 @@ interface AnimatedSectionProps {
 }
 
 export function AnimatedSection({ children, className, delay = 0, style }: AnimatedSectionProps) {
-  const [shouldReduce, setShouldReduce] = useState(false)
-
-  useEffect(() => {
-    setShouldReduce(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-  }, [])
+  const shouldReduce = useSyncExternalStore(
+    (callback) => {
+      const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+      media.addEventListener('change', callback)
+      return () => media.removeEventListener('change', callback)
+    },
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    () => false // Server side
+  )
 
   const inner = (
     <motion.div

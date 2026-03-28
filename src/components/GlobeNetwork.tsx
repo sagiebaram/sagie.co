@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react'
 import dynamic from 'next/dynamic'
 import type { CityData } from '@/lib/members'
 
@@ -67,9 +67,12 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
 
   // Refs so imperative DOM click handlers always use latest values
   const handleSelectRef = useRef(handleSelect)
-  handleSelectRef.current = handleSelect
   const selectedCityRef = useRef(selectedCity)
-  selectedCityRef.current = selectedCity
+
+  useLayoutEffect(() => {
+    handleSelectRef.current = handleSelect
+    selectedCityRef.current = selectedCity
+  })
 
   useEffect(() => {
     fetch('/data/ne_110m_admin_0_countries.geojson')

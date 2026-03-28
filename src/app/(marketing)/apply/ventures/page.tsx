@@ -21,7 +21,7 @@ export default function ApplyVenturesPage() {
             <span className="block text-foreground-secondary">THAT MATTERS.</span>
           </h1>
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
-            Positive impact or innovation? Reach out and see if we're a match.
+            Positive impact or innovation? Reach out and see if we&apos;re a match.
           </p>
           <VenturesForm />
         </div>
