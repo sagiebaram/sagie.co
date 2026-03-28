@@ -16,10 +16,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Events
 
-- [ ] **EVT-01**: Register button opens the event's external registration URL from Notion
-- [ ] **EVT-02**: Add to Calendar modal offers Google Calendar, Outlook, Apple Calendar links and .ics download
-- [ ] **EVT-03**: More Info button links to event's detail/info URL from Notion
-- [ ] **EVT-04**: Read Recap button links to event's recap URL from Notion
+- [x] **EVT-01**: Register button opens the event's external registration URL from Notion
+- [x] **EVT-02**: Add to Calendar modal offers Google Calendar, Outlook, Apple Calendar links and .ics download
+- [x] **EVT-03**: More Info button links to event's detail/info URL from Notion
+- [x] **EVT-04**: Read Recap button links to event's recap URL from Notion
 - [ ] **EVT-05**: Event action buttons show/hide based on data availability (no dead buttons)
 
 ### Forms
@@ -126,10 +126,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FIX-02 | Phase 5 | Complete |
 | FIX-03 | Phase 5 | Complete |
 | FIX-04 | Phase 5 | Complete |
-| EVT-01 | Phase 6 | Pending |
-| EVT-02 | Phase 6 | Pending |
-| EVT-03 | Phase 6 | Pending |
-| EVT-04 | Phase 6 | Pending |
+| EVT-01 | Phase 6 | Complete |
+| EVT-02 | Phase 6 | Complete |
+| EVT-03 | Phase 6 | Complete |
+| EVT-04 | Phase 6 | Complete |
 | EVT-05 | Phase 6 | Pending |
 | FORM-01 | Phase 7 | Pending |
 | FORM-02 | Phase 7 | Pending |

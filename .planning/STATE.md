@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-28T22:07:04.123Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-28T22:13:28.918Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
   completed_phases: 5
-  total_plans: 18
-  completed_plans: 14
+  total_plans: 19
+  completed_plans: 15
 ---
 
 # Project State
@@ -57,6 +57,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 | Phase 05-bug-fixes P01 | 5 | 2 tasks | 4 files |
 | Phase 05-bug-fixes P03 | 4 | 2 tasks | 7 files |
 | Phase 05-bug-fixes P02 | 15 | 2 tasks | 6 files |
+| Phase 06-event-interactivity P01 | 2 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,9 @@ Recent decisions affecting current work:
 - [Phase Phase 05-bug-fixes]: EventFilter is a controlled component consistent with ResourceFilter — parent (EventsPageClient) owns nuqs location state
 - [Phase Phase 05-bug-fixes]: EventsPageClient location filter matches against event.chapter field (graceful degradation — shows all events when chapter is null)
 - [Phase Phase 05-bug-fixes]: filterKey concatenation for BlogFilter: category|author — any change triggers fade
+- [Phase 06-event-interactivity]: mapEvent exported (not private) so ICS route can reuse Notion property mapping without duplication
+- [Phase 06-event-interactivity]: ICS generated via manual string building with CRLF — no ical library needed for single-event output
+- [Phase 06-event-interactivity]: All-day ICS events end date = start + 1 day per RFC 5545 exclusive end date spec
 
 ### Pending Todos
 
@@ -113,6 +117,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T22:07:04.120Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-admin-polish-404/08-CONTEXT.md
+Last session: 2026-03-28T22:13:28.917Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: None

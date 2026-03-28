@@ -137,7 +137,7 @@ Plans:
 4. User clicks Read Recap on a past event and lands on the recap content
 5. Action buttons only appear when the corresponding Notion field is populated — no dead or broken buttons appear for events missing those fields
 
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 06-01-PLAN.md — Extend SAGIEEvent data model with URL fields, calendar URL builders, ICS content generator, API route
@@ -188,6 +188,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 3. Features + Globe | 3/3 | Complete | 2026-03-28 |
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
 | 5. Bug Fixes | 3/3 | Complete   | 2026-03-28 |
-| 6. Event Interactivity | 0/2 | Not started | - |
+| 6. Event Interactivity | 1/2 | In Progress|  |
 | 7. Form Redesign | 0/3 | Not started | - |
 | 8. Admin Polish + 404 | 0/? | Not started | - |
