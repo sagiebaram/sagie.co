@@ -40,7 +40,7 @@ export function SocialProof({ globe }: { globe?: ReactNode }) {
       </div>
 
       {globe && (
-        <div className="hidden md:block">
+        <div className="hidden md:flex justify-center mt-8">
           {globe}
         </div>
       )}
