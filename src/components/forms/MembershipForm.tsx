@@ -1,27 +1,42 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { MembershipSchema } from '@/lib/schemas'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
+type FormData = z.input<typeof MembershipSchema>
+
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <div style={{
+      borderTop: '0.5px solid var(--border-default)',
+      paddingTop: '16px',
+      marginTop: '4px',
+    }}>
+      <span style={{
+        fontSize: '9px',
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+        color: 'var(--text-muted)',
+        fontFamily: 'var(--font-body)',
+      }}>
+        {label}
+      </span>
+    </div>
+  )
+}
+
 export function MembershipForm() {
-  const [fields, setFields] = useState({
-    fullName: '',
-    email: '',
-    location: '',
-    role: '',
-    whatTheyNeed: '',
-    howTheyKnowSagie: '',
-    linkedIn: '',
-    referral: '',
-  })
   const trapRef = useRef('')
   const loadTime = useRef(Date.now())
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [rateLimitUntil, setRateLimitUntil] = useState<number | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!rateLimitUntil) return
@@ -31,32 +46,26 @@ export function MembershipForm() {
     return () => clearTimeout(timer)
   }, [rateLimitUntil])
 
-  const set = (key: string) => (value: string) =>
-    setFields(prev => ({ ...prev, [key]: value }))
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(MembershipSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
+  })
 
-  const validate = () => {
-    const e: Record<string, string> = {}
-    if (!fields.fullName) e.fullName = 'Required'
-    if (!fields.email) e.email = 'Required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) e.email = 'Enter a valid email'
-    if (!fields.location) e.location = 'Required'
-    if (!fields.whatTheyNeed) e.whatTheyNeed = 'Required'
-    if (!fields.role) e.role = 'Required'
-    if (!fields.howTheyKnowSagie) e.howTheyKnowSagie = 'Required'
-    if (fields.linkedIn && !/^https?:\/\/.+/.test(fields.linkedIn)) e.linkedIn = 'Enter a full URL (https://...)'
-    return e
-  }
-
-  const handleSubmit = async () => {
-    const e = validate()
-    if (Object.keys(e).length) { setErrors(e); return }
-    setLoading(true)
+  const onSubmit = async (data: FormData) => {
+    if (rateLimitUntil !== null && Date.now() < rateLimitUntil) return
     setSubmitWarning(null)
+    setSubmitError(null)
     try {
       const res = await fetch('/api/applications/membership', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, _trap: trapRef.current, _t: loadTime.current }),
+        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime.current }),
       })
 
       if (res.status === 429) {
@@ -69,15 +78,13 @@ export function MembershipForm() {
       }
 
       if (!res.ok) {
-        setErrors({ submit: 'Something went wrong. Please try again.' })
+        setSubmitError('Something went wrong. Please try again.')
         return
       }
 
       setSuccess(true)
     } catch {
-      setErrors({ submit: 'Something went wrong. Please try again.' })
-    } finally {
-      setLoading(false)
+      setSubmitError('Something went wrong. Please try again.')
     }
   }
 
@@ -91,45 +98,140 @@ export function MembershipForm() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+      <SectionHeader label="About You" />
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Full Name" name="fullName" placeholder="Your full name" required value={fields.fullName} onChange={set('fullName')} error={errors.fullName} />
-        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required value={fields.email} onChange={set('email')} error={errors.email} />
+        <FormField
+          label="Full Name"
+          name="fullName"
+          placeholder="Your full name"
+          required
+          registration={register('fullName')}
+          error={errors.fullName?.message}
+        />
+        <FormField
+          label="Email"
+          name="email"
+          type="email"
+          placeholder="your@email.com"
+          required
+          registration={register('email')}
+          error={errors.email?.message}
+        />
       </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="City" name="location" placeholder="Where are you based?" required value={fields.location} onChange={set('location')} error={errors.location} />
         <FormField
           label="I am a..."
           name="role"
           type="select"
           options={['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']}
           required
-          value={fields.role}
-          onChange={set('role')}
-          error={errors.role}
+          registration={register('role')}
+          error={errors.role?.message}
+        />
+        <FormField
+          label="Company / Organisation"
+          name="company"
+          placeholder="Where do you work?"
+          registration={register('company')}
+          error={errors.company?.message}
         />
       </div>
-      <FormField label="What are you building or working on?" name="whatTheyNeed" type="textarea" placeholder="Tell us what you're focused on right now." required value={fields.whatTheyNeed} onChange={set('whatTheyNeed')} error={errors.whatTheyNeed} />
-      <FormField label="Why SAGIE?" name="howTheyKnowSagie" type="textarea" placeholder="What does this community mean to you — or what are you hoping it will mean?" required value={fields.howTheyKnowSagie} onChange={set('howTheyKnowSagie')} error={errors.howTheyKnowSagie} />
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" value={fields.linkedIn} onChange={set('linkedIn')} />
-        <FormField label="How did you hear about us?" name="referral" placeholder="Name, event, social..." value={fields.referral} onChange={set('referral')} />
+        <FormField
+          label="City"
+          name="location"
+          placeholder="Where are you based?"
+          required
+          registration={register('location')}
+          error={errors.location?.message}
+        />
+        <FormField
+          label="LinkedIn URL"
+          name="linkedIn"
+          type="url"
+          placeholder="linkedin.com/in/yourname"
+          registration={register('linkedIn')}
+          error={errors.linkedIn?.message}
+        />
       </div>
-      <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
-      <input type="hidden" name="_t" value={loadTime.current.toString()} />
+
+      <SectionHeader label="Your Interests" />
+
+      <FormField
+        label="What are you interested in? (select all that apply)"
+        name="category"
+        type="checkbox-group"
+        options={['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor']}
+        registration={register('category')}
+        error={errors.category?.message}
+      />
+
+      <FormField
+        label="What are you building or working on?"
+        name="whatTheyNeed"
+        type="textarea"
+        placeholder="Tell us what you're focused on right now."
+        registration={register('whatTheyNeed')}
+        error={errors.whatTheyNeed?.message}
+      />
+
+      <FormField
+        label="What do you bring to the community?"
+        name="whatTheyOffer"
+        type="textarea"
+        placeholder="Skills, expertise, connections — what could you offer others?"
+        registration={register('whatTheyOffer')}
+        error={errors.whatTheyOffer?.message}
+      />
+
+      <SectionHeader label="Connection" />
+
+      <FormField
+        label="Why SAGIE?"
+        name="howTheyKnowSagie"
+        type="textarea"
+        placeholder="What does this community mean to you — or what are you hoping it will mean?"
+        registration={register('howTheyKnowSagie')}
+        error={errors.howTheyKnowSagie?.message}
+      />
+
+      <FormField
+        label="How did you hear about us?"
+        name="referral"
+        placeholder="Name, event, social..."
+        registration={register('referral')}
+        error={errors.referral?.message}
+      />
+
+      <input
+        type="text"
+        name="_trap"
+        autoComplete="off"
+        tabIndex={-1}
+        aria-hidden="true"
+        style={{ display: 'none' }}
+        onChange={e => { trapRef.current = e.target.value }}
+      />
+
       {submitWarning && (
         <span style={{ fontSize: '11px', color: '#B8860B', lineHeight: '1.5' }}>
           {submitWarning}
         </span>
       )}
-      {errors.submit && (
-        <span style={{ fontSize: '11px', color: '#c0392b' }}>{errors.submit}</span>
+      {submitError && (
+        <span style={{ fontSize: '11px', color: '#c0392b' }}>{submitError}</span>
       )}
+
       <button
-        onClick={handleSubmit}
-        disabled={loading || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
+        type="submit"
+        disabled={isSubmitting || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
         style={{
-          background: loading ? 'var(--border-default)' : 'var(--silver)',
+          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',
           fontFamily: 'var(--font-display)',
           fontSize: '14px',
@@ -137,12 +239,12 @@ export function MembershipForm() {
           textTransform: 'uppercase',
           padding: '14px 32px',
           border: 'none',
-          cursor: loading ? 'not-allowed' : 'pointer',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
           alignSelf: 'flex-start',
         }}
       >
-        {loading ? 'Submitting...' : 'Submit Application →'}
+        {isSubmitting ? 'Submitting...' : 'Submit Application →'}
       </button>
-    </div>
+    </form>
   )
 }
