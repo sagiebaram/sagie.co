@@ -8,10 +8,10 @@ export function MembershipForm() {
   const [fields, setFields] = useState({
     fullName: '',
     email: '',
-    city: '',
+    location: '',
     role: '',
-    building: '',
-    whySagie: '',
+    whatTheyNeed: '',
+    howTheyKnowSagie: '',
     linkedIn: '',
     referral: '',
   })
@@ -28,9 +28,9 @@ export function MembershipForm() {
     const e: Record<string, string> = {}
     if (!fields.fullName) e.fullName = 'Required'
     if (!fields.email) e.email = 'Required'
-    if (!fields.city) e.city = 'Required'
-    if (!fields.building) e.building = 'Required'
-    if (!fields.whySagie) e.whySagie = 'Required'
+    if (!fields.location) e.location = 'Required'
+    if (!fields.whatTheyNeed) e.whatTheyNeed = 'Required'
+    if (!fields.howTheyKnowSagie) e.howTheyKnowSagie = 'Required'
     return e
   }
 
@@ -68,7 +68,7 @@ export function MembershipForm() {
         <FormField label="Email" name="email" type="email" placeholder="your@email.com" required value={fields.email} onChange={set('email')} error={errors.email} />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="City" name="city" placeholder="Where are you based?" required value={fields.city} onChange={set('city')} error={errors.city} />
+        <FormField label="City" name="location" placeholder="Where are you based?" required value={fields.location} onChange={set('location')} error={errors.location} />
         <FormField
           label="I am a..."
           name="role"
@@ -78,8 +78,8 @@ export function MembershipForm() {
           onChange={set('role')}
         />
       </div>
-      <FormField label="What are you building or working on?" name="building" type="textarea" placeholder="Tell us what you're focused on right now." required value={fields.building} onChange={set('building')} error={errors.building} />
-      <FormField label="Why SAGIE?" name="whySagie" type="textarea" placeholder="What does this community mean to you — or what are you hoping it will mean?" required value={fields.whySagie} onChange={set('whySagie')} error={errors.whySagie} />
+      <FormField label="What are you building or working on?" name="whatTheyNeed" type="textarea" placeholder="Tell us what you're focused on right now." required value={fields.whatTheyNeed} onChange={set('whatTheyNeed')} error={errors.whatTheyNeed} />
+      <FormField label="Why SAGIE?" name="howTheyKnowSagie" type="textarea" placeholder="What does this community mean to you — or what are you hoping it will mean?" required value={fields.howTheyKnowSagie} onChange={set('howTheyKnowSagie')} error={errors.howTheyKnowSagie} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" value={fields.linkedIn} onChange={set('linkedIn')} />
         <FormField label="How did you hear about us?" name="referral" placeholder="Name, event, social..." value={fields.referral} onChange={set('referral')} />

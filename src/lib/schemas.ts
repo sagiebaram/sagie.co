@@ -6,11 +6,12 @@ export const MembershipSchema = z.object({
   role: z.string().min(1).max(100).trim(),
   company: z.string().max(100).trim().optional(),
   location: z.string().min(1).max(100).trim(),
-  tier: z.enum(['Explorer', 'Builder', 'Shaper']),
+  tier: z.enum(['Explorer', 'Builder', 'Shaper']).default('Explorer'),
   linkedIn: z.string().url().optional(),
   whatTheyNeed: z.string().max(500).trim().optional(),
   whatTheyOffer: z.string().max(500).trim().optional(),
   howTheyKnowSagie: z.string().max(500).trim().optional(),
+  referral: z.string().max(500).trim().optional(),
   category: z.array(
     z.enum(['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor'])
   ).optional(),
@@ -23,6 +24,8 @@ export const ChapterSchema = z.object({
   whyLead: z.string().min(10).max(2000).trim(),
   linkedIn: z.string().url().optional(),
   communitySize: z.string().max(50).trim().optional(),
+  background: z.string().max(2000).trim().optional(),
+  chapterVision: z.string().max(2000).trim().optional(),
 });
 
 export const VenturesSchema = z.object({

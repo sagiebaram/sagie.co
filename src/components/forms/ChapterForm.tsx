@@ -9,7 +9,7 @@ export function ChapterForm() {
     fullName: '',
     email: '',
     city: '',
-    whyCity: '',
+    whyLead: '',
     background: '',
     chapterVision: '',
     linkedIn: '',
@@ -28,7 +28,7 @@ export function ChapterForm() {
     if (!fields.fullName) e.fullName = 'Required'
     if (!fields.email) e.email = 'Required'
     if (!fields.city) e.city = 'Required'
-    if (!fields.whyCity) e.whyCity = 'Required'
+    if (!fields.whyLead) e.whyLead = 'Required'
     if (!fields.background) e.background = 'Required'
     if (!fields.chapterVision) e.chapterVision = 'Required'
     return e
@@ -68,7 +68,7 @@ export function ChapterForm() {
         <FormField label="Email" name="email" type="email" placeholder="your@email.com" required value={fields.email} onChange={set('email')} error={errors.email} />
       </div>
       <FormField label="Which city do you want to lead?" name="city" placeholder="City name" required value={fields.city} onChange={set('city')} error={errors.city} />
-      <FormField label="Why is this city ready for a SAGIE chapter?" name="whyCity" type="textarea" placeholder="Tell us why this city is ready." required value={fields.whyCity} onChange={set('whyCity')} error={errors.whyCity} />
+      <FormField label="Why is this city ready for a SAGIE chapter?" name="whyLead" type="textarea" placeholder="Tell us why this city is ready." required value={fields.whyLead} onChange={set('whyLead')} error={errors.whyLead} />
       <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." required value={fields.background} onChange={set('background')} error={errors.background} />
       <FormField label="What does a chapter look like to you?" name="chapterVision" type="textarea" placeholder="Your vision for the chapter." required value={fields.chapterVision} onChange={set('chapterVision')} error={errors.chapterVision} />
       <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" value={fields.linkedIn} onChange={set('linkedIn')} />
