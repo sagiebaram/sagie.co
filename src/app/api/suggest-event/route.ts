@@ -4,6 +4,7 @@ import { env } from '@/env/server'
 import { withValidation } from '@/lib/validation'
 import { EventSuggestionSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
+import { sendEmails } from '@/lib/email'
 
 export const POST = withValidation(EventSuggestionSchema, async (_req: Request, body) => {
   try {
@@ -17,6 +18,7 @@ export const POST = withValidation(EventSuggestionSchema, async (_req: Request, 
       },
     }))
 
+    void sendEmails('Event Suggestion', null, body)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Event suggestion failed:', error)

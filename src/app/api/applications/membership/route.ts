@@ -4,6 +4,7 @@ import { env } from '@/env/server'
 import { withValidation } from '@/lib/validation'
 import { MembershipSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
+import { sendEmails } from '@/lib/email'
 
 const ROLE_MAP: Record<string, string> = {
   Founder: 'Founder',
@@ -52,6 +53,7 @@ export const POST = withValidation(MembershipSchema, async (_req: Request, body)
       },
     }))
 
+    void sendEmails('Membership Application', body.email, body)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Membership application failed:', error)

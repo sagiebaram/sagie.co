@@ -4,6 +4,7 @@ import { env } from '@/env/server'
 import { withValidation } from '@/lib/validation'
 import { SolutionsSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
+import { sendEmails } from '@/lib/email'
 
 export const POST = withValidation(SolutionsSchema, async (_req: Request, body) => {
   try {
@@ -23,6 +24,7 @@ export const POST = withValidation(SolutionsSchema, async (_req: Request, body) 
       },
     }))
 
+    void sendEmails('Solutions Provider', body.email, body)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Solutions application failed:', error)

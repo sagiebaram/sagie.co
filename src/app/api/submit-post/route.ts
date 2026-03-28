@@ -4,6 +4,7 @@ import { env } from '@/env/server'
 import { withValidation } from '@/lib/validation'
 import { SubmitPostSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
+import { sendEmails } from '@/lib/email'
 
 export const POST = withValidation(SubmitPostSchema, async (_req: Request, body) => {
   try {
@@ -21,6 +22,7 @@ export const POST = withValidation(SubmitPostSchema, async (_req: Request, body)
       },
     }))
 
+    void sendEmails('Blog Post Submission', body.yourEmail, body)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Blog post submission failed:', error)

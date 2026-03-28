@@ -4,6 +4,7 @@ import { env } from '@/env/server'
 import { withValidation } from '@/lib/validation'
 import { ChapterSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
+import { sendEmails } from '@/lib/email'
 
 export const POST = withValidation(ChapterSchema, async (_req: Request, body) => {
   try {
@@ -22,6 +23,7 @@ export const POST = withValidation(ChapterSchema, async (_req: Request, body) =>
       },
     }))
 
+    void sendEmails('Chapter Lead Application', body.email, body)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Chapter application failed:', error)
