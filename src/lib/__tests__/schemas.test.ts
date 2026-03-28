@@ -82,6 +82,19 @@ describe('MembershipSchema', () => {
       expect(result.data.tier).toBe('Explorer')
     }
   })
+
+  test('rejects invalid role value (role enum enforced)', () => {
+    const result = MembershipSchema.safeParse({ ...validMembership, role: 'InvalidRole' })
+    expect(result.success).toBe(false)
+  })
+
+  test('accepts all valid role enum values', () => {
+    const validRoles = ['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']
+    for (const role of validRoles) {
+      const result = MembershipSchema.safeParse({ ...validMembership, role })
+      expect(result.success).toBe(true)
+    }
+  })
 })
 
 // ---------------------------------------------------------------------------
