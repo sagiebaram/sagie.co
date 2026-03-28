@@ -7,6 +7,7 @@ import {
   ChapterSchema,
   VenturesSchema,
   SolutionsSchema,
+  SubmitPostSchema,
 } from '@/lib/schemas'
 
 // ---------------------------------------------------------------------------
@@ -302,5 +303,102 @@ describe('SolutionsSchema', () => {
     if (result.success) {
       expect(result.data.email).toBe('bob@solutions.com')
     }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// optional URL fields accept empty strings
+// ---------------------------------------------------------------------------
+describe('optional URL fields accept empty strings', () => {
+  const validMembership = {
+    fullName: 'Jane Doe',
+    email: 'jane@example.com',
+    role: 'Founder',
+    location: 'Tel Aviv',
+  }
+
+  const validChapter = {
+    fullName: 'John Smith',
+    email: 'john@example.com',
+    city: 'London',
+    whyLead: 'I have 10 years of community building experience.',
+  }
+
+  const validVenture = {
+    companyName: 'TechCo',
+    founderName: 'Alice Brown',
+    email: 'alice@techco.com',
+    oneLineDescription: 'AI-powered supply chain optimization.',
+  }
+
+  const validSolution = {
+    providerName: 'Bob Provider',
+    email: 'bob@solutions.com',
+    category: 'Technology & Product' as const,
+    bio: 'Expert product consultant with 15 years of experience.',
+    servicesOffered: 'Product strategy, team coaching, and technical reviews.',
+  }
+
+  const validPost = {
+    postTitle: 'My Post',
+    category: 'Ecosystem',
+    yourName: 'Alice',
+    yourEmail: 'alice@example.com',
+    content: 'This is the post content with enough characters.',
+  }
+
+  // MembershipSchema
+  test('MembershipSchema: empty linkedIn passes (becomes undefined)', () => {
+    const result = MembershipSchema.safeParse({ ...validMembership, linkedIn: '' })
+    expect(result.success).toBe(true)
+  })
+
+  test('MembershipSchema: valid LinkedIn URL passes', () => {
+    const result = MembershipSchema.safeParse({ ...validMembership, linkedIn: 'https://linkedin.com/in/test' })
+    expect(result.success).toBe(true)
+  })
+
+  test('MembershipSchema: invalid LinkedIn URL fails', () => {
+    const result = MembershipSchema.safeParse({ ...validMembership, linkedIn: 'not-a-url' })
+    expect(result.success).toBe(false)
+  })
+
+  // ChapterSchema
+  test('ChapterSchema: empty linkedIn passes', () => {
+    const result = ChapterSchema.safeParse({ ...validChapter, linkedIn: '' })
+    expect(result.success).toBe(true)
+  })
+
+  // VenturesSchema
+  test('VenturesSchema: empty website passes', () => {
+    const result = VenturesSchema.safeParse({ ...validVenture, website: '' })
+    expect(result.success).toBe(true)
+  })
+
+  test('VenturesSchema: empty linkedIn passes', () => {
+    const result = VenturesSchema.safeParse({ ...validVenture, linkedIn: '' })
+    expect(result.success).toBe(true)
+  })
+
+  test('VenturesSchema: empty pitchDeckUrl passes', () => {
+    const result = VenturesSchema.safeParse({ ...validVenture, pitchDeckUrl: '' })
+    expect(result.success).toBe(true)
+  })
+
+  // SolutionsSchema
+  test('SolutionsSchema: empty linkedIn passes', () => {
+    const result = SolutionsSchema.safeParse({ ...validSolution, linkedIn: '' })
+    expect(result.success).toBe(true)
+  })
+
+  test('SolutionsSchema: empty portfolioUrl passes', () => {
+    const result = SolutionsSchema.safeParse({ ...validSolution, portfolioUrl: '' })
+    expect(result.success).toBe(true)
+  })
+
+  // SubmitPostSchema
+  test('SubmitPostSchema: empty url passes', () => {
+    const result = SubmitPostSchema.safeParse({ ...validPost, url: '' })
+    expect(result.success).toBe(true)
   })
 })

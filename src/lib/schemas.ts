@@ -1,5 +1,12 @@
 import { z } from 'zod';
 
+/** Transform empty strings to undefined so .url().optional() works with blank form fields */
+const optionalUrl = (message: string) =>
+  z.preprocess(
+    (val) => (val === '' ? undefined : val),
+    z.string().url(message).optional()
+  )
+
 export const MembershipSchema = z.object({
   fullName: z.string().min(1, 'What should we call you?').max(100).trim(),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
@@ -9,7 +16,7 @@ export const MembershipSchema = z.object({
   company: z.string().max(100).trim().optional(),
   location: z.string().min(1, 'Where are you based?').max(100).trim(),
   tier: z.enum(['Explorer', 'Builder', 'Shaper']).default('Explorer'),
-  linkedIn: z.string().url('Please enter a valid LinkedIn URL').optional(),
+  linkedIn: optionalUrl('Please enter a valid LinkedIn URL'),
   whatTheyNeed: z.string().max(500).trim().optional(),
   whatTheyOffer: z.string().max(500).trim().optional(),
   howTheyKnowSagie: z.string().max(500).trim().optional(),
@@ -24,7 +31,7 @@ export const ChapterSchema = z.object({
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
   city: z.string().min(1, 'Which city would you lead?').max(100).trim(),
   whyLead: z.string().min(10, 'Tell us a bit more about why you want to lead').max(2000).trim(),
-  linkedIn: z.string().url('Please enter a valid URL').optional(),
+  linkedIn: optionalUrl('Please enter a valid URL'),
   communitySize: z.string().max(50).trim().optional(),
   background: z.string().max(2000).trim().optional(),
   chapterVision: z.string().max(2000).trim().optional(),
@@ -34,9 +41,9 @@ export const VenturesSchema = z.object({
   companyName: z.string().min(1, "What's your company called?").max(100).trim(),
   founderName: z.string().min(1, 'What should we call you?').max(100).trim(),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
-  website: z.string().url('Please enter a valid URL').optional(),
-  linkedIn: z.string().url('Please enter a valid LinkedIn URL').optional(),
-  pitchDeckUrl: z.string().url('Please enter a valid URL').optional(),
+  website: optionalUrl('Please enter a valid URL'),
+  linkedIn: optionalUrl('Please enter a valid LinkedIn URL'),
+  pitchDeckUrl: optionalUrl('Please enter a valid URL'),
   sector: z.enum(['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other'], {
     error: 'Please select a sector',
   }).optional(),
@@ -56,8 +63,8 @@ export const SolutionsSchema = z.object({
   }),
   bio: z.string().min(10, 'Tell us a bit more about yourself').max(1000).trim(),
   servicesOffered: z.string().min(10, 'Tell us more about what you offer').max(1000).trim(),
-  linkedIn: z.string().url('Please enter a valid URL').optional(),
-  portfolioUrl: z.string().url('Please enter a valid URL').optional(),
+  linkedIn: optionalUrl('Please enter a valid URL'),
+  portfolioUrl: optionalUrl('Please enter a valid URL'),
   rateRange: z.string().max(100).trim().optional(),
   location: z.string().max(100).trim().optional(),
 });
@@ -74,5 +81,5 @@ export const SubmitPostSchema = z.object({
   yourName: z.string().min(1, 'What should we call you?').max(100).trim(),
   yourEmail: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
   content: z.string().min(10, 'Tell us more — we need at least a few sentences').max(5000).trim(),
-  url: z.string().url('Please enter a valid URL').optional(),
+  url: optionalUrl('Please enter a valid URL'),
 });
