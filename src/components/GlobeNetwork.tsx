@@ -28,11 +28,17 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 })
   const [countries, setCountries] = useState<{ features: any[] }>({ features: [] })
 
+  const [altitude, setAltitude] = useState(2.2)
+  const isZoomedIn = altitude < 1.8
+
+  // Atmosphere shrinks as you zoom in: 0.25 at altitude 2.2+, down to 0.05 at altitude 1.0
+  const atmosphereAlt = Math.min(0.25, Math.max(0.05, (altitude - 1.0) * 0.17))
+
   const globeColors = {
     globeColor: '#000000',
     showAtmosphere: true,
     atmosphereColor: '#ffffff',
-    atmosphereAltitude: 0.25,
+    atmosphereAltitude: atmosphereAlt,
     polygonCapColor: () => 'rgba(0,0,0,0)',
     polygonSideColor: () => 'rgba(0,0,0,0)',
     polygonStrokeColor: () => 'rgba(255,255,255,0.35)',
@@ -41,8 +47,6 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
     arcColorIdle: ['rgba(255,255,255,0.15)', 'rgba(255,255,255,0.15)'] as [string, string],
     ringColor: () => (t: number) => `rgba(255,255,255,${1 - t})`,
   }
-
-  const [isZoomedIn, setIsZoomedIn] = useState(false)
   const [hoveredCity, setHoveredCity] = useState<string | null>(null)
   const [selectedCity, setSelectedCity] = useState<CityData | null>(null)
 
@@ -114,7 +118,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
         if (globeRef.current) {
           const pov = globeRef.current.pointOfView()
           if (pov && typeof pov.altitude === 'number') {
-            setIsZoomedIn(pov.altitude < 1.8)
+            setAltitude(pov.altitude)
           }
         }
       })
@@ -177,9 +181,9 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
         style={{
           width: dimensions.width,
           height: dimensions.height,
-          maskImage: isZoomedIn ? 'none' : 'radial-gradient(circle, black 40%, transparent 75%)',
-          WebkitMaskImage: isZoomedIn ? 'none' : 'radial-gradient(circle, black 40%, transparent 75%)',
-          transition: 'mask-image 0.3s ease',
+          maskImage: isZoomedIn ? 'none' : `radial-gradient(circle, black ${30 + Math.min(altitude, 2.5) * 5}%, transparent ${60 + Math.min(altitude, 2.5) * 6}%)`,
+          WebkitMaskImage: isZoomedIn ? 'none' : `radial-gradient(circle, black ${30 + Math.min(altitude, 2.5) * 5}%, transparent ${60 + Math.min(altitude, 2.5) * 6}%)`,
+          transition: 'mask-image 0.5s ease, -webkit-mask-image 0.5s ease',
         }}
       >
         <Globe
