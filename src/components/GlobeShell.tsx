@@ -9,22 +9,37 @@ export async function GlobeShell() {
     getChapters(),
   ])
 
-  // Cross-reference: only mark cities as chapters when Status = Active
-  const chapterLocations = new Set(
+  // Build a set of chapter city names (lowercase) so we can mark member-city dots
+  const chapterCityNames = new Set(
     chapters
-      .filter((ch) => ch.status === 'Active')
-      .map((ch) => ch.location.toLowerCase())
+      .filter((ch) => ch.city)
+      .map((ch) => ch.city!.toLowerCase())
   )
 
+  // Member cities with isChapter flag based on chapter DB
   const mergedCities = memberCities.map((city) => ({
     ...city,
-    isChapter: chapterLocations.has(city.name.toLowerCase()),
+    isChapter: chapterCityNames.has(city.name.toLowerCase()),
   }))
+
+  // Build chapter pins from DB lat/lng for globe rendering
+  const chapterPins = chapters
+    .filter((ch) => ch.latitude != null && ch.longitude != null)
+    .map((ch) => ({
+      id: `chapter-${ch.id}`,
+      name: ch.name,
+      lat: ch.latitude!,
+      lng: ch.longitude!,
+      members: ch.memberCount ?? 0,
+      isChapter: ch.status === 'Active',
+      isChapterPin: true,
+      chapterStatus: ch.status,
+    }))
 
   return (
     <div className="relative w-full">
       <Suspense fallback={<div className="h-[400px] rounded-full bg-white/5 animate-pulse" />}>
-        <GlobeClient cities={mergedCities} />
+        <GlobeClient cities={mergedCities} chapterPins={chapterPins} />
       </Suspense>
     </div>
   )

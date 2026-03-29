@@ -17,11 +17,6 @@ function statusToBadge(status: ChapterStatus): string {
   }
 }
 
-function statusToAction(status: ChapterStatus): { label: string; href: string } {
-  if (status === 'Active') return { label: 'View Chapter \u2192', href: '#' }
-  return { label: 'Join Waitlist \u2192', href: '#' }
-}
-
 export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
   const leftRef = useScrollReveal({ y: 24, duration: 0.6 })
   const rightRef = useScrollReveal({ y: 24, duration: 0.6, delay: 0.15 })
@@ -45,11 +40,12 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
           <Button variant="primary" href="/apply/chapter">{CHAPTER_SECTION.cta}</Button>
         </div>
 
-        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto">
+        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto scrollbar-subtle">
           {chapters.map((chapter) => {
             const isLive = chapter.status === 'Active'
             const badge = statusToBadge(chapter.status)
-            const action = statusToAction(chapter.status)
+            const hasChapterUrl = !!chapter.chapterUrl
+            const hasWaitlistUrl = !!chapter.waitlistUrl
 
             return (
               <div
@@ -94,23 +90,41 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
                       fontWeight: 300,
                     }}
                   >
-                    {chapter.detail ?? chapter.description ?? ''}
+                    {chapter.description ?? ''}
                   </span>
-                  <a
-                    href={action.href}
-                    className="hover:text-silver hover:-translate-y-px transition-all duration-150"
-                    style={{
-                      fontSize: '11px',
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      color: 'var(--text-muted)',
-                      borderBottom: '0.5px solid var(--border-subtle)',
-                      paddingBottom: '1px',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    {action.label}
-                  </a>
+                  {hasChapterUrl ? (
+                    <a
+                      href={chapter.chapterUrl!}
+                      className="hover:text-silver hover:-translate-y-px transition-all duration-150"
+                      style={{
+                        fontSize: '11px',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        color: 'var(--text-muted)',
+                        borderBottom: '0.5px solid var(--border-subtle)',
+                        paddingBottom: '1px',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      View Chapter →
+                    </a>
+                  ) : hasWaitlistUrl ? (
+                    <a
+                      href={chapter.waitlistUrl!}
+                      className="hover:text-silver hover:-translate-y-px transition-all duration-150"
+                      style={{
+                        fontSize: '11px',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        color: 'var(--text-muted)',
+                        borderBottom: '0.5px solid var(--border-subtle)',
+                        paddingBottom: '1px',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      Join Waitlist →
+                    </a>
+                  ) : null}
                 </div>
               </div>
             )

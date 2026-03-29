@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react'
 import dynamic from 'next/dynamic'
 import type { CityData } from '@/lib/members'
+import type { ChapterPin } from './GlobeClient'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const Globe = dynamic(() => import('react-globe.gl').then((mod) => mod.default) as any, {
@@ -21,7 +22,7 @@ interface Arc {
   endLng: number
 }
 
-export function GlobeNetwork({ cities }: { cities: CityData[] }) {
+export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[]; chapterPins?: ChapterPin[] }) {
   const globeRef = useRef<any>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const cancelledRef = useRef(false)
@@ -42,7 +43,10 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
     polygonCapColor: () => 'rgba(0,0,0,0)',
     polygonSideColor: () => 'rgba(0,0,0,0)',
     polygonStrokeColor: () => 'rgba(255,255,255,0.35)',
-    pointColor: (d: any) => d.isChapter ? '#ffffff' : 'rgba(255,255,255,0.3)',
+    pointColor: (d: any) => {
+      if (d.isChapterPin && d.chapterStatus !== 'Active') return 'rgba(255,255,255,0.45)'
+      return d.isChapter ? '#ffffff' : 'rgba(255,255,255,0.3)'
+    },
     arcColorConnected: ['#ffffff', '#ffffff'] as [string, string],
     arcColorIdle: ['rgba(255,255,255,0.15)', 'rgba(255,255,255,0.15)'] as [string, string],
     ringColor: () => (t: number) => `rgba(255,255,255,${1 - t})`,
@@ -137,35 +141,54 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
     }, 2100)
   }
 
+  // Merge chapter pins into the city list for rendering
+  // Chapter pins that don't overlap with member cities get added as extra points
+  const allPoints = useMemo(() => {
+    const memberCityIds = new Set(cities.map((c) => c.id))
+    const extraChapterPoints: CityData[] = chapterPins
+      .filter((cp) => !memberCityIds.has(cp.id))
+      .map((cp) => ({
+        id: cp.id,
+        name: cp.name,
+        lat: cp.lat,
+        lng: cp.lng,
+        members: cp.members,
+        isChapter: cp.isChapter,
+        isChapterPin: true,
+        chapterStatus: cp.chapterStatus,
+      }))
+    return [...cities, ...extraChapterPoints] as (CityData & { isChapterPin?: boolean; chapterStatus?: string })[]
+  }, [cities, chapterPins])
+
   const ringsData = useMemo(
     () =>
-      cities.filter((c) => c.isChapter).map((c) => ({
-        lat: c.lat,
-        lng: c.lng,
-        maxR: 14 + Math.log10(Math.max(c.members, 1) + 1) * 6,
+      chapterPins.filter((cp) => cp.chapterStatus === 'Active').map((cp) => ({
+        lat: cp.lat,
+        lng: cp.lng,
+        maxR: 14 + Math.log10(Math.max(cp.members, 1) + 1) * 6,
         propagationSpeed: 1.2,
         repeatPeriod: 1400,
       })),
-    [cities],
+    [chapterPins],
   )
 
-  // Generate arcs dynamically between chapter cities
+  // Generate arcs dynamically between all chapter points (DB pins + member cities marked as chapters)
   const arcsData = useMemo((): Arc[] => {
-    const chapterCities = cities.filter((c) => c.isChapter)
-    if (chapterCities.length < 2) return []
+    const chapterPoints = allPoints.filter((c) => c.isChapter)
+    if (chapterPoints.length < 2) return []
     const arcs: Arc[] = []
-    for (let i = 0; i < chapterCities.length; i++) {
-      for (let j = i + 1; j < chapterCities.length; j++) {
+    for (let i = 0; i < chapterPoints.length; i++) {
+      for (let j = i + 1; j < chapterPoints.length; j++) {
         arcs.push({
-          startLat: chapterCities[i]!.lat,
-          startLng: chapterCities[i]!.lng,
-          endLat: chapterCities[j]!.lat,
-          endLng: chapterCities[j]!.lng,
+          startLat: chapterPoints[i]!.lat,
+          startLng: chapterPoints[i]!.lng,
+          endLat: chapterPoints[j]!.lat,
+          endLng: chapterPoints[j]!.lng,
         })
       }
     }
     return arcs
-  }, [cities])
+  }, [allPoints])
 
   useEffect(() => {
     // Imperatively update the labels to bypass globe.gl's re-rendering logic
@@ -204,7 +227,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
           polygonCapColor={globeColors.polygonCapColor}
           polygonSideColor={globeColors.polygonSideColor}
           polygonStrokeColor={globeColors.polygonStrokeColor}
-          pointsData={[...cities]}
+          pointsData={[...allPoints]}
           pointColor={(d: any) => {
             if (hoveredCity === d.id) return '#ffffff'
             return hoveredCity
@@ -214,6 +237,9 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
           pointAltitude={(d: any) => 0.02 + (d.members / 200) * 0.04}
           pointRadius={(d: any) => {
             if (hoveredCity === d.id) return 0.8
+            if (d.isChapterPin && d.chapterStatus !== 'Active') {
+              return 0.45 + Math.log10(Math.max(d.members, 1) + 1) * 0.3
+            }
             const base = d.isChapter ? 0.6 : 0.3
             const scale = Math.log10(Math.max(d.members, 1) + 1) * 0.4
             return base + scale
@@ -227,7 +253,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
           arcsData={arcsData}
           arcColor={(arc: any) => {
             if (!hoveredCity) return globeColors.arcColorIdle
-            const city = cities.find(c => c.id === hoveredCity)
+            const city = allPoints.find(c => c.id === hoveredCity)
             const isConnected =
               arc.startLat === city?.lat || arc.endLat === city?.lat
             return isConnected ? globeColors.arcColorConnected : globeColors.arcColorIdle
@@ -239,12 +265,12 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
           arcStroke={0.5}
           onPointHover={(point: any) => setHoveredCity(point ? point.id : null)}
           onPointClick={(point: any) => {
-            const city = cities.find(c => c.id === point.id)
+            const city = allPoints.find(c => c.id === point.id)
             if (city) {
               handleSelect(selectedCity?.id === city.id ? null : city)
             }
           }}
-          htmlElementsData={[...cities]}
+          htmlElementsData={[...allPoints]}
           htmlElement={(d: any) => {
             const el = document.createElement('div')
             el.innerHTML = `
@@ -257,7 +283,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
             `
             el.onclick = (e: MouseEvent) => {
               e.stopPropagation()
-              const city = cities.find(c => c.id === d.id) || null
+              const city = allPoints.find(c => c.id === d.id) || null
               const prev = selectedCityRef.current
               handleSelectRef.current(prev?.id === city?.id ? null : city)
             }
@@ -311,7 +337,7 @@ export function GlobeNetwork({ cities }: { cities: CityData[] }) {
         className="absolute bottom-6 right-6 z-20"
         style={{ minWidth: '160px' }}
       >
-        {cities.map((city) => (
+        {allPoints.map((city) => (
           <button
             key={city.id}
             onClick={() => handleSelect(selectedCity?.id === city.id ? null : city)}

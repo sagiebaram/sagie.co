@@ -8,6 +8,23 @@ const GlobeNetwork = dynamic(
   { ssr: false }
 )
 
-export function GlobeClient({ cities }: { cities: CityData[] }) {
-  return <GlobeNetwork cities={cities} />
+export interface ChapterPin {
+  id: string
+  name: string
+  lat: number
+  lng: number
+  members: number
+  isChapter: boolean
+  isChapterPin: boolean
+  chapterStatus: 'Active' | 'Coming Soon' | 'Planned'
+}
+
+export function GlobeClient({
+  cities,
+  chapterPins = [],
+}: {
+  cities: CityData[]
+  chapterPins?: ChapterPin[]
+}) {
+  return <GlobeNetwork cities={cities} chapterPins={chapterPins} />
 }

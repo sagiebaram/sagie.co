@@ -7,17 +7,21 @@ export interface Chapter {
   id: string
   name: string
   status: 'Active' | 'Coming Soon' | 'Planned'
-  location: string
-  chapterLead: string | null
   description: string | null
+  foundedYear: number | null
+  latitude: number | null
+  longitude: number | null
+  city: string | null
+  region: string | null
+  memberCount: number | null
+  chapterLead: string | null
+  waitlistUrl: string | null
+  chapterUrl: string | null
   displayOrder: number
-  detail: string | null
 }
 
 export const getChapters = unstable_cache(
   async (): Promise<Chapter[]> => {
-    // Graceful degradation: if Chapters DB ID not configured, return empty array.
-    // This means all cities appear as non-chapter dots until the Chapters DB is set up.
     if (!env.NOTION_CHAPTERS_DB_ID) {
       return []
     }
@@ -39,15 +43,20 @@ export const getChapters = unstable_cache(
 
       return {
         id: page.id,
-        name: p['Name']?.title?.[0]?.plain_text ?? 'Unnamed Chapter',
+        name: p['Chapter Name']?.title?.[0]?.plain_text ?? 'Unnamed Chapter',
         status,
-        location: p['Location']?.rich_text?.[0]?.plain_text ?? '',
-        chapterLead: p['Chapter Lead']?.rich_text?.[0]?.plain_text ?? null,
         description:
           p['Description']?.rich_text?.map((b: any) => b.plain_text).join('') || null,
+        foundedYear: p['Founded Year']?.number ?? null,
+        latitude: p['Latitude']?.number ?? null,
+        longitude: p['Longitude']?.number ?? null,
+        city: p['City']?.rich_text?.[0]?.plain_text ?? null,
+        region: p['Region']?.select?.name ?? null,
+        memberCount: p['Member Count']?.number ?? null,
+        chapterLead: p['Chapter Lead']?.rich_text?.[0]?.plain_text ?? null,
+        waitlistUrl: p['Waitlist URL']?.url ?? null,
+        chapterUrl: p['Chapter URL']?.url ?? null,
         displayOrder: p['Display Order']?.number ?? 999,
-        detail:
-          p['Detail']?.rich_text?.map((b: any) => b.plain_text).join('') || null,
       }
     })
   },
