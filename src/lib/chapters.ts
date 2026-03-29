@@ -10,6 +10,8 @@ export interface Chapter {
   location: string
   chapterLead: string | null
   description: string | null
+  displayOrder: number
+  detail: string | null
 }
 
 export const getChapters = unstable_cache(
@@ -23,6 +25,7 @@ export const getChapters = unstable_cache(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await notion.databases.query({
       database_id: env.NOTION_CHAPTERS_DB_ID,
+      sorts: [{ property: 'Display Order', direction: 'ascending' }],
     })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,6 +45,9 @@ export const getChapters = unstable_cache(
         chapterLead: p['Chapter Lead']?.rich_text?.[0]?.plain_text ?? null,
         description:
           p['Description']?.rich_text?.map((b: any) => b.plain_text).join('') || null,
+        displayOrder: p['Display Order']?.number ?? 999,
+        detail:
+          p['Detail']?.rich_text?.map((b: any) => b.plain_text).join('') || null,
       }
     })
   },

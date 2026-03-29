@@ -8,12 +8,15 @@ import { WhoItsFor } from '@/components/sections/WhoItsFor'
 import { SocialProof } from '@/components/sections/SocialProof'
 import { GlobeShell } from '@/components/GlobeShell'
 import { ChapterMap } from '@/components/sections/ChapterMap'
+import { getChapters } from '@/lib/chapters'
 import { Tiers } from '@/components/sections/Tiers'
 import { FounderBridge } from '@/components/sections/FounderBridge'
 import { FAQ } from '@/components/sections/FAQ'
 import { FinalCTA } from '@/components/sections/FinalCTA'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const chapters = await getChapters()
+
   return (
     <main className="relative">
       <CircuitBackground />
@@ -23,7 +26,7 @@ export default function HomePage() {
       <Pillars />
       <WhoItsFor />
       <SocialProof globe={<GlobeShell />} />
-      <ChapterMap />
+      <ChapterMap chapters={chapters} />
       <Tiers />
       <FAQ />
       <FounderBridge />

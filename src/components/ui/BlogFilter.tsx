@@ -42,7 +42,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
         <div ref={featuredRef}>
           <Link href={`/blog/${featuredPost.slug}`} className="block mb-14 group">
             <div className="grid md:grid-cols-2 gap-10 border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
-              <div className="bg-background-card border border-border-subtle aspect-[16/10] flex items-center justify-center">
+              <div className="bg-background-card border border-border-subtle aspect-16/10 flex items-center justify-center">
                 <span className="font-body text-foreground-dim text-label tracking-label uppercase">Cover Image</span>
               </div>
               <div className="flex flex-col justify-center py-2">
@@ -79,11 +79,10 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
             <button
               key={cat}
               onClick={() => setFilters({ category: cat })}
-              className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
-                filters.category === cat
+              className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${filters.category === cat
                   ? 'text-silver border-border-strong'
                   : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
-              }`}
+                }`}
             >
               {cat}
             </button>
@@ -99,13 +98,12 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
               <button
                 key={author}
                 onClick={() => setFilters({ author: author })}
-                className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
-                  isActive
+                className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${isActive
                     ? isCommunity
                       ? 'text-eco border-eco/30'
                       : 'text-silver border-border-strong'
                     : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
-                }`}
+                  }`}
               >
                 {author}
               </button>
@@ -133,9 +131,8 @@ function PostCard({ post }: { post: BlogPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className={`post-card group flex flex-col p-8 border border-border-default hover:bg-background-card-featured transition-colors duration-200 ${
-        isCommunity ? 'border-l-eco/20' : ''
-      }`}
+      className={`post-card group flex flex-col p-8 border border-border-default hover:bg-background-card-featured transition-colors duration-200 ${isCommunity ? 'border-l-eco/20' : ''
+        }`}
     >
       <div className="flex items-center gap-2.5 mb-4">
         <span className="font-body uppercase text-foreground-muted text-label tracking-spaced">{post.category}</span>

@@ -9,9 +9,11 @@ export async function GlobeShell() {
     getChapters(),
   ])
 
-  // Cross-reference: mark cities as chapters when their name matches a chapter's location (case-insensitive)
+  // Cross-reference: only mark cities as chapters when Status = Active
   const chapterLocations = new Set(
-    chapters.map((ch) => ch.location.toLowerCase())
+    chapters
+      .filter((ch) => ch.status === 'Active')
+      .map((ch) => ch.location.toLowerCase())
   )
 
   const mergedCities = memberCities.map((city) => ({

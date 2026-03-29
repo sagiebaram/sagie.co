@@ -25,11 +25,10 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
           <button
             key={opt.value}
             onClick={() => setActive(opt.value)}
-            className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${
-              active === opt.value
+            className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${active === opt.value
                 ? 'text-silver border-border-strong'
                 : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
-            }`}
+              }`}
           >
             {opt.label}
           </button>
@@ -51,7 +50,7 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
               {/* Header */}
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-10 h-10 border border-border-default flex items-center justify-center shrink-0">
-                  <span className="font-display text-foreground-muted text-[14px] leading-none">
+                  <span className="font-display text-foreground-muted text-caption leading-none">
                     {provider.initials}
                   </span>
                 </div>
@@ -73,11 +72,10 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
               {/* Footer */}
               <div className="border-t border-border-subtle pt-4 flex items-center justify-between">
                 <span
-                  className={`font-body uppercase text-label tracking-label px-2 py-0.5 border ${
-                    provider.memberTier === 'Shaper'
+                  className={`font-body uppercase text-label tracking-label px-2 py-0.5 border ${provider.memberTier === 'Shaper'
                       ? 'border-border-strong text-foreground-secondary'
                       : 'border-border-default text-foreground-muted'
-                  }`}
+                    }`}
                 >
                   {provider.memberTier}
                 </span>
