@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { MembershipSchema } from '@/lib/schemas'
@@ -51,6 +51,7 @@ export function MembershipForm() {
     handleSubmit,
     setValue,
     watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(MembershipSchema),
@@ -178,13 +179,21 @@ export function MembershipForm() {
 
       <SectionHeader label="Your Interests" />
 
-      <FormField
-        label="What are you interested in? (select all that apply)"
+      <Controller
         name="category"
-        type="checkbox-group"
-        options={['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor']}
-        registration={register('category')}
-        error={errors.category?.message}
+        control={control}
+        defaultValue={[]}
+        render={({ field }) => (
+          <FormField
+            label="What are you interested in? (select all that apply)"
+            name="category"
+            type="checkbox-group"
+            options={['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor']}
+            value={field.value ?? []}
+            onArrayChange={(v) => field.onChange(v)}
+            error={errors.category?.message}
+          />
+        )}
       />
 
       <FormField
