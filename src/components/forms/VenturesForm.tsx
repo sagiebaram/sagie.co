@@ -32,19 +32,12 @@ function SectionHeader({ label }: { label: string }) {
 
 export function VenturesForm() {
   const trapRef = useRef('')
-  const loadTime = useRef(Date.now())
+  const loadTime = useRef(0)
+  useEffect(() => { loadTime.current = Date.now() }, [])
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
-  const [rateLimitUntil, setRateLimitUntil] = useState<number | null>(null)
+  const [isRateLimited, setIsRateLimited] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!rateLimitUntil) return
-    const remaining = rateLimitUntil - Date.now()
-    if (remaining <= 0) { setRateLimitUntil(null); return }
-    const timer = setTimeout(() => setRateLimitUntil(null), remaining)
-    return () => clearTimeout(timer)
-  }, [rateLimitUntil])
 
   const {
     register,
@@ -60,7 +53,7 @@ export function VenturesForm() {
   })
 
   const onSubmit = async (data: FormData) => {
-    if (rateLimitUntil !== null && Date.now() < rateLimitUntil) return
+    if (isRateLimited) return
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -75,7 +68,8 @@ export function VenturesForm() {
         const waitSeconds = retryAfterRaw ? parseInt(retryAfterRaw, 10) : 30
         const safeWait = isNaN(waitSeconds) ? 30 : waitSeconds
         setSubmitWarning("You've submitted several times recently. Please wait a few minutes before trying again.")
-        setRateLimitUntil(Date.now() + safeWait * 1000)
+        setIsRateLimited(true)
+        setTimeout(() => setIsRateLimited(false), safeWait * 1000)
         return
       }
 
@@ -246,7 +240,7 @@ export function VenturesForm() {
 
       <button
         type="submit"
-        disabled={isSubmitting || (rateLimitUntil !== null && Date.now() < rateLimitUntil)}
+        disabled={isSubmitting || isRateLimited}
         style={{
           background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',

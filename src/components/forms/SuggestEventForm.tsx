@@ -12,11 +12,12 @@ type FormData = z.infer<typeof EventSuggestionSchema>
 
 export function SuggestEventForm() {
   const trapRef = useRef('')
-  const loadTime = useRef(Date.now())
+  const loadTime = useRef(0)
+  useEffect(() => { loadTime.current = Date.now() }, [])
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [rateLimitUntil, setRateLimitUntil] = useState<number | null>(null)
+  const [isRateLimited, setIsRateLimited] = useState(false)
 
   const {
     register,
@@ -28,14 +29,6 @@ export function SuggestEventForm() {
     reValidateMode: 'onChange',
     shouldFocusError: true,
   })
-
-  useEffect(() => {
-    if (!rateLimitUntil) return
-    const remaining = rateLimitUntil - Date.now()
-    if (remaining <= 0) { setRateLimitUntil(null); return }
-    const timer = setTimeout(() => setRateLimitUntil(null), remaining)
-    return () => clearTimeout(timer)
-  }, [rateLimitUntil])
 
   const onSubmit = async (data: FormData) => {
     setSubmitWarning(null)
@@ -52,7 +45,8 @@ export function SuggestEventForm() {
         const waitSeconds = retryAfterRaw ? parseInt(retryAfterRaw, 10) : 30
         const safeWait = isNaN(waitSeconds) ? 30 : waitSeconds
         setSubmitWarning("You've submitted several times recently. Please wait a few minutes before trying again.")
-        setRateLimitUntil(Date.now() + safeWait * 1000)
+        setIsRateLimited(true)
+        setTimeout(() => setIsRateLimited(false), safeWait * 1000)
         return
       }
 
@@ -87,8 +81,6 @@ export function SuggestEventForm() {
       />
     )
   }
-
-  const isRateLimited = rateLimitUntil !== null && Date.now() < rateLimitUntil
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
