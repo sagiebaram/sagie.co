@@ -123,6 +123,7 @@ export function MembershipForm() {
           name="fullName"
           placeholder="Your full name"
           required
+          autoComplete="name"
           registration={register('fullName')}
           error={errors.fullName?.message}
         />
@@ -132,6 +133,7 @@ export function MembershipForm() {
           type="email"
           placeholder="your@email.com"
           required
+          autoComplete="email"
           registration={register('email')}
           error={errors.email?.message}
         />
@@ -153,6 +155,7 @@ export function MembershipForm() {
           label="Company / Organisation"
           name="company"
           placeholder="Where do you work?"
+          autoComplete="organization"
           registration={register('company')}
           error={errors.company?.message}
         />
@@ -172,6 +175,7 @@ export function MembershipForm() {
           name="linkedIn"
           type="url"
           placeholder="linkedin.com/in/yourname"
+          autoComplete="url"
           registration={register('linkedIn')}
           error={errors.linkedIn?.message}
         />

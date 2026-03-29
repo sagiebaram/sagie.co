@@ -16,6 +16,7 @@ interface FormFieldProps {
   registration?: UseFormRegisterReturn | undefined
   error?: string | undefined
   allowOther?: boolean | undefined
+  autoComplete?: string | undefined
 }
 
 const INPUT_STYLE: React.CSSProperties = {
@@ -195,7 +196,7 @@ function DropdownSelect({ name, options, value, placeholder, onValueChange, allo
 
 export function FormField({
   label, name, type = 'text', placeholder, required,
-  options, value, onValueChange, onArrayChange, registration, error, allowOther
+  options, value, onValueChange, onArrayChange, registration, error, allowOther, autoComplete
 }: FormFieldProps) {
   const stringValue = typeof value === 'string' ? value : ''
 
@@ -232,7 +233,7 @@ export function FormField({
           allowOther={allowOther}
         />
       ) : type === 'checkbox-group' ? (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        <div id={name} role="group" aria-labelledby={`${name}-label`} style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           {options?.map(opt => {
             const checkedValues: string[] = Array.isArray(value) ? value : []
             const isChecked = checkedValues.includes(opt)
@@ -287,6 +288,7 @@ export function FormField({
           id={name}
           type={type}
           placeholder={placeholder}
+          autoComplete={autoComplete}
           style={INPUT_STYLE}
           {...(registration ?? { name, value: stringValue, onChange: (e: React.ChangeEvent<HTMLInputElement>) => onValueChange?.(e.target.value) })}
         />
