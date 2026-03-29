@@ -124,6 +124,7 @@ export default function RevalidatePage() {
 
   async function handleRevalidate(key: string, tags: string[]) {
     setStatus(key, 'loading')
+    // eslint-disable-next-line react-hooks/purity -- event handler, not render
     const start = Date.now()
     try {
       const res = await fetch('/api/revalidate', {
@@ -132,6 +133,7 @@ export default function RevalidatePage() {
         body: JSON.stringify({ secret, tags }),
       })
       // Ensure spinner shows for at least 600ms so the user sees it
+      // eslint-disable-next-line react-hooks/purity -- event handler, not render
       const elapsed = Date.now() - start
       if (elapsed < 600) await new Promise((r) => setTimeout(r, 600 - elapsed))
       if (res.status === 401) {

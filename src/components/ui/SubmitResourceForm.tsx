@@ -53,6 +53,7 @@ export function SubmitResourceForm() {
         const waitSeconds = retryAfterRaw ? parseInt(retryAfterRaw, 10) : 30
         const safeWait = isNaN(waitSeconds) ? 30 : waitSeconds
         setSubmitWarning("You've submitted several times recently. Please wait a few minutes before trying again.")
+        // eslint-disable-next-line react-hooks/purity -- event handler, not render
         setRateLimitUntil(Date.now() + safeWait * 1000)
         return
       }

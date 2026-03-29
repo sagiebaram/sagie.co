@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -12,8 +12,7 @@ type FormData = z.infer<typeof EventSuggestionSchema>
 
 export function SuggestEventForm() {
   const trapRef = useRef('')
-  const loadTime = useRef(0)
-  useEffect(() => { loadTime.current = Date.now() }, [])
+  const [loadTime] = useState(() => Date.now())
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -37,7 +36,7 @@ export function SuggestEventForm() {
       const res = await fetch('/api/suggest-event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime.current }),
+        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime }),
       })
 
       if (res.status === 429) {
@@ -83,12 +82,12 @@ export function SuggestEventForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <form onSubmit={(e) => handleSubmit(onSubmit)(e)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <FormField label="Event Name" name="eventName" placeholder="What's the event called?" required registration={register('eventName')} error={errors.eventName?.message} />
       <FormField label="Your Name" name="suggestedBy" placeholder="Your full name" required registration={register('suggestedBy')} error={errors.suggestedBy?.message} />
       <FormField label="Description" name="description" type="textarea" placeholder="What's the idea?" required registration={register('description')} error={errors.description?.message} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
-      <input type="hidden" name="_t" value={loadTime.current.toString()} />
+      <input type="hidden" name="_t" value={loadTime.toString()} />
       {submitWarning && (
         <span style={{ fontSize: '11px', color: '#B8860B', lineHeight: '1.5' }}>
           {submitWarning}

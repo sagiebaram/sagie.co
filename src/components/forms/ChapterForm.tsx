@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -12,8 +12,7 @@ type FormData = z.infer<typeof ChapterSchema>
 
 export function ChapterForm() {
   const trapRef = useRef('')
-  const loadTime = useRef(0)
-  useEffect(() => { loadTime.current = Date.now() }, [])
+  const [loadTime] = useState(() => Date.now())
   const [success, setSuccess] = useState(false)
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -37,7 +36,7 @@ export function ChapterForm() {
       const res = await fetch('/api/applications/chapter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime.current }),
+        body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime }),
       })
 
       if (res.status === 429) {
@@ -83,7 +82,7 @@ export function ChapterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <form onSubmit={(e) => handleSubmit(onSubmit)(e)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Full Name" name="fullName" placeholder="Your full name" required registration={register('fullName')} error={errors.fullName?.message} />
         <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
@@ -97,7 +96,7 @@ export function ChapterForm() {
       <FormField label="What does a chapter look like to you?" name="chapterVision" type="textarea" placeholder="Your vision for the chapter." registration={register('chapterVision')} error={errors.chapterVision?.message} />
       <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
-      <input type="hidden" name="_t" value={loadTime.current.toString()} />
+      <input type="hidden" name="_t" value={loadTime.toString()} />
       {submitWarning && (
         <span style={{ fontSize: '11px', color: '#B8860B', lineHeight: '1.5' }}>
           {submitWarning}
