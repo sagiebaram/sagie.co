@@ -2,25 +2,11 @@
 
 ## What This Is
 
-The marketing and community platform for SAGIE — a global network for founders, investors, and tech professionals. The site showcases the community's pillars, hosts a blog, events calendar, solutions marketplace, and resource directory, all powered by Notion as a CMS. It also handles intake for membership, chapter leadership, ventures, and solutions provider applications via custom forms.
+The marketing and community platform for SAGIE — a global network for founders, investors, and tech professionals. The site showcases the community's pillars, hosts a blog, events calendar, solutions marketplace, and resource directory, all powered by Notion as a CMS. It handles intake for membership, chapter leadership, ventures, and solutions provider applications via custom forms with inline validation. Events support registration, calendar integration, and recap links.
 
 ## Core Value
 
 Community members and prospective members can discover SAGIE's value, consume content, and apply to join — with every submission reliably reaching the team and every piece of content appearing promptly.
-
-## Current Milestone: v2.0 Polish & Interactivity
-
-**Goal:** Fix navigation/rendering bugs, make event pages interactive, redesign forms, and polish the admin and error experiences.
-
-**Target features:**
-
-- Fix filter state bug (Blog, Solutions, Resources)
-- Fix page navigation rendering bug (back/forward)
-- Rate limit feedback in forms
-- Event action buttons (Register, Add to Calendar, More Info, Read Recap)
-- Form redesign (fields + UX overhaul)
-- Revalidation UI feedback (success/failure, key rotation fix)
-- Custom 404 illustration
 
 ## Requirements
 
@@ -49,19 +35,21 @@ Community members and prospective members can discover SAGIE's value, consume co
 - ✓ Complete sitemap with dynamic content — v1.0
 - ✓ Error and loading boundaries for all route segments — v1.0
 - ✓ Vitest + Playwright test suites — v1.0
+- ✓ URL-synced filters with nuqs (Blog, Solutions, Resources, Events) — v2.0
+- ✓ Back/forward navigation rendering fix — v2.0
+- ✓ Rate limit feedback (amber warning, Retry-After parsing) on all forms — v2.0
+- ✓ Event action buttons: Register, More Info, Read Recap (data-driven) — v2.0
+- ✓ Add to Calendar inline dropdown (Google, Outlook, Apple Calendar) — v2.0
+- ✓ ICS API route for calendar downloads — v2.0
+- ✓ react-hook-form with zodResolver, inline blur validation on all forms — v2.0
+- ✓ Custom-styled dropdowns and checkbox groups matching dark theme — v2.0
+- ✓ Form field audit: all schema fields rendered, data-loss bugs fixed — v2.0
+- ✓ Admin revalidation page with per-button loading/success/failure states — v2.0
+- ✓ Branded 404 page with circuit-board SVG illustration — v2.0
 
 ### Active
 
-- [ ] Fix filter state bug — second filter selection wipes rendered components until refresh
-- [ ] Fix navigation rendering bug — pages don't render on browser back/forward until refresh
-- [ ] Add visible rate limit feedback in forms when 429 is returned
-- [ ] Event action buttons: Register opens external event link
-- [ ] Event action buttons: Add to Calendar modal with Google/Outlook/Apple Calendar + .ics download
-- [ ] Event action buttons: More Info and Read Recap functional
-- [ ] Form redesign — rethink fields collected and improve UX (dropdowns, checkboxes, inline validation)
-- [ ] Revalidation admin UI — success/failure indication on refresh
-- [ ] Revalidation admin UI — fix key rotation redirect behavior
-- [ ] Custom 404 page with branded SVG/CSS illustration
+(None — next milestone not yet defined)
 
 ### Out of Scope
 
@@ -70,22 +58,26 @@ Community members and prospective members can discover SAGIE's value, consume co
 - Mobile app — web-first
 - CMS admin panel — Notion serves this role
 - Payment processing — not part of current model
-- Event "Notify me when confirmed" — deferred, requires email capture without accounts
+- Event "Notify me when confirmed" — deferred (EVT-06), requires email capture without accounts
+- Multi-step form wizard — deferred (FORM-04)
 
 ## Context
 
-- Brownfield Next.js 15+ site deployed on Vercel
+- Next.js 16+ site deployed on Vercel (App Router)
 - Notion is the sole backend — no database, no auth
-- ~89 TypeScript files, well-organized App Router structure
+- ~129 TypeScript files in src/
+- 11,200+ lines of application code
+- Vitest (127 unit tests) + Playwright (10 E2E tests), CI fully green
+- react-hook-form + Zod for all 7 forms with inline validation
+- nuqs for URL-synced filter state
+- Resend + React Email for form submission notifications
 - Codebase map available at `.planning/codebase/`
-- CI exists but unit test step will fail (Vitest not installed)
-- All forms work end-to-end but some silently drop fields due to schema mismatches
 
 ## Constraints
 
 - **Backend**: Notion only — no separate database
 - **Hosting**: Vercel
-- **Framework**: Next.js App Router (already established)
+- **Framework**: Next.js App Router (established)
 - **Styling**: Tailwind CSS + inline styles (mixed, both in use)
 - **Budget**: Minimize external service dependencies
 
@@ -93,9 +85,20 @@ Community members and prospective members can discover SAGIE's value, consume co
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Fix bugs before adding features | Broken forms are losing real user data now | — Pending |
-| Vitest for unit testing | Already referenced in CI, lightweight, Vite-native | — Pending |
-| Keep Notion as sole backend | Already deeply integrated, team uses it daily | — Pending |
+| Fix bugs before adding features | Broken forms were losing real user data | ✓ Good — data loss fixed in Phase 1 |
+| Vitest for unit testing | Already referenced in CI, lightweight, Vite-native | ✓ Good — 127 tests, <1s runs |
+| Keep Notion as sole backend | Already deeply integrated, team uses it daily | ✓ Good — no operational overhead |
+| nuqs for filter URL params | Lightweight, replaceState, works with App Router | ✓ Good — shareable/bookmarkable filters |
+| react-hook-form + zodResolver | Industry standard, reuses existing Zod schemas | ✓ Good — all 7 forms migrated |
+| Custom dropdowns over native select | Dark theme consistency, keyboard nav, "Other" free-text | ✓ Good — cohesive form UX |
+| Server-side ICS route over client Blob | User chose despite out-of-scope listing; simpler CSP story | ✓ Good — works reliably |
+| Calendar helpers in separate calendar.ts | events.ts imports server-only; client components can't import it | ✓ Good — clean module boundary |
+
+## Known Gaps
+
+- Notion "Referral" property doesn't exist yet — form collects referral but API write is commented out
+- SubmitPostForm `yourEmail` and `url` collected but not written to Notion blog DB
+- Event Notion properties (Registration Link, More Info Link, Recap Link) may not exist yet — buttons won't appear until populated
 
 ---
-*Last updated: 2026-03-28 after milestone v2.0 started*
+*Last updated: 2026-03-29 after v2.0 milestone completed*
