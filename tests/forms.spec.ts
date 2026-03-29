@@ -1,6 +1,20 @@
 import { test, expect } from '@playwright/test';
 
 // -----------------------------------------------------------------------
+// Helper: interact with a custom dropdown (data-dropdown trigger + option)
+// -----------------------------------------------------------------------
+async function selectDropdownOption(
+  page: import('@playwright/test').Page,
+  fieldName: string,
+  optionText: string
+) {
+  // Click the dropdown trigger
+  await page.locator(`[data-dropdown="${fieldName}"]`).click()
+  // Click the option in the listbox
+  await page.getByRole('option', { name: optionText }).click()
+}
+
+// -----------------------------------------------------------------------
 // Helper: set up a route mock that returns { success: true } for POST
 // requests to a given API path, and continues all other requests.
 // -----------------------------------------------------------------------
@@ -44,8 +58,8 @@ test('membership form submits and shows success state', async ({ page }) => {
   await page.fill('[name="email"]', 'ada@example.com');
   await page.fill('[name="location"]', 'London');
 
-  // Role is a <select> — pick the first real option
-  await page.selectOption('[name="role"]', 'Founder');
+  // Role is a custom dropdown — click trigger then option
+  await selectDropdownOption(page, 'role', 'Founder');
 
   // Optional fields added by Plan 02
   await page.fill('[name="company"]', 'Analytical Engine Co.');
@@ -117,6 +131,7 @@ test('chapter form shows blur validation errors', async ({ page }) => {
   await expect(page.getByText('What should we call you?')).toBeVisible({ timeout: 5000 });
 
   await page.locator('[name="fullName"]').fill('Grace Hopper');
+  await page.locator('[name="fullName"]').blur();
   await expect(page.getByText('What should we call you?')).not.toBeVisible({ timeout: 5000 });
 });
 
@@ -133,8 +148,8 @@ test('solutions form submits and shows success state', async ({ page }) => {
   await page.fill('[name="linkedIn"]', 'https://linkedin.com/in/margaret');
   await page.fill('[name="location"]', 'Cambridge, MA');
 
-  // Service Category is a <select>
-  await page.selectOption('[name="category"]', 'Technology & Product');
+  // Service Category is a custom dropdown
+  await selectDropdownOption(page, 'category', 'Technology & Product');
 
   await page.fill('[name="bio"]', 'Software engineer who put humans on the moon.');
   await page.fill('[name="servicesOffered"]', 'Technical architecture reviews and product strategy.');
@@ -158,6 +173,7 @@ test('solutions form shows blur validation errors', async ({ page }) => {
   await expect(page.getByText('What should we call you?')).toBeVisible({ timeout: 5000 });
 
   await page.locator('[name="providerName"]').fill('Margaret Hamilton');
+  await page.locator('[name="providerName"]').blur();
   await expect(page.getByText('What should we call you?')).not.toBeVisible({ timeout: 5000 });
 });
 
@@ -174,11 +190,11 @@ test('ventures form submits and shows success state', async ({ page }) => {
   await page.fill('[name="companyName"]', 'Turing Machines Inc.');
   await page.fill('[name="oneLineDescription"]', 'A universal computing machine that solves the halting problem.');
 
-  // Stage select — updated options (Pre-Seed, not Pre-seed)
-  await page.selectOption('[name="stage"]', 'Pre-Seed');
+  // Stage is a custom dropdown
+  await selectDropdownOption(page, 'stage', 'Pre-Seed');
 
-  // New fields added in RHF migration
-  await page.selectOption('[name="sector"]', 'AI / ML');
+  // Sector is a custom dropdown
+  await selectDropdownOption(page, 'sector', 'AI / ML');
   await page.fill('[name="raiseAmount"]', '$500K');
   await page.fill('[name="linkedIn"]', 'https://linkedin.com/in/turing');
   await page.fill('[name="pitchDeckUrl"]', 'https://deck.turing.io');
@@ -202,6 +218,7 @@ test('ventures form shows blur validation errors', async ({ page }) => {
   await expect(page.getByText('What should we call you?')).toBeVisible({ timeout: 5000 });
 
   await page.locator('[name="founderName"]').fill('Alan Turing');
+  await page.locator('[name="founderName"]').blur();
   await expect(page.getByText('What should we call you?')).not.toBeVisible({ timeout: 5000 });
 });
 
@@ -215,7 +232,7 @@ test('suggest event form submits and shows success state', async ({ page }) => {
   // Updated field names: suggestedBy (was yourName), removed eventType/proposedDate/yourEmail
   await page.fill('[name="eventName"]', 'SAGIE Miami Founder Meetup');
   await page.fill('[name="suggestedBy"]', 'Katherine Johnson');
-  await page.fill('[name="description"]', 'A casual networking event for founders in the Miami ecosystem.');
+  await page.locator('textarea[name="description"]').fill('A casual networking event for founders in the Miami ecosystem.');
 
   await page.getByRole('button', { name: /submit suggestion/i }).click();
 
@@ -234,5 +251,6 @@ test('suggest event form shows blur validation errors', async ({ page }) => {
   await expect(page.getByText("What's the event called?")).toBeVisible({ timeout: 5000 });
 
   await page.locator('[name="eventName"]').fill('SAGIE Miami Founder Meetup');
+  await page.locator('[name="eventName"]').blur();
   await expect(page.getByText("What's the event called?")).not.toBeVisible({ timeout: 5000 });
 });
