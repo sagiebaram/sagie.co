@@ -2,7 +2,7 @@
 
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { useScrollReveal } from '@/hooks/useScrollReveal'
+import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
 import { PILLARS } from '@/constants/pillars'
 
 export function Pillars() {
@@ -17,7 +17,7 @@ export function Pillars() {
     <Section>
       <Eyebrow>The Pillars</Eyebrow>
 
-      <div ref={ref}>
+      <div ref={ref} className={SR_INIT}>
         {PILLARS.map((pillar) => (
           <div
             key={pillar.word}

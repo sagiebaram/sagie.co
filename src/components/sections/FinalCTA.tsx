@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef } from 'react'
 import { Section } from '@/components/ui/Section'
 import { Button } from '@/components/ui/Button'
 import { gsap } from '@/lib/gsap'
-import { useScrollReveal } from '@/hooks/useScrollReveal'
+import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
 import { FINAL_CTA } from '@/constants/copy'
 
 export function FinalCTA() {
@@ -38,7 +38,7 @@ export function FinalCTA() {
 
   return (
     <Section className="py-[140px]">
-      <div ref={sectionRef} className="text-center mx-auto max-w-[700px]">
+      <div ref={sectionRef} className={`${SR_INIT} text-center mx-auto max-w-[700px]`}>
         <div style={{ marginBottom: '40px' }}>
           <span style={{
             display: 'block',

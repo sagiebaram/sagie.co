@@ -4,7 +4,7 @@ import { useQueryStates, parseAsString } from 'nuqs'
 import { BLOG_CATEGORIES, BLOG_AUTHORS } from '@/constants/blog'
 import type { BlogPost } from '@/lib/blog'
 import Link from 'next/link'
-import { useScrollReveal } from '@/hooks/useScrollReveal'
+import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
 
 function formatDate(dateStr: string) {
   return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
@@ -39,7 +39,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
     <>
       {/* Featured post */}
       {featuredPost && (
-        <div ref={featuredRef}>
+        <div ref={featuredRef} className={SR_INIT}>
           <Link href={`/blog/${featuredPost.slug}`} className="block mb-14 group">
             <div className="grid md:grid-cols-2 gap-10 border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
               <div className="bg-background-card border border-border-subtle aspect-16/10 flex items-center justify-center">
@@ -72,7 +72,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
       <hr className="border-border-default mb-10" />
 
       {/* Filters */}
-      <div ref={filterRef} className="mb-14 grid gap-4" style={{ gridTemplateColumns: 'auto 1fr' }}>
+      <div ref={filterRef} className={`${SR_INIT} mb-14 grid gap-4`} style={{ gridTemplateColumns: 'auto 1fr' }}>
         <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Category</span>
         <div className="flex items-center gap-2 flex-wrap">
           {BLOG_CATEGORIES.map(cat => (
@@ -116,7 +116,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
       {filtered.length === 0 ? (
         <p className="font-body text-foreground-muted text-center py-16">No posts match this filter.</p>
       ) : (
-        <div ref={gridRef} className="grid md:grid-cols-3 gap-px">
+        <div ref={gridRef} className={`${SR_INIT} grid md:grid-cols-3 gap-px`}>
           {filtered.map(post => (
             <PostCard key={post.id} post={post} />
           ))}
