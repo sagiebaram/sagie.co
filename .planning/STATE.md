@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Polish & Interactivity
 status: planning
-stopped_at: Completed 05-05-PLAN.md
-last_updated: "2026-03-28T23:54:01.705Z"
+stopped_at: Completed 07-03-PLAN.md
+last_updated: "2026-03-29T00:12:15.949Z"
 last_activity: 2026-03-28 — Roadmap created, ready for plan-phase 5
 progress:
   total_phases: 8
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 23
-  completed_plans: 22
+  completed_plans: 23
 ---
 
 # Project State
@@ -65,6 +65,7 @@ v2.0 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 | Phase 05-bug-fixes P04 | 2 | 1 tasks | 1 files |
 | Phase 06-event-interactivity P02 | 30 | 2 tasks | 2 files |
 | Phase 05-bug-fixes P05 | 14 | 2 tasks | 8 files |
+| Phase 07-form-redesign P03 | 18 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,8 @@ Recent decisions affecting current work:
 - [Phase 06-event-interactivity]: Apple Calendar .ics download uses /api/events/[id]/ics route; duplicate Download .ics option removed from dropdown
 - [Phase 05-bug-fixes]: optionalUrl uses z.string().optional().transform().pipe() — z.preprocess gives unknown input type incompatible with zodResolver; optional-based transform preserves string|undefined input matching resolver output
 - [Phase 05-bug-fixes]: All 6 form components parse 422 fieldErrors from server and display first error at 13px — raised from 11px which was invisible on dark backgrounds
+- [Phase 07-form-redesign]: FormField custom dropdown uses hidden input for [name] selector compatibility — E2E assertions and form data serialization continue to work
+- [Phase 07-form-redesign]: MembershipSchema role changed to z.string().min(1) — allows any non-empty string including custom Other free-text values
 
 ### Pending Todos
 
@@ -135,6 +138,6 @@ None active.
 
 ## Session Continuity
 
-Last session: 2026-03-28T23:54:01.703Z
-Stopped at: Completed 05-05-PLAN.md
+Last session: 2026-03-29T00:12:15.947Z
+Stopped at: Completed 07-03-PLAN.md
 Resume file: None

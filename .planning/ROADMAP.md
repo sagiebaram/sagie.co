@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Testing** - Install Vitest, write unit and E2E tests, make CI fully green (completed 2026-03-28)
 - [x] **Phase 5: Bug Fixes** - Fix filter state, back/forward nav, GSAP re-trigger, and rate limit feedback (completed 2026-03-28)
 - [x] **Phase 6: Event Interactivity** - Wire event action buttons and build Add to Calendar modal (completed 2026-03-28)
-- [ ] **Phase 7: Form Redesign** - Schema audit, react-hook-form adoption, inline validation, dropdowns/checkboxes
+- [x] **Phase 7: Form Redesign** - Schema audit, react-hook-form adoption, inline validation, dropdowns/checkboxes (completed 2026-03-29)
 - [x] **Phase 8: Admin Polish + 404** - Revalidation UI feedback, key rotation fix, custom 404 illustration (completed 2026-03-28)
 
 ## Phase Details
@@ -156,7 +156,7 @@ Plans:
 2. Fixed-choice fields (e.g. country, membership tier, chapter role) are rendered as dropdown selects or checkbox groups — no free-text inputs for constrained choices
 3. A form submission that passes client-side validation results in every field appearing correctly in the corresponding Notion database entry — no silent field loss
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 07-01-PLAN.md — Install react-hook-form, update FormField (registration prop + checkbox-group), add friendly error messages to schemas, role enum
@@ -195,5 +195,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6/7 (parallel) -> 8
 | 4. Testing | 3/3 | Complete | 2026-03-28 |
 | 5. Bug Fixes | 5/5 | Complete   | 2026-03-28 |
 | 6. Event Interactivity | 2/2 | Complete    | 2026-03-28 |
-| 7. Form Redesign | 2/3 | In Progress| |
+| 7. Form Redesign | 3/3 | Complete   | 2026-03-29 |
 | 8. Admin Polish + 404 | 2/2 | Complete   | 2026-03-28 |
