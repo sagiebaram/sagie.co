@@ -7,9 +7,7 @@ const optionalUrl = (message: string) =>
 export const MembershipSchema = z.object({
   fullName: z.string().min(1, 'What should we call you?').max(100).trim(),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
-  role: z.enum(['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner'], {
-    error: 'Please select your role',
-  }),
+  role: z.string().min(1, 'Please select your role'),
   company: z.string().max(100).trim().optional(),
   location: z.string().min(1, 'Where are you based?').max(100).trim(),
   tier: z.enum(['Explorer', 'Builder', 'Shaper']).default('Explorer'),

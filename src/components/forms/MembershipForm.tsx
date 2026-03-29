@@ -49,6 +49,8 @@ export function MembershipForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(MembershipSchema),
@@ -141,7 +143,9 @@ export function MembershipForm() {
           type="select"
           options={['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']}
           required
-          registration={register('role')}
+          value={watch('role') || ''}
+          onValueChange={(v) => setValue('role', v, { shouldValidate: true })}
+          allowOther
           error={errors.role?.message}
         />
         <FormField

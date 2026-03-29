@@ -21,6 +21,8 @@ export function SolutionsForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(SolutionsSchema),
@@ -106,7 +108,8 @@ export function SolutionsForm() {
         type="select"
         options={['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People']}
         required
-        registration={register('category')}
+        value={watch('category') || ''}
+        onValueChange={(v) => setValue('category', v as 'Operations & Systems' | 'Strategy & Advisory' | 'Technology & Product' | 'Growth & Marketing' | 'Finance & Legal' | 'Talent & People', { shouldValidate: true })}
         error={errors.category?.message}
       />
       <FormField label="Tell us about your background" name="bio" type="textarea" placeholder="Your experience and expertise." required registration={register('bio')} error={errors.bio?.message} />

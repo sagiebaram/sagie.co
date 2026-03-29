@@ -84,17 +84,27 @@ describe('MembershipSchema', () => {
     }
   })
 
-  test('rejects invalid role value (role enum enforced)', () => {
+  test('accepts any non-empty string as role (free-text Other support)', () => {
     const result = MembershipSchema.safeParse({ ...validMembership, role: 'InvalidRole' })
+    expect(result.success).toBe(true)
+  })
+
+  test('rejects empty string for role', () => {
+    const result = MembershipSchema.safeParse({ ...validMembership, role: '' })
     expect(result.success).toBe(false)
   })
 
-  test('accepts all valid role enum values', () => {
+  test('accepts all predefined role values', () => {
     const validRoles = ['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']
     for (const role of validRoles) {
       const result = MembershipSchema.safeParse({ ...validMembership, role })
       expect(result.success).toBe(true)
     }
+  })
+
+  test('accepts custom Other free-text for role', () => {
+    const result = MembershipSchema.safeParse({ ...validMembership, role: 'Blockchain Developer' })
+    expect(result.success).toBe(true)
   })
 })
 

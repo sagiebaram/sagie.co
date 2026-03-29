@@ -21,6 +21,8 @@ export function SubmitPostForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(SubmitPostSchema),
@@ -100,7 +102,8 @@ export function SubmitPostForm() {
           type="select"
           options={['Ecosystem', 'Spotlight', 'Thought Leadership', 'Event Recap']}
           required
-          registration={register('category')}
+          value={watch('category') || ''}
+          onValueChange={(v) => setValue('category', v, { shouldValidate: true })}
           error={errors.category?.message}
         />
       </div>

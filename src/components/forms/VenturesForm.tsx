@@ -49,6 +49,8 @@ export function VenturesForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(VenturesSchema),
@@ -170,7 +172,8 @@ export function VenturesForm() {
           name="sector"
           type="select"
           options={['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other']}
-          registration={register('sector')}
+          value={watch('sector') || ''}
+          onValueChange={(v) => setValue('sector', v as 'Fintech' | 'AI / ML' | 'SaaS' | 'Health Tech' | 'EdTech' | 'Impact / Social' | 'Deep Tech' | 'Other', { shouldValidate: true })}
           error={errors.sector?.message}
         />
         <FormField
@@ -178,7 +181,8 @@ export function VenturesForm() {
           name="stage"
           type="select"
           options={['Pre-Seed', 'Seed', 'Series A', 'Series B+', 'Revenue-Stage']}
-          registration={register('stage')}
+          value={watch('stage') || ''}
+          onValueChange={(v) => setValue('stage', v as 'Pre-Seed' | 'Seed' | 'Series A' | 'Series B+' | 'Revenue-Stage', { shouldValidate: true })}
           error={errors.stage?.message}
         />
       </div>
