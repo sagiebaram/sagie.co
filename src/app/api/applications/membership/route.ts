@@ -49,7 +49,8 @@ export const POST = withValidation(MembershipSchema, async (_req: Request, body)
         ...(body.whatTheyOffer ? { 'What They Offer': { rich_text: [{ text: { content: body.whatTheyOffer } }] } } : {}),
         ...(body.role ? { Role: { rich_text: [{ text: { content: body.role } }] } } : {}),
         ...(body.company ? { Company: { rich_text: [{ text: { content: body.company } }] } } : {}),
-        ...(body.referral ? { 'Referral': { rich_text: [{ text: { content: body.referral } }] } } : {}),
+        // TODO: Create "Referral" property in Notion Members DB (rich_text) — field collected but property doesn't exist yet
+        // ...(body.referral ? { 'Referral': { rich_text: [{ text: { content: body.referral } }] } } : {}),
       },
     }))
 
