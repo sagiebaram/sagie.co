@@ -89,7 +89,7 @@ skipped: 8
 ## Gaps
 
 - truth: "Click a category filter on /blog. URL updates and filtered posts appear correctly."
-  status: failed
+  status: resolved
   reason: "User reported: URL updates to /blog?category=Personal but it's the same behaviour (filter bug still present). Also node deprecation warning about url.parse()."
   severity: major
   test: 1
@@ -104,7 +104,7 @@ skipped: 8
   debug_session: ".planning/debug/filter-blank-content.md"
 
 - truth: "Select category AND author on /blog. Both URL params appear. Changing one does not reset the other."
-  status: failed
+  status: resolved
   reason: "User reported: It shows both params, but the behavior is still the same."
   severity: major
   test: 2
