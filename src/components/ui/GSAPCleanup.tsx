@@ -5,6 +5,11 @@ import { ScrollTrigger } from '@/lib/gsap'
 
 export function GSAPCleanup() {
   useEffect(() => {
+    // Disable browser scroll restoration — always start at top on refresh
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+
     const handlePageHide = () => {
       ScrollTrigger.getAll().forEach(t => t.kill())
     }

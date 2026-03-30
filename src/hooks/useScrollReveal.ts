@@ -18,15 +18,13 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
   const isFirstRender = useRef(true)
 
   useLayoutEffect(() => {
-    if (!ref.current) return
+    const currentRef = ref.current
+    if (!currentRef) return
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mediaQuery.matches) return
 
     const ctx = gsap.context(() => {
-      const currentRef = ref.current
-      if (!currentRef) return
-
       const target = selector
         ? gsap.utils.toArray<Element>(selector, currentRef)
         : currentRef

@@ -110,6 +110,7 @@
 .hero-body,
 .hero-cta {
   opacity: 0;
+  will-change: opacity, transform;
 }
 
 /* ── Page hero initial states ── */
@@ -117,6 +118,18 @@
 .page-hero-line,
 .page-hero-sub {
   opacity: 0;
+}
+
+/* ── Reduced motion: show everything immediately ── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-line, .hero-body, .hero-cta,
+  .page-hero-eyebrow, .page-hero-line, .page-hero-sub,
+  .post-back, .post-meta, .post-title, .post-author,
+  .event-item, .step, .cat-card, .dir-card, .res-card,
+  .post-card, .related-card, .type-divider,
+  .founder-photo, .founder-name, .founder-title, .founder-body, .founder-link {
+    opacity: 1 !important;
+  }
 }
 
 /* ── Subtle scrollbar ── */

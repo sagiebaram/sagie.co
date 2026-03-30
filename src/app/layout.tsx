@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${bebasNeue.variable} ${dmSans.variable} scroll-smooth`}
+      className={`${bebasNeue.variable} ${dmSans.variable}`}
       suppressHydrationWarning
     >
       <body>
