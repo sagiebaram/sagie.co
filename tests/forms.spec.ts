@@ -170,6 +170,7 @@ test('solutions form submits and shows success state', async ({ page }) => {
 // -----------------------------------------------------------------------
 test('solutions form shows blur validation errors', async ({ page }) => {
   await page.goto('/apply/solutions');
+  await page.getByRole('button', { name: /submit application/i }).waitFor();
 
   await page.locator('[name="providerName"]').focus();
   await page.locator('[name="providerName"]').blur();
@@ -249,6 +250,7 @@ test('suggest event form submits and shows success state', async ({ page }) => {
 // -----------------------------------------------------------------------
 test('suggest event form shows blur validation errors', async ({ page }) => {
   await page.goto('/suggest-event');
+  await page.getByRole('button', { name: /submit suggestion/i }).waitFor();
 
   await page.locator('[name="eventName"]').focus();
   await page.locator('[name="eventName"]').blur();

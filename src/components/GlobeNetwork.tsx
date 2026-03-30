@@ -172,18 +172,17 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     [chapterPins],
   )
 
-  // Generate arcs dynamically between all chapter points (DB pins + member cities marked as chapters)
+  // Generate arcs connecting all locations
   const arcsData = useMemo((): Arc[] => {
-    const chapterPoints = allPoints.filter((c) => c.isChapter)
-    if (chapterPoints.length < 2) return []
+    if (allPoints.length < 2) return []
     const arcs: Arc[] = []
-    for (let i = 0; i < chapterPoints.length; i++) {
-      for (let j = i + 1; j < chapterPoints.length; j++) {
+    for (let i = 0; i < allPoints.length; i++) {
+      for (let j = i + 1; j < allPoints.length; j++) {
         arcs.push({
-          startLat: chapterPoints[i]!.lat,
-          startLng: chapterPoints[i]!.lng,
-          endLat: chapterPoints[j]!.lat,
-          endLng: chapterPoints[j]!.lng,
+          startLat: allPoints[i]!.lat,
+          startLng: allPoints[i]!.lng,
+          endLat: allPoints[j]!.lat,
+          endLng: allPoints[j]!.lng,
         })
       }
     }
@@ -262,7 +261,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           arcDashGap={0.2}
           arcDashAnimateTime={3000}
           arcAltitudeAutoScale={0.3}
-          arcStroke={0.5}
+          arcStroke={0.3}
           onPointHover={(point: any) => setHoveredCity(point ? point.id : null)}
           onPointClick={(point: any) => {
             const city = allPoints.find(c => c.id === point.id)
@@ -372,7 +371,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
                 fontSize: '13px',
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                color: selectedCity?.id === city.id
+                color: hoveredCity === city.id || selectedCity?.id === city.id
                   ? 'var(--text-primary)'
                   : city.isChapter
                     ? 'var(--silver)'
@@ -385,7 +384,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
             <span
               style={{
                 fontSize: '10px',
-                color: 'var(--text-dim)',
+                color: hoveredCity === city.id ? 'var(--text-secondary)' : 'var(--text-dim)',
                 letterSpacing: '0.06em',
                 marginLeft: 'auto',
               }}
