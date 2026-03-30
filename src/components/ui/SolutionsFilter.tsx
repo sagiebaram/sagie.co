@@ -3,7 +3,7 @@
 import { useQueryState, parseAsString } from 'nuqs'
 import { FILTER_OPTIONS } from '@/constants/solutions'
 import type { SolutionProvider } from '@/lib/solutions'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 
 export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }) {
   const [active, setActive] = useQueryState(
@@ -41,7 +41,7 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
           Community providers coming soon.
         </p>
       ) : (
-        <div ref={gridRef} className={`${SR_INIT} grid grid-cols-1 md:grid-cols-3 gap-px`}>
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-px">
           {filtered.map((provider) => (
             <div
               key={provider.id}

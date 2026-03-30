@@ -3,7 +3,7 @@
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { CHAPTER_SECTION } from '@/constants/copy'
 import type { Chapter } from '@/lib/chapters'
 
@@ -24,7 +24,7 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
   return (
     <Section>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
-        <div ref={leftRef} className={SR_INIT}>
+        <div ref={leftRef}>
           <Eyebrow>{CHAPTER_SECTION.eyebrow}</Eyebrow>
           <h2 className="font-display uppercase text-foreground mb-6 text-chapter leading-[0.95]">
             {CHAPTER_SECTION.heading.split('\n').map((line, i) => (
@@ -40,7 +40,7 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
           <Button variant="primary" href="/apply/chapter">{CHAPTER_SECTION.cta}</Button>
         </div>
 
-        <div ref={rightRef} className={`${SR_INIT} flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto scrollbar-subtle`}>
+        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto scrollbar-subtle">
           {chapters.map((chapter) => {
             const isLive = chapter.status === 'Active'
             const badge = statusToBadge(chapter.status)

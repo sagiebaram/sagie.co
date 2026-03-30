@@ -4,7 +4,7 @@ import { useState, useRef, useCallback } from 'react'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { PillarIcon } from '@/components/ui/PillarIcon'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { gsap } from '@/lib/gsap'
 import { PERSONAS } from '@/constants/personas'
 
@@ -67,7 +67,7 @@ export function WhoItsFor() {
         fontFamily: 'var(--font-body)',
       }}>Click any card to learn what&apos;s in it for you.</p>
 
-      <div ref={ref} className={`${SR_INIT} grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px`}>
+      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
         {PERSONAS.map((persona, i) => {
           return (
             <div

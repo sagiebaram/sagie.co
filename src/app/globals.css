@@ -119,11 +119,6 @@
   opacity: 0;
 }
 
-/* ── Scroll-reveal initial state (prevents hydration mismatch + FOUC) ── */
-.sr-init {
-  opacity: 0;
-}
-
 /* ── Subtle scrollbar ── */
 .scrollbar-subtle {
   scrollbar-width: thin;

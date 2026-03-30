@@ -12,9 +12,6 @@ export interface UseScrollRevealOptions {
   filterKey?: string
 }
 
-/** CSS class to apply on the element for hydration-safe initial hidden state */
-export const SR_INIT = 'sr-init'
-
 export function useScrollReveal(options: UseScrollRevealOptions = {}) {
   const ref = useRef<HTMLDivElement>(null)
   const { y = 24, duration = 0.6, delay = 0, stagger = 0, selector, filterKey } = options

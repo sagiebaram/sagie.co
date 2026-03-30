@@ -9,7 +9,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { ResourceFilter } from '@/components/ui/ResourceFilter'
 import { SubmitResourceForm } from '@/components/ui/SubmitResourceForm'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { Resource } from '@/lib/resources'
 
 function DetailRow({ label, value }: { label: string; value: string }) {
@@ -165,7 +165,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
 
       {/* Filter bar */}
       <section className="relative z-1 border-t border-border-strong md:border-border-subtle px-6 md:px-8 py-6">
-        <div ref={filterRef} className={`${SR_INIT} max-w-[880px] mx-auto`}>
+        <div ref={filterRef} className="max-w-[880px] mx-auto">
           <ResourceFilter
             resources={resources}
             active={activeCategory}
@@ -177,7 +177,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
       {/* Resource grid */}
       <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
         <GridBackground />
-        <div ref={gridRef} className={`${SR_INIT} relative z-10 max-w-[880px] mx-auto`}>
+        <div ref={gridRef} className="relative z-10 max-w-[880px] mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
             {filtered.map((resource) => {
               const isExpanded = expandedId === resource.id
@@ -316,7 +316,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
       {/* Submit section */}
       <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
         <GridBackground />
-        <div ref={submitRef} className={`${SR_INIT} relative z-10 max-w-[880px] mx-auto`}>
+        <div ref={submitRef} className="relative z-10 max-w-[880px] mx-auto">
           <Eyebrow>Contribute</Eyebrow>
           <h2
             className="font-display uppercase mb-4"

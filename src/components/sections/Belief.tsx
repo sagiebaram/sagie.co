@@ -2,7 +2,7 @@
 
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { BELIEF } from '@/constants/copy'
 
 export function Belief() {
@@ -17,7 +17,7 @@ export function Belief() {
     <Section>
       <Eyebrow>The Belief</Eyebrow>
 
-      <div ref={ref} className={`${SR_INIT} max-w-[620px]`}>
+      <div ref={ref} className="max-w-[620px]">
         {BELIEF.statements.map((statement, i) => (
           <div key={i} className="belief-line py-8 border-b border-border-subtle">
             <p className="font-body text-foreground-muted text-manifesto font-light leading-[1.6]">

@@ -11,7 +11,7 @@ import { GridBackground } from '@/components/ui/GridBackground'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { EventFilter } from '@/components/ui/EventFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/types/events'
 import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
 
@@ -146,7 +146,7 @@ function EventAccordion({
   const ref = useScrollReveal({ selector: '.event-item', stagger: 0.06, y: 16, duration: 0.5 })
 
   return (
-    <div ref={ref} className={SR_INIT} style={{ opacity: dimmed ? 0.45 : 1 }}>
+    <div ref={ref} style={{ opacity: dimmed ? 0.45 : 1 }}>
       {events.map((event) => {
         const isOpen = openId === event.id
         return (
@@ -347,7 +347,7 @@ export function EventsPageClient({
       {upcoming.length > 0 && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
           <GridBackground />
-          <div ref={upcomingRef} className={`${SR_INIT} relative z-10 max-w-[880px] mx-auto`}>
+          <div ref={upcomingRef} className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Upcoming</Eyebrow>
 
             <div className="mb-6">
@@ -405,7 +405,7 @@ export function EventsPageClient({
       {/* Suggest an Event */}
       <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle">
         <GridBackground />
-        <div ref={suggestRef} className={`${SR_INIT} relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-16 md:py-24`}>
+        <div ref={suggestRef} className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-16 md:py-24">
           <Eyebrow>Contribute</Eyebrow>
           <h2 className="font-display uppercase text-pillar leading-none text-foreground-secondary mb-4">
             Know of an event the ecosystem should attend?

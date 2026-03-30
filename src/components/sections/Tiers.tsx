@@ -2,7 +2,7 @@
 
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { TIERS } from '@/constants/tiers'
 import { TIERS_EYEBROW } from '@/constants/copy'
 
@@ -45,7 +45,7 @@ export function Tiers() {
     <Section>
       <Eyebrow>{TIERS_EYEBROW}</Eyebrow>
 
-      <div ref={ref} className={`${SR_INIT} grid grid-cols-1 md:grid-cols-3 gap-px mt-8`}>
+      <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-px mt-8">
         {TIERS.map((tier) => {
           const styles = TIER_STYLES[tier.name] ?? TIER_STYLES.Explorer!
           return (

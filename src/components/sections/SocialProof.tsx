@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { CountUp } from '@/components/ui/CountUp'
-import { useScrollReveal, SR_INIT } from '@/hooks/useScrollReveal'
+import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { SOCIAL_STATS } from '@/constants/copy'
 
 const STAT_VALUES: Record<string, { end: number; suffix: string }> = {
@@ -19,7 +19,7 @@ export function SocialProof({ globe }: { globe?: ReactNode }) {
     <Section className="overflow-visible">
       <Eyebrow>The Network</Eyebrow>
 
-      <div ref={ref} className={`${SR_INIT} grid grid-cols-1 sm:grid-cols-2 mt-8`}>
+      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 mt-8">
         {SOCIAL_STATS.map((stat) => {
           const parsed = STAT_VALUES[stat.value]
           return (
