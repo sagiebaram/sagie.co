@@ -65,8 +65,8 @@ test('membership form submits and shows success state', async ({ page }) => {
   await page.fill('[name="company"]', 'Analytical Engine Co.');
   await page.fill('[name="whatTheyOffer"]', 'First algorithms ever written.');
 
-  // Click at least one category checkbox
-  await page.locator('[name="category"][value="Founder"]').check();
+  // Click at least one category checkbox (custom div role="checkbox")
+  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
 
   // Required textareas
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler for the next century.');
