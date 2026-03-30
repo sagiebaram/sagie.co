@@ -85,6 +85,8 @@ test('membership form submits and shows success state', async ({ page }) => {
 // -----------------------------------------------------------------------
 test('membership form shows blur validation errors', async ({ page }) => {
   await page.goto('/apply');
+  // Wait for react-hook-form hydration — submit button is rendered by the form component
+  await page.getByRole('button', { name: /submit application/i }).waitFor();
 
   // Click into fullName and blur without entering anything
   await page.locator('[name="fullName"]').focus();
@@ -125,6 +127,7 @@ test('chapter form submits and shows success state', async ({ page }) => {
 // -----------------------------------------------------------------------
 test('chapter form shows blur validation errors', async ({ page }) => {
   await page.goto('/apply/chapter');
+  await page.getByRole('button', { name: /submit application/i }).waitFor();
 
   await page.locator('[name="fullName"]').focus();
   await page.locator('[name="fullName"]').blur();
@@ -212,6 +215,7 @@ test('ventures form submits and shows success state', async ({ page }) => {
 // -----------------------------------------------------------------------
 test('ventures form shows blur validation errors', async ({ page }) => {
   await page.goto('/apply/ventures');
+  await page.getByRole('button', { name: /submit application/i }).waitFor();
 
   await page.locator('[name="founderName"]').focus();
   await page.locator('[name="founderName"]').blur();
