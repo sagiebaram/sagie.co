@@ -1,18 +1,23 @@
 # sagie.co
 
-**S.A.G.I.E** Website — built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4.
+**S.A.G.I.E** (Shape a Great Impact Everywhere) — the marketing site and operational hub for a curated ecosystem connecting founders, operators, and builders across multiple cities.
+
+Built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4.
 
 ## Tech Stack
 
-- **Framework:** Next.js 16 (App Router)
-- **Language:** TypeScript 6
-- **Styling:** Tailwind CSS v4
-- **Animations:** GSAP + Motion (Framer Motion)
+- **Framework:** Next.js 16 (App Router, Server Components, ISR)
+- **Language:** TypeScript 6 (strict mode)
+- **React:** 19 with React Compiler enabled
+- **Styling:** Tailwind CSS v4 (inline theme via `globals.css`)
+- **Animations:** GSAP (ScrollTrigger + SplitText) + Motion
 - **3D:** Three.js / react-globe.gl (lazy-loaded via `GlobeShell`)
+- **Forms:** react-hook-form + Zod
 - **Database:** Notion API (`@notionhq/client`)
-- **Validation:** Zod
-- **Error Monitoring:** Sentry (`@sentry/nextjs`)
-- **Deployment:** Vercel
+- **Email:** Resend + React Email
+- **Error Monitoring:** Sentry (client + server + edge)
+- **Testing:** Vitest (unit) + Playwright (E2E)
+- **Deployment:** Vercel + GitHub Actions CI/CD
 
 ## Getting Started
 
@@ -38,8 +43,10 @@ Copy `.env.example` to `.env.local` and fill in the required values:
 | `NOTION_DEAL_PIPELINE_DB_ID` | Yes | Deal pipeline database ID |
 | `NOTION_MEMBER_DB_ID` | Yes | Membership database ID |
 | `NOTION_VENTURES_INTAKE_DB_ID` | Yes | Ventures intake database ID |
+| `NOTION_CHAPTERS_DB_ID` | No | Chapter features database ID |
 | `ALLOWED_ORIGINS` | Yes | Comma-separated allowed origins |
-| `REVALIDATE_SECRET` | Yes | Secret for on-demand ISR revalidation |
+| `REVALIDATE_SECRET` | No | Secret for on-demand ISR revalidation |
+| `RESEND_API_KEY` | No | Email delivery via Resend (skipped in dev/test) |
 | `NEXT_PUBLIC_SENTRY_DSN` | No | Sentry DSN for error monitoring |
 | `SENTRY_AUTH_TOKEN` | No | Sentry auth token for source maps |
 | `NODE_ENV` | Yes | `development`, `test`, or `production` |
@@ -52,12 +59,16 @@ Copy `.env.example` to `.env.local` and fill in the required values:
 | `npm run build` | Production build |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests (Vitest) |
+| `npm run test:watch` | Run unit tests in watch mode |
+| `npm run test:coverage` | Run unit tests with coverage |
 
 ## Project Structure
 
 ```text
 src/
 ├── app/                    # Next.js App Router pages & layout
+│   ├── (marketing)/        # Public pages (home, blog, events, apply, legal)
 │   └── api/                # API route handlers (7 endpoints)
 ├── components/
 │   ├── forms/              # Form components (6 forms with honeypot protection)
@@ -65,12 +76,21 @@ src/
 │   ├── sections/           # Hero, Pillars, Tiers, FAQ, SocialProof, etc.
 │   └── ui/                 # Reusable UI components
 ├── constants/              # Copy & persona data
+├── emails/                 # React Email templates (confirmation + admin alert)
 ├── env/                    # Zod-validated environment variables
+├── hooks/                  # Custom hooks (useScrollReveal)
 ├── lib/                    # Notion client, validation, schemas, monitoring
 └── types/                  # TypeScript type definitions
 ```
 
 ## Architecture
+
+### Pages
+
+- **Home** — Hero, Belief, Pillars, WhoItsFor, SocialProof, ChapterMap, Tiers, FAQ, Founder, CTA
+- **Content** — Blog, Events, Resources, Solutions (all Notion-driven with filters)
+- **Applications** — Membership, Chapter Lead, Solutions Provider, Ventures Intake
+- **Legal** — Privacy Policy, Terms of Service, Contact
 
 ### API Routes
 
@@ -79,28 +99,36 @@ All form submissions go through validated API routes:
 - `/api/applications/membership` — Membership applications (Zod + honeypot)
 - `/api/applications/chapter` — Chapter lead applications
 - `/api/applications/solutions` — Solutions provider applications
-- `/api/applications/ventures` — Ventures intake (separate DB from Deal Pipeline)
+- `/api/applications/ventures` — Ventures intake
 - `/api/submit-post` — Community blog post submissions
 - `/api/suggest-event` — Event suggestions
 - `/api/submit-resource` — Resource submissions
+- `/api/revalidate` — ISR cache invalidation (secret-protected)
 
 Each route uses:
 
-- **`withValidation`** — Zod schema validation + honeypot/timing bot detection
+- **`withValidation`** — Zod schema validation + honeypot/timing bot detection + rate limiting
 - **`notionWrite`** — Sentry-monitored Notion API wrapper
 
 ### Security
 
 - **CSP + security headers** configured in `next.config.ts`
 - **Honeypot fields** (`_trap` + `_t` timing) on all forms — bots get silent 200s
-- **Zod validation** on all API inputs — invalid data returns 422 with field errors
+- **Rate limiting** — 5 requests per IP per 10 minutes on all form endpoints
+- **Zod validation** on both client and server — invalid data returns 422 with field errors
 - **Environment validation** — server env vars validated at startup via `src/env/server.ts`
 
 ### Performance
 
 - **ISR caching** via `unstable_cache` on all Notion read queries:
-  - Blog: 1hr, Events: 5min, Resources: 6hr, Solutions: 12hr
+  - Blog: 1hr, Events: 5min, Resources: 6hr, Solutions: 12hr, Members/Chapters: 1hr
 - **Globe lazy loading** — Three.js bundle only loads on desktop via `GlobeShell`
+- **React Compiler** enabled for automatic memoization
+
+## Testing
+
+- **Unit tests** (Vitest): `src/lib/__tests__/` — data transforms, schema validation, email templates, rate limiting
+- **E2E tests** (Playwright): `tests/` — smoke tests, content verification, form workflows
 
 ## CI/CD
 
@@ -109,4 +137,4 @@ GitHub Actions workflows in `.github/workflows/`:
 - **`ci.yml`** — Runs on PRs to `main`: preflight, lint, typecheck, unit tests
 - **`e2e-preview.yml`** — Runs Playwright against Vercel preview deployments
 
-See [GITHUB_SECRETS_CHECKLIST.md](GITHUB_SECRETS_CHECKLIST.md) for required secrets.
+5 required PR checks must pass before merging. See [GITHUB_SECRETS_CHECKLIST.md](GITHUB_SECRETS_CHECKLIST.md) for required secrets.
