@@ -27,6 +27,12 @@
   --color-solutions: #1565C0;
   --color-ventures: #757575;
 
+  /* ── Button / feedback tokens ── */
+  --color-button-primary-bg: var(--text-primary);
+  --color-button-primary-text: var(--bg);
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+
   /* ── Globe — always dark themed ── */
   --color-globe-bg: #040d14;
   --color-globe-cyan: #00ffff;

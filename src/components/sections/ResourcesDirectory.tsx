@@ -148,9 +148,9 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                 href={featured.url ?? '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-body uppercase bg-white hover:opacity-85 hover:-translate-y-px transition-all duration-150 shrink-0 self-start md:self-center"
+                className="font-body uppercase bg-button-primary-bg hover:opacity-85 hover:-translate-y-px transition-all duration-150 shrink-0 self-start md:self-center"
                 style={{
-                  color: 'black',
+                  color: 'var(--bg)',
                   fontSize: '13px',
                   letterSpacing: '0.12em',
                   padding: '12px 28px',

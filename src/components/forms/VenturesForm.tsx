@@ -230,12 +230,12 @@ export function VenturesForm() {
       />
 
       {submitWarning && (
-        <span style={{ fontSize: '11px', color: '#B8860B', lineHeight: '1.5' }}>
+        <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>
           {submitWarning}
         </span>
       )}
       {submitError && (
-        <span style={{ fontSize: '13px', color: '#c0392b', lineHeight: '1.5' }}>{submitError}</span>
+        <span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>{submitError}</span>
       )}
 
       <button
@@ -244,7 +244,7 @@ export function VenturesForm() {
         style={{
           background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',
-          fontFamily: 'var(--font-display)',
+          fontFamily: 'var(--font-body)',
           fontSize: '14px',
           letterSpacing: '0.14em',
           textTransform: 'uppercase',

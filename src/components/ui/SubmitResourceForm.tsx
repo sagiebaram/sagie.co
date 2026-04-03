@@ -102,7 +102,7 @@ export function SubmitResourceForm() {
             }}
           />
           {errors.name && (
-            <span style={{ fontSize: '10px', color: '#c0392b', marginTop: '4px' }}>{errors.name.message}</span>
+            <span style={{ fontSize: '10px', color: 'var(--color-error)', marginTop: '4px' }}>{errors.name.message}</span>
           )}
         </div>
         <div className="flex flex-col flex-1 min-w-0">
@@ -123,15 +123,15 @@ export function SubmitResourceForm() {
             }}
           />
           {errors.url && (
-            <span style={{ fontSize: '10px', color: '#c0392b', marginTop: '4px' }}>{errors.url.message}</span>
+            <span style={{ fontSize: '10px', color: 'var(--color-error)', marginTop: '4px' }}>{errors.url.message}</span>
           )}
         </div>
         <button
           type="submit"
           disabled={isSubmitting || rateLimitUntil !== null}
-          className="font-body uppercase bg-white hover:opacity-85 hover:-translate-y-px transition-all duration-150 disabled:opacity-50 shrink-0"
+          className="font-body uppercase bg-button-primary-bg hover:opacity-85 hover:-translate-y-px transition-all duration-150 disabled:opacity-50 shrink-0"
           style={{
-            color: 'black',
+            color: 'var(--bg)',
             fontSize: '13px',
             letterSpacing: '0.12em',
             padding: '14px 28px',
@@ -141,12 +141,12 @@ export function SubmitResourceForm() {
         </button>
       </form>
       {submitWarning && (
-        <p style={{ fontSize: '11px', color: '#B8860B', lineHeight: '1.5', marginTop: '8px' }}>
+        <p style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5', marginTop: '8px' }}>
           {submitWarning}
         </p>
       )}
       {status === 'error' && (
-        <p style={{ fontSize: '11px', color: '#c0392b', marginTop: '8px' }}>
+        <p style={{ fontSize: '11px', color: 'var(--color-error)', marginTop: '8px' }}>
           Something went wrong. Please try again.
         </p>
       )}

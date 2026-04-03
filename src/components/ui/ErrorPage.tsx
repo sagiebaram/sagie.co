@@ -28,7 +28,7 @@ export function ErrorPage({ title, message, illustration, onRetry }: ErrorPagePr
           {onRetry && (
             <button
               onClick={onRetry}
-              className="inline-block font-body uppercase transition-all duration-150 hover:-translate-y-px bg-white text-black hover:opacity-85 text-button tracking-button px-[34px] py-4"
+              className="inline-block font-body uppercase transition-all duration-150 hover:-translate-y-px bg-button-primary-bg [color:var(--color-button-primary-text)] hover:opacity-85 text-button tracking-button px-[34px] py-4"
             >
               Try again
             </button>
