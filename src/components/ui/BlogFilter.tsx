@@ -74,11 +74,12 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
       {/* Filters */}
       <div ref={filterRef} className="mb-14 grid gap-4" style={{ gridTemplateColumns: 'auto 1fr' }}>
         <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Category</span>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter posts by category">
           {BLOG_CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => setFilters({ category: cat })}
+              aria-pressed={filters.category === cat}
               className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${filters.category === cat
                   ? 'text-silver border-border-strong'
                   : 'text-foreground-muted border-transparent hover:text-foreground-secondary'
@@ -90,7 +91,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
         </div>
 
         <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Author</span>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter posts by author">
           {BLOG_AUTHORS.map(author => {
             const isActive = filters.author === author
             const isCommunity = author === 'Community Members'
@@ -98,6 +99,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
               <button
                 key={author}
                 onClick={() => setFilters({ author: author })}
+                aria-pressed={isActive}
                 className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${isActive
                     ? isCommunity
                       ? 'text-eco border-eco/30'

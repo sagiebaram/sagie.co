@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 export default function EventsLoading() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       {/* Hero — mirrors EventsPageClient hero with pt-32 md:pt-40 */}
       <section className="relative z-1 overflow-hidden pt-32 pb-16 md:pt-40 md:pb-20 px-6 md:px-8">
         <div className="max-w-[880px] mx-auto">

@@ -6,7 +6,7 @@ import { SuggestEventForm } from '@/components/forms/SuggestEventForm'
 
 export default function SuggestEventPage() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

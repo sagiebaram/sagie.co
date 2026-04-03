@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 export default function BlogLoading() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       {/* Section: hero + filter + grid — mirrors blog/page.tsx Section wrapper with pt-28 md:pt-36 */}
       <section className="relative z-1 pt-28 md:pt-36 px-6 md:px-8 pb-20">
         <div className="max-w-[880px] mx-auto">

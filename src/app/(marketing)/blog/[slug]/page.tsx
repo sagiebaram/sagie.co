@@ -84,7 +84,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .slice(0, 3)
 
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

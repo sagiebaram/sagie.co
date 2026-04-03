@@ -6,7 +6,7 @@ import { ChapterForm } from '@/components/forms/ChapterForm'
 
 export default function ApplyChapterPage() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

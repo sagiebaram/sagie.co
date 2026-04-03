@@ -6,7 +6,7 @@ import { VenturesForm } from '@/components/forms/VenturesForm'
 
 export default function ApplyVenturesPage() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

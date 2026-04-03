@@ -27,7 +27,7 @@ export default async function ResourcesPage() {
   }
 
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
       <ResourcesDirectory resources={resources} />

@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 export default function ResourcesLoading() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       {/* Hero — mirrors ResourcesDirectory hero with pt-32 md:pt-40 */}
       <section className="relative z-1 overflow-hidden pt-32 pb-8 md:pt-40 md:pb-10 px-6 md:px-0">
         <div className="max-w-[880px] mx-auto">
