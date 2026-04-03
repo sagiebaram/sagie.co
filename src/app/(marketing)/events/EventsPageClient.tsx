@@ -319,7 +319,7 @@ export function EventsPageClient({
   }
 
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

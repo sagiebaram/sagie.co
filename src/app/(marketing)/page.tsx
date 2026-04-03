@@ -18,7 +18,7 @@ export default async function HomePage() {
   const chapters = await getChapters()
 
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
       <Hero />

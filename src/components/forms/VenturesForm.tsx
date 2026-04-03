@@ -235,7 +235,7 @@ export function VenturesForm() {
         </span>
       )}
       {submitError && (
-        <span style={{ fontSize: '13px', color: '#c0392b', lineHeight: '1.5' }}>{submitError}</span>
+        <span role="alert" aria-live="assertive" style={{ fontSize: '13px', color: '#c0392b', lineHeight: '1.5' }}>{submitError}</span>
       )}
 
       <button

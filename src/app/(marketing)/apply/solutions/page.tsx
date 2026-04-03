@@ -6,7 +6,7 @@ import { SolutionsForm } from '@/components/forms/SolutionsForm'
 
 export default function ApplySolutionsPage() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

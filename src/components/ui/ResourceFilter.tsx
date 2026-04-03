@@ -21,12 +21,13 @@ export function ResourceFilter({ resources, active, onChange }: ResourceFilterPr
   ]
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-3" role="group" aria-label="Filter resources by category">
       {items.map(({ label, count }) => (
         <button
           key={label}
           type="button"
           onClick={() => onChange(label)}
+          aria-pressed={active === label}
           className="font-body uppercase text-label tracking-label px-4 py-2 transition-all duration-150"
           style={{
             border: active === label ? '1px solid var(--silver)' : '1px solid var(--border-default)',

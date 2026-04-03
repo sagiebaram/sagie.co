@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 export default function MarketingLoading() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       {/* Hero area placeholder */}
       <section className="relative z-1 overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24 px-6 md:px-8">
         <div className="max-w-[880px] mx-auto">

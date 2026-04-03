@@ -20,11 +20,12 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
   return (
     <div>
       {/* Filter bar */}
-      <div className="flex flex-wrap gap-3 mb-10">
+      <div className="flex flex-wrap gap-3 mb-10" role="group" aria-label="Filter solutions by category">
         {FILTER_OPTIONS.map((opt) => (
           <button
             key={opt.value}
             onClick={() => setActive(opt.value)}
+            aria-pressed={active === opt.value}
             className={`font-body uppercase text-label tracking-label px-3 py-1.5 border transition-all duration-150 ${active === opt.value
                 ? 'text-silver border-border-strong'
                 : 'text-foreground-muted border-transparent hover:text-foreground-secondary'

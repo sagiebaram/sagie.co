@@ -75,7 +75,12 @@ export function WhoItsFor() {
               ref={el => { cardRefs.current[i] = el }}
               className="persona-card cursor-pointer"
               style={{ position: 'relative', overflow: 'hidden' }}
+              role="button"
+              tabIndex={0}
+              aria-label={`View details for ${persona.name}`}
+              aria-pressed={activeCards.has(i)}
               onClick={() => toggleCard(i)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCard(i) } }}
             >
               {/* Front face */}
               <div

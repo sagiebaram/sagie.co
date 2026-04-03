@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 export default function SuggestEventLoading() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       {/* Hero + form area — mirrors suggest-event/page.tsx with pt-32 md:pt-40 */}
       <section className="relative z-[1] overflow-hidden">
         <div className="max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-24">

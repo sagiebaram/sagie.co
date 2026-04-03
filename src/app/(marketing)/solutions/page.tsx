@@ -29,7 +29,7 @@ export default async function SolutionsPage() {
   }
 
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

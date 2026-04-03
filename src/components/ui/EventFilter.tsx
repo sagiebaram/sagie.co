@@ -10,11 +10,12 @@ interface EventFilterProps {
 
 export function EventFilter({ active, onChange }: EventFilterProps) {
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-3" role="group" aria-label="Filter events by location">
       {FILTERS.map((filter) => (
         <button
           key={filter}
           onClick={() => onChange(filter)}
+          aria-pressed={active === filter}
           className="font-body uppercase text-label tracking-label px-4 py-2 transition-all duration-150"
           style={{
             border: active === filter ? '1px solid var(--silver)' : '1px solid var(--border-default)',

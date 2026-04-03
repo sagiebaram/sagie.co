@@ -6,7 +6,7 @@ import { MembershipForm } from '@/components/forms/MembershipForm'
 
 export default function ApplyPage() {
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
 

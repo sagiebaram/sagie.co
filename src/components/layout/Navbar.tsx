@@ -33,6 +33,12 @@ export function Navbar() {
     <nav
       className="fixed top-0 left-0 right-0 z-50 bg-background-nav backdrop-blur-md border-b border-border-strong"
     >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-9999 focus:bg-background focus:text-foreground focus:p-4 focus:top-2 focus:left-2"
+      >
+        Skip to main content
+      </a>
       <div className="max-w-[800px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
         <a href="/">
           <Image
@@ -72,6 +78,7 @@ export function Navbar() {
             className="md:hidden relative w-8 h-8 flex items-center justify-center"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
             <div className="w-6 h-5 relative flex flex-col justify-between">
               <span
@@ -100,6 +107,7 @@ export function Navbar() {
 
       {/* Mobile dropdown */}
       <div
+        id="mobile-menu"
         className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
         style={{
           maxHeight: isOpen ? '300px' : '0px',

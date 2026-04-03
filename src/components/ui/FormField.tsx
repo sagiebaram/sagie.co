@@ -203,6 +203,7 @@ export function FormField({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
       <label
+        id={`${name}-label`}
         htmlFor={name}
         style={{
           fontSize: '9px',
@@ -220,6 +221,8 @@ export function FormField({
           id={name}
           placeholder={placeholder}
           rows={4}
+          aria-describedby={error ? `${name}-error` : undefined}
+          aria-invalid={error ? true : undefined}
           style={{ ...INPUT_STYLE, resize: 'vertical', lineHeight: '1.6' }}
           {...(registration ?? { name, value: stringValue, onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => onValueChange?.(e.target.value) })}
         />
@@ -289,13 +292,15 @@ export function FormField({
           type={type}
           placeholder={placeholder}
           autoComplete={autoComplete}
+          aria-describedby={error ? `${name}-error` : undefined}
+          aria-invalid={error ? true : undefined}
           style={INPUT_STYLE}
           {...(registration ?? { name, value: stringValue, onChange: (e: React.ChangeEvent<HTMLInputElement>) => onValueChange?.(e.target.value) })}
         />
       )}
 
       {error && (
-        <span style={{ fontSize: '10px', color: '#c0392b' }}>{error}</span>
+        <span id={`${name}-error`} role="alert" style={{ fontSize: '10px', color: '#c0392b' }}>{error}</span>
       )}
     </div>
   )

@@ -72,7 +72,8 @@
   --text-primary: #EDECEA;
   --text-secondary: #B0AFAB;
   --text-muted: #6E6D69;
-  --text-dim: #3E3E3C;
+  --text-dim: #5A5A58;
+  --text-dim-decorative: #3E3E3C; /* Original low-contrast value for intentional fade effects */
   --text-ghost: #242422;
   --silver: #C0C0C0;
   --silver-bright: #E0E0DC;
@@ -103,6 +104,11 @@
   body {
     @apply bg-background text-foreground font-body antialiased;
   }
+}
+
+/* ── Decorative low-contrast text (intentional fade effect, not for readable content) ── */
+.text-dim-decorative {
+  color: var(--text-dim-decorative);
 }
 
 /* ── GSAP hero initial state ── */
