@@ -77,6 +77,11 @@ export function Footer() {
                   Start a Chapter
                 </a>
               </li>
+              <li>
+                <a href="/contact" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                  Contact
+                </a>
+              </li>
             </ul>
           </div>
 

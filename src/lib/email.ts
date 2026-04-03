@@ -13,6 +13,7 @@ export type FormType =
   | 'Event Suggestion'
   | 'Blog Post Submission'
   | 'Resource Submission'
+  | 'Contact Form'
 
 const resend = new Resend(env.RESEND_API_KEY)
 
