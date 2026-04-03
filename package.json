@@ -17,6 +17,8 @@
     "@react-email/components": "^1.0.10",
     "@sentry/nextjs": "^10.46.0",
     "@tailwindcss/postcss": "^4.2.2",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "clsx": "^2.1.1",
     "gsap": "^3.14.2",

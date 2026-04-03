@@ -70,6 +70,15 @@ export const EventSuggestionSchema = z.object({
   description: z.string().min(10, 'Tell us more about the event').max(1000).trim(),
 });
 
+export const ContactSchema = z.object({
+  name: z.string().min(1, 'What should we call you?').max(100).trim(),
+  email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+  subject: z.enum(['General Inquiry', 'Partnership', 'Speaking', 'Media', 'Other'], {
+    error: 'Please select a subject',
+  }),
+  message: z.string().min(10, 'Tell us a bit more').max(2000).trim(),
+});
+
 export const SubmitPostSchema = z.object({
   postTitle: z.string().min(1, 'Give your post a title').max(200).trim(),
   category: z.string().min(1, 'Please select a category').max(100).trim(),
