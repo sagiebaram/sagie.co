@@ -6,6 +6,7 @@ vi.mock('@/env/server', () => ({
   env: {
     NODE_ENV: 'production',
     RESEND_API_KEY: 'mock-resend-key',
+    ADMIN_EMAIL: 'hello@sagie.co',
   },
 }))
 

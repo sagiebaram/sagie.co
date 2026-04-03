@@ -2,6 +2,7 @@ import 'server-only'
 import { unstable_cache } from 'next/cache'
 import { notion } from './notion'
 import { env } from '@/env/server'
+import { getSelectProperty } from './notion-utils'
 
 export interface CityData {
   id: string
@@ -45,7 +46,7 @@ const CITY_DISPLAY_NAMES: Record<string, string> = {
 
 export const getMemberCities = unstable_cache(
   async (): Promise<CityData[]> => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const response = await notion.databases.query({
       database_id: env.NOTION_MEMBER_DB_ID,
       filter: {
@@ -59,10 +60,9 @@ export const getMemberCities = unstable_cache(
 
     // Aggregate member counts by lowercase city name
     const counts: Record<string, number> = {}
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     for (const page of response.results as any[]) {
-      const rawLocation: string | undefined =
-        page.properties?.['Location']?.select?.name
+      const rawLocation = getSelectProperty(page.properties, 'Location', page.id, '')
       if (!rawLocation) continue
       const key = rawLocation.toLowerCase()
       if (!(key in CITY_COORDS)) continue

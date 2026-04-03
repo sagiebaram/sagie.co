@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { notion } from './notion'
 import { env } from '@/env/server'
+import { getTitleProperty, getTextProperty, getSelectProperty, getUrlProperty, getCheckboxProperty } from './notion-utils'
 
 export interface SolutionProvider {
   id: string
@@ -22,10 +23,11 @@ export const getSolutionProviders = unstable_cache(
       sorts: [{ property: 'Featured', direction: 'descending' }],
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     return response.results.map((page: any) => {
       const p = page.properties
-      const name = p['Provider Name']?.title?.[0]?.plain_text ?? 'Community Member'
+      const id = page.id
+      const name = getTitleProperty(p, 'Provider Name', id, 'Community Member')
       const initials = name
         .split(' ')
         .slice(0, 2)
@@ -33,15 +35,15 @@ export const getSolutionProviders = unstable_cache(
         .join('')
 
       return {
-        id: page.id,
+        id,
         name,
         initials,
-        category: p['Category']?.select?.name ?? '',
-        bio: p['Bio']?.rich_text?.[0]?.plain_text ?? '',
-        servicesOffered: p['Services Offered']?.rich_text?.[0]?.plain_text ?? '',
-        website: p['Website']?.url ?? null,
-        memberTier: p['Member Tier']?.select?.name ?? 'Builder',
-        featured: p['Featured']?.checkbox ?? false,
+        category: getSelectProperty(p, 'Category', id, ''),
+        bio: getTextProperty(p, 'Bio', id, ''),
+        servicesOffered: getTextProperty(p, 'Services Offered', id, ''),
+        website: getUrlProperty(p, 'Website', id),
+        memberTier: getSelectProperty(p, 'Member Tier', id, 'Builder') as SolutionProvider['memberTier'],
+        featured: getCheckboxProperty(p, 'Featured', id),
       }
     })
   },

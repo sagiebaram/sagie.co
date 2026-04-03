@@ -5,6 +5,7 @@ import { withValidation } from '@/lib/validation'
 import { MembershipSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
 import { sendEmails } from '@/lib/email'
+import { sanitizeRecord } from '@/lib/sanitize'
 
 const ROLE_MAP: Record<string, string> = {
   Founder: 'Founder',
@@ -26,8 +27,9 @@ function mapLocation(city: string): string {
   return 'International'
 }
 
-export const POST = withValidation(MembershipSchema, async (_req: Request, body) => {
+export const POST = withValidation(MembershipSchema, async (_req: Request, rawBody) => {
   try {
+    const body = sanitizeRecord(rawBody)
     const categoryNames = body.category?.length
       ? body.category.map((c: string) => ({ name: c }))
       : [{ name: ROLE_MAP[body.role] || body.role || 'Founder' }]
