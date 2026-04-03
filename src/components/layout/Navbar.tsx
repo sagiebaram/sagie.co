@@ -8,7 +8,7 @@ const NAV_ROUTES: Record<string, string> = {
   Solutions: '/solutions',
   Events: '/events',
   Resources: '/resources',
-  Blog: '/blog',
+  Journal: '/blog',
 }
 
 function navHref(item: string) {
