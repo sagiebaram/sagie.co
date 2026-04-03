@@ -140,7 +140,11 @@ export const FINAL_CTA = {
 export const FOOTER = {
   navigate: {
     label: 'Navigate',
-    links: ['SAGIE ECO', 'SAGIE Solutions', 'SAGIE Ventures'],
+    links: [
+      { label: 'SAGIE ECO', url: '/eco' },
+      { label: 'SAGIE Solutions', url: '/solutions' },
+      { label: 'SAGIE Ventures', url: '/ventures' },
+    ],
     founderLink: 'Work with Sagie \u2192',
   },
   follow: {
