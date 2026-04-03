@@ -1,7 +1,19 @@
+import type { Metadata } from 'next'
 import { getUpcomingEvents, getPastEvents, type SAGIEEvent } from '@/lib/events'
 import { EventsPageClient } from './EventsPageClient'
 
 export const revalidate = 300
+
+export const metadata: Metadata = {
+  title: 'Events',
+  description:
+    'Discover upcoming SAGIE community events — meetups, workshops, and gatherings for founders, operators, and builders.',
+  openGraph: {
+    title: 'Events | SAGIE',
+    description:
+      'Discover upcoming SAGIE community events — meetups, workshops, and gatherings for founders, operators, and builders.',
+  },
+}
 
 export default async function EventsPage() {
   let upcoming: SAGIEEvent[] = []

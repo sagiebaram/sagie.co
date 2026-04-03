@@ -6,9 +6,21 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { BlogFilter } from '@/components/ui/BlogFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { SubmitPostForm } from '@/components/forms/SubmitPostForm'
+import type { Metadata } from 'next'
 import { getAllPosts, type BlogPost } from '@/lib/blog'
 
 export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Blog',
+  description:
+    'Personal writing, community spotlights, event recaps and thought leadership from the SAGIE ecosystem.',
+  openGraph: {
+    title: 'Blog | SAGIE',
+    description:
+      'Personal writing, community spotlights, event recaps and thought leadership from the SAGIE ecosystem.',
+  },
+}
 
 export default async function BlogPage() {
   let posts: BlogPost[] = []
