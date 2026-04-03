@@ -163,26 +163,23 @@ export default function EcoPage() {
         </AnimatedSection>
 
         {/* Vertical timeline */}
-        <div className="relative pl-10 md:pl-14">
-          {/* Timeline line */}
-          <div
-            aria-hidden="true"
-            className="absolute left-[15px] md:left-[23px] top-0 bottom-0 w-px bg-eco-dim"
-          />
-
+        <div className="relative">
           {VISION_STEPS.map((step, i) => (
             <AnimatedSection key={i} delay={i * 0.1}>
-              <div className="relative mb-10 last:mb-0">
-                {/* Step marker */}
-                <div
-                  aria-hidden="true"
-                  className="absolute -left-10 md:-left-14 top-1 flex items-center justify-center w-[30px] h-[30px] md:w-[46px] md:h-[46px] rounded-full border border-eco bg-eco-bg"
-                >
-                  <span className="font-display text-eco text-label md:text-subhead">
-                    {i + 1}
-                  </span>
+              <div className="flex gap-5 md:gap-8 mb-10 last:mb-0">
+                {/* Step marker + line */}
+                <div className="flex flex-col items-center shrink-0">
+                  <div className="flex items-center justify-center w-[36px] h-[36px] md:w-[48px] md:h-[48px] rounded-full border border-eco bg-eco-bg">
+                    <span className="font-display text-eco text-caption md:text-subhead">
+                      {i + 1}
+                    </span>
+                  </div>
+                  {i < VISION_STEPS.length - 1 && (
+                    <div aria-hidden="true" className="w-px flex-1 bg-eco-dim mt-2" />
+                  )}
                 </div>
-                <p className="font-body text-foreground-secondary text-body-lg leading-[1.7] font-light pt-0.5">
+                {/* Step text */}
+                <p className="font-body text-foreground-secondary text-body-lg leading-[1.7] font-light pt-1.5 md:pt-2.5">
                   {step}
                 </p>
               </div>
