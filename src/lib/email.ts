@@ -17,7 +17,7 @@ export type FormType =
 const resend = new Resend(env.RESEND_API_KEY)
 
 const FROM_ADDRESS = 'SAGIE <hello@sagie.co>'
-const ADMIN_EMAIL = 'hello@sagie.co'
+const ADMIN_EMAIL = env.ADMIN_EMAIL
 
 export async function sendEmails(
   formType: FormType,

@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { notion } from './notion'
 import { env } from '@/env/server'
+import { getTitleProperty, getTextProperty, getSelectProperty, getUrlProperty, getCheckboxProperty } from './notion-utils'
 
 export interface Resource {
   id: string
@@ -22,19 +23,20 @@ export const getResources = unstable_cache(
       sorts: [{ property: 'Featured', direction: 'descending' }],
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     return response.results.map((page: any) => {
       const p = page.properties
+      const id = page.id
       return {
-        id: page.id,
-        name: p['Resource Name']?.title?.[0]?.plain_text ?? '',
-        category: p['Category']?.select?.name ?? 'Community',
-        description: p['Description']?.rich_text?.[0]?.plain_text ?? '',
-        url: p['URL']?.url ?? null,
-        location: p['Location']?.rich_text?.[0]?.plain_text ?? null,
-        bestFor: p['Tags']?.rich_text?.[0]?.plain_text ?? null,
-        source: p['Source']?.select?.name ?? 'Curated',
-        featured: p['Featured']?.checkbox ?? false,
+        id,
+        name: getTitleProperty(p, 'Resource Name', id, ''),
+        category: getSelectProperty(p, 'Category', id, 'Community') as Resource['category'],
+        description: getTextProperty(p, 'Description', id, ''),
+        url: getUrlProperty(p, 'URL', id),
+        location: getTextProperty(p, 'Location', id, '') || null,
+        bestFor: getTextProperty(p, 'Tags', id, '') || null,
+        source: getSelectProperty(p, 'Source', id, 'Curated') as Resource['source'],
+        featured: getCheckboxProperty(p, 'Featured', id),
       }
     })
   },

@@ -5,9 +5,11 @@ import { withValidation } from '@/lib/validation'
 import { SubmitPostSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
 import { sendEmails } from '@/lib/email'
+import { sanitizeRecord } from '@/lib/sanitize'
 
-export const POST = withValidation(SubmitPostSchema, async (_req: Request, body) => {
+export const POST = withValidation(SubmitPostSchema, async (_req: Request, rawBody) => {
   try {
+    const body = sanitizeRecord(rawBody)
     const excerpt = body.content.length > 150 ? body.content.slice(0, 150) + '...' : body.content
 
     await notionWrite(() => notion.pages.create({
