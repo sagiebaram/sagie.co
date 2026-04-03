@@ -128,7 +128,7 @@ export function SolutionsForm() {
         style={{
           background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
           color: 'var(--bg)',
-          fontFamily: 'var(--font-display)',
+          fontFamily: 'var(--font-body)',
           fontSize: '14px',
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
