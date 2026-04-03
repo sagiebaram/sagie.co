@@ -1,212 +1,160 @@
 # External Integrations
 
-**Analysis Date:** 2026-03-28
+**Analysis Date:** 2026-03-30
 
 ## APIs & External Services
 
-**Notion (Database Platform):**
-- Service: Notion workspace for content management
-  - SDK: `@notionhq/client` 2.2.15
-  - Client file: `src/lib/notion.ts`
+**Content & Data Management:**
+- Notion - Content management and database system
+  - SDK/Client: @notionhq/client 2.2.15
   - Auth: `NOTION_TOKEN` environment variable
-  - Write pattern: Uses Notion API to create pages in multiple databases
+  - Usage: Multiple database queries and page creation across content types
+  - Implementation: `src/lib/notion.ts` - Client instantiation
+  - Monitoring: `src/lib/notion-monitor.ts` - Error tracking with Sentry for write operations
 
-**Email Service:**
-- Service: Resend
-  - SDK: `resend` 6.9.4
+**Email Delivery:**
+- Resend - Email sending service
+  - SDK/Client: resend 6.9.4
+  - Auth: `RESEND_API_KEY` environment variable (optional, production only)
+  - Usage: Confirmation emails to users and admin alerts
   - Implementation: `src/lib/email.ts`
-  - Auth: `RESEND_API_KEY` environment variable
-  - Features: Sends confirmation emails to applicants and admin alerts to `hello@sagie.co`
-  - Template system: React email components (`src/emails/ConfirmationEmail`, `src/emails/AdminAlertEmail`)
-  - Production-only: Disabled in non-production environments
+  - Environment: Only active in production (skipped in development/test)
+  - Email templates: `src/emails/ConfirmationEmail.tsx`, `src/emails/AdminAlertEmail.tsx`
+  - Error tracking: Exceptions captured to Sentry with service tags
 
-**Error Tracking & Observability:**
-- Service: Sentry
-  - SDK: `@sentry/nextjs` 10.46.0
+**Error Tracking & Monitoring:**
+- Sentry - Error tracking and performance monitoring
+  - SDK: @sentry/nextjs 10.46.0 (includes client, server, edge support)
+  - Auth: `NEXT_PUBLIC_SENTRY_DSN` (public DSN for client-side, configured in next.config.ts via org: 'sagie', project: 'sagie-co')
   - Configuration:
-    - Server: `sentry.server.config.ts`
-    - Client: `sentry.client.config.ts`
-    - Edge: `sentry.edge.config.ts`
-  - Auth: `NEXT_PUBLIC_SENTRY_DSN` environment variable
-  - Sampling:
-    - Traces: 10% in production, 100% in development
-    - Replays: 10% session, 100% on error
-  - Organization: `sagie`
-  - Project: `sagie-co`
+    - Client-side: `sentry.client.config.ts` - Trace sample rate 0.1 (prod), 1.0 (dev); replay sessions 0.1; error replays 1.0
+    - Server-side: `sentry.server.config.ts` - Same trace sampling
+    - Edge: `sentry.edge.config.ts` - Lightweight edge runtime config
+  - Usage: Captured in `src/lib/email.ts` (Resend failures), `src/lib/notion-monitor.ts` (Notion write failures)
+  - Integration: Wrapped via `withSentryConfig` in next.config.ts
 
 ## Data Storage
 
 **Databases:**
-- Notion (primary data store)
-  - Connection: `NOTION_TOKEN` authentication
-  - Client: `@notionhq/client`
-  - Implementation: `src/lib/notion.ts`
-
-**Notion Databases Used:**
-- `NOTION_BLOG_DB_ID` - Blog post submissions and published content
-- `NOTION_RESOURCES_DB_ID` - Resource listings
-- `NOTION_SOLUTIONS_DB_ID` - Solutions provider intake forms
-- `NOTION_EVENT_DB_ID` - Event suggestions
-- `NOTION_MEMBER_DB_ID` - Member directory
-- `NOTION_VENTURES_INTAKE_DB_ID` - Venture intake forms
-- `NOTION_CHAPTERS_DB_ID` (optional) - Chapter information
-- `NOTION_DEAL_PIPELINE_DB_ID` (optional) - Deal tracking
+- Notion - Primary data storage
+  - Connection: API token via `NOTION_TOKEN`
+  - Client: @notionhq/client with custom wrapper
+  - Database IDs (via environment variables):
+    - `NOTION_BLOG_DB_ID` - Blog posts (`src/lib/blog.ts`)
+    - `NOTION_RESOURCES_DB_ID` - Resources directory (`src/lib/resources.ts`)
+    - `NOTION_SOLUTIONS_DB_ID` - Solutions listing (`src/lib/solutions.ts`)
+    - `NOTION_EVENT_DB_ID` - Events/calendar data (`src/lib/events.ts`)
+    - `NOTION_MEMBER_DB_ID` - Community members (`src/lib/members.ts`)
+    - `NOTION_CHAPTERS_DB_ID` - Chapter information (`src/lib/chapters.ts`)
+    - `NOTION_VENTURES_INTAKE_DB_ID` - Ventures applications (`src/app/api/applications/ventures/route.ts`)
+    - `NOTION_DEAL_PIPELINE_DB_ID` - Deal pipeline (optional)
+  - Data Access Patterns:
+    - Query: `notion.databases.query()` - Used for fetching pages with filters
+    - Create: `notion.pages.create()` - Used for form submissions writing to databases
+  - Conversion: notion-to-md 3.1.9 converts Notion content to Markdown for blog rendering
 
 **File Storage:**
-- Local filesystem only (static content and assets)
-- No cloud file storage integration detected
+- Notion file attachments - Files stored via Notion database attachments (not separate cloud storage)
+- No S3/Google Cloud/Azure blob storage detected
 
 **Caching:**
-- Next.js built-in cache with revalidation tags:
-  - `notion:blog`
-  - `notion:events`
-  - `notion:resources`
-  - `notion:solutions`
-  - `notion:members`
-  - `notion:chapters`
-- Revalidation endpoint: `POST /api/revalidate` (requires `REVALIDATE_SECRET`)
+- Next.js native caching:
+  - Cache tags: `notion:blog`, `notion:events`, `notion:resources`, `notion:solutions`, `notion:members`, `notion:chapters`
+  - Revalidation endpoint: `POST /api/revalidate` - Manual cache invalidation via secret
+  - Implementation: `src/app/api/revalidate/route.ts` - Uses Next.js `revalidateTag()` API
 
 ## Authentication & Identity
 
 **Auth Provider:**
-- Custom/None - No third-party auth provider detected
-- Implementation approach:
-  - Rate limiting per IP for form submissions (5 requests per 10 minutes)
-  - Honeypot field for bot detection (`_trap` field)
-  - Minimum submission time validation (3 seconds)
-  - Validation middleware: `src/lib/validation.ts` with `withValidation` HOF
+- No dedicated auth provider (Clerk, Auth0, NextAuth.js not present)
+- Custom origin validation via environment variable:
+  - `ALLOWED_ORIGINS` - Comma-separated list for CORS/webhook validation
+  - Implementation: `src/env/server.ts` - Parsed as Set for membership validation
+  - Usage: `src/lib/validation.ts` - Validates request origin in form submissions
 
-**API Security:**
-- All form submissions validated with Zod schemas
-- REVALIDATE_SECRET required for cache invalidation endpoint
-- Rate limiting in-memory store by IP address
+**Authorization:**
+- Admin endpoints secured via secret tokens:
+  - `/api/revalidate` - Requires `REVALIDATE_SECRET` header validation
+  - Form submissions - Optional origin validation for CORS
+- No per-user permission system (simple admin secret pattern)
 
 ## Monitoring & Observability
 
 **Error Tracking:**
-- Sentry integration for server and client errors
-- Email service errors tagged with `service: 'resend'` and `type: 'confirmation'|'admin_alert'`
-- Sample implementation in `src/lib/email.ts` lines 46-50, 63-67
+- Sentry - Captures exceptions from:
+  - Email delivery failures (Resend)
+  - Notion write failures (all form submissions and API operations)
+  - Performance traces (0.1% in production)
+  - Session replays on error (100% capture rate)
 
 **Logs:**
-- Console logging for development/debugging:
-  - Email skipping in non-production: `console.log`
-  - API errors: `console.error`
-- Sentry captures all exceptions thrown in handlers
-
-**Performance Monitoring:**
-- Sentry APM (Application Performance Monitoring) enabled
-- Trace sampling: 10% in production
+- Console logging in development:
+  - `src/lib/email.ts` - Logs email skips in non-production
+  - `src/app/api/applications/membership/route.ts` - Logs application failures
+- No external log aggregation (ELK, Datadog, etc.)
 
 ## CI/CD & Deployment
 
 **Hosting:**
-- Vercel (detected via Sentry config and `VERCEL_AUTOMATION_BYPASS_SECRET`)
-- Environment variable: `NODE_ENV` (values: `development`, `test`, `production`)
+- Vercel - Edge-optimized serverless platform
+  - Project config: `.vercel/project.json` (projectId: prj_fTQQAZhN7twm93BvnWfUbEbFIPCW)
+  - Edge functions: Sentry edge config available for edge middleware
+  - Bypass header: `x-vercel-protection-bypass` via `VERCEL_AUTOMATION_BYPASS_SECRET` for test automation
 
 **CI Pipeline:**
-- Playwright E2E tests (not auto-triggered in git config, must be manual or in separate workflow)
-- Test configuration: `playwright.config.ts`
-- Base URL: `PLAYWRIGHT_TEST_BASE_URL` (defaults to `http://localhost:3000`)
-- Workers: Single worker in CI (via `process.env.CI` check)
+- GitHub Actions (configured in `.github/` directory)
+- Playwright tests with CI detection:
+  - Single worker in CI mode (via `process.env.CI`)
+  - Multi-worker locally
+  - Base URL: Configurable via env var or localhost:3000
 
-## Form Submissions & Data Flow
+## Environment Configuration
 
-**Submit Endpoints:**
+**Required env vars:**
+- `NOTION_TOKEN` - Critical for all content operations
+- `NOTION_BLOG_DB_ID` - Required for blog rendering
+- `NOTION_RESOURCES_DB_ID` - Required for resources page
+- `NOTION_SOLUTIONS_DB_ID` - Required for solutions listing
+- `NOTION_EVENT_DB_ID` - Required for events/calendar
+- `NOTION_MEMBER_DB_ID` - Required for membership applications
+- `NOTION_VENTURES_INTAKE_DB_ID` - Required for ventures applications
+- `ALLOWED_ORIGINS` - Required for form submission validation
+- `NODE_ENV` - Required (development/test/production)
 
-1. **Solutions Provider (`POST /api/applications/solutions`):**
-   - Schema: `SolutionsSchema`
-   - Notion DB: `NOTION_SOLUTIONS_DB_ID`
-   - Email type: `Solutions Provider`
-   - Fields: Provider Name, Email, Category, Bio, Services Offered, LinkedIn URL, Website, Rate Range, Location
+**Optional env vars:**
+- `NOTION_CHAPTERS_DB_ID` - For chapter features
+- `NOTION_DEAL_PIPELINE_DB_ID` - For deal pipeline (if implemented)
+- `RESEND_API_KEY` - Email delivery (production recommended, not development)
+- `REVALIDATE_SECRET` - Cache invalidation (production recommended)
+- `NEXT_PUBLIC_SENTRY_DSN` - Error tracking (production recommended)
+- `VERCEL_AUTOMATION_BYPASS_SECRET` - Test automation (development/testing)
+- `PLAYWRIGHT_TEST_BASE_URL` - E2E test URL (defaults to http://localhost:3000)
 
-2. **Event Suggestion (`POST /api/suggest-event`):**
-   - Schema: `EventSuggestionSchema`
-   - Notion DB: `NOTION_EVENT_DB_ID`
-   - Email type: `Event Suggestion` (admin only)
-   - Fields: Event Name, Description, Submitted By
-
-3. **Blog Post Submission (`POST /api/submit-post`):**
-   - Schema: `SubmitPostSchema`
-   - Notion DB: `NOTION_BLOG_DB_ID`
-   - Email type: `Blog Post Submission`
-   - Fields: Post Title, Content (excerpt auto-generated), Category, Author Name, Author Email
-
-4. **Resource Submission (`POST /api/submit-resource`):**
-   - Notion DB: `NOTION_RESOURCES_DB_ID`
-   - Email type: `Resource Submission`
-
-5. **Membership Application (`POST /api/applications/membership`):**
-   - Notion DB: N/A (Notion write target unconfirmed)
-   - Email type: `Membership Application`
-
-6. **Chapter Lead Application (`POST /api/applications/chapter`):**
-   - Notion DB: N/A (Notion write target unconfirmed)
-   - Email type: `Chapter Lead Application`
-
-7. **Ventures Intake (`POST /api/applications/ventures`):**
-   - Schema: Ventures application form
-   - Notion DB: `NOTION_VENTURES_INTAKE_DB_ID`
-   - Email type: `Ventures Intake`
-
-**Email Sending:**
-- Implementation: `src/lib/email.ts` → `sendEmails(formType, applicantEmail?, submissionData)`
-- From address: `SAGIE <hello@sagie.co>`
-- Admin destination: `hello@sagie.co`
-- Components: `src/emails/ConfirmationEmail.tsx`, `src/emails/AdminAlertEmail.tsx`
-- Service: Resend API
-- Error handling: Errors logged to Sentry but don't block form submission (via `catch` in Promise handler)
-
-**Notion Write Monitoring:**
-- Wrapper function: `notionWrite()` in `src/lib/notion-monitor.ts`
-- Purpose: Track/throttle Notion API calls (exact implementation in that file)
-
-## Content Sourcing
-
-**Blog & Content:**
-- Source: Notion database (`NOTION_BLOG_DB_ID`)
-- Processing: `notion-to-md` to convert Notion blocks to markdown
-- Rendering: `react-markdown` for display
-- Implementation: `src/lib/blog.ts`
-
-**Events:**
-- Source: Notion database (`NOTION_EVENT_DB_ID`)
-- Implementation: `src/lib/events.ts`
-
-**Resources:**
-- Source: Notion database (`NOTION_RESOURCES_DB_ID`)
-- Implementation: `src/lib/resources.ts`
-
-**Solutions/Providers:**
-- Source: Notion database (`NOTION_SOLUTIONS_DB_ID`)
-- Implementation: `src/lib/solutions.ts`
-
-**Members & Chapters:**
-- Source: Notion databases (`NOTION_MEMBER_DB_ID`, `NOTION_CHAPTERS_DB_ID`)
-- Implementation: `src/lib/members.ts`, `src/lib/chapters.ts`
+**Secrets location:**
+- Development: `.env.local` file (ignored by git)
+- Production: Vercel environment variables dashboard
+- `.env.example` available showing structure
 
 ## Webhooks & Callbacks
 
 **Incoming:**
-- None detected
+- `/api/revalidate` - POST endpoint for cache invalidation
+  - Secret-based auth via `REVALIDATE_SECRET`
+  - Accepts optional `tags` array to target specific cache keys
+  - Returns: `{ revalidated: true, tags: string[], now: number }`
+- `/api/submit-post` - Form submission handler (blog posts)
+- `/api/submit-resource` - Form submission handler (resources)
+- `/api/suggest-event` - Form submission handler (event suggestions)
+- `/api/applications/membership` - Membership application handler
+- `/api/applications/chapter` - Chapter lead application handler
+- `/api/applications/solutions` - Solutions provider application handler
+- `/api/applications/ventures` - Ventures intake application handler
 
 **Outgoing:**
-- Notion API calls (create pages) triggered by form submissions
-- Revalidation endpoint calls required externally to invalidate cache
-
-## Security Configuration
-
-**CORS & Headers:**
-- X-Frame-Options: DENY (prevent framing)
-- X-Content-Type-Options: nosniff (prevent MIME sniffing)
-- Referrer-Policy: origin-when-cross-origin
-- Permissions-Policy: Disable camera, microphone, geolocation
-- Cache-Control: no-store for all `/api/*` routes
-
-**Origin Validation:**
-- `ALLOWED_ORIGINS` parsed from comma-separated env var
-- Stored in Set for efficient lookups in `src/env/server.ts`
+- Email confirmations via Resend (async, fire-and-forget with error catching)
+- No outgoing webhooks to external services detected
+- Sentry error reporting (automatic via SDK)
 
 ---
 
-*Integration audit: 2026-03-28*
+*Integration audit: 2026-03-30*

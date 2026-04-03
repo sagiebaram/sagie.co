@@ -1,167 +1,122 @@
 # Technology Stack
 
-**Analysis Date:** 2026-03-28
+**Analysis Date:** 2026-03-30
 
 ## Languages
 
 **Primary:**
-- TypeScript 6.0.2 - All application code, configuration, and tests
-- JSX/TSX - React components and page files
-
-**Secondary:**
-- JavaScript (mjs) - PostCSS configuration (`postcss.config.mjs`)
+- TypeScript 6.0.2 - Full codebase including frontend, backend, and server configuration
+- TSX - React components and page files
+- JavaScript (ESM) - Configuration files (next.config.ts, postcss.config.mjs, etc.)
 
 ## Runtime
 
 **Environment:**
-- Node.js (version not specified in lockfile constraints - determined by deployment platform)
+- Node.js (version specified by project, enforced via .vercel config)
+- Next.js 16.2.1 - Full-stack React framework with App Router
 
 **Package Manager:**
-- npm (lockfile: `package-lock.json` present)
+- npm - Lockfile: `package-lock.json` present
 
 ## Frameworks
 
 **Core:**
-- Next.js 16.2.1 - Full-stack React framework, API routes, server components
-- React 19.2.4 - UI library and component system
+- Next.js 16.2.1 - Full-stack framework with React 19.2.4, server/client components, API routes
+- React 19.2.4 - UI library with hooks and server components support
 - React DOM 19.2.4 - DOM rendering
 
-**Styling:**
-- Tailwind CSS 4.2.2 - Utility-first CSS framework
-- PostCSS 8 - CSS transformation pipeline
-- @tailwindcss/postcss 4.2.2 - Tailwind CSS v4 plugin
+**Testing:**
+- Vitest 4.1.2 - Unit test runner configured in `vitest.config.ts`
+- @vitest/coverage-v8 4.1.2 - Coverage reporting (v8 provider)
+- @playwright/test 1.58.2 - E2E testing framework
 
-**Animation/Interaction:**
-- GSAP 3.14.2 - Advanced animation library (`src/lib/gsap.ts`)
-- Motion 12.38.0 - Animation primitives library
-- react-globe.gl 2.37.0 - 3D globe visualization component
-- three 0.183.2 - 3D graphics library (dependency of react-globe.gl)
-
-**Content & Rendering:**
-- react-markdown 10.1.0 - Markdown to React component rendering
-- notion-to-md 3.1.9 - Convert Notion blocks to markdown
-- @react-email/components 1.0.10 - Email template components
-
-**Utilities:**
-- clsx 2.1.1 - Conditional CSS class builder
-- tailwind-merge 3.5.0 - Merge Tailwind CSS classes intelligently
-- zod 4.3.6 - TypeScript-first schema validation and parsing
-- next-themes 0.4.6 - Dark mode management
-
-**Build/Compilation:**
-- babel-plugin-react-compiler 1.0.0 - React Compiler for automatic memoization
-
-## Testing
-
-**Test Runner:**
-- Vitest 4.1.2 - Fast unit test framework (`vitest.config.ts`)
-- @vitest/coverage-v8 4.1.2 - Code coverage using V8 provider
-
-**E2E Testing:**
-- @playwright/test 1.58.2 - Browser automation and E2E testing
-
-**Test Configuration:**
-- Tests run in Node environment with globals enabled
-- Coverage includes `src/lib/**/*.ts` (excludes Notion, GSAP integrations)
-- Test files pattern: `src/**/*.test.ts`
-
-## Error Tracking & Monitoring
-
-**Error Tracking:**
-- @sentry/nextjs 10.46.0 - Error tracking and performance monitoring
-- Configuration files: `sentry.server.config.ts`, `sentry.client.config.ts`, `sentry.edge.config.ts`
-- Integrated in Next.js config via `withSentryConfig` wrapper
+**Build/Dev:**
+- Babel React Compiler Plugin 1.0.0 - Enabled via `reactCompiler: true` in `next.config.ts`
+- PostCSS 8 - CSS processing with Tailwind CSS integration
+- Tailwind CSS 4.2.2 - Utility-first CSS framework via @tailwindcss/postcss 4.2.2
+- ESLint 9.39.4 - Linting via eslint.config.mjs with Next.js config
+- TypeScript 6.0.2 - Strict type checking with strict mode enabled
 
 ## Key Dependencies
 
-**Critical - External Services:**
-- @notionhq/client 2.2.15 - Notion database client for CRUD operations
-- resend 6.9.4 - Email service provider (confirmed optional in env schema)
+**Critical:**
+- @notionhq/client 2.2.15 - Notion API integration for multi-database content management
+- resend 6.9.4 - Email delivery service (optional in non-production)
+- @sentry/nextjs 10.46.0 - Error tracking and monitoring (client/server/edge)
+- zod 4.3.6 - Runtime schema validation for environment variables and form data
 
-**Data Validation:**
-- zod 4.3.6 - Schema validation on all API routes via `src/lib/validation.ts`
+**UI & Animation:**
+- gsap 3.14.2 - Advanced animation library with ScrollTrigger and SplitText plugins
+- motion 12.38.0 - Animation and motion library (secondary to GSAP)
+- react-globe.gl 2.37.0 - 3D globe visualization component
+- three 0.183.2 - 3D graphics library (dependency of react-globe.gl)
 
-**Server-Side Only:**
-- server-only 0.0.1 - Enforces server-only code at build time
+**Forms & Validation:**
+- react-hook-form 7.72.0 - Lightweight form state management
+- @hookform/resolvers 5.2.2 - Validation resolvers for react-hook-form
+- clsx 2.1.1 - Conditional class name utility
+- tailwind-merge 3.5.0 - Merge Tailwind CSS class names without conflicts
 
-**Type Definitions:**
-- @types/node 25.5.0 - Node.js type definitions
-- @types/react 19.2.14 - React type definitions
-- @types/react-dom 19.2.3 - React DOM type definitions
+**Content Management:**
+- notion-to-md 3.1.9 - Convert Notion blocks to Markdown
+- react-markdown 10.1.0 - Render Markdown to React components
+- @react-email/components 1.0.10 - Email component library for HTML emails
+
+**Utilities:**
+- next-themes 0.4.6 - Dark mode and theme management
+- nuqs 2.8.9 - Next.js URL search params management (query strings)
+- server-only 0.0.1 - Enforce server-only modules (development utility)
+
+**Type Safety:**
+- @types/react 19.2.14 - Type definitions for React
+- @types/react-dom 19.2.3 - Type definitions for React DOM
+- @types/node 25.5.0 - Type definitions for Node.js runtime
 
 ## Configuration
 
-**TypeScript:**
-- Target: ES2022
-- Strict mode enabled with additional checks:
-  - `noUncheckedIndexedAccess: true`
-  - `noImplicitOverride: true`
-  - `noImplicitReturns: true`
-  - `exactOptionalPropertyTypes: true`
-- Path alias: `@/*` → `src/*`
+**Environment:**
+- Server-side environment validation via `src/env/server.ts` using Zod
+- Environment variables loaded from `.env.local` (development) and vercel secrets (production)
+- Required variables:
+  - `NOTION_TOKEN` - Notion API authentication
+  - `NOTION_BLOG_DB_ID`, `NOTION_RESOURCES_DB_ID`, `NOTION_SOLUTIONS_DB_ID`, `NOTION_EVENT_DB_ID`, `NOTION_MEMBER_DB_ID`, `NOTION_CHAPTERS_DB_ID`, `NOTION_VENTURES_INTAKE_DB_ID` - Notion database identifiers
+  - `ALLOWED_ORIGINS` - CORS-allowed origins (comma-separated)
+  - `RESEND_API_KEY` - Email service API key (optional, production only)
+  - `REVALIDATE_SECRET` - Cache revalidation endpoint security
+  - `NODE_ENV` - Runtime environment (development/test/production)
 
-**Next.js:**
-- React Compiler enabled (`reactCompiler: true`)
-- Security headers configured for all routes
-- Cache-Control headers for `/api/*` routes
-- Sentry integration enabled via `withSentryConfig`
-
-**Build Output:**
-- Location: `.next/` directory (git-ignored)
-
-## Environment Configuration
-
-**Required Environment Variables:**
-- `NOTION_TOKEN` - Notion API authentication token
-- `NOTION_BLOG_DB_ID` - Notion database ID for blog posts
-- `NOTION_RESOURCES_DB_ID` - Notion database ID for resources
-- `NOTION_SOLUTIONS_DB_ID` - Notion database ID for solutions
-- `NOTION_EVENT_DB_ID` - Notion database ID for event suggestions
-- `NOTION_MEMBER_DB_ID` - Notion database ID for members
-- `NOTION_VENTURES_INTAKE_DB_ID` - Notion database ID for venture intakes
-- `ALLOWED_ORIGINS` - Comma-separated list of allowed CORS origins
-- `NODE_ENV` - Environment: `development`, `test`, or `production`
-
-**Optional Environment Variables:**
-- `NOTION_DEAL_PIPELINE_DB_ID` - Notion database ID for deals
-- `NOTION_CHAPTERS_DB_ID` - Notion database ID for chapters
-- `REVALIDATE_SECRET` - Secret token for `/api/revalidate` endpoint
-- `RESEND_API_KEY` - Resend email service API key
-- `NEXT_PUBLIC_SENTRY_DSN` - Sentry Data Source Name (public, for client-side)
-- `PLAYWRIGHT_TEST_BASE_URL` - E2E test base URL (defaults to `http://localhost:3000`)
-- `VERCEL_AUTOMATION_BYPASS_SECRET` - Vercel protection bypass token
-
-**Secrets Location:**
-- Environment variables provided at deployment/runtime
-- No `.env` file pattern committed to repository
+**Build:**
+- `next.config.ts` - Next.js configuration with:
+  - React Compiler enabled for optimized rendering
+  - Security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
+  - Cache-Control headers for API routes
+  - Sentry integration via withSentryConfig wrapper
+- `tsconfig.json` - Strict TypeScript configuration:
+  - ES2022 target
+  - Strict mode enabled
+  - Path alias: `@/*` → `./src/*`
+- `vitest.config.ts` - Test configuration:
+  - Test glob: `src/**/*.test.ts`
+  - Coverage provider: v8
+  - Excluded from coverage: external integrations (notion, email, animations)
+- `playwright.config.ts` - E2E test configuration:
+  - Base URL: localhost:3000 (dev) or env var
+  - Worker count: 1 in CI, auto otherwise
 
 ## Platform Requirements
 
 **Development:**
-- Node.js (version unspecified - recommend checking `.npmrc` or deployment docs)
-- npm for dependency management
+- Node.js runtime
+- `.env.local` file with Notion and optional Resend API keys
+- npm dependencies installed
 
 **Production:**
-- Deployed on Vercel (inferred from Sentry config organization "sagie" and `VERCEL_AUTOMATION_BYPASS_SECRET`)
-- Sentry project: `sagie-co`
-
-## Testing Commands
-
-```bash
-npm test              # Run unit tests
-npm run test:watch   # Watch mode for unit tests
-npm run test:coverage # Generate coverage report
-```
-
-## Development Commands
-
-```bash
-npm run dev   # Start development server (http://localhost:3000)
-npm run build # Production build
-npm start     # Start production server
-npm run lint  # Run Next.js linting
-```
+- Vercel deployment platform (configured in `.vercel/project.json`)
+- Environment secrets stored in Vercel dashboard
+- Sentry DSN configured via `NEXT_PUBLIC_SENTRY_DSN`
+- Notion API access from server
+- Resend API key for email delivery (optional but recommended)
 
 ---
 
-*Stack analysis: 2026-03-28*
+*Stack analysis: 2026-03-30*
