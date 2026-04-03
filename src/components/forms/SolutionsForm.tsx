@@ -5,8 +5,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
+import { PhoneField } from '@/components/ui/PhoneField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
-import { SolutionsSchema } from '@/lib/schemas'
+import { SolutionsSchema, COUNTRY_OPTIONS } from '@/lib/schemas'
 
 type FormData = z.infer<typeof SolutionsSchema>
 
@@ -20,10 +21,7 @@ export function SolutionsForm() {
   const [isRateLimited, setIsRateLimited] = useState(false)
 
   const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
+    register, handleSubmit, setValue, watch, control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(SolutionsSchema),
@@ -41,7 +39,6 @@ export function SolutionsForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, _trap: trapRef.current, _t: loadTime.current }),
       })
-
       if (res.status === 429) {
         const retryAfterRaw = res.headers.get('Retry-After')
         const waitSeconds = retryAfterRaw ? parseInt(retryAfterRaw, 10) : 30
@@ -51,7 +48,6 @@ export function SolutionsForm() {
         setTimeout(() => setIsRateLimited(false), safeWait * 1000)
         return
       }
-
       if (!res.ok) {
         try {
           const body = await res.json()
@@ -60,28 +56,16 @@ export function SolutionsForm() {
             setSubmitError(typeof firstError === 'string' ? firstError : 'Please check your input and try again.')
           } else if (body.error && typeof body.error === 'string') {
             setSubmitError(body.error)
-          } else {
-            setSubmitError('Something went wrong. Please try again.')
-          }
-        } catch {
-          setSubmitError('Something went wrong. Please try again.')
-        }
+          } else { setSubmitError('Something went wrong. Please try again.') }
+        } catch { setSubmitError('Something went wrong. Please try again.') }
         return
       }
-
       setSuccess(true)
-    } catch {
-      setSubmitError('Something went wrong. Please try again.')
-    }
+    } catch { setSubmitError('Something went wrong. Please try again.') }
   }
 
   if (success) {
-    return (
-      <FormSuccess
-        headline="We'll review your application."
-        message="Solutions providers are vetted before being listed. You'll hear from us within a week."
-      />
-    )
+    return (<FormSuccess headline="We'll review your application." message="Solutions providers are vetted before being listed. You'll hear from us within a week." />)
   }
 
   return (
@@ -94,16 +78,11 @@ export function SolutionsForm() {
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
         <FormField label="Location" name="location" placeholder="New York, NY" registration={register('location')} error={errors.location?.message} />
       </div>
-      <FormField
-        label="Service Category"
-        name="category"
-        type="select"
-        options={['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People']}
-        required
-        value={watch('category') || ''}
-        onValueChange={(v) => setValue('category', v as 'Operations & Systems' | 'Strategy & Advisory' | 'Technology & Product' | 'Growth & Marketing' | 'Finance & Legal' | 'Talent & People', { shouldValidate: true })}
-        error={errors.category?.message}
-      />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
+        <PhoneField label="Phone" name="phone" control={control} error={errors.phone?.message} />
+      </div>
+      <FormField label="Service Category" name="category" type="select" options={['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People']} required value={watch('category') || ''} onValueChange={(v) => setValue('category', v as 'Operations & Systems' | 'Strategy & Advisory' | 'Technology & Product' | 'Growth & Marketing' | 'Finance & Legal' | 'Talent & People', { shouldValidate: true })} error={errors.category?.message} />
       <FormField label="Tell us about your background" name="bio" type="textarea" placeholder="Your experience and expertise." required registration={register('bio')} error={errors.bio?.message} />
       <FormField label="What specific services do you offer?" name="servicesOffered" type="textarea" placeholder="Describe the services you provide." required registration={register('servicesOffered')} error={errors.servicesOffered?.message} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -111,33 +90,9 @@ export function SolutionsForm() {
         <FormField label="Rate Range" name="rateRange" placeholder="$100-200/hr" registration={register('rateRange')} error={errors.rateRange?.message} />
       </div>
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
-      <input type="hidden" name="_t" value={loadTime.current.toString()} />
-      {submitWarning && (
-        <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>
-          {submitWarning}
-        </span>
-      )}
-      {submitError && (
-        <span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>
-          {submitError}
-        </span>
-      )}
-      <button
-        type="submit"
-        disabled={isSubmitting || isRateLimited}
-        style={{
-          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
-          color: 'var(--bg)',
-          fontFamily: 'var(--font-body)',
-          fontSize: '14px',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          padding: '14px 32px',
-          border: 'none',
-          cursor: isSubmitting ? 'not-allowed' : 'pointer',
-          alignSelf: 'flex-start',
-        }}
-      >
+      {submitWarning && (<span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>)}
+      {submitError && (<span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>{submitError}</span>)}
+      <button type="submit" disabled={isSubmitting || isRateLimited} style={{ background: isSubmitting ? 'var(--border-default)' : 'var(--silver)', color: 'var(--bg)', fontFamily: 'var(--font-body)', fontSize: '14px', letterSpacing: '0.14em', textTransform: 'uppercase', padding: '14px 32px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', alignSelf: 'flex-start' }}>
         {isSubmitting ? 'Submitting...' : 'Submit Application →'}
       </button>
     </form>

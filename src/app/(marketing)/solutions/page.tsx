@@ -27,8 +27,8 @@ export const metadata = {
 }
 
 const STEPS = [
-  { num: '01', title: 'Join as a Builder', desc: 'Membership is the entry point. Builders are vetted before offering services.' },
-  { num: '02', title: 'Offer your expertise', desc: 'Services are listed and matched with members or external clients who need them.' },
+  { num: '01', title: 'Join the ecosystem', desc: 'Start by becoming a SAGIE ECO member. Builders earn their tier through consistent value creation.' },
+  { num: '02', title: 'Apply as a provider', desc: 'Once you reach Builder tier, apply to offer your services through SAGIE Solutions.' },
   { num: '03', title: 'Revenue funds the mission', desc: 'Every engagement through SAGIE Solutions supports the ecosystem. Builder members access services at a discounted rate.' },
 ]
 
@@ -137,12 +137,20 @@ export default function SolutionsPage() {
                 Builder members access all services at a discounted rate. Every engagement funds the ecosystem.
               </p>
             </div>
-            <a
-              href="/apply/solutions"
-              className="font-body text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 text-button tracking-button uppercase whitespace-nowrap"
-            >
-              Apply to Join →
-            </a>
+            <div className="flex flex-col items-end gap-3">
+              <a
+                href="/apply"
+                className="font-body text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 text-button tracking-button uppercase whitespace-nowrap"
+              >
+                Join the Ecosystem →
+              </a>
+              <a
+                href="/apply/solutions"
+                className="font-body text-foreground-dim hover:text-foreground-muted text-caption transition-colors duration-150 whitespace-nowrap"
+              >
+                Already a Builder? Apply as a Solutions Provider →
+              </a>
+            </div>
           </div>
         </ScrollReveal>
       </section>
@@ -163,10 +171,13 @@ export default function SolutionsPage() {
             <span className="block text-foreground-dim">READY TO OFFER</span>
             <span className="block text-foreground-secondary">YOUR EXPERTISE?</span>
           </h2>
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-10">
-            Become a Builder and bring your skills to the ecosystem.
+          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-8">
+            Join the ecosystem first, then offer your expertise as a Builder.
           </p>
-          <Button variant="primary" href="/apply/solutions">Apply to Join →</Button>
+          <div className="flex flex-col gap-4">
+            <Button variant="primary" href="/apply">Join SAGIE ECO →</Button>
+            <a href="/apply/solutions" className="font-body text-foreground-dim hover:text-foreground-muted transition-colors duration-150 text-caption">Already a Builder? Apply as a Solutions Provider →</a>
+          </div>
         </div>
       </section>
 

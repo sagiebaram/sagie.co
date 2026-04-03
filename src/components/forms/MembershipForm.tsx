@@ -4,8 +4,9 @@ import { useState, useRef, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { MembershipSchema } from '@/lib/schemas'
+import { MembershipSchema, COUNTRY_OPTIONS } from '@/lib/schemas'
 import { FormField } from '@/components/ui/FormField'
+import { PhoneField } from '@/components/ui/PhoneField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
 type FormData = z.input<typeof MembershipSchema>
@@ -112,67 +113,23 @@ export function MembershipForm() {
       <SectionHeader label="About You" />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField
-          label="Full Name"
-          name="fullName"
-          placeholder="Your full name"
-          required
-          autoComplete="name"
-          registration={register('fullName')}
-          error={errors.fullName?.message}
-        />
-        <FormField
-          label="Email"
-          name="email"
-          type="email"
-          placeholder="your@email.com"
-          required
-          autoComplete="email"
-          registration={register('email')}
-          error={errors.email?.message}
-        />
+        <FormField label="Full Name" name="fullName" placeholder="Your full name" required autoComplete="name" registration={register('fullName')} error={errors.fullName?.message} />
+        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required autoComplete="email" registration={register('email')} error={errors.email?.message} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField
-          label="I am a..."
-          name="role"
-          type="select"
-          options={['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']}
-          required
-          value={watch('role') || ''}
-          onValueChange={(v) => setValue('role', v, { shouldValidate: true })}
-          allowOther
-          error={errors.role?.message}
-        />
-        <FormField
-          label="Company / Organisation"
-          name="company"
-          placeholder="Where do you work?"
-          autoComplete="organization"
-          registration={register('company')}
-          error={errors.company?.message}
-        />
+        <FormField label="I am a..." name="role" type="select" options={['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']} required value={watch('role') || ''} onValueChange={(v) => setValue('role', v, { shouldValidate: true })} allowOther error={errors.role?.message} />
+        <FormField label="Company / Organisation" name="company" placeholder="Where do you work?" autoComplete="organization" registration={register('company')} error={errors.company?.message} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField
-          label="City"
-          name="location"
-          placeholder="Where are you based?"
-          required
-          registration={register('location')}
-          error={errors.location?.message}
-        />
-        <FormField
-          label="LinkedIn URL"
-          name="linkedIn"
-          type="url"
-          placeholder="linkedin.com/in/yourname"
-          autoComplete="url"
-          registration={register('linkedIn')}
-          error={errors.linkedIn?.message}
-        />
+        <FormField label="City" name="location" placeholder="Where are you based?" required registration={register('location')} error={errors.location?.message} />
+        <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} required value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" autoComplete="url" registration={register('linkedIn')} error={errors.linkedIn?.message} />
+        <PhoneField label="Phone" name="phone" control={control} error={errors.phone?.message} />
       </div>
 
       <SectionHeader label="Your Interests" />
@@ -182,90 +139,28 @@ export function MembershipForm() {
         control={control}
         defaultValue={[]}
         render={({ field }) => (
-          <FormField
-            label="What are you interested in? (select all that apply)"
-            name="category"
-            type="checkbox-group"
-            options={['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor']}
-            value={field.value ?? []}
-            onArrayChange={(v) => field.onChange(v)}
-            error={errors.category?.message}
-          />
+          <FormField label="What are you interested in? (select all that apply)" name="category" type="checkbox-group" options={['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor']} value={field.value ?? []} onArrayChange={(v) => field.onChange(v)} error={errors.category?.message} />
         )}
       />
 
-      <FormField
-        label="What are you building or working on?"
-        name="whatTheyNeed"
-        type="textarea"
-        placeholder="Tell us what you're focused on right now."
-        registration={register('whatTheyNeed')}
-        error={errors.whatTheyNeed?.message}
-      />
-
-      <FormField
-        label="What do you bring to the community?"
-        name="whatTheyOffer"
-        type="textarea"
-        placeholder="Skills, expertise, connections — what could you offer others?"
-        registration={register('whatTheyOffer')}
-        error={errors.whatTheyOffer?.message}
-      />
+      <FormField label="What are you building or working on?" name="whatTheyNeed" type="textarea" placeholder="Tell us what you're focused on right now." registration={register('whatTheyNeed')} error={errors.whatTheyNeed?.message} />
+      <FormField label="What do you bring to the community?" name="whatTheyOffer" type="textarea" placeholder="Skills, expertise, connections — what could you offer others?" registration={register('whatTheyOffer')} error={errors.whatTheyOffer?.message} />
 
       <SectionHeader label="Connection" />
 
-      <FormField
-        label="Why SAGIE?"
-        name="howTheyKnowSagie"
-        type="textarea"
-        placeholder="What does this community mean to you — or what are you hoping it will mean?"
-        registration={register('howTheyKnowSagie')}
-        error={errors.howTheyKnowSagie?.message}
-      />
+      <FormField label="Why SAGIE?" name="howTheyKnowSagie" type="textarea" placeholder="What does this community mean to you — or what are you hoping it will mean?" registration={register('howTheyKnowSagie')} error={errors.howTheyKnowSagie?.message} />
+      <FormField label="How did you hear about us?" name="referral" placeholder="Name, event, social..." registration={register('referral')} error={errors.referral?.message} />
 
-      <FormField
-        label="How did you hear about us?"
-        name="referral"
-        placeholder="Name, event, social..."
-        registration={register('referral')}
-        error={errors.referral?.message}
-      />
-
-      <input
-        type="text"
-        name="_trap"
-        autoComplete="off"
-        tabIndex={-1}
-        aria-hidden="true"
-        style={{ display: 'none' }}
-        onChange={e => { trapRef.current = e.target.value }}
-      />
+      <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
 
       {submitWarning && (
-        <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>
-          {submitWarning}
-        </span>
+        <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>
       )}
       {submitError && (
         <span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>{submitError}</span>
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting || isRateLimited}
-        style={{
-          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
-          color: 'var(--bg)',
-          fontFamily: 'var(--font-body)',
-          fontSize: '14px',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          padding: '14px 32px',
-          border: 'none',
-          cursor: isSubmitting ? 'not-allowed' : 'pointer',
-          alignSelf: 'flex-start',
-        }}
-      >
+      <button type="submit" disabled={isSubmitting || isRateLimited} style={{ background: isSubmitting ? 'var(--border-default)' : 'var(--silver)', color: 'var(--bg)', fontFamily: 'var(--font-body)', fontSize: '14px', letterSpacing: '0.14em', textTransform: 'uppercase', padding: '14px 32px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', alignSelf: 'flex-start' }}>
         {isSubmitting ? 'Submitting...' : 'Submit Application →'}
       </button>
     </form>

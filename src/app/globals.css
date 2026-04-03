@@ -22,27 +22,14 @@
   --color-border-default: var(--border-default);
   --color-border-strong: var(--border-strong);
 
-  /* ─── Pillar Accent Palette ─── */
-
-  /* GREEN (ECO) — Sage Green family */
+  /* ── Pillar accents — fixed in both modes ── */
   --color-eco: #7A9E7E;
   --color-eco-bright: #8BAF8E;
   --color-eco-dim: #1E3322;
   --color-eco-bg: #0F1A12;
   --color-eco-glow: #162B1A;
-
-  /* BLUE (Solutions) — Steel Blue family */
-  --color-solutions: #6B9EC0;
-  --color-solutions-bright: #7FAECA;
-  --color-solutions-dim: #162A3A;
-  --color-solutions-bg: #0D1926;
-  --color-solutions-glow: #132435;
-
-  /* GRAY (Ventures) — Refined neutral */
-  --color-ventures: #8A8A8A;
-  --color-ventures-bright: #A0A0A0;
-  --color-ventures-dim: #1F1F1F;
-  --color-ventures-bg: #141414;
+  --color-solutions: #1565C0;
+  --color-ventures: #757575;
 
   /* ── Button / feedback tokens ── */
   --color-button-primary-bg: var(--text-primary);
@@ -56,30 +43,7 @@
   --color-globe-blue: #0055ff;
   --color-globe-label: #ccffff;
 
-  /* ── Font sizes ──
-   *
-   * Canonical typography scale — use these tokens, not Tailwind defaults.
-   *
-   * DISPLAY (Bebas Neue / font-display):
-   *   --text-hero-cta   clamp(72px, 10vw, 110px)   Final CTA heading
-   *   --text-hero        clamp(60px, 8vw, 90px)     Main hero heading
-   *   --text-stat        96px                        Stat counters
-   *   --text-chapter     52px                        Chapter headings
-   *   --text-tier        40px                        Tier names
-   *   --text-pillar      36px                        Pillar words (ECO, SOLUTIONS, VENTURES)
-   *   --text-founder     32px                        Founder section, blog post titles
-   *   --text-persona     28px                        Persona card names
-   *
-   * BODY (DM Sans / font-body):
-   *   --text-manifesto   24px                        Belief/manifesto text
-   *   --text-quote       22px                        Quotes, blog post headings
-   *   --text-subhead     18px                        Subheadings, FAQ questions
-   *   --text-body-lg     17px                        Large body text
-   *   --text-body        16px                        Default body text
-   *   --text-button      15px                        Button labels
-   *   --text-caption     14px                        Captions, metadata
-   *   --text-label       13px                        Labels, eyebrows, tags
-   */
+  /* ── Font sizes ── */
   --text-label: 13px;
   --text-caption: 14px;
   --text-button: 15px;
@@ -268,7 +232,7 @@ select:-webkit-autofill {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* ─── Phone Input (react-phone-number-input) dark theme ─── */
+/* Phone Input (react-phone-number-input) dark theme */
 .phone-input-dark {
   display: flex !important;
   gap: 0 !important;

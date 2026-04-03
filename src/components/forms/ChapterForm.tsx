@@ -5,8 +5,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
+import { PhoneField } from '@/components/ui/PhoneField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
-import { ChapterSchema } from '@/lib/schemas'
+import { ChapterSchema, COUNTRY_OPTIONS } from '@/lib/schemas'
 
 type FormData = z.infer<typeof ChapterSchema>
 
@@ -21,6 +22,9 @@ export function ChapterForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(ChapterSchema),
@@ -89,7 +93,11 @@ export function ChapterForm() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Which city do you want to lead?" name="city" placeholder="City name" required registration={register('city')} error={errors.city?.message} />
+        <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} required value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Community size (approx.)" name="communitySize" placeholder="e.g. 200 people in my network" registration={register('communitySize')} error={errors.communitySize?.message} />
+        <PhoneField label="Phone" name="phone" control={control} error={errors.phone?.message} />
       </div>
       <FormField label="Why is this city ready for a SAGIE chapter?" name="whyLead" type="textarea" placeholder="Tell us why this city is ready." required registration={register('whyLead')} error={errors.whyLead?.message} />
       <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." registration={register('background')} error={errors.background?.message} />
@@ -97,32 +105,9 @@ export function ChapterForm() {
       <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.toString()} />
-      {submitWarning && (
-        <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>
-          {submitWarning}
-        </span>
-      )}
-      {submitError && (
-        <span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>
-          {submitError}
-        </span>
-      )}
-      <button
-        type="submit"
-        disabled={isSubmitting || isRateLimited}
-        style={{
-          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
-          color: 'var(--bg)',
-          fontFamily: 'var(--font-body)',
-          fontSize: '14px',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          padding: '14px 32px',
-          border: 'none',
-          cursor: isSubmitting ? 'not-allowed' : 'pointer',
-          alignSelf: 'flex-start',
-        }}
-      >
+      {submitWarning && (<span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>)}
+      {submitError && (<span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>{submitError}</span>)}
+      <button type="submit" disabled={isSubmitting || isRateLimited} style={{ background: isSubmitting ? 'var(--border-default)' : 'var(--silver)', color: 'var(--bg)', fontFamily: 'var(--font-body)', fontSize: '14px', letterSpacing: '0.14em', textTransform: 'uppercase', padding: '14px 32px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', alignSelf: 'flex-start' }}>
         {isSubmitting ? 'Submitting...' : 'Submit Application →'}
       </button>
     </form>

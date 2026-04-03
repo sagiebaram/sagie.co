@@ -35,6 +35,7 @@ const VALID_MEMBERSHIP_BODY = {
   email: 'test@example.com',
   role: 'Founder',
   location: 'Tel Aviv',
+  country: 'Israel',
 }
 
 // ---------------------------------------------------------------------------
