@@ -79,6 +79,10 @@ export const ContactSchema = z.object({
   message: z.string().min(10, 'Tell us a bit more').max(2000).trim(),
 });
 
+export const SubscribeSchema = z.object({
+  email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+});
+
 export const SubmitPostSchema = z.object({
   postTitle: z.string().min(1, 'Give your post a title').max(200).trim(),
   category: z.string().min(1, 'Please select a category').max(100).trim(),
