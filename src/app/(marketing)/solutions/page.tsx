@@ -13,6 +13,17 @@ import { getSolutionProviders, type SolutionProvider } from '@/lib/solutions'
 
 export const revalidate = 3600
 
+export const metadata = {
+  title: 'Solutions',
+  description:
+    'Expert services from vetted SAGIE community members. Revenue funds the ecosystem mission.',
+  openGraph: {
+    title: 'Solutions | SAGIE',
+    description:
+      'Expert services from vetted SAGIE community members. Revenue funds the ecosystem mission.',
+  },
+}
+
 const STEPS = [
   { num: '01', title: 'Join as a Builder', desc: 'Membership is the entry point. Builders are vetted before offering services.' },
   { num: '02', title: 'Offer your expertise', desc: 'Services are listed and matched with members or external clients who need them.' },

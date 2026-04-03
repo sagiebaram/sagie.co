@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { notion } from './notion'
 import { env } from '@/env/server'
 import { NotionToMarkdown } from 'notion-to-md'
+import { getTitleProperty, getTextProperty, getSelectProperty, getUrlProperty, getCheckboxProperty, getDateProperty, getNumberProperty } from './notion-utils'
 
 const n2m = new NotionToMarkdown({ notionClient: notion })
 
@@ -26,21 +27,22 @@ export const getAllPosts = unstable_cache(
       filter: { property: 'Status', select: { equals: 'Published' } },
       sorts: [{ property: 'Publish Date', direction: 'descending' }],
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     return response.results.map((page: any) => {
       const p = page.properties
+      const id = page.id
       return {
-        id: page.id,
-        title: p['Title']?.title?.[0]?.plain_text ?? 'Untitled',
-        slug: p['Slug']?.rich_text?.[0]?.plain_text ?? page.id,
-        category: p['Category']?.select?.name ?? 'Ecosystem',
-        excerpt: p['Excerpt']?.rich_text?.[0]?.plain_text ?? '',
-        author: p['Author']?.rich_text?.[0]?.plain_text ?? 'Sagie Baram',
-        authorType: p['Author Type']?.select?.name ?? 'Sagie',
-        coverImage: p['Cover Image']?.url ?? null,
-        featured: p['Featured']?.checkbox ?? false,
-        publishDate: p['Publish Date']?.date?.start ?? null,
-        readTime: p['Read Time']?.number ?? 3,
+        id,
+        title: getTitleProperty(p, 'Title', id, 'Untitled'),
+        slug: getTextProperty(p, 'Slug', id, page.id),
+        category: getSelectProperty(p, 'Category', id, 'Ecosystem') as BlogPost['category'],
+        excerpt: getTextProperty(p, 'Excerpt', id, ''),
+        author: getTextProperty(p, 'Author', id, 'Sagie Baram'),
+        authorType: getSelectProperty(p, 'Author Type', id, 'Sagie') as BlogPost['authorType'],
+        coverImage: getUrlProperty(p, 'Cover Image', id),
+        featured: getCheckboxProperty(p, 'Featured', id),
+        publishDate: getDateProperty(p, 'Publish Date', id),
+        readTime: getNumberProperty(p, 'Read Time', id, 3) ?? 3,
       }
     })
   },

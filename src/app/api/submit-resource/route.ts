@@ -5,14 +5,16 @@ import { env } from '@/env/server'
 import { withValidation } from '@/lib/validation'
 import { notionWrite } from '@/lib/notion-monitor'
 import { sendEmails } from '@/lib/email'
+import { sanitizeRecord } from '@/lib/sanitize'
 
 const ResourceSchema = z.object({
   name: z.string().min(1).max(200).trim(),
   url: z.string().url(),
 })
 
-export const POST = withValidation(ResourceSchema, async (_req: Request, body) => {
+export const POST = withValidation(ResourceSchema, async (_req: Request, rawBody) => {
   try {
+    const body = sanitizeRecord(rawBody)
     await notionWrite(() => notion.pages.create({
       parent: { database_id: env.NOTION_RESOURCES_DB_ID },
       properties: {

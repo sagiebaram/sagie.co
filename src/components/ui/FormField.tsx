@@ -300,7 +300,7 @@ export function FormField({
       )}
 
       {error && (
-        <span id={`${name}-error`} role="alert" style={{ fontSize: '10px', color: '#c0392b' }}>{error}</span>
+        <span style={{ fontSize: '10px', color: 'var(--color-error)' }}>{error}</span>
       )}
     </div>
   )

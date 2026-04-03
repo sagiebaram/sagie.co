@@ -5,9 +5,11 @@ import { withValidation } from '@/lib/validation'
 import { VenturesSchema } from '@/lib/schemas'
 import { notionWrite } from '@/lib/notion-monitor'
 import { sendEmails } from '@/lib/email'
+import { sanitizeRecord } from '@/lib/sanitize'
 
-export const POST = withValidation(VenturesSchema, async (_req: Request, body) => {
+export const POST = withValidation(VenturesSchema, async (_req: Request, rawBody) => {
   try {
+    const body = sanitizeRecord(rawBody)
     await notionWrite(() => notion.pages.create({
       parent: { database_id: env.NOTION_VENTURES_INTAKE_DB_ID },
       properties: {

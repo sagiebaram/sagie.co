@@ -7,8 +7,14 @@ import { getResources, type Resource } from '@/lib/resources'
 export const revalidate = 3600
 
 export const metadata = {
-  title: 'Resources — SAGIE',
-  description: 'Curated tools and resources for the startup ecosystem. Accelerators, incubators, providers and more.',
+  title: 'Resources',
+  description:
+    'Curated tools and resources for the startup ecosystem. Accelerators, incubators, providers and more.',
+  openGraph: {
+    title: 'Resources | SAGIE',
+    description:
+      'Curated tools and resources for the startup ecosystem. Accelerators, incubators, providers and more.',
+  },
 }
 
 export default async function ResourcesPage() {

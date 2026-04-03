@@ -14,6 +14,7 @@ const EnvSchema = z.object({
   ALLOWED_ORIGINS: z.string().min(1),
   REVALIDATE_SECRET: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
+  ADMIN_EMAIL: z.string().email().optional().default('hello@sagie.co'),
   NODE_ENV: z.enum(['development', 'test', 'production']),
 });
 

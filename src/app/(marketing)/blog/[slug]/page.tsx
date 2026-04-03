@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Navbar } from '@/components/layout/Navbar'
@@ -8,9 +9,47 @@ import { BlogPostHeaderAnimation } from '@/components/ui/BlogPostHeaderAnimation
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { BlogContent } from '@/components/mdx/BlogContent'
 import { getAllPosts, getPostBySlug } from '@/lib/blog'
+import { SITE } from '@/constants/copy'
 import { ShareButton } from './ShareButton'
 
 export const revalidate = 3600
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
+
+  if (!post) {
+    return { title: 'Post Not Found' }
+  }
+
+  const description = post.excerpt || post.title
+
+  return {
+    title: post.title,
+    description,
+    openGraph: {
+      title: post.title,
+      description,
+      type: 'article',
+      url: `${SITE.url}/blog/${post.slug}`,
+      ...(post.publishDate && { publishedTime: post.publishDate }),
+      authors: [post.author],
+      ...(post.coverImage && {
+        images: [{ url: post.coverImage, alt: post.title }],
+      }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      ...(post.coverImage && { images: [post.coverImage] }),
+    },
+  }
+}
 
 function formatDate(dateStr: string) {
   return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
