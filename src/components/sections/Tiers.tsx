@@ -1,8 +1,6 @@
-'use client'
-
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { useScrollReveal } from '@/hooks/useScrollReveal'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { TIERS } from '@/constants/tiers'
 import { TIERS_EYEBROW } from '@/constants/copy'
 
@@ -34,18 +32,11 @@ const TIER_STYLES: Record<string, { bg: string; hover: string; tag: string; name
 }
 
 export function Tiers() {
-  const ref = useScrollReveal({
-    selector: '.tier-card',
-    stagger: 0.12,
-    y: 24,
-    duration: 0.6,
-  })
-
   return (
     <Section>
       <Eyebrow>{TIERS_EYEBROW}</Eyebrow>
 
-      <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-px mt-8">
+      <ScrollReveal selector=".tier-card" stagger={0.12} y={24} duration={0.6} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px mt-8">
         {TIERS.map((tier) => {
           const styles = TIER_STYLES[tier.name] ?? TIER_STYLES.Explorer!
           return (
@@ -60,12 +51,12 @@ export function Tiers() {
                 >
                   {tier.tag}
                 </p>
-                <p
+                <h3
                   className="font-display uppercase text-tier tracking-heading"
                   style={{ color: styles.name }}
                 >
                   {tier.name}
-                </p>
+                </h3>
               </div>
 
               <p
@@ -100,7 +91,7 @@ export function Tiers() {
             </div>
           )
         })}
-      </div>
+      </ScrollReveal>
     </Section>
   )
 }
