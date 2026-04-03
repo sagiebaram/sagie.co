@@ -77,7 +77,7 @@ function ButtonContent({ status, label }: { status: ButtonStatus; label: string 
 const outlineClasses =
   'border border-silver text-silver hover:bg-silver hover:text-background text-button tracking-button px-[34px] py-4 font-body uppercase transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed'
 const primaryClasses =
-  'bg-white [color:black] hover:opacity-85 text-button tracking-button px-[34px] py-4 font-body uppercase transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed inline-block'
+  'bg-button-primary-bg [color:var(--color-button-primary-text)] hover:opacity-85 text-button tracking-button px-[34px] py-4 font-body uppercase transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed inline-block'
 
 export default function RevalidatePage() {
   const [secret, setSecret] = useState('')
