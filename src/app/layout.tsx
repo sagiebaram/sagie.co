@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { GSAPCleanup } from '@/components/ui/GSAPCleanup'
+import { CookieConsent } from '@/components/ui/CookieConsent'
 import { METADATA, SITE } from '@/constants/copy'
 import './globals.css'
 
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <GSAPCleanup />
         <NuqsAdapter>{children}</NuqsAdapter>
+        <CookieConsent />
       </body>
     </html>
   )

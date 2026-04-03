@@ -84,9 +84,19 @@ export function Footer() {
 
         <div className="flex flex-col sm:flex-row items-start sm:items-end sm:justify-between py-8 gap-4">
           <Logo width={160} height={45} className="-ml-6 -mb-2" />
-          <p className="font-body text-white text-caption tracking-copyright mb-0">
-            {FOOTER.copyright}
-          </p>
+          <div className="flex flex-col items-start sm:items-end gap-2">
+            <div className="flex gap-4">
+              <a href="/privacy" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
+                Privacy Policy
+              </a>
+              <a href="/terms" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
+                Terms of Service
+              </a>
+            </div>
+            <p className="font-body text-white text-caption tracking-copyright mb-0">
+              {FOOTER.copyright}
+            </p>
+          </div>
         </div>
       </div>
     </footer>
