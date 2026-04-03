@@ -103,6 +103,46 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     cancelledRef.current = false
     return () => {
       cancelledRef.current = true
+
+      // Dispose Three.js resources to prevent memory leaks
+      const globe = globeRef.current
+      if (!globe) return
+
+      const renderer = globe.renderer?.()
+      const scene = globe.scene?.()
+      const controls = globe.controls?.()
+
+      if (controls) {
+        controls.autoRotate = false
+        controls.dispose?.()
+      }
+
+      if (scene) {
+        scene.traverse((object: any) => {
+          if (object.geometry) {
+            object.geometry.dispose()
+          }
+          if (object.material) {
+            const materials = Array.isArray(object.material)
+              ? object.material
+              : [object.material]
+            for (const material of materials) {
+              for (const key of Object.keys(material)) {
+                const value = material[key]
+                if (value && typeof value === 'object' && typeof value.dispose === 'function') {
+                  value.dispose()
+                }
+              }
+              material.dispose()
+            }
+          }
+        })
+      }
+
+      if (renderer) {
+        renderer.dispose()
+        renderer.forceContextLoss?.()
+      }
     }
   }, [])
 

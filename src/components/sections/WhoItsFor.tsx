@@ -5,7 +5,7 @@ import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { PillarIcon } from '@/components/ui/PillarIcon'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
-import { gsap } from '@/lib/gsap'
+import { getGSAP } from '@/lib/gsap'
 import { PERSONAS } from '@/constants/personas'
 
 export function WhoItsFor() {
@@ -20,7 +20,7 @@ export function WhoItsFor() {
     duration: 0.6,
   })
 
-  const toggleCard = useCallback((i: number) => {
+  const toggleCard = useCallback(async (i: number) => {
     const isActive = activeCards.has(i)
     const card = cardRefs.current[i]
     if (!card) return
@@ -28,6 +28,8 @@ export function WhoItsFor() {
     const front = card.querySelector<HTMLElement>('.face-front')
     const back = card.querySelector<HTMLElement>('.face-back')
     if (!front || !back) return
+
+    const { gsap } = await getGSAP()
 
     // Kill any running animation on this card
     if (tlRefs.current[i]) tlRefs.current[i]!.kill()

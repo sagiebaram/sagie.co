@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
@@ -5,6 +6,7 @@ import { GridBackground } from '@/components/ui/GridBackground'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { SolutionsFilter } from '@/components/ui/SolutionsFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
@@ -30,7 +32,22 @@ const STEPS = [
   { num: '03', title: 'Revenue funds the mission', desc: 'Every engagement through SAGIE Solutions supports the ecosystem. Builder members access services at a discounted rate.' },
 ]
 
-export default async function SolutionsPage() {
+function ProvidersSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="p-7 border border-border-default">
+          <Skeleton className="h-5 w-32 mb-4" />
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-3/4 mb-4" />
+          <Skeleton className="h-3 w-20" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+async function ProvidersContent() {
   let providers: SolutionProvider[] = []
 
   try {
@@ -39,6 +56,10 @@ export default async function SolutionsPage() {
     console.error('Failed to fetch solution providers:', e)
   }
 
+  return <SolutionsFilter providers={providers} />
+}
+
+export default function SolutionsPage() {
   return (
     <main id="main-content" className="relative">
       <CircuitBackground />
@@ -129,7 +150,9 @@ export default async function SolutionsPage() {
       {/* Community Providers */}
       <Section>
         <Eyebrow>Community Providers</Eyebrow>
-        <SolutionsFilter providers={providers} />
+        <Suspense fallback={<ProvidersSkeleton />}>
+          <ProvidersContent />
+        </Suspense>
       </Section>
 
       {/* CTA */}

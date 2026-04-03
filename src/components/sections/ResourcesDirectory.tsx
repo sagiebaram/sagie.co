@@ -1,8 +1,8 @@
 'use client'
 
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { gsap } from '@/lib/gsap'
+import { getGSAP } from '@/lib/gsap'
 import { useQueryState, parseAsString } from 'nuqs'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -48,30 +48,38 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
   const gridRef = useScrollReveal({ selector: '.res-card', stagger: 0.05, y: 16, duration: 0.45, filterKey: activeCategory })
   const submitRef = useScrollReveal({ y: 16, duration: 0.5 })
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!featuredRef.current) return
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) return
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        featuredRef.current,
-        { opacity: 0, y: 24 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: featuredRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
-    }, featuredRef)
+    let ctx: any
 
-    return () => ctx.revert()
+    const init = async () => {
+      const { gsap } = await getGSAP()
+
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          featuredRef.current,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: featuredRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          }
+        )
+      }, featuredRef)
+    }
+
+    init()
+
+    return () => { ctx?.revert() }
   }, [])
 
   return (
