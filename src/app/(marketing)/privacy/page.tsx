@@ -106,7 +106,7 @@ export default function PrivacyPage() {
               <li>We don&apos;t sell your data. Ever.</li>
               <li>We don&apos;t share your information with advertisers.</li>
               <li>We don&apos;t use your data to build profiles for third-party targeting.</li>
-              <li>We don&apos;t have cookies for tracking yet. When we add analytics, this policy will be updated with a dedicated cookie section.</li>
+              <li>We only use essential cookies required for the site to function. We do not use tracking cookies. Our analytics (Vercel Analytics) are cookie-free and privacy-friendly.</li>
             </ul>
           </LegalSection>
 
