@@ -180,7 +180,7 @@ function FounderContent() {
           <p key={i}>{para}</p>
         ))}
       </div>
-      <div className="founder-link" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+      <div className="founder-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto', paddingTop: '20px' }}>
         <a
           href={SITE.founderUrl}
           target="_blank"
@@ -193,15 +193,14 @@ function FounderContent() {
             color: 'var(--silver)',
             borderBottom: '0.5px solid var(--text-muted)',
             paddingBottom: '2px',
-            display: 'inline-block',
             textDecoration: 'none',
-            width: 'fit-content',
           }}
         >
           {FOUNDER.link}
         </a>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>|</span>
         <a
-          href="https://www.linkedin.com/in/sagiebaram/"
+          href="https://www.linkedin.com/in/sagie-baram"
           target="_blank"
           rel="noopener noreferrer"
           className="hover:-translate-y-px transition-transform duration-150"
@@ -212,12 +211,10 @@ function FounderContent() {
             color: 'var(--silver)',
             borderBottom: '0.5px solid var(--text-muted)',
             paddingBottom: '2px',
-            display: 'inline-block',
             textDecoration: 'none',
-            width: 'fit-content',
           }}
         >
-          LinkedIn →
+          LinkedIn
         </a>
       </div>
     </>
