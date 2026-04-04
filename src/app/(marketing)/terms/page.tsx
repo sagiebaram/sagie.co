@@ -7,7 +7,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — SAGIE',
+  title: 'Terms of Service',
   description: 'Terms governing your use of sagie.co and participation in the SAGIE ecosystem.',
 }
 

@@ -61,7 +61,7 @@ const TIERS = [
 ] as const
 
 const CHAPTERS = [
-  { city: 'Miami', status: 'Active', detail: 'Founded 2024' },
+  { city: 'Miami', status: 'Active', detail: 'Founded 2025' },
   { city: 'Tel Aviv', status: 'Coming Soon', detail: null },
   { city: 'Texas', status: 'Coming Soon', detail: null },
   { city: 'Singapore', status: 'Coming Soon', detail: null },

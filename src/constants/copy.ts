@@ -15,7 +15,7 @@ export const METADATA = {
   ogDescription: 'A curated ecosystem for operators, founders & builders.',
 } as const
 
-export const NAV_LINKS = ['ECO', 'Solutions', 'Events', 'Resources', 'Blog'] as const
+export const NAV_LINKS = ['Solutions', 'ECO', 'Ventures', 'Events', 'Blog', 'Resources'] as const
 
 export const HERO = {
   headingLines: [
@@ -56,7 +56,7 @@ export const SOCIAL_STATS: readonly SocialStat[] = [
 export const CHAPTERS: readonly Chapter[] = [
   {
     city: 'Miami',
-    detail: 'Founded 2024 \u00B7 Active Chapter',
+    detail: 'Founded 2025 \u00B7 Active Chapter',
     status: 'live',
     badge: 'Live',
     action: { label: 'View Chapter \u2192', href: '#' },
@@ -142,8 +142,8 @@ export const FOOTER = {
   navigate: {
     label: 'Navigate',
     links: [
-      { label: 'SAGIE ECO', url: '/eco' },
       { label: 'SAGIE Solutions', url: '/solutions' },
+      { label: 'SAGIE ECO', url: '/eco' },
       { label: 'SAGIE Ventures', url: '/ventures' },
     ],
     founderLink: 'Work with Sagie \u2192',

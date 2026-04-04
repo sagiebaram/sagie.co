@@ -1,8 +1,13 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
+
+export const metadata: Metadata = {
+  title: 'Apply — Ventures',
+}
 
 export default function ApplyVenturesForkPage() {
   return (
