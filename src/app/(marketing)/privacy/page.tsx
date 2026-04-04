@@ -47,11 +47,10 @@ export default function PrivacyPage() {
             <ul className="list-disc pl-6 space-y-2 mt-4">
               <li>Full name</li>
               <li>Email address</li>
-              <li>City</li>
-              <li>Role or title</li>
               <li>Phone number</li>
-              <li>Country</li>
+              <li>Country, State, City</li>
               <li>LinkedIn URL</li>
+              <li>Role or title</li>
               <li>Company or organization</li>
               <li>Any free-text you write in open fields</li>
             </ul>
@@ -165,7 +164,7 @@ export default function PrivacyPage() {
 
 function LegalSection({ title, id, children }: { title: string; id?: string; children: React.ReactNode }) {
   return (
-    <div id={id}>
+    <div id={id} className={id ? 'scroll-mt-24' : undefined}>
       <h2 className="font-display uppercase text-chapter tracking-heading text-foreground mb-4">
         {title}
       </h2>

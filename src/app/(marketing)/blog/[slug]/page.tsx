@@ -26,7 +26,7 @@ export async function generateMetadata({
     return { title: 'Post Not Found' }
   }
 
-  const description = post.excerpt || post.title
+  const description = post.excerpt || 'SAGIE runs on trust — not access. Here\u2019s what that means for how deal flow, collaboration, and community actually work.'
 
   return {
     title: post.title,

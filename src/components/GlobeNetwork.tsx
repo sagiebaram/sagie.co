@@ -241,6 +241,8 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     <div
       ref={containerRef}
       className="relative w-full overflow-visible flex justify-center items-center min-h-[500px] bg-transparent"
+      role="img"
+      aria-label="Interactive globe showing SAGIE community locations worldwide"
     >
       <div
         className="relative z-0"
@@ -363,6 +365,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           </div>
           <button
             onClick={() => handleSelect(null)}
+            aria-label="Close city details"
             className="absolute top-2 right-3 text-label cursor-pointer"
             style={{ color: 'var(--text-muted)' }}
           >

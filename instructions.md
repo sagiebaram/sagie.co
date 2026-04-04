@@ -400,6 +400,7 @@ Form UX:
   [MEDIUM] Role field is single-select, should be multi-select
   [LOW] Referral source is free text, should be dropdown
   [MEDIUM] Error messages are generic ("Required") not contextual
+  [MEDIUM] Resource submission form needs rework — current inline form is minimal; redesign in future sprint
 
 Security:
   [LOW] Honeypot timing too strict
