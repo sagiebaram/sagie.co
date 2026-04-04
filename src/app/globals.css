@@ -139,8 +139,11 @@
   .post-back, .post-meta, .post-title, .post-author,
   .event-item, .step, .cat-card, .dir-card, .res-card,
   .post-card, .related-card, .type-divider,
-  .founder-photo, .founder-name, .founder-title, .founder-body, .founder-link {
+  .founder-photo, .founder-name, .founder-title, .founder-body, .founder-link,
+  .belief-line, .pillar-row, .persona-card, .tier-card {
     opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
@@ -213,7 +216,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .broken-node { animation: none; opacity: 0.5; }
+  .broken-node { animation: none !important; opacity: 0.5; }
+  .skeleton { animation: none !important; }
 }
 
 /* Override browser autofill background on dark theme */

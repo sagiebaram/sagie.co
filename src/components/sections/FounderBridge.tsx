@@ -1,57 +1,80 @@
 'use client'
 
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { FOUNDER, SITE } from '@/constants/copy'
-import { gsap } from '@/lib/gsap'
 
 export function FounderBridge() {
   const sectionRef = useRef<HTMLDivElement>(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) return
+    if (prefersReduced) {
+      el.querySelectorAll('.founder-photo, .founder-name, .founder-title, .founder-body, .founder-link').forEach((node) => {
+        ;(node as HTMLElement).style.opacity = '1'
+        ;(node as HTMLElement).style.transform = 'none'
+      })
+      return
+    }
 
-    const ctx = gsap.context(() => {
-      // Photo slides in from left
-      gsap.fromTo(
-        '.founder-photo',
-        { opacity: 0, x: -40 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.7,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
+    // Set initial states
+    el.querySelectorAll<HTMLElement>('.founder-photo').forEach((node) => {
+      node.style.opacity = '0'
+      node.style.transform = 'translateX(-40px)'
+      node.style.willChange = 'opacity, transform'
+    })
 
-      // Text elements stagger in
-      gsap.fromTo(
-        ['.founder-name', '.founder-title', '.founder-body', '.founder-link'],
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
-    }, sectionRef)
+    const textEls = Array.from(
+      el.querySelectorAll<HTMLElement>('.founder-name, .founder-title, .founder-body, .founder-link')
+    )
+    textEls.forEach((node) => {
+      node.style.opacity = '0'
+      node.style.transform = 'translateY(20px)'
+      node.style.willChange = 'opacity, transform'
+    })
 
-    return () => ctx.revert()
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+
+          // Animate photo from left
+          el.querySelectorAll<HTMLElement>('.founder-photo').forEach((node) => {
+            node.style.transition = 'opacity 0.7s cubic-bezier(0.33, 1, 0.68, 1), transform 0.7s cubic-bezier(0.33, 1, 0.68, 1)'
+            node.style.opacity = '1'
+            node.style.transform = 'translateX(0)'
+          })
+
+          // Stagger text elements
+          textEls.forEach((node, i) => {
+            const delay = 0.1 + i * 0.1
+            node.style.transition = `opacity 0.5s cubic-bezier(0.33, 1, 0.68, 1) ${delay}s, transform 0.5s cubic-bezier(0.33, 1, 0.68, 1) ${delay}s`
+            node.style.opacity = '1'
+            node.style.transform = 'translateY(0)'
+          })
+
+          // Clean up will-change
+          const maxDelay = 0.1 + textEls.length * 0.1 + 0.7
+          setTimeout(() => {
+            el.querySelectorAll<HTMLElement>('.founder-photo, .founder-name, .founder-title, .founder-body, .founder-link').forEach((node) => {
+              node.style.willChange = ''
+            })
+          }, maxDelay * 1000)
+
+          observer.unobserve(entry.target)
+        })
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0 }
+    )
+
+    observer.observe(el)
+
+    return () => observer.disconnect()
   }, [])
 
   return (
@@ -180,26 +203,43 @@ function FounderContent() {
           <p key={i}>{para}</p>
         ))}
       </div>
-      <a
-        href={SITE.founderUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="founder-link hover:-translate-y-px transition-transform duration-150"
-        style={{
-          fontSize: '11px',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: 'var(--silver)',
-          borderBottom: '0.5px solid var(--text-muted)',
-          paddingBottom: '2px',
-          display: 'inline-block',
-          marginTop: '20px',
-          textDecoration: 'none',
-          width: 'fit-content',
-        }}
-      >
-        {FOUNDER.link}
-      </a>
+      <div className="founder-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto', paddingTop: '20px' }}>
+        <a
+          href={SITE.founderUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:-translate-y-px transition-transform duration-150"
+          style={{
+            fontSize: '11px',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--silver)',
+            borderBottom: '0.5px solid var(--text-muted)',
+            paddingBottom: '2px',
+            textDecoration: 'none',
+          }}
+        >
+          {FOUNDER.link}
+        </a>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>|</span>
+        <a
+          href="https://www.linkedin.com/in/sagie-baram"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:-translate-y-px transition-transform duration-150"
+          style={{
+            fontSize: '11px',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--silver)',
+            borderBottom: '0.5px solid var(--text-muted)',
+            paddingBottom: '2px',
+            textDecoration: 'none',
+          }}
+        >
+          LinkedIn
+        </a>
+      </div>
     </>
   )
 }

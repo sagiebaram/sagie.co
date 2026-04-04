@@ -1,9 +1,8 @@
 'use client'
 
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Section } from '@/components/ui/Section'
 import { Button } from '@/components/ui/Button'
-import { gsap } from '@/lib/gsap'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { FINAL_CTA } from '@/constants/copy'
 
@@ -11,29 +10,42 @@ export function FinalCTA() {
   const sectionRef = useScrollReveal({ y: 24, duration: 0.6 })
   const taglineRef = useRef<HTMLParagraphElement>(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    const el = taglineRef.current
+    if (!el) return
+
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) return
+    if (prefersReduced) {
+      el.querySelectorAll<HTMLElement>('.tagline-letter-hi').forEach((node) => {
+        node.style.opacity = '1'
+      })
+      return
+    }
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.tagline-letter-hi',
-        { opacity: 0.1 },
-        {
-          opacity: 1,
-          duration: 0.3,
-          stagger: 0.08,
-          ease: 'power1.out',
-          scrollTrigger: {
-            trigger: taglineRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
-    }, taglineRef)
+    // Set initial dim state
+    const letters = Array.from(el.querySelectorAll<HTMLElement>('.tagline-letter-hi'))
+    letters.forEach((node) => { node.style.opacity = '0.1' })
 
-    return () => ctx.revert()
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+
+          letters.forEach((node, i) => {
+            const delay = i * 0.08
+            node.style.transition = `opacity 0.3s ease-out ${delay}s`
+            node.style.opacity = '1'
+          })
+
+          observer.unobserve(entry.target)
+        })
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0 }
+    )
+
+    observer.observe(el)
+
+    return () => observer.disconnect()
   }, [])
 
   return (
