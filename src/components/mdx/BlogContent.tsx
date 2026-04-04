@@ -18,7 +18,7 @@ export function BlogContent({ markdown }: BlogContentProps) {
           <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--text-secondary)', letterSpacing: '0.04em', marginBottom: '10px' }}>{children}</h3>
         ),
         p: ({ children }) => (
-          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.85', fontWeight: 300, marginBottom: '14px' }}>{children}</p>
+          <p style={{ fontSize: '16px', color: 'var(--silver)', lineHeight: '1.85', fontWeight: 300, marginBottom: '14px' }}>{children}</p>
         ),
         blockquote: ({ children }) => (
           <blockquote style={{ borderLeft: '2px solid var(--silver)', paddingLeft: '16px', fontStyle: 'italic', color: 'var(--text-muted)', margin: '20px 0' }}>{children}</blockquote>

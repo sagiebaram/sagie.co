@@ -8,7 +8,13 @@ export function HeroAnimation({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) return
+    if (prefersReduced) {
+      if (ref.current) ref.current.removeAttribute('aria-hidden')
+      return
+    }
+
+    // Hide from assistive tech while animating (content is opacity:0)
+    if (ref.current) ref.current.setAttribute('aria-hidden', 'true')
 
     let ctx: any
 
@@ -16,7 +22,12 @@ export function HeroAnimation({ children }: { children: React.ReactNode }) {
       const { gsap } = await getGSAP()
 
       ctx = gsap.context(() => {
-        const tl = gsap.timeline({ delay: 0.2 })
+        const tl = gsap.timeline({
+          delay: 0.2,
+          onComplete: () => {
+            ref.current?.removeAttribute('aria-hidden')
+          },
+        })
 
         tl.fromTo(
           '.hero-line',
