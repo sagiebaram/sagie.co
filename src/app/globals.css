@@ -23,7 +23,11 @@
   --color-border-strong: var(--border-strong);
 
   /* ── Pillar accents — fixed in both modes ── */
-  --color-eco: #2E7D32;
+  --color-eco: #7A9E7E;
+  --color-eco-bright: #8BAF8E;
+  --color-eco-dim: #1E3322;
+  --color-eco-bg: #0F1A12;
+  --color-eco-glow: #162B1A;
   --color-solutions: #1565C0;
   --color-ventures: #757575;
 

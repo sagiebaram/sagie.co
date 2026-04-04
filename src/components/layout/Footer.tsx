@@ -2,6 +2,10 @@ import { Logo } from '@/components/ui/Logo'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { FOOTER, SITE } from '@/constants/copy'
 
+const NAVIGATE_ROUTES: Record<string, string> = {
+  'SAGIE ECO': '/eco',
+}
+
 export function Footer() {
   return (
     <footer className="relative z-1 overflow-hidden border-t border-border-strong">
@@ -16,7 +20,7 @@ export function Footer() {
             <ul className="space-y-4">
               {FOOTER.navigate.links.map((item) => (
                 <li key={item}>
-                  <a href="#" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                  <a href={NAVIGATE_ROUTES[item] ?? '#'} className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                     {item}
                   </a>
                 </li>
