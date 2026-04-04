@@ -7,7 +7,8 @@ import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
-import { SolutionsSchema, COUNTRY_OPTIONS } from '@/lib/schemas'
+import { SolutionsSchema } from '@/lib/schemas'
+import { LocationFields } from '@/components/ui/LocationFields'
 
 type FormData = z.infer<typeof SolutionsSchema>
 
@@ -74,12 +75,18 @@ export function SolutionsForm() {
         <FormField label="Your Name" name="providerName" placeholder="Your full name" required registration={register('providerName')} error={errors.providerName?.message} />
         <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
       </div>
+      <LocationFields
+        country={watch('country') || ''}
+        city={watch('city') || ''}
+        onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
+        onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
+        countryError={errors.country?.message}
+        cityError={errors.city?.message}
+        countryRequired={false}
+        cityRequired={false}
+      />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
-        <FormField label="Location" name="location" placeholder="New York, NY" registration={register('location')} error={errors.location?.message} />
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
         <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
       </div>
       <FormField label="Service Category" name="category" type="select" options={['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People']} required value={watch('category') || ''} onValueChange={(v) => setValue('category', v as 'Operations & Systems' | 'Strategy & Advisory' | 'Technology & Product' | 'Growth & Marketing' | 'Finance & Legal' | 'Talent & People', { shouldValidate: true })} error={errors.category?.message} />

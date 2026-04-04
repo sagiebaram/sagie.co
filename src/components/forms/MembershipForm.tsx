@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { MembershipSchema, COUNTRY_OPTIONS } from '@/lib/schemas'
+import { MembershipSchema } from '@/lib/schemas'
 import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
+import { LocationFields } from '@/components/ui/LocationFields'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
 type FormData = z.input<typeof MembershipSchema>
@@ -122,10 +123,14 @@ export function MembershipForm() {
         <FormField label="Company / Organisation" name="company" placeholder="Where do you work?" autoComplete="organization" registration={register('company')} error={errors.company?.message} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="City" name="location" placeholder="Where are you based?" required registration={register('location')} error={errors.location?.message} />
-        <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} required value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
-      </div>
+      <LocationFields
+        country={watch('country') || ''}
+        city={watch('location') || ''}
+        onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
+        onCityChange={(v) => setValue('location', v, { shouldValidate: true })}
+        countryError={errors.country?.message}
+        cityError={errors.location?.message}
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" autoComplete="url" registration={register('linkedIn')} error={errors.linkedIn?.message} />

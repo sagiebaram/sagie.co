@@ -71,19 +71,39 @@ const spamCheckedText = (minMsg: string, min = 10, max = 2000) =>
       'Please avoid excessive caps.'
     )
 
-// --- Country List ---
+// --- Location Data ---
 
-export const COUNTRY_OPTIONS = [
-  'United States', 'Israel', 'United Kingdom', 'Canada', 'Germany', 'France',
-  'Australia', 'Singapore', 'United Arab Emirates', 'India', 'Argentina',
-  'Austria', 'Belgium', 'Brazil', 'Chile', 'China', 'Colombia',
-  'Czech Republic', 'Denmark', 'Egypt', 'Finland', 'Greece', 'Hong Kong',
-  'Hungary', 'Indonesia', 'Ireland', 'Italy', 'Japan', 'Kenya', 'Malaysia',
+/** Cities with SAGIE chapter presence, keyed by country */
+export const CHAPTER_CITIES: Record<string, string[]> = {
+  'United States': ['Miami', 'New York', 'Texas'],
+  'Israel': ['Tel Aviv'],
+  'Singapore': ['Singapore'],
+  'United Arab Emirates': ['Dubai'],
+}
+
+/** Countries that have chapter presence — sorted to top of dropdown */
+const CHAPTER_COUNTRIES = Object.keys(CHAPTER_CITIES)
+
+/** All other countries — alphabetical */
+const OTHER_COUNTRIES = [
+  'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada',
+  'Chile', 'China', 'Colombia', 'Czech Republic', 'Denmark', 'Egypt',
+  'Finland', 'France', 'Germany', 'Greece', 'Hong Kong', 'Hungary',
+  'India', 'Indonesia', 'Ireland', 'Italy', 'Japan', 'Kenya', 'Malaysia',
   'Mexico', 'Netherlands', 'New Zealand', 'Nigeria', 'Norway', 'Peru',
   'Philippines', 'Poland', 'Portugal', 'Romania', 'Saudi Arabia',
   'South Africa', 'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Taiwan',
-  'Thailand', 'Turkey', 'Ukraine', 'Vietnam', 'Other',
-] as const;
+  'Thailand', 'Turkey', 'Ukraine', 'United Kingdom', 'Vietnam', 'Other',
+]
+
+/** Full country list — chapter countries first, then alphabetical rest */
+export const COUNTRY_OPTIONS = [...CHAPTER_COUNTRIES, ...OTHER_COUNTRIES]
+
+/** Get city options for a given country. Returns chapter cities + "Other", or just ["Other"] */
+export function getCityOptions(country: string): string[] {
+  const chapterCities = CHAPTER_CITIES[country]
+  return chapterCities ? [...chapterCities, 'Other'] : ['Other']
+}
 
 // --- Schemas ---
 
@@ -124,6 +144,7 @@ export const VenturesSchema = z.object({
   founderName: nameField('What should we call you?'),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
   country: z.string().max(100).trim().optional(),
+  city: z.string().max(100).trim().optional(),
   phone: phoneSchema,
   website: optionalUrl('Please enter a valid URL'),
   linkedIn: optionalLinkedIn(),
@@ -143,6 +164,7 @@ export const SolutionsSchema = z.object({
   providerName: nameField('What should we call you?'),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
   country: z.string().max(100).trim().optional(),
+  city: z.string().max(100).trim().optional(),
   phone: phoneSchema,
   category: z.enum(['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People'], {
     error: 'Please select a category',
@@ -152,7 +174,6 @@ export const SolutionsSchema = z.object({
   linkedIn: optionalLinkedIn(),
   portfolioUrl: optionalUrl('Please enter a valid URL'),
   rateRange: z.string().max(100).trim().optional(),
-  location: z.string().max(100).trim().optional(),
 });
 
 export const EventSuggestionSchema = z.object({

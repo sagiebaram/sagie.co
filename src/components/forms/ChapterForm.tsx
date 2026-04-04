@@ -7,7 +7,8 @@ import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
-import { ChapterSchema, COUNTRY_OPTIONS } from '@/lib/schemas'
+import { ChapterSchema } from '@/lib/schemas'
+import { LocationFields } from '@/components/ui/LocationFields'
 
 type FormData = z.infer<typeof ChapterSchema>
 
@@ -91,10 +92,16 @@ export function ChapterForm() {
         <FormField label="Full Name" name="fullName" placeholder="Your full name" required registration={register('fullName')} error={errors.fullName?.message} />
         <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Which city do you want to lead?" name="city" placeholder="City name" required registration={register('city')} error={errors.city?.message} />
-        <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} required value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
-      </div>
+      <LocationFields
+        country={watch('country') || ''}
+        city={watch('city') || ''}
+        onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
+        onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
+        countryError={errors.country?.message}
+        cityError={errors.city?.message}
+        cityLabel="Which city do you want to lead?"
+        cityPlaceholder="City name"
+      />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Community size (approx.)" name="communitySize" placeholder="e.g. 200 people in my network" registration={register('communitySize')} error={errors.communitySize?.message} />
         <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />

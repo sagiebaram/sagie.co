@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { VenturesSchema, COUNTRY_OPTIONS } from '@/lib/schemas'
+import { VenturesSchema } from '@/lib/schemas'
 import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
+import { LocationFields } from '@/components/ui/LocationFields'
 import { FormSuccess } from '@/components/ui/FormSuccess'
 
 type FormData = z.infer<typeof VenturesSchema>
@@ -88,11 +89,20 @@ export function VenturesForm() {
         <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
         <FormField label="Website" name="website" type="url" placeholder="https://yoursite.com" registration={register('website')} error={errors.website?.message} />
       </div>
+      <LocationFields
+        country={watch('country') || ''}
+        city={watch('city') || ''}
+        onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
+        onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
+        countryError={errors.country?.message}
+        cityError={errors.city?.message}
+        countryRequired={false}
+        cityRequired={false}
+      />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="https://linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
-        <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
+        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
       </div>
-      <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
       <SectionHeader label="Details" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Sector" name="sector" type="select" options={['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other']} value={watch('sector') || ''} onValueChange={(v) => setValue('sector', v as 'Fintech' | 'AI / ML' | 'SaaS' | 'Health Tech' | 'EdTech' | 'Impact / Social' | 'Deep Tech' | 'Other', { shouldValidate: true })} error={errors.sector?.message} />

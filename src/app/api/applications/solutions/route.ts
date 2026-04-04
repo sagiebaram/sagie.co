@@ -25,7 +25,7 @@ export const POST = withValidation(SolutionsSchema, async (_req: Request, rawBod
           ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
           ...(body.portfolioUrl ? { Website: { url: body.portfolioUrl } } : {}),
           ...(body.rateRange ? { 'Rate Range': { rich_text: [{ text: { content: body.rateRange } }] } } : {}),
-          ...(body.location ? { Location: { rich_text: [{ text: { content: body.location } }] } } : {}),
+          ...(body.city ? { Location: { rich_text: [{ text: { content: body.city } }] } } : {}),
         },
       }))
     } catch (notionError) {
