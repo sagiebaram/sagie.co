@@ -112,7 +112,7 @@ export function Navbar() {
         className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
         aria-hidden={!isOpen}
         style={{
-          maxHeight: isOpen ? '300px' : '0px',
+          maxHeight: isOpen ? '400px' : '0px',
           opacity: isOpen ? 1 : 0,
           borderTop: isOpen ? '1px solid var(--border-strong)' : '0px solid transparent',
         }}
@@ -124,7 +124,7 @@ export function Navbar() {
               href={navHref(item)}
               onClick={() => setIsOpen(false)}
               tabIndex={isOpen ? 0 : -1}
-              className="font-body uppercase text-foreground-secondary hover:text-silver transition-all duration-200 text-label tracking-label py-3 border-b border-border-subtle"
+              className={`font-body uppercase text-foreground-secondary hover:text-silver transition-all duration-200 text-label tracking-label py-3 ${i < NAV_LINKS.length - 1 ? 'border-b border-border-subtle' : ''}`}
               style={{
                 transitionDelay: isOpen ? `${i * 60}ms` : '0ms',
                 transform: isOpen ? 'translateX(0)' : 'translateX(-12px)',
