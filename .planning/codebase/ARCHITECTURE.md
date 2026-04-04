@@ -1,180 +1,233 @@
 # Architecture
 
-**Analysis Date:** 2026-03-30
+**Analysis Date:** 2026-04-04
 
 ## Pattern Overview
 
-**Overall:** Next.js App Router with Client-Server Architecture
+**Overall:** Next.js App Router with server-driven data, client form interaction, and Notion as headless CMS
 
 **Key Characteristics:**
-- Next.js 16.2 with React 19 and Server Components by default
-- Notion as primary CMS for all dynamic content (blog, events, resources, applications)
-- Hybrid client-server: SSR pages with client-side forms and interactive components
-- API routes with request validation, rate limiting, and honeypot spam protection
-- Email notifications via Resend with React components
-- GSAP-based animations with specialized cleanup handlers
+- Server components for static content; Client components for forms and interactive features
+- Notion API as single source of truth for blog, events, resources, solutions, and members
+- Incremental Static Regeneration (ISR) with tag-based cache invalidation
+- Zod validation on both client and server with honeypot bot detection
+- React Hook Form paired with Zod for client-side form handling
+- GSAP for scroll-triggered animations; Three.js for lazy-loaded 3D globe
+- API routes with rate limiting, validation, email delivery, and Sentry error monitoring
 
 ## Layers
 
-**Presentation Layer:**
-- Purpose: UI components and page rendering
-- Location: `src/components/` and `src/app/`
-- Contains: Page layouts, section components, UI components, form components
-- Depends on: Business logic layer (data fetching, validation)
-- Used by: Next.js routing system
+**Page Layer:**
+- Purpose: Render marketing pages and application pages; coordinate layout, sections, and forms
+- Location: `src/app/(marketing)/`, `src/app/admin/`
+- Contains: Page components, layout wrappers, error boundaries, loading states
+- Depends on: Components (sections, forms, layout), lib utilities, constants
+- Used by: Next.js routing system; Browser requests
 
-**Business Logic Layer:**
-- Purpose: Data fetching, transformation, validation, and domain logic
-- Location: `src/lib/`
-- Contains: Notion queries, email service, validation schemas, form processing
-- Depends on: External services (Notion API, Resend API)
-- Used by: Presentation and API layers
+**Component Layer:**
+- Purpose: Reusable UI and feature components
+- Location: `src/components/`
+- Subdivisions:
+  - **Forms** (`src/components/forms/`): Application forms with validation — MembershipForm, ChapterForm, VenturesForm, SolutionsForm, ContactForm, SubmitPostForm, SuggestEventForm
+  - **Layout** (`src/components/layout/`): Navbar, Footer (persistent across pages)
+  - **Sections** (`src/components/sections/`): Page sections — Hero, Pillars, Belief, FAQ, Tiers, etc.
+  - **UI** (`src/components/ui/`): Atomic components — FormField, PhoneField, LocationFields, Button, Filters, animations
+- Depends on: Lib utilities (validation, schemas), hooks, constants
+- Used by: Page layer, other components
 
-**API Route Layer:**
-- Purpose: HTTP endpoints for form submissions and cache revalidation
+**API Layer:**
+- Purpose: Handle form submissions, Notion writes, email delivery, cache revalidation
 - Location: `src/app/api/`
-- Contains: Request handlers, validation middleware, error responses
-- Depends on: Business logic and validation layers
-- Used by: Client-side forms and external services
+- Endpoints:
+  - **Applications**: `/api/applications/{membership,chapter,solutions,ventures}` — POST form submissions
+  - **Content**: `/api/{submit-post,submit-resource,suggest-event,contact,subscribe}` — POST user submissions
+  - **Events**: `/api/events/[id]/ics` — GET calendar file generation
+  - **Admin**: `/api/revalidate` — POST cache invalidation (secret-protected)
+- Depends on: Validation middleware, schemas, Notion client, email service, Sentry
+- Used by: Client forms (fetch), Notion webhooks, external triggers (revalidate)
 
-**Data/Configuration Layer:**
-- Purpose: Types, constants, environment configuration
-- Location: `src/types/`, `src/constants/`, `src/env/`
-- Contains: Domain types, UI constants, environment schema validation
-- Depends on: Nothing
-- Used by: All other layers
+**Data/Lib Layer:**
+- Purpose: Notion queries, validation, email templates, sanitization, monitoring
+- Location: `src/lib/`
+- Key modules:
+  - **Notion**: `notion.ts` (client initialization), `blog.ts`, `events.ts`, `resources.ts`, `solutions.ts`, `members.ts`, `chapters.ts` (all use `unstable_cache` for ISR)
+  - **Validation**: `validation.ts` (HOF `withValidation` combining Zod + honeypot + rate limiting), `schemas.ts` (Zod form schemas)
+  - **Email**: `email.ts` (Resend integration), `sanitize.ts` (XSS prevention on user input)
+  - **Notion Utilities**: `notion-utils.ts` (property extractors), `notion-monitor.ts` (Sentry wrapper)
+  - **Other**: `gsap.ts` (dynamic import), `calendar.ts` (ICS generation), `location.ts`, `locationData.ts`
+- Depends on: External SDKs (Notion, Resend, Sentry), Zod, environment config
+- Used by: Page layer (data fetching), API layer (form processing)
+
+**Constants & Types:**
+- Purpose: Centralized copy, personas, tiers, FAQ, pillar definitions; TypeScript interfaces
+- Location: `src/constants/`, `src/types/`
+- Contains: Marketing copy, static data structures, type definitions (BlogPost, SAGIEEvent, Chapter, Pillar, etc.)
+- Depends on: None
+- Used by: Components, pages, lib modules
+
+**Environment Configuration:**
+- Purpose: Zod-validated server-side environment variables
+- Location: `src/env/server.ts`
+- Validates: Notion tokens/DB IDs, API keys (Resend, Beehiiv, Sentry), admin email, allowed origins, revalidate secret
+- Used by: Lib modules, API routes
 
 ## Data Flow
 
-**Form Submission Flow:**
+**Blog/Content Fetch:**
 
-1. User interacts with form (e.g., `SolutionsForm`)
-2. Form validates client-side using Zod schema from `@/lib/schemas`
-3. Form submits POST to `/api/applications/{type}` with honeypot fields
-4. API route in `src/app/api/applications/{type}/route.ts`:
-   - Checks rate limiting (5 submissions per 10 minutes per IP)
-   - Validates honeypot fields and form load time (>3 seconds)
-   - Validates request body against Zod schema
-   - Calls `notion.pages.create()` to store in Notion database
-   - Calls `sendEmails()` to notify applicant and admin
-5. Response returned with success/error status
-6. Client updates UI (shows success message or error)
+1. Page component (`/blog`, `/solutions`, `/resources`, `/events`) calls server-side lib function (getAllPosts, getUpcomingEvents, etc.)
+2. Lib function checks Next.js cache via `unstable_cache` + tag
+3. If cache miss: fetch from Notion database with filters/sorts
+4. Map Notion properties via `notion-utils.ts` helper functions
+5. Return typed data to page component
+6. Component renders content with filters/search client-side
+7. ISR revalidates on schedule or via `/api/revalidate` webhook (Notion database change triggers POST to secret endpoint)
 
-**Content Fetch Flow:**
+**Form Submission:**
 
-1. Server-side page component calls data function (e.g., `getAllPosts()`)
-2. Data function uses `unstable_cache` wrapper with cache keys and tags
-3. Function queries Notion database using notion SDK
-4. Results are transformed/mapped to typed objects
-5. Cache tags used for selective revalidation via `/api/revalidate` endpoint
-6. Revalidation called from Notion automations via webhook
+1. User fills form (client component — MembershipForm, SolutionsForm, etc.)
+2. On submit, client validates via React Hook Form + Zod resolver
+3. If valid, POST to `/api/applications/{type}` with honeypot fields (`_trap`, `_t`)
+4. Server receives request in `withValidation` middleware
+5. Checks: honeypot, timing (must be >3000ms), rate limit (5 per IP per 10 min)
+6. If bot detected or rate limited: return 200 silently (honeypot)
+7. If rate limited (legitimate): return 429 with Retry-After
+8. Zod validates payload; on failure: return 422 with fieldErrors
+9. On success: call handler async function
+10. Handler calls `notionWrite(() => notion.pages.create(...))` wrapped in Sentry try/catch
+11. Meanwhile call `sendEmails(formType, userEmail, data)` fire-and-forget via Promise.allSettled
+12. Return `{ success: true }` to client
+13. Client shows success state, optional redirect/reset
 
-**State Management:**
+**Cache Invalidation:**
 
-- **Server State:** Notion databases (single source of truth for all content)
-- **Client State:**
-  - Form state: React Hook Form with Zod validation
-  - UI state: useState hooks (success/error states, loading indicators)
-  - URL state: nuqs for query parameters (filters on blog, events, resources pages)
-- **Animation State:** GSAP controlled directly, with cleanup via `GSAPCleanup` component
-- **Cache State:** Next.js cache with tag-based invalidation strategy
+1. Notion database is updated (post published, event added, etc.)
+2. Notion automation or webhook calls POST `/api/revalidate` with secret
+3. Route handler validates secret; on mismatch: return 401
+4. For each tag (or specific tags): call `revalidateTag(tag)`
+5. Next.js invalidates all paths cached with that tag
+6. Next cache miss triggers fresh Notion fetch on next request
+
+**Email Delivery:**
+
+1. Form handler calls `sendEmails(formType, applicantEmail, data)`
+2. In production only: sends two emails via Resend:
+   - Confirmation email to applicant (from `ConfirmationEmail` React template)
+   - Admin alert to `env.ADMIN_EMAIL` (from `AdminAlertEmail` template)
+3. Errors captured in Sentry with tags `service: 'resend'` + `type: 'confirmation'|'admin_alert'`
+4. Uses Promise.allSettled so one email failure doesn't block the other
 
 ## Key Abstractions
 
-**Data Layer Abstraction (src/lib/):**
-- Purpose: Encapsulates Notion client and query logic
-- Examples: `blog.ts`, `events.ts`, `resources.ts`, `members.ts`, `chapters.ts`
-- Pattern:
-  - `unstable_cache` wraps async data fetchers
-  - Custom mapper functions transform Notion pages to typed objects
-  - Cache keys and revalidation tags manage freshness
+**Validation Middleware (`withValidation`):**
+- Purpose: Wrap API handlers with Zod validation, bot detection, rate limiting
+- Location: `src/lib/validation.ts`
+- Usage: `withValidation(schema, handler)` returns an async Request handler
+- Pattern: Higher-order function accepting schema and handler; returns middleware that pre-processes and validates
+- Guards: Honeypot check, timing check (>3s), rate limiter (5 per IP per 10min), Zod validation, returns appropriate status codes
 
-**Form Processing Abstraction (src/lib/validation.ts):**
-- Purpose: Reusable middleware for request validation, rate limiting, and spam protection
-- Pattern: Higher-order function `withValidation` wraps route handlers
-- Features: IP-based rate limiting, honeypot detection, Zod schema validation
+**Notion Data Accessors:**
+- Purpose: Type-safe extraction of Notion properties with fallback handling
+- Location: `src/lib/notion-utils.ts`
+- Functions: `getTextProperty`, `getTitleProperty`, `getSelectProperty`, `getNumberProperty`, `getCheckboxProperty`, `getUrlProperty`, `getDateProperty`
+- Pattern: Each takes `properties` object, property name, page ID, fallback; returns typed value; logs warning to Sentry on missing
+- Usage: Called within blog.ts, events.ts, resources.ts, etc. to extract fields from Notion page objects
 
-**Email Service Abstraction (src/lib/email.ts):**
-- Purpose: Centralized email sending with type-safe form types
-- Pattern: `sendEmails()` function takes FormType enum and submission data
-- Features: React component email templates, conditional skipping in non-prod, error tracking via Sentry
+**Cached Data Loaders:**
+- Purpose: Fetch Notion data with ISR caching and tag-based revalidation
+- Location: `src/lib/blog.ts`, `src/lib/events.ts`, `src/lib/resources.ts`, `src/lib/solutions.ts`, etc.
+- Pattern: Use `unstable_cache(asyncFn, keyArray, { revalidate: seconds, tags: [] })` to wrap Notion queries
+- Cache keys: e.g., `['notion:blog:index']`; tags: e.g., `['notion:blog']`
+- Allows selective cache invalidation via tag without cache key knowledge
 
-**Section Components (src/components/sections/):**
-- Purpose: Reusable landing page sections with consistent styling
-- Examples: `Hero.tsx`, `Pillars.tsx`, `FAQ.tsx`, `ChapterMap.tsx`
-- Pattern: Async server components that compose child components and fetch data as needed
+**Schemas as Source of Truth:**
+- Purpose: Define form structure, validation rules, and type safety in one place
+- Location: `src/lib/schemas.ts`
+- Pattern: Zod objects for each form type (MembershipSchema, ChapterSchema, SolutionsSchema, VenturesSchema, etc.)
+- Used by: Client-side React Hook Form resolver AND server-side API validation
+- Ensures client and server validation match; includes spam checks and format validation
 
-**Form Components (src/components/forms/):**
-- Purpose: Self-contained form implementations with validation and submission
-- Examples: `SolutionsForm.tsx`, `MembershipForm.tsx`, `VenturesForm.tsx`
-- Pattern: Client components using React Hook Form + Zod, manage own success/error states
+**Location Cascading:**
+- Purpose: Provide dependent dropdowns (Country → State → City)
+- Location: `src/components/ui/LocationFields.tsx`, `src/lib/location.ts`, `src/lib/locationData.ts`
+- Pattern: Component tracks selected country, filters states for that country; selected state filters cities
+- Data: Static mapping from `country-state-city` npm package
+- Validation: Zod schema ensures only valid location tuples are submitted
 
 ## Entry Points
 
-**Home Page:**
-- Location: `src/app/(marketing)/page.tsx`
-- Triggers: Route `/`
-- Responsibilities: Fetches chapters data, renders section components in sequence (Hero → Belief → Pillars → ... → Footer)
+**Root Layout:**
+- Location: `src/app/layout.tsx`
+- Triggers: Browser navigation to any page
+- Responsibilities: Load fonts (Bebas Neue, DM Sans), setup metadata/JSON-LD, wrap with providers (NuqsAdapter for query strings), integrate Sentry, Vercel Analytics, Vercel Speed Insights
 
-**Application Pages:**
-- Location: `src/app/(marketing)/apply/[type]/page.tsx`
-- Triggers: Routes `/apply`, `/apply/solutions`, `/apply/chapter`, `/apply/ventures`
-- Responsibilities: Render page intro text and form component for specific application type
+**Marketing Layout:**
+- Location: `src/app/(marketing)/layout.tsx`
+- Triggers: Navigation to any page under `/(marketing)/`
+- Responsibilities: Render Navbar + Footer + children; consistent styling across public pages
 
-**Content Pages:**
-- Location: `src/app/(marketing)/blog/page.tsx`, `/resources/page.tsx`, `/solutions/page.tsx`
-- Triggers: `/blog`, `/resources`, `/solutions`
-- Responsibilities: Fetch content from Notion, render filters and content grid
+**API Route Handlers:**
+- Locations: `src/app/api/**/route.ts`
+- Triggers: HTTP requests (POST for forms, GET for ICS)
+- Responsibilities: Validate input via `withValidation`, process form data, write to Notion, send emails, return JSON response
 
-**API Routes:**
-- Location: `src/app/api/applications/*/route.ts`, `src/app/api/submit-post/route.ts`, etc.
-- Triggers: Form POST requests from client
-- Responsibilities: Validate, process submission, store in Notion, send emails
-
-**Admin/Revalidation:**
-- Location: `src/app/admin/revalidate/page.tsx`, `src/app/api/revalidate/route.ts`
-- Triggers: Manual dashboard trigger or webhook from Notion
-- Responsibilities: Invalidate cache tags to refresh stale content
+**Admin Revalidate Route:**
+- Location: `src/app/admin/revalidate/page.tsx`
+- Triggers: Authenticated admin visits `/admin/revalidate`
+- Responsibilities: Display UI for triggering cache revalidation via `/api/revalidate` endpoint
 
 ## Error Handling
 
-**Strategy:** Layered validation with graceful degradation and error tracking
+**Strategy:** Layered approach with Sentry monitoring, user-friendly messages, and silent bot responses
 
 **Patterns:**
 
-- **Client-side form errors:** React Hook Form captures validation errors, displays inline error messages
-- **API validation errors:** Returns 422 with field-level error details
-- **API rate limiting:** Returns 429 with Retry-After header, client shows user message
-- **Notion API failures:** Caught in try-catch, returns 500 error, logs to Sentry
-- **Email sending failures:** Non-blocking failures, captured by Sentry, user still sees success
-- **Content fetch failures:** Graceful fallbacks (empty arrays, null values, default text)
-- **Spam detection:** Honeypot failures silently return 200 to fool bots
+1. **Validation Errors (422):** Zod parsing fails → return `{ error: 'Validation failed', fieldErrors: {...} }` → client displays per-field error messages
+2. **Rate Limit (429):** Too many requests from IP → return 429 with Retry-After header → client shows warning, disables form temporarily
+3. **Honeypot/Bot (200):** Bot detected → silent 200 response (appears successful to bot; client checks response structure to detect actual success)
+4. **Notion Write Errors:** Wrapped in try/catch → log to Sentry with context → still return 200 to user (don't expose backend issues); currently bypassed in dev/test due to Notion property setup
+5. **Email Errors:** Caught and sent to Sentry; Promise.allSettled prevents one email failure from blocking response
+6. **Server Errors (500):** Uncaught exceptions → logged to Sentry → return generic error message to client
+
+Example error handling in form submission (SolutionsForm.tsx):
+```typescript
+if (res.status === 429) {
+  setSubmitWarning("You've submitted several times recently...")
+  setIsRateLimited(true)
+} else if (!res.ok) {
+  const body = await res.json()
+  if (body.fieldErrors) {
+    // Display field-specific errors
+  } else {
+    setSubmitError('Something went wrong. Please try again.')
+  }
+}
+```
 
 ## Cross-Cutting Concerns
 
-**Logging:** Console.log for development; Sentry integration for production errors with context tags
+**Logging:** 
+- Development: console.log/warn for debugging
+- Production: Sentry for errors + warnings; email delivery logs status
+- Notion utilities warn when properties missing, escalated to Sentry in production
 
-**Validation:**
-- Client: Zod schemas in `@/lib/schemas.ts` used by React Hook Form
-- Server: Same schemas used in `withValidation` middleware wrapper
-- Bidirectional: Prevents invalid data from reaching Notion
+**Validation:** 
+- Client-side: React Hook Form with Zod resolver for UX feedback
+- Server-side: `withValidation` HOF with Zod for security
+- Honeypot + timing check for bot detection
+- Rate limiting per IP for abuse prevention
 
-**Authentication:**
-- Secret-based (REVALIDATE_SECRET for cache invalidation endpoint)
-- No user authentication; all routes are public
-- Rate limiting by IP prevents abuse
+**Authentication:** 
+- No user login system; forms are public
+- Admin endpoints protected via secret token in env variable
+- CORS validation via env.ALLOWED_ORIGINS set
 
-**Caching:**
-- Server-side: `unstable_cache` with time-based revalidation (300s to 3600s)
-- Cache tags: All notion:* tags invalidate via `/api/revalidate` endpoint
-- No browser caching for API routes (Cache-Control: no-store)
-
-**Security Headers:** Configured in `next.config.ts`:
-- X-Frame-Options: DENY (no framing)
-- X-Content-Type-Options: nosniff (prevent MIME sniffing)
-- Referrer-Policy: origin-when-cross-origin
-- Permissions-Policy: disabled camera, microphone, geolocation
+**Monitoring:**
+- Sentry integration: client-side errors, server-side errors, Notion failures, email delivery issues
+- Vercel Analytics: page views, Web Vitals
+- Vercel Speed Insights: performance metrics
+- Custom tags on Sentry captures (e.g., `service: 'resend'`, `type: 'confirmation'`)
 
 ---
 
-*Architecture analysis: 2026-03-30*
+*Architecture analysis: 2026-04-04*
