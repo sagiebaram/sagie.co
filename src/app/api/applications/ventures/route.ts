@@ -28,6 +28,7 @@ export const POST = withValidation(VenturesSchema, async (_req: Request, rawBody
           ...(body.website ? { Website: { url: body.website } } : {}),
           ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
           ...(body.whySAGIE ? { 'Why SAGIE': { rich_text: [{ text: { content: body.whySAGIE } }] } } : {}),
+          Type: { select: { name: body.ventureType === 'investor' ? 'Investor' : 'Founder' } },
           Source: { select: { name: 'Website Application' } },
         },
       }))

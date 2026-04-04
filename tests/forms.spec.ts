@@ -198,11 +198,11 @@ test('solutions form shows blur validation errors', async ({ page }) => {
 });
 
 // -----------------------------------------------------------------------
-// Ventures form  (/apply/ventures)
+// Ventures form  (/apply/ventures/founder)
 // -----------------------------------------------------------------------
 test('ventures form submits and shows success state', async ({ page }) => {
   await mockApplicationRoute(page, 'ventures');
-  await page.goto('/apply/ventures');
+  await page.goto('/apply/ventures/founder');
 
   await page.fill('[name="founderName"]', 'Alan Turing');
   await page.fill('[name="email"]', 'alan@example.com');
@@ -233,7 +233,7 @@ test('ventures form submits and shows success state', async ({ page }) => {
 // Ventures form — blur validation
 // -----------------------------------------------------------------------
 test('ventures form shows blur validation errors', async ({ page }) => {
-  await page.goto('/apply/ventures');
+  await page.goto('/apply/ventures/founder');
   await page.getByRole('button', { name: /submit application/i }).waitFor();
 
   await page.locator('[name="founderName"]').focus();

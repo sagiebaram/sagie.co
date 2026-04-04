@@ -1,10 +1,10 @@
+import Link from 'next/link'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
-import { VenturesForm } from '@/components/forms/VenturesForm'
 
-export default function ApplyVenturesPage() {
+export default function ApplyVenturesForkPage() {
   return (
     <main id="main-content" className="relative">
       <CircuitBackground />
@@ -20,10 +20,45 @@ export default function ApplyVenturesPage() {
             <span className="block text-foreground-dim">BUILD SOMETHING</span>
             <span className="block text-foreground-secondary">THAT MATTERS.</span>
           </h1>
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
-            Positive impact or innovation? Reach out and see if we&apos;re a match.
+          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[480px] mb-16">
+            Whether you&apos;re building the next big thing or backing it — start here.
           </p>
-          <VenturesForm />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-[640px]">
+            <Link
+              href="/apply/ventures/founder"
+              className="group border border-border-default hover:border-silver/40 transition-colors p-8 flex flex-col justify-between min-h-[180px]"
+            >
+              <div>
+                <p className="font-display uppercase text-foreground text-xl tracking-wide mb-2">
+                  Founder
+                </p>
+                <p className="font-body text-foreground-muted text-sm leading-relaxed">
+                  Show us what you&apos;re building. Apply for portfolio consideration.
+                </p>
+              </div>
+              <p className="font-body text-silver text-sm mt-6 group-hover:translate-x-1 transition-transform">
+                I&apos;m a Founder →
+              </p>
+            </Link>
+
+            <Link
+              href="/apply/ventures/investor"
+              className="group border border-border-default hover:border-silver/40 transition-colors p-8 flex flex-col justify-between min-h-[180px]"
+            >
+              <div>
+                <p className="font-display uppercase text-foreground text-xl tracking-wide mb-2">
+                  Investor
+                </p>
+                <p className="font-body text-foreground-muted text-sm leading-relaxed">
+                  Community-sourced deal flow built on trust. Join the network.
+                </p>
+              </div>
+              <p className="font-body text-silver text-sm mt-6 group-hover:translate-x-1 transition-transform">
+                I&apos;m an Investor →
+              </p>
+            </Link>
+          </div>
         </div>
       </section>
 
