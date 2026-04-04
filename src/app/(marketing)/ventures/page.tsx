@@ -255,7 +255,7 @@ export default function VenturesPage() {
               <p className="font-body text-foreground-muted text-body leading-[1.7] font-light mb-8 flex-1">
                 Looking for deal flow, community diligence, or a portfolio to back.
               </p>
-              <Button variant="outline" href="/apply/ventures">
+              <Button variant="outline" href="/apply/ventures/investor">
                 Schedule a Call &rarr;
               </Button>
             </div>
@@ -268,7 +268,7 @@ export default function VenturesPage() {
               <p className="font-body text-foreground-muted text-body leading-[1.7] font-light mb-8 flex-1">
                 Building something innovative and looking for visibility, support, and access to capital.
               </p>
-              <Button variant="outline" href="/apply/ventures">
+              <Button variant="outline" href="/apply/ventures/founder">
                 Schedule a Call &rarr;
               </Button>
             </div>
