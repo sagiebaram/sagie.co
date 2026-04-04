@@ -10,8 +10,8 @@ async function selectDropdownOption(
 ) {
   // Click the dropdown trigger
   await page.locator(`[data-dropdown="${fieldName}"]`).click()
-  // Click the option in the listbox
-  await page.getByRole('option', { name: optionText }).click()
+  // Click the option scoped to this field's listbox (avoids phone input country collision)
+  await page.locator(`#${fieldName}-listbox`).getByRole('option', { name: optionText }).click()
 }
 
 // -----------------------------------------------------------------------

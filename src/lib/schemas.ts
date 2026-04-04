@@ -114,7 +114,7 @@ import { COUNTRIES_WITH_STATE_FIELD } from '@/lib/locationData'
 const requiredLocationFields = {
   country: z.string().min(2, 'Please select a country.'),
   state: z.string().optional(),
-  city: z.string().min(1, 'Please select or enter a city.').max(100),
+  city: z.string().min(1, 'Please select or enter a city.').max(100).trim(),
 }
 
 /** Cascading location validation — state required only for 6 countries (US, AU, CA, BR, MX, IN) */

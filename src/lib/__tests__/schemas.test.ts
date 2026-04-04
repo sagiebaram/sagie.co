@@ -18,8 +18,9 @@ describe('MembershipSchema', () => {
     fullName: 'Jane Doe',
     email: 'JANE@EXAMPLE.COM',
     role: 'Founder',
-    location: 'Tel Aviv',
-    country: 'Israel',
+    country: 'IL',
+    city: 'Tel Aviv',
+    phone: '+972501234567',
   }
 
   test('accepts a fully valid input', () => {
@@ -50,8 +51,8 @@ describe('MembershipSchema', () => {
     expect(result.success).toBe(false)
   })
 
-  test('rejects missing location', () => {
-    const { location: _l, ...rest } = validMembership
+  test('rejects missing country', () => {
+    const { country: _c, ...rest } = validMembership
     const result = MembershipSchema.safeParse(rest)
     expect(result.success).toBe(false)
   })
@@ -116,8 +117,9 @@ describe('ChapterSchema', () => {
   const validChapter = {
     fullName: 'John Smith',
     email: 'john@example.com',
+    country: 'GB',
     city: 'London',
-    country: 'United Kingdom',
+    phone: '+442071234567',
     whyLead: 'I have 10 years of community building experience.',
   }
 
@@ -185,6 +187,7 @@ describe('VenturesSchema', () => {
     companyName: 'TechCo',
     founderName: 'Alice Brown',
     email: 'alice@techco.com',
+    phone: '+14155551234',
     oneLineDescription: 'AI-powered supply chain optimization.',
   }
 
@@ -251,6 +254,7 @@ describe('SolutionsSchema', () => {
   const validSolution = {
     providerName: 'Bob Provider',
     email: 'bob@solutions.com',
+    phone: '+14165551234',
     category: 'Technology & Product' as const,
     bio: 'Expert product consultant with 15 years of experience.',
     servicesOffered: 'Product strategy, team coaching, and technical reviews.',
@@ -326,15 +330,17 @@ describe('optional URL fields accept empty strings', () => {
     fullName: 'Jane Doe',
     email: 'jane@example.com',
     role: 'Founder',
-    location: 'Tel Aviv',
-    country: 'Israel',
+    country: 'IL',
+    city: 'Tel Aviv',
+    phone: '+972501234567',
   }
 
   const validChapter = {
     fullName: 'John Smith',
     email: 'john@example.com',
+    country: 'GB',
     city: 'London',
-    country: 'United Kingdom',
+    phone: '+442071234567',
     whyLead: 'I have 10 years of community building experience.',
   }
 
@@ -342,12 +348,14 @@ describe('optional URL fields accept empty strings', () => {
     companyName: 'TechCo',
     founderName: 'Alice Brown',
     email: 'alice@techco.com',
+    phone: '+14155551234',
     oneLineDescription: 'AI-powered supply chain optimization.',
   }
 
   const validSolution = {
     providerName: 'Bob Provider',
     email: 'bob@solutions.com',
+    phone: '+14165551234',
     category: 'Technology & Product' as const,
     bio: 'Expert product consultant with 15 years of experience.',
     servicesOffered: 'Product strategy, team coaching, and technical reviews.',
@@ -425,15 +433,17 @@ describe('phone and country fields', () => {
     fullName: 'Jane Doe',
     email: 'jane@example.com',
     role: 'Founder',
-    location: 'Tel Aviv',
-    country: 'Israel',
+    country: 'IL',
+    city: 'Tel Aviv',
+    phone: '+972501234567',
   }
 
   const validChapter = {
     fullName: 'John Smith',
     email: 'john@example.com',
+    country: 'GB',
     city: 'London',
-    country: 'United Kingdom',
+    phone: '+442071234567',
     whyLead: 'I have 10 years of community building experience.',
   }
 
@@ -451,9 +461,10 @@ describe('phone and country fields', () => {
     }
   })
 
-  test('MembershipSchema accepts empty phone (optional)', () => {
-    const result = MembershipSchema.safeParse({ ...validMembership, phone: '' })
-    expect(result.success).toBe(true)
+  test('MembershipSchema rejects missing phone', () => {
+    const { phone: _p, ...rest } = validMembership
+    const result = MembershipSchema.safeParse(rest)
+    expect(result.success).toBe(false)
   })
 
   test('MembershipSchema rejects invalid phone', () => {
@@ -477,21 +488,22 @@ describe('phone and country fields', () => {
       companyName: 'TechCo',
       founderName: 'Alice Brown',
       email: 'alice@techco.com',
+      phone: '+14155551234',
       oneLineDescription: 'AI-powered supply chain optimization.',
-      country: 'United States',
+      country: 'US',
     }
     const result = VenturesSchema.safeParse(validVenture)
     expect(result.success).toBe(true)
   })
 
-  test('SolutionsSchema accepts optional phone and country', () => {
+  test('SolutionsSchema accepts optional country', () => {
     const validSolution = {
       providerName: 'Bob Provider',
       email: 'bob@solutions.com',
       category: 'Technology & Product' as const,
       bio: 'Expert product consultant with 15 years of experience.',
       servicesOffered: 'Product strategy, team coaching, and technical reviews.',
-      country: 'Canada',
+      country: 'CA',
       phone: '+14165551234',
     }
     const result = SolutionsSchema.safeParse(validSolution)
@@ -508,8 +520,9 @@ describe('upgraded validation patterns', () => {
       fullName: '李明',
       email: 'li@example.com',
       role: 'Founder',
-      location: 'Shanghai',
-      country: 'China',
+      country: 'CN',
+      city: 'Shanghai',
+      phone: '+8613800138000',
     })
     expect(result.success).toBe(true)
   })
@@ -519,8 +532,9 @@ describe('upgraded validation patterns', () => {
       fullName: "O'Brien-Smith",
       email: 'ob@example.com',
       role: 'Investor',
-      location: 'Dublin',
-      country: 'Ireland',
+      country: 'IE',
+      city: 'Dublin',
+      phone: '+353871234567',
     })
     expect(result.success).toBe(true)
   })
@@ -530,8 +544,10 @@ describe('upgraded validation patterns', () => {
       fullName: 'Test123',
       email: 'test@example.com',
       role: 'Founder',
-      location: 'NYC',
-      country: 'United States',
+      country: 'US',
+      state: 'NY',
+      city: 'Manhattan',
+      phone: '+12125551234',
     })
     expect(result.success).toBe(false)
   })
@@ -541,6 +557,7 @@ describe('upgraded validation patterns', () => {
       companyName: 'AT&T',
       founderName: 'Jane Doe',
       email: 'jane@att.com',
+      phone: '+12125551234',
       oneLineDescription: 'Telecommunications giant.',
     })
     expect(result.success).toBe(true)
@@ -551,8 +568,9 @@ describe('upgraded validation patterns', () => {
       fullName: 'Jane Doe',
       email: 'jane@example.com',
       role: 'Founder',
-      location: 'Tel Aviv',
-      country: 'Israel',
+      country: 'IL',
+      city: 'Tel Aviv',
+      phone: '+972501234567',
       linkedIn: 'https://linkedin.com/in/janedoe',
     })
     expect(result.success).toBe(true)
@@ -563,8 +581,9 @@ describe('upgraded validation patterns', () => {
       fullName: 'Jane Doe',
       email: 'jane@example.com',
       role: 'Founder',
-      location: 'Tel Aviv',
-      country: 'Israel',
+      country: 'IL',
+      city: 'Tel Aviv',
+      phone: '+972501234567',
       linkedIn: 'https://twitter.com/janedoe',
     })
     expect(result.success).toBe(false)
@@ -574,8 +593,9 @@ describe('upgraded validation patterns', () => {
     const result = ChapterSchema.safeParse({
       fullName: 'John Smith',
       email: 'john@example.com',
+      country: 'GB',
       city: 'London',
-      country: 'United Kingdom',
+      phone: '+442071234567',
       whyLead: 'aaaaaaaaaaaaaaaaaaa',
     })
     expect(result.success).toBe(false)
@@ -585,6 +605,7 @@ describe('upgraded validation patterns', () => {
     const result = SolutionsSchema.safeParse({
       providerName: 'Bob Provider',
       email: 'bob@solutions.com',
+      phone: '+14165551234',
       category: 'Technology & Product' as const,
       bio: 'Check out https://spam1.com and https://spam2.com and https://spam3.com for more info.',
       servicesOffered: 'Product strategy, team coaching, and technical reviews.',
