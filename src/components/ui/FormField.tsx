@@ -10,6 +10,7 @@ interface FormFieldProps {
   placeholder?: string | undefined
   required?: boolean | undefined
   options?: string[] | undefined
+  optionLabels?: Record<string, string> | undefined
   value?: string | string[] | undefined
   onValueChange?: ((value: string) => void) | undefined
   onArrayChange?: ((value: string[]) => void) | undefined
@@ -31,14 +32,16 @@ const INPUT_STYLE: React.CSSProperties = {
   display: 'block',
 }
 
-function DropdownSelect({ name, options, value, placeholder, onValueChange, allowOther }: {
+function DropdownSelect({ name, options, value, placeholder, onValueChange, allowOther, optionLabels }: {
   name: string
   options: string[]
   value: string
   placeholder?: string | undefined
   onValueChange?: ((value: string) => void) | undefined
   allowOther?: boolean | undefined
+  optionLabels?: Record<string, string> | undefined
 }) {
+  const getLabel = (option: string) => optionLabels?.[option] ?? option
   const [isOpen, setIsOpen] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
@@ -48,7 +51,7 @@ function DropdownSelect({ name, options, value, placeholder, onValueChange, allo
   const allOptions = allowOther ? [...options, 'Other'] : options
   const isOtherSelected = allowOther && value === 'Other'
   const isCustomValue = allowOther && value !== '' && !allOptions.includes(value)
-  const displayValue = isCustomValue ? 'Other' : value
+  const displayValue = isCustomValue ? 'Other' : getLabel(value)
 
   useEffect(() => {
     function handleMouseDown(e: MouseEvent) {
@@ -162,7 +165,7 @@ function DropdownSelect({ name, options, value, placeholder, onValueChange, allo
             <div
               key={option}
               role="option"
-              aria-selected={displayValue === option}
+              aria-selected={value === option}
               onClick={() => handleSelect(option)}
               onMouseEnter={() => setHighlightedIndex(index)}
               style={{
@@ -170,12 +173,12 @@ function DropdownSelect({ name, options, value, placeholder, onValueChange, allo
                 cursor: 'pointer',
                 fontFamily: 'var(--font-body)',
                 fontSize: '13px',
-                color: displayValue === option ? 'var(--silver)' : 'var(--text-secondary)',
+                color: value === option ? 'var(--silver)' : 'var(--text-secondary)',
                 background: index === highlightedIndex ? 'rgba(255,255,255,0.05)' : 'transparent',
                 userSelect: 'none',
               }}
             >
-              {option}
+              {getLabel(option)}
             </div>
           ))}
         </div>
@@ -196,7 +199,7 @@ function DropdownSelect({ name, options, value, placeholder, onValueChange, allo
 
 export function FormField({
   label, name, type = 'text', placeholder, required,
-  options, value, onValueChange, onArrayChange, registration, error, allowOther, autoComplete
+  options, optionLabels, value, onValueChange, onArrayChange, registration, error, allowOther, autoComplete
 }: FormFieldProps) {
   const stringValue = typeof value === 'string' ? value : ''
 
@@ -234,6 +237,7 @@ export function FormField({
           placeholder={placeholder}
           onValueChange={onValueChange}
           allowOther={allowOther}
+          optionLabels={optionLabels}
         />
       ) : type === 'checkbox-group' ? (
         <div id={name} role="group" aria-labelledby={`${name}-label`} style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>

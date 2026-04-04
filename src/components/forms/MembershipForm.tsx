@@ -125,11 +125,14 @@ export function MembershipForm() {
 
       <LocationFields
         country={watch('country') || ''}
-        city={watch('location') || ''}
+        state={watch('state') || ''}
+        city={watch('city') || ''}
         onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
-        onCityChange={(v) => setValue('location', v, { shouldValidate: true })}
+        onStateChange={(v) => setValue('state', v, { shouldValidate: true })}
+        onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
         countryError={errors.country?.message}
-        cityError={errors.location?.message}
+        stateError={errors.state?.message}
+        cityError={errors.city?.message}
       />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>

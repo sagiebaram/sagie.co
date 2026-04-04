@@ -94,10 +94,13 @@ export function ChapterForm() {
       </div>
       <LocationFields
         country={watch('country') || ''}
+        state={watch('state') || ''}
         city={watch('city') || ''}
         onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
+        onStateChange={(v) => setValue('state', v, { shouldValidate: true })}
         onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
         countryError={errors.country?.message}
+        stateError={errors.state?.message}
         cityError={errors.city?.message}
         cityLabel="Which city do you want to lead?"
         cityPlaceholder="City name"

@@ -21,6 +21,7 @@
     "@vercel/speed-insights": "^2.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "clsx": "^2.1.1",
+    "country-state-city": "^3.2.1",
     "gsap": "^3.14.2",
     "libphonenumber-js": "^1.12.41",
     "motion": "^12.38.0",

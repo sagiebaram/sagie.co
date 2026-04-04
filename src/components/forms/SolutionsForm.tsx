@@ -77,13 +77,15 @@ export function SolutionsForm() {
       </div>
       <LocationFields
         country={watch('country') || ''}
+        state={watch('state') || ''}
         city={watch('city') || ''}
         onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
+        onStateChange={(v) => setValue('state', v, { shouldValidate: true })}
         onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
         countryError={errors.country?.message}
+        stateError={errors.state?.message}
         cityError={errors.city?.message}
-        countryRequired={false}
-        cityRequired={false}
+        required={false}
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />

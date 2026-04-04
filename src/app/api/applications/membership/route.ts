@@ -41,7 +41,7 @@ export const POST = withValidation(MembershipSchema, async (_req: Request, rawBo
           'Full Name': { title: [{ text: { content: body.fullName } }] },
           Email: { email: body.email },
           Category: { multi_select: categoryNames },
-          Location: { select: { name: mapLocation(body.location || '') } },
+          Location: { select: { name: mapLocation(body.city || '') } },
           ...(body.country ? { Country: { select: { name: body.country } } } : {}),
           Phone: { phone_number: body.phone },
           Tier: { select: { name: body.tier || 'Explorer' } },

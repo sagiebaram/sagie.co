@@ -71,38 +71,43 @@ const spamCheckedText = (minMsg: string, min = 10, max = 2000) =>
       'Please avoid excessive caps.'
     )
 
-// --- Location Data ---
+// --- Location validation (uses country-state-city library) ---
 
-/** Cities with SAGIE chapter presence, keyed by country */
-export const CHAPTER_CITIES: Record<string, string[]> = {
-  'United States': ['Miami', 'New York', 'Texas'],
-  'Israel': ['Tel Aviv'],
-  'Singapore': ['Singapore'],
-  'United Arab Emirates': ['Dubai'],
+import { Country, State, City } from 'country-state-city'
+
+/** Location fields for required forms (Membership, Chapter) — validates country→state→city cascade */
+const requiredLocationFields = {
+  country: z.string().min(2, 'Please select a country.'),
+  state: z.string().optional(),
+  city: z.string().min(1, 'Please select or enter a city.').max(100),
 }
 
-/** Countries that have chapter presence — sorted to top of dropdown */
-const CHAPTER_COUNTRIES = Object.keys(CHAPTER_CITIES)
+/** Cascading location validation — state required if country has states, city must belong to location */
+function locationSuperRefine(data: { country: string; state?: string | undefined; city: string }, ctx: z.RefinementCtx) {
+  if (!Country.getCountryByCode(data.country)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Invalid country.', path: ['country'] })
+    return
+  }
+  const countryStates = State.getStatesOfCountry(data.country)
+  const hasStates = countryStates.length > 0
+  if (hasStates) {
+    if (!data.state) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Please select a state/province.', path: ['state'] })
+      return
+    }
+    if (!countryStates.some((s) => s.isoCode === data.state)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'State does not belong to this country.', path: ['state'] })
+      return
+    }
+  }
+  // City validation — allow free text (many valid cities aren't in the dataset)
+}
 
-/** All other countries — alphabetical */
-const OTHER_COUNTRIES = [
-  'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Canada',
-  'Chile', 'China', 'Colombia', 'Czech Republic', 'Denmark', 'Egypt',
-  'Finland', 'France', 'Germany', 'Greece', 'Hong Kong', 'Hungary',
-  'India', 'Indonesia', 'Ireland', 'Italy', 'Japan', 'Kenya', 'Malaysia',
-  'Mexico', 'Netherlands', 'New Zealand', 'Nigeria', 'Norway', 'Peru',
-  'Philippines', 'Poland', 'Portugal', 'Romania', 'Saudi Arabia',
-  'South Africa', 'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Taiwan',
-  'Thailand', 'Turkey', 'Ukraine', 'United Kingdom', 'Vietnam', 'Other',
-]
-
-/** Full country list — chapter countries first, then alphabetical rest */
-export const COUNTRY_OPTIONS = [...CHAPTER_COUNTRIES, ...OTHER_COUNTRIES]
-
-/** Get city options for a given country. Returns chapter cities + "Other", or just ["Other"] */
-export function getCityOptions(country: string): string[] {
-  const chapterCities = CHAPTER_CITIES[country]
-  return chapterCities ? [...chapterCities, 'Other'] : ['Other']
+/** Optional location fields for secondary forms (Ventures, Solutions) */
+const optionalLocationFields = {
+  country: z.string().max(100).trim().optional(),
+  state: z.string().max(100).trim().optional(),
+  city: z.string().max(100).trim().optional(),
 }
 
 // --- Schemas ---
@@ -112,8 +117,7 @@ export const MembershipSchema = z.object({
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
   role: z.string().min(1, 'Please select your role'),
   company: z.string().max(100).trim().optional(),
-  location: z.string().min(1, 'Where are you based?').max(100).trim(),
-  country: z.string().min(1, 'Please select your country'),
+  ...requiredLocationFields,
   phone: phoneSchema,
   tier: z.enum(['Explorer', 'Builder', 'Shaper']).default('Explorer'),
   linkedIn: optionalLinkedIn(),
@@ -124,27 +128,25 @@ export const MembershipSchema = z.object({
   category: z.array(
     z.enum(['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor'])
   ).optional(),
-});
+}).superRefine((data, ctx) => locationSuperRefine(data, ctx));
 
 export const ChapterSchema = z.object({
   fullName: nameField('What should we call you?'),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
-  city: z.string().min(1, 'Which city would you lead?').max(100).trim(),
-  country: z.string().min(1, 'Please select your country'),
+  ...requiredLocationFields,
   phone: phoneSchema,
   whyLead: spamCheckedText('Tell us a bit more about why you want to lead'),
   linkedIn: optionalLinkedIn(),
   communitySize: z.string().max(50).trim().optional(),
   background: z.string().max(2000).trim().optional(),
   chapterVision: z.string().max(2000).trim().optional(),
-});
+}).superRefine((data, ctx) => locationSuperRefine(data, ctx));
 
 export const VenturesSchema = z.object({
   companyName: companyField("What's your company called?"),
   founderName: nameField('What should we call you?'),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
-  country: z.string().max(100).trim().optional(),
-  city: z.string().max(100).trim().optional(),
+  ...optionalLocationFields,
   phone: phoneSchema,
   website: optionalUrl('Please enter a valid URL'),
   linkedIn: optionalLinkedIn(),
@@ -163,8 +165,7 @@ export const VenturesSchema = z.object({
 export const SolutionsSchema = z.object({
   providerName: nameField('What should we call you?'),
   email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
-  country: z.string().max(100).trim().optional(),
-  city: z.string().max(100).trim().optional(),
+  ...optionalLocationFields,
   phone: phoneSchema,
   category: z.enum(['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People'], {
     error: 'Please select a category',
