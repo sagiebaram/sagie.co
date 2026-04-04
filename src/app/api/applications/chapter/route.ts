@@ -17,7 +17,7 @@ export const POST = withValidation(ChapterSchema, async (_req: Request, rawBody)
         Email: { email: body.email },
         'Chapter Lead Applicant': { checkbox: true },
         ...(body.country ? { Country: { select: { name: body.country } } } : {}),
-        ...(body.phone ? { Phone: { phone_number: body.phone } } : {}),
+        Phone: { phone_number: body.phone },
         ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
         ...(body.communitySize ? { 'Existing Community Size': { rich_text: [{ text: { content: body.communitySize } }] } } : {}),
         ...(body.whyLead ? { 'Why Lead': { rich_text: [{ text: { content: body.whyLead } }] } } : {}),

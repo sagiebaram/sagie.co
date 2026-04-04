@@ -80,7 +80,7 @@ export function SolutionsForm() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
-        <PhoneField label="Phone" name="phone" control={control} error={errors.phone?.message} />
+        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
       </div>
       <FormField label="Service Category" name="category" type="select" options={['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People']} required value={watch('category') || ''} onValueChange={(v) => setValue('category', v as 'Operations & Systems' | 'Strategy & Advisory' | 'Technology & Product' | 'Growth & Marketing' | 'Finance & Legal' | 'Talent & People', { shouldValidate: true })} error={errors.category?.message} />
       <FormField label="Tell us about your background" name="bio" type="textarea" placeholder="Your experience and expertise." required registration={register('bio')} error={errors.bio?.message} />

@@ -17,7 +17,7 @@ export const POST = withValidation(VenturesSchema, async (_req: Request, rawBody
         Email: { email: body.email },
         'Contact Name': { rich_text: [{ text: { content: body.founderName } }] },
         ...(body.country ? { Country: { select: { name: body.country } } } : {}),
-        ...(body.phone ? { Phone: { phone_number: body.phone } } : {}),
+        Phone: { phone_number: body.phone },
         'One-Line Description': { rich_text: [{ text: { content: body.oneLineDescription } }] },
         ...(body.sector ? { Sector: { select: { name: body.sector } } } : {}),
         ...(body.stage ? { Stage: { select: { name: body.stage } } } : {}),

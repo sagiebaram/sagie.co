@@ -42,7 +42,7 @@ export const POST = withValidation(MembershipSchema, async (_req: Request, rawBo
         Category: { multi_select: categoryNames },
         Location: { select: { name: mapLocation(body.location || '') } },
         ...(body.country ? { Country: { select: { name: body.country } } } : {}),
-        ...(body.phone ? { Phone: { phone_number: body.phone } } : {}),
+        Phone: { phone_number: body.phone },
         Tier: { select: { name: body.tier || 'Explorer' } },
         Status: { select: { name: 'New' } },
         'Application Status': { select: { name: 'Pending Review' } },

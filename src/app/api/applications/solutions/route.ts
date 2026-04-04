@@ -20,7 +20,7 @@ export const POST = withValidation(SolutionsSchema, async (_req: Request, rawBod
         'Services Offered': { rich_text: [{ text: { content: body.servicesOffered } }] },
         Status: { select: { name: 'Pending Vetting' } },
         ...(body.country ? { Country: { select: { name: body.country } } } : {}),
-        ...(body.phone ? { Phone: { phone_number: body.phone } } : {}),
+        Phone: { phone_number: body.phone },
         ...(body.linkedIn ? { 'LinkedIn URL': { url: body.linkedIn } } : {}),
         ...(body.portfolioUrl ? { Website: { url: body.portfolioUrl } } : {}),
         ...(body.rateRange ? { 'Rate Range': { rich_text: [{ text: { content: body.rateRange } }] } } : {}),

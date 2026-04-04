@@ -97,7 +97,7 @@ export function ChapterForm() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Community size (approx.)" name="communitySize" placeholder="e.g. 200 people in my network" registration={register('communitySize')} error={errors.communitySize?.message} />
-        <PhoneField label="Phone" name="phone" control={control} error={errors.phone?.message} />
+        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
       </div>
       <FormField label="Why is this city ready for a SAGIE chapter?" name="whyLead" type="textarea" placeholder="Tell us why this city is ready." required registration={register('whyLead')} error={errors.whyLead?.message} />
       <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." registration={register('background')} error={errors.background?.message} />

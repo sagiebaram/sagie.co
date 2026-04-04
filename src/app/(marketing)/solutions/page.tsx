@@ -171,13 +171,10 @@ export default function SolutionsPage() {
             <span className="block text-foreground-dim">READY TO OFFER</span>
             <span className="block text-foreground-secondary">YOUR EXPERTISE?</span>
           </h2>
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-8">
+          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-10">
             Join the ecosystem first, then offer your expertise as a Builder.
           </p>
-          <div className="flex flex-col gap-4">
-            <Button variant="primary" href="/apply">Join SAGIE ECO →</Button>
-            <a href="/apply/solutions" className="font-body text-foreground-dim hover:text-foreground-muted transition-colors duration-150 text-caption">Already a Builder? Apply as a Solutions Provider →</a>
-          </div>
+          <Button variant="primary" href="/apply">Join SAGIE ECO →</Button>
         </div>
       </section>
 

@@ -129,7 +129,7 @@ export function MembershipForm() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" autoComplete="url" registration={register('linkedIn')} error={errors.linkedIn?.message} />
-        <PhoneField label="Phone" name="phone" control={control} error={errors.phone?.message} />
+        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
       </div>
 
       <SectionHeader label="Your Interests" />

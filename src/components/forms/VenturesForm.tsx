@@ -92,7 +92,7 @@ export function VenturesForm() {
         <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="https://linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
         <FormField label="Country" name="country" type="select" options={[...COUNTRY_OPTIONS]} value={watch('country') || ''} onValueChange={(v) => setValue('country', v, { shouldValidate: true })} error={errors.country?.message} />
       </div>
-      <PhoneField label="Phone" name="phone" control={control} error={errors.phone?.message} />
+      <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
       <SectionHeader label="Details" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Sector" name="sector" type="select" options={['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other']} value={watch('sector') || ''} onValueChange={(v) => setValue('sector', v as 'Fintech' | 'AI / ML' | 'SaaS' | 'Health Tech' | 'EdTech' | 'Impact / Social' | 'Deep Tech' | 'Other', { shouldValidate: true })} error={errors.sector?.message} />
