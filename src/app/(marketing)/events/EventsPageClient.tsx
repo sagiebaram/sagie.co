@@ -17,6 +17,12 @@ import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/types/events'
 import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
 
+function formatEventDate(dateStr: string): string {
+  const d = dateStr.slice(0, 10)
+  const [y, m, day] = d.split('-')
+  return `${m}-${day}-${y}`
+}
+
 const STATUS_COLORS: Record<string, string> = {
   Confirmed: 'var(--silver)',
   Live: 'var(--color-eco)',
@@ -165,7 +171,7 @@ function EventAccordion({
               </span>
               {event.date ? (
                 <time dateTime={event.date.slice(0, 10)} className="font-body text-foreground-muted text-label shrink-0">
-                  {event.date}
+                  {formatEventDate(event.date)}
                 </time>
               ) : (
                 <span className="font-body text-foreground-muted text-label shrink-0">{event.date}</span>
@@ -232,7 +238,7 @@ function EventAccordion({
                               </span>
                               <span className="font-body text-foreground-muted text-label">
                                 <time dateTime={event.date.slice(0, 10)}>
-                                  {event.date}{event.time ? ` · ${event.time}` : ''}
+                                  {formatEventDate(event.date)}{event.time ? ` · ${event.time}` : ''}
                                 </time>
                               </span>
                             </div>
