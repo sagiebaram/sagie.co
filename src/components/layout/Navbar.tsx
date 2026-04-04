@@ -7,6 +7,7 @@ import { NAV_LINKS } from '@/constants/copy'
 const NAV_ROUTES: Record<string, string> = {
   ECO: '/eco',
   Solutions: '/solutions',
+  Ventures: '/ventures',
   Events: '/events',
   Resources: '/resources',
   Blog: '/blog',
@@ -40,20 +41,20 @@ export function Navbar() {
       >
         Skip to main content
       </a>
-      <div className="max-w-[800px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
+      <div className="max-w-[960px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
         <a href="/">
           <Image
             src="/sagie_logo_nav.png"
             alt="SAGIE"
-            width={180}
-            height={40}
+            width={171}
+            height={38}
             priority
-            style={{ width: 'auto', height: '38px' }}
+            style={{ width: '171px', height: '38px' }}
           />
         </a>
 
         {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {NAV_LINKS.map((item) => (
             <a
               key={item}
@@ -112,7 +113,7 @@ export function Navbar() {
         className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
         aria-hidden={!isOpen}
         style={{
-          maxHeight: isOpen ? '300px' : '0px',
+          maxHeight: isOpen ? '360px' : '0px',
           opacity: isOpen ? 1 : 0,
           borderTop: isOpen ? '1px solid var(--border-strong)' : '0px solid transparent',
         }}

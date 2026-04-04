@@ -1,8 +1,13 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { ChapterForm } from '@/components/forms/ChapterForm'
+
+export const metadata: Metadata = {
+  title: 'Apply — Chapter Lead',
+}
 
 export default function ApplyChapterPage() {
   return (

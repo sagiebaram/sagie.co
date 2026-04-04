@@ -1,8 +1,13 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { VenturesForm } from '@/components/forms/VenturesForm'
+
+export const metadata: Metadata = {
+  title: 'Apply — Ventures Founder',
+}
 
 export default function ApplyVenturesFounderPage() {
   return (

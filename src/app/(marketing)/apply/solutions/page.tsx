@@ -1,8 +1,13 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { SolutionsForm } from '@/components/forms/SolutionsForm'
+
+export const metadata: Metadata = {
+  title: 'Apply — Solutions Provider',
+}
 
 export default function ApplySolutionsPage() {
   return (

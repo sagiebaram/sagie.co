@@ -7,7 +7,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — SAGIE',
+  title: 'Privacy Policy',
   description: 'How SAGIE handles your data. No legalese, no fluff — just what you need to know.',
 }
 
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
               <li>Any free-text you write in open fields</li>
             </ul>
             <p className="mt-4">
-              We don&apos;t collect anything passively beyond what&apos;s described in the <strong className="text-foreground">How We Process Errors</strong> section below. No tracking pixels, no behavioral profiling, no third-party analytics — at least not yet. If that changes, this policy will be updated and you&apos;ll know about it.
+              We don&apos;t collect anything passively beyond what&apos;s described in the <a href="#who-processes-your-data" className="text-silver hover:text-foreground transition-colors underline">Who Processes Your Data</a> section below. No tracking pixels, no behavioral profiling, no third-party analytics — at least not yet. If that changes, this policy will be updated and you&apos;ll know about it.
             </p>
           </LegalSection>
 
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Who Processes Your Data">
+          <LegalSection title="Who Processes Your Data" id="who-processes-your-data">
             <p>We use a small, intentional set of tools. Here&apos;s what each one touches:</p>
 
             <div className="mt-6 space-y-6">
@@ -158,9 +158,9 @@ export default function PrivacyPage() {
   )
 }
 
-function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
+function LegalSection({ title, id, children }: { title: string; id?: string; children: React.ReactNode }) {
   return (
-    <div>
+    <div id={id}>
       <h2 className="font-display uppercase text-chapter tracking-heading text-foreground mb-4">
         {title}
       </h2>

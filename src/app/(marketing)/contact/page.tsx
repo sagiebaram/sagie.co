@@ -6,7 +6,7 @@ import { GridBackground } from '@/components/ui/GridBackground'
 import { ContactForm } from '@/components/forms/ContactForm'
 
 export const metadata: Metadata = {
-  title: 'Contact — SAGIE',
+  title: 'Contact',
   description: 'Get in touch with SAGIE. Reach out for partnerships, speaking inquiries, media requests, or general questions.',
 }
 

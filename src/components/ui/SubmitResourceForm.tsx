@@ -85,7 +85,9 @@ export function SubmitResourceForm() {
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-4">
         <div className="flex flex-col flex-1 min-w-0">
+          <label htmlFor="resource-name" className="sr-only">Resource name</label>
           <input
+            id="resource-name"
             type="text"
             placeholder="Resource name"
             {...nameReg}
@@ -106,7 +108,9 @@ export function SubmitResourceForm() {
           )}
         </div>
         <div className="flex flex-col flex-1 min-w-0">
+          <label htmlFor="resource-url" className="sr-only">Resource URL</label>
           <input
+            id="resource-url"
             type="url"
             placeholder="https://"
             {...urlReg}

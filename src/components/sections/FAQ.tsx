@@ -79,6 +79,7 @@ export function FAQ() {
 
                   {/* Number */}
                   <span
+                    aria-hidden="true"
                     style={{
                       fontFamily: 'var(--font-display)',
                       fontSize: '16px',
