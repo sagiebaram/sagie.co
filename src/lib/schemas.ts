@@ -73,7 +73,8 @@ const spamCheckedText = (minMsg: string, min = 10, max = 2000) =>
 
 // --- Location validation (uses country-state-city library) ---
 
-import { Country, State, City } from 'country-state-city'
+import { Country, State } from 'country-state-city'
+import { COUNTRIES_WITH_STATE_FIELD } from '@/lib/locationData'
 
 /** Location fields for required forms (Membership, Chapter) — validates country→state→city cascade */
 const requiredLocationFields = {
@@ -82,15 +83,14 @@ const requiredLocationFields = {
   city: z.string().min(1, 'Please select or enter a city.').max(100),
 }
 
-/** Cascading location validation — state required if country has states, city must belong to location */
+/** Cascading location validation — state required only for 6 countries (US, AU, CA, BR, MX, IN) */
 function locationSuperRefine(data: { country: string; state?: string | undefined; city: string }, ctx: z.RefinementCtx) {
   if (!Country.getCountryByCode(data.country)) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Invalid country.', path: ['country'] })
     return
   }
-  const countryStates = State.getStatesOfCountry(data.country)
-  const hasStates = countryStates.length > 0
-  if (hasStates) {
+  if (COUNTRIES_WITH_STATE_FIELD.has(data.country)) {
+    const countryStates = State.getStatesOfCountry(data.country)
     if (!data.state) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Please select a state/province.', path: ['state'] })
       return
@@ -100,7 +100,6 @@ function locationSuperRefine(data: { country: string; state?: string | undefined
       return
     }
   }
-  // City validation — allow free text (many valid cities aren't in the dataset)
 }
 
 /** Optional location fields for secondary forms (Ventures, Solutions) */

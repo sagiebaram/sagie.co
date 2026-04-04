@@ -1,4 +1,5 @@
 import { Country, State, City, type ICountry, type IState, type ICity } from 'country-state-city'
+import { COUNTRIES_WITH_STATE_FIELD } from '@/lib/locationData'
 
 // --- Chapter data (SAGIE presence) ---
 
@@ -41,8 +42,9 @@ export function getCities(countryCode: string, stateCode?: string): ICity[] {
   return City.getCitiesOfCountry(countryCode) ?? []
 }
 
-export function countryHasStates(countryCode: string): boolean {
-  return State.getStatesOfCountry(countryCode).length > 0
+/** Only show state field for these 6 countries, regardless of library data */
+export function showStateField(countryCode: string): boolean {
+  return COUNTRIES_WITH_STATE_FIELD.has(countryCode)
 }
 
 /** Check if a city is a chapter city for the given country */

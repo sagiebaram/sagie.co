@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useMemo } from 'react'
-import { FormField } from '@/components/ui/FormField'
-import { SORTED_COUNTRIES, getStates, getCities, countryHasStates, sortedCities } from '@/lib/location'
+import { FormField, type OptionGroup } from '@/components/ui/FormField'
+import { SORTED_COUNTRIES, getStates, getCities, showStateField, sortedCities } from '@/lib/location'
+import { getCuratedCities } from '@/lib/locationData'
 
 interface LocationFieldsProps {
   country: string
@@ -36,11 +37,17 @@ export function LocationFields({
   const prevCountry = useRef(country)
   const prevState = useRef(state)
 
-  // Country change → reset state + city
+  // Country change → reset state + city, auto-select single-city countries
   useEffect(() => {
     if (prevCountry.current !== country) {
       onStateChange('')
-      onCityChange('')
+      const curated = getCuratedCities(country)
+      const allCities = curated?.flatMap((g) => g.cities) ?? []
+      if (allCities.length === 1 && allCities[0]) {
+        onCityChange(allCities[0])
+      } else {
+        onCityChange('')
+      }
       prevCountry.current = country
     }
   }, [country, onStateChange, onCityChange])
@@ -53,21 +60,35 @@ export function LocationFields({
     }
   }, [state, onCityChange])
 
-  const states = useMemo(() => (country ? getStates(country) : []), [country])
-  const hasStates = states.length > 0
+  const hasStateField = showStateField(country)
+  const states = useMemo(() => (hasStateField ? getStates(country) : []), [country, hasStateField])
 
-  const rawCities = useMemo(() => {
-    if (!country) return []
-    if (hasStates && state) return getCities(country, state)
-    if (!hasStates) return getCities(country)
-    return []
-  }, [country, state, hasStates])
-
-  const cities = useMemo(
-    () => sortedCities(country, rawCities),
-    [country, rawCities],
+  // --- City resolution: curated groups take priority over library data ---
+  const curatedGroups = useMemo(
+    () => getCuratedCities(country, state),
+    [country, state],
   )
 
+  const libraryCities = useMemo(() => {
+    if (curatedGroups) return [] // curated takes priority
+    if (!country) return []
+    if (hasStateField && state) return getCities(country, state)
+    if (!hasStateField) return getCities(country)
+    return []
+  }, [country, state, hasStateField, curatedGroups])
+
+  const sortedLibCities = useMemo(
+    () => sortedCities(country, libraryCities),
+    [country, libraryCities],
+  )
+
+  // Convert library cities to flat options (existing behavior)
+  const flatCityOptions = useMemo(
+    () => sortedLibCities.map((c) => c.name),
+    [sortedLibCities],
+  )
+
+  // --- Country/state option helpers (unchanged) ---
   const countryOptions = useMemo(
     () => SORTED_COUNTRIES.map((c) => c.isoCode),
     [],
@@ -94,15 +115,18 @@ export function LocationFields({
     return map
   }, [states])
 
-  const cityOptions = useMemo(
-    () => cities.map((c) => c.name),
-    [cities],
-  )
+  // Decide if city should be shown (need country, and if state-field country, need state)
+  const showCity = country && (!hasStateField || state)
+
+  // Convert curated groups to OptionGroup[] for FormField
+  const cityOptionGroups: OptionGroup[] | undefined = curatedGroups
+    ? curatedGroups.map((g) => ({ label: g.label, options: g.cities }))
+    : undefined
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Country + State row */}
-      <div style={{ display: 'grid', gridTemplateColumns: hasStates ? '1fr 1fr' : '1fr', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: hasStateField ? '1fr 1fr' : '1fr', gap: '16px' }}>
         <FormField
           label="Country"
           name="country"
@@ -114,7 +138,7 @@ export function LocationFields({
           onValueChange={onCountryChange}
           error={countryError}
         />
-        {hasStates && (
+        {hasStateField && (
           <FormField
             label="State / Province"
             name="state"
@@ -130,23 +154,51 @@ export function LocationFields({
       </div>
 
       {/* City */}
-      {cityOptions.length > 0 ? (
-        <FormField
-          label={cityLabel}
-          name="city"
-          type="select"
-          options={cityOptions}
-          required={required}
-          value={city}
-          onValueChange={onCityChange}
-          allowOther
-          error={cityError}
-        />
+      {showCity ? (
+        cityOptionGroups ? (
+          // Curated grouped city list
+          <FormField
+            label={cityLabel}
+            name="city"
+            type="select"
+            optionGroups={cityOptionGroups}
+            required={required}
+            value={city}
+            onValueChange={onCityChange}
+            allowOther
+            error={cityError}
+          />
+        ) : flatCityOptions.length > 0 ? (
+          // Library city data (flat list, chapter cities sorted first)
+          <FormField
+            label={cityLabel}
+            name="city"
+            type="select"
+            options={flatCityOptions}
+            required={required}
+            value={city}
+            onValueChange={onCityChange}
+            allowOther
+            error={cityError}
+          />
+        ) : (
+          // No city data — free text
+          <FormField
+            label={cityLabel}
+            name="city"
+            placeholder={cityPlaceholder}
+            required={required}
+            value={city}
+            onValueChange={onCityChange}
+            error={cityError}
+          />
+        )
       ) : (
+        // Country not selected yet, or state-field country without state selected
         <FormField
           label={cityLabel}
           name="city"
-          placeholder={country ? cityPlaceholder : 'Select a country first'}
+          placeholder={!country ? 'Select a country first' : 'Select a state first'}
           required={required}
           value={city}
           onValueChange={onCityChange}
