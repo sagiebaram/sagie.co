@@ -12,11 +12,17 @@ export function ShareButton() {
   }
 
   return (
-    <button
-      onClick={handleShare}
-      className="font-body text-foreground-muted text-label tracking-mid uppercase hover:text-silver hover:-translate-y-px transition-all duration-150"
-    >
-      {copied ? 'Copied!' : 'Share →'}
-    </button>
+    <>
+      <button
+        onClick={handleShare}
+        aria-label="Share this post"
+        className="font-body text-foreground-muted text-label tracking-mid uppercase hover:text-silver hover:-translate-y-px transition-all duration-150"
+      >
+        {copied ? 'Copied!' : 'Share →'}
+      </button>
+      <span aria-live="polite" className="sr-only">
+        {copied ? 'Link copied to clipboard' : ''}
+      </span>
+    </>
   )
 }

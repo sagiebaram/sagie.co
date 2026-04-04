@@ -26,7 +26,7 @@ export default function ApplyChapterPage() {
             <span className="block text-foreground-secondary">TO YOUR CITY.</span>
           </h1>
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
-            Chapter Leads are selected, not self-appointed. If the timing and alignment are right, the conversation will happen.
+            Tell us about your city. We&apos;ll take it from there.
           </p>
           <ChapterForm />
         </div>

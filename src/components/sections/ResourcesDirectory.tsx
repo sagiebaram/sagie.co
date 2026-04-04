@@ -335,14 +335,14 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
             Know something the ecosystem should know about?
           </h2>
           <p className="font-body text-foreground-muted text-body-lg font-light leading-[1.7] mb-10 max-w-[520px]">
-            Submit a resource and we&apos;ll review it for the directory.
+            Submit a resource to the directory.
           </p>
           <SubmitResourceForm />
           <p
             className="font-body uppercase mt-5"
             style={{ fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
           >
-            Category · Description · Your name collected on next step
+            Category · Description · Your name
           </p>
         </div>
       </section>
