@@ -19,7 +19,7 @@ import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
 
 const STATUS_COLORS: Record<string, string> = {
   Confirmed: 'var(--silver)',
-  Live: '#2E7D32',
+  Live: 'var(--color-eco)',
   Planning: 'var(--text-dim)',
   Complete: 'var(--text-dim)',
   Concept: 'var(--text-dim)',
