@@ -12,9 +12,12 @@ Built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4.
 - **Styling:** Tailwind CSS v4 (inline theme via `globals.css`)
 - **Animations:** GSAP (ScrollTrigger + SplitText) + Motion
 - **3D:** Three.js / react-globe.gl (lazy-loaded via `GlobeShell`)
-- **Forms:** react-hook-form + Zod
+- **Forms:** react-hook-form + Zod + react-phone-number-input
+- **Location:** country-state-city (cascading country → state → city dropdowns)
+- **Phone Validation:** libphonenumber-js (international phone number validation)
 - **Database:** Notion API (`@notionhq/client`)
 - **Email:** Resend + React Email
+- **Newsletter:** Beehiiv API integration
 - **Error Monitoring:** Sentry (client + server + edge)
 - **Testing:** Vitest (unit) + Playwright (E2E)
 - **Deployment:** Vercel + GitHub Actions CI/CD
@@ -44,6 +47,8 @@ Copy `.env.example` to `.env.local` and fill in the required values:
 | `NOTION_MEMBER_DB_ID` | Yes | Membership database ID |
 | `NOTION_VENTURES_INTAKE_DB_ID` | Yes | Ventures intake database ID |
 | `NOTION_CHAPTERS_DB_ID` | No | Chapter features database ID |
+| `BEEHIIV_API_KEY` | No | Beehiiv newsletter API key |
+| `BEEHIIV_PUBLICATION_ID` | No | Beehiiv publication identifier |
 | `ALLOWED_ORIGINS` | Yes | Comma-separated allowed origins |
 | `REVALIDATE_SECRET` | No | Secret for on-demand ISR revalidation |
 | `RESEND_API_KEY` | No | Email delivery via Resend (skipped in dev/test) |
@@ -69,17 +74,17 @@ Copy `.env.example` to `.env.local` and fill in the required values:
 src/
 ├── app/                    # Next.js App Router pages & layout
 │   ├── (marketing)/        # Public pages (home, blog, events, apply, legal)
-│   └── api/                # API route handlers (7 endpoints)
+│   └── api/                # API route handlers (11 endpoints)
 ├── components/
 │   ├── forms/              # Form components (6 forms with honeypot protection)
 │   ├── layout/             # Navbar, Footer
 │   ├── sections/           # Hero, Pillars, Tiers, FAQ, SocialProof, etc.
-│   └── ui/                 # Reusable UI components
+│   └── ui/                 # Reusable UI (LocationFields, PhoneField, NewsletterForm, etc.)
 ├── constants/              # Copy & persona data
 ├── emails/                 # React Email templates (confirmation + admin alert)
 ├── env/                    # Zod-validated environment variables
 ├── hooks/                  # Custom hooks (useScrollReveal)
-├── lib/                    # Notion client, validation, schemas, monitoring
+├── lib/                    # Notion client, validation, schemas, location data, monitoring
 └── types/                  # TypeScript type definitions
 ```
 
@@ -88,6 +93,7 @@ src/
 ### Pages
 
 - **Home** — Hero, Belief, Pillars, WhoItsFor, SocialProof, ChapterMap, Tiers, FAQ, Founder, CTA
+- **Pillars** — ECO (ecosystem page), Ventures (venture pillar page)
 - **Content** — Blog, Events, Resources, Solutions (all Notion-driven with filters)
 - **Applications** — Membership, Chapter Lead, Solutions Provider, Ventures Intake
 - **Legal** — Privacy Policy, Terms of Service, Contact
@@ -100,9 +106,12 @@ All form submissions go through validated API routes:
 - `/api/applications/chapter` — Chapter lead applications
 - `/api/applications/solutions` — Solutions provider applications
 - `/api/applications/ventures` — Ventures intake
+- `/api/subscribe` — Newsletter subscription (Beehiiv integration)
+- `/api/contact` — Contact form submissions
 - `/api/submit-post` — Community blog post submissions
 - `/api/suggest-event` — Event suggestions
 - `/api/submit-resource` — Resource submissions
+- `/api/events/[id]/ics` — iCalendar file generation for events
 - `/api/revalidate` — ISR cache invalidation (secret-protected)
 
 Each route uses:
@@ -116,6 +125,8 @@ Each route uses:
 - **Honeypot fields** (`_trap` + `_t` timing) on all forms — bots get silent 200s
 - **Rate limiting** — 5 requests per IP per 10 minutes on all form endpoints
 - **Zod validation** on both client and server — invalid data returns 422 with field errors
+- **RFC 5321 email validation** — production-grade email checks beyond basic regex
+- **International phone validation** — libphonenumber-js for E.164 phone number validation
 - **Environment validation** — server env vars validated at startup via `src/env/server.ts`
 
 ### Performance
