@@ -80,9 +80,13 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
                 >
                   {provider.memberTier}
                 </span>
-                <span className="font-body text-foreground-muted text-caption tracking-mid">
+                <a
+                  href="/apply/solutions"
+                  aria-label={`Work with ${provider.name}`}
+                  className="font-body text-foreground-muted text-caption tracking-mid hover:text-silver transition-colors duration-150"
+                >
                   Work with me →
-                </span>
+                </a>
               </div>
             </div>
           ))}
