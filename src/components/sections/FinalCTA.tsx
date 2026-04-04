@@ -1,9 +1,9 @@
 'use client'
 
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Section } from '@/components/ui/Section'
 import { Button } from '@/components/ui/Button'
-import { gsap } from '@/lib/gsap'
+import { getGSAP } from '@/lib/gsap'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { FINAL_CTA } from '@/constants/copy'
 
@@ -11,29 +11,37 @@ export function FinalCTA() {
   const sectionRef = useScrollReveal({ y: 24, duration: 0.6 })
   const taglineRef = useRef<HTMLParagraphElement>(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) return
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.tagline-letter-hi',
-        { opacity: 0.1 },
-        {
-          opacity: 1,
-          duration: 0.3,
-          stagger: 0.08,
-          ease: 'power1.out',
-          scrollTrigger: {
-            trigger: taglineRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
-    }, taglineRef)
+    let ctx: any
 
-    return () => ctx.revert()
+    const init = async () => {
+      const { gsap } = await getGSAP()
+
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          '.tagline-letter-hi',
+          { opacity: 0.1 },
+          {
+            opacity: 1,
+            duration: 0.3,
+            stagger: 0.08,
+            ease: 'power1.out',
+            scrollTrigger: {
+              trigger: taglineRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+          }
+        )
+      }, taglineRef)
+    }
+
+    init()
+
+    return () => { ctx?.revert() }
   }, [])
 
   return (

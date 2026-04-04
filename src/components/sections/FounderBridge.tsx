@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { FOUNDER, SITE } from '@/constants/copy'
-import { gsap } from '@/lib/gsap'
+import { getGSAP } from '@/lib/gsap'
 
 export function FounderBridge() {
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -14,44 +14,48 @@ export function FounderBridge() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) return
 
-    const ctx = gsap.context(() => {
-      // Photo slides in from left
-      gsap.fromTo(
-        '.founder-photo',
-        { opacity: 0, x: -40 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.7,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
+    let ctx: { revert: () => void } | undefined
 
-      // Text elements stagger in
-      gsap.fromTo(
-        ['.founder-name', '.founder-title', '.founder-body', '.founder-link'],
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
-    }, sectionRef)
+    getGSAP().then(({ gsap }) => {
+      ctx = gsap.context(() => {
+        // Photo slides in from left
+        gsap.fromTo(
+          '.founder-photo',
+          { opacity: 0, x: -40 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.7,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+          }
+        )
 
-    return () => ctx.revert()
+        // Text elements stagger in
+        gsap.fromTo(
+          ['.founder-name', '.founder-title', '.founder-body', '.founder-link'],
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+          }
+        )
+      }, sectionRef)
+    })
+
+    return () => ctx?.revert()
   }, [])
 
   return (

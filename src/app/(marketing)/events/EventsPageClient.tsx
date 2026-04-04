@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import { useQueryState, parseAsString } from 'nuqs'
 import { Navbar } from '@/components/layout/Navbar'
@@ -11,6 +12,7 @@ import { GridBackground } from '@/components/ui/GridBackground'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { EventFilter } from '@/components/ui/EventFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { ErrorPage } from '@/components/ui/ErrorPage'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/types/events'
 import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
@@ -293,10 +295,13 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 export function EventsPageClient({
   upcoming,
   past,
+  fetchError = false,
 }: {
   upcoming: SAGIEEvent[]
   past: SAGIEEvent[]
+  fetchError?: boolean
 }) {
+  const router = useRouter()
   const [openId, setOpenId] = useState<string | null>(null)
   const [activeLocation, setActiveLocation] = useQueryState(
     'location',
@@ -343,8 +348,29 @@ export function EventsPageClient({
         </PageHeroAnimation>
       </section>
 
+      {/* Error state */}
+      {fetchError && (
+        <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
+          <GridBackground />
+          <div className="relative z-10 max-w-[880px] mx-auto">
+            <ErrorPage
+              title="Connection Issue"
+              message="Unable to load events. Please try again."
+              illustration={
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground-muted">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+              }
+              onRetry={() => router.refresh()}
+            />
+          </div>
+        </section>
+      )}
+
       {/* Upcoming Events */}
-      {upcoming.length > 0 && (
+      {!fetchError && upcoming.length > 0 && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
           <GridBackground />
           <div ref={upcomingRef} className="relative z-10 max-w-[880px] mx-auto">
@@ -379,7 +405,7 @@ export function EventsPageClient({
       )}
 
       {/* No upcoming events fallback */}
-      {upcoming.length === 0 && (
+      {!fetchError && upcoming.length === 0 && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
           <GridBackground />
           <div className="relative z-10 max-w-[880px] mx-auto">
@@ -392,7 +418,7 @@ export function EventsPageClient({
       )}
 
       {/* Past Events */}
-      {past.length > 0 && (
+      {!fetchError && past.length > 0 && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
           <GridBackground />
           <div className="relative z-10 max-w-[880px] mx-auto">

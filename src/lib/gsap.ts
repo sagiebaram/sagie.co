@@ -1,9 +1,24 @@
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { SplitText } from 'gsap/SplitText'
+import type { default as GSAPType } from 'gsap'
+import type { default as ScrollTriggerType } from 'gsap/ScrollTrigger'
+import type { default as SplitTextType } from 'gsap/SplitText'
 
-if (typeof window !== 'undefined') {
+let cached: {
+  gsap: typeof GSAPType
+  ScrollTrigger: typeof ScrollTriggerType
+  SplitText: typeof SplitTextType
+} | null = null
+
+export async function getGSAP() {
+  if (cached) return cached
+
+  const [{ gsap }, { ScrollTrigger }, { SplitText }] = await Promise.all([
+    import('gsap'),
+    import('gsap/ScrollTrigger'),
+    import('gsap/SplitText'),
+  ])
+
   gsap.registerPlugin(ScrollTrigger, SplitText)
-}
 
-export { gsap, ScrollTrigger, SplitText }
+  cached = { gsap, ScrollTrigger, SplitText }
+  return cached
+}

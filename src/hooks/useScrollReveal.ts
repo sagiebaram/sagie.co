@@ -1,7 +1,7 @@
 'use client'
 
-import { useLayoutEffect, useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { useEffect, useRef } from 'react'
+import { getGSAP } from '@/lib/gsap'
 
 export interface UseScrollRevealOptions {
   y?: number
@@ -17,42 +17,50 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
   const { y = 24, duration = 0.6, delay = 0, stagger = 0, selector, filterKey } = options
   const isFirstRender = useRef(true)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const currentRef = ref.current
     if (!currentRef) return
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mediaQuery.matches) return
 
-    const ctx = gsap.context(() => {
-      const target = selector
-        ? gsap.utils.toArray<Element>(selector, currentRef)
-        : currentRef
+    let ctx: any
 
-      if (!target || (Array.isArray(target) && target.length === 0)) {
-        return
-      }
+    const init = async () => {
+      const { gsap, ScrollTrigger: _ST } = await getGSAP()
 
-      gsap.fromTo(
-        target as any,
-        { opacity: 0, y },
-        {
-          opacity: 1,
-          y: 0,
-          duration,
-          delay,
-          ease: 'power2.out',
-          stagger,
-          scrollTrigger: {
-            trigger: currentRef,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          },
+      ctx = gsap.context(() => {
+        const target = selector
+          ? gsap.utils.toArray<Element>(selector, currentRef)
+          : currentRef
+
+        if (!target || (Array.isArray(target) && target.length === 0)) {
+          return
         }
-      )
-    }, ref)
 
-    return () => ctx.revert()
+        gsap.fromTo(
+          target as any,
+          { opacity: 0, y },
+          {
+            opacity: 1,
+            y: 0,
+            duration,
+            delay,
+            ease: 'power2.out',
+            stagger,
+            scrollTrigger: {
+              trigger: currentRef,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          }
+        )
+      }, ref)
+    }
+
+    init()
+
+    return () => { ctx?.revert() }
   }, [y, duration, delay, stagger, selector])
 
   useEffect(() => {
@@ -69,18 +77,25 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
     el.style.opacity = '0'
     el.style.transition = ''
 
-    const rafId = requestAnimationFrame(() => {
-      el.style.transition = 'opacity 200ms ease-out'
-      el.style.opacity = '1'
+    let rafId: number
 
-      // Override CSS opacity:0 on child card elements
-      if (selector) {
-        const children = gsap.utils.toArray<HTMLElement>(selector, el)
-        children.forEach((child) => {
-          child.style.opacity = '1'
-        })
-      }
-    })
+    const update = async () => {
+      const { gsap } = await getGSAP()
+
+      rafId = requestAnimationFrame(() => {
+        el.style.transition = 'opacity 200ms ease-out'
+        el.style.opacity = '1'
+
+        if (selector) {
+          const children = gsap.utils.toArray<HTMLElement>(selector, el)
+          children.forEach((child) => {
+            child.style.opacity = '1'
+          })
+        }
+      })
+    }
+
+    update()
 
     return () => {
       cancelAnimationFrame(rafId)
