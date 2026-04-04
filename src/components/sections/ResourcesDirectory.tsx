@@ -196,9 +196,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                   style={{ border: '1px solid var(--border-default)' }}
                 >
                   {/* Collapsed card */}
-                  <button
-                    type="button"
-                    onClick={() => setExpandedId(isExpanded ? null : resource.id)}
+                  <div
                     className="w-full text-left p-7 flex flex-col gap-4 transition-colors duration-200"
                     style={{
                       background: isExpanded ? 'var(--bg-card-featured)' : 'transparent',
@@ -210,7 +208,12 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                       if (!isExpanded) e.currentTarget.style.background = 'transparent'
                     }}
                   >
-                    <div className="flex items-start justify-between gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedId(isExpanded ? null : resource.id)}
+                      className="w-full text-left flex items-start justify-between gap-3"
+                      aria-expanded={isExpanded}
+                    >
                       <span
                         className="font-display uppercase"
                         style={{ fontSize: '20px', color: 'var(--silver)', letterSpacing: '0.04em' }}
@@ -223,7 +226,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                       >
                         {isExpanded ? '\u2212' : '+'}
                       </span>
-                    </div>
+                    </button>
                     <p
                       className="font-body font-light leading-[1.7]"
                       style={{ fontSize: '14px', color: 'var(--text-muted)' }}
@@ -241,7 +244,6 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                         href={resource.url ?? '#'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
                         className="font-body uppercase shrink-0 hover:text-silver transition-colors duration-150"
                         style={{
                           fontSize: '11px',
@@ -254,7 +256,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                         Visit →
                       </a>
                     </div>
-                  </button>
+                  </div>
 
                   {/* Expanded panel */}
                   <AnimatePresence>

@@ -58,7 +58,7 @@ export function Navbar() {
             <a
               key={item}
               href={navHref(item)}
-              className="font-body uppercase text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-label tracking-label"
+              className="font-body uppercase text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 text-label tracking-label"
             >
               {item}
             </a>
@@ -110,6 +110,7 @@ export function Navbar() {
       <div
         id="mobile-menu"
         className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+        aria-hidden={!isOpen}
         style={{
           maxHeight: isOpen ? '300px' : '0px',
           opacity: isOpen ? 1 : 0,
@@ -122,7 +123,8 @@ export function Navbar() {
               key={item}
               href={navHref(item)}
               onClick={() => setIsOpen(false)}
-              className="font-body uppercase text-foreground-muted hover:text-silver transition-all duration-200 text-label tracking-label py-3 border-b border-border-subtle"
+              tabIndex={isOpen ? 0 : -1}
+              className="font-body uppercase text-foreground-secondary hover:text-silver transition-all duration-200 text-label tracking-label py-3 border-b border-border-subtle"
               style={{
                 transitionDelay: isOpen ? `${i * 60}ms` : '0ms',
                 transform: isOpen ? 'translateX(0)' : 'translateX(-12px)',
@@ -135,6 +137,7 @@ export function Navbar() {
           <a
             href="/apply"
             onClick={() => setIsOpen(false)}
+            tabIndex={isOpen ? 0 : -1}
             className="font-body uppercase text-silver hover:text-foreground transition-all duration-200 text-label tracking-label py-3"
             style={{
               transitionDelay: isOpen ? `${NAV_LINKS.length * 60}ms` : '0ms',
