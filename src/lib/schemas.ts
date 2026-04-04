@@ -10,6 +10,40 @@ const COMPANY_REGEX = /^[\p{L}\p{M}\p{N}][\p{L}\p{M}\p{N}\s\-&'.,/()+!#@%]+$/u;
 const LINKEDIN_REGEX =
   /^https?:\/\/(www\.)?linkedin\.com\/(in|company|pub|school)\/[a-zA-Z0-9\-_%.\u00C0-\u017F]+\/?$/i;
 
+/** Production-grade email validation — covers RFC 5321 limits and common formatting traps */
+const emailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(5, 'Email is too short.')
+  .max(254, 'Email is too long.')
+  .email('Please enter a valid email address.')
+  .refine(
+    (val) => {
+      const parts = val.split('@');
+      const local = parts[0] ?? '';
+      const domain = parts[1] ?? '';
+      return (
+        local.length <= 64 &&
+        !local.startsWith('.') &&
+        !local.endsWith('.') &&
+        !local.includes('..') &&
+        domain.length > 0 &&
+        !domain.startsWith('.') &&
+        !domain.endsWith('.') &&
+        !domain.includes('..')
+      );
+    },
+    'Email address format is invalid.',
+  )
+  .refine(
+    (val) => {
+      const domain = val.split('@')[1] ?? '';
+      return /^[^\s@]+\.[a-z]{2,63}$/i.test(domain);
+    },
+    'Email domain appears invalid.',
+  );
+
 /** Transform empty strings to undefined so .url().optional() works with blank form fields */
 const optionalUrl = (message: string) =>
   z.string().optional().transform((val) => (val === '' ? undefined : val)).pipe(z.string().url(message).optional())
@@ -113,7 +147,7 @@ const optionalLocationFields = {
 
 export const MembershipSchema = z.object({
   fullName: nameField('What should we call you?'),
-  email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+  email: emailSchema,
   role: z.string().min(1, 'Please select your role'),
   company: z.string().max(100).trim().optional(),
   ...requiredLocationFields,
@@ -131,7 +165,7 @@ export const MembershipSchema = z.object({
 
 export const ChapterSchema = z.object({
   fullName: nameField('What should we call you?'),
-  email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+  email: emailSchema,
   ...requiredLocationFields,
   phone: phoneSchema,
   whyLead: spamCheckedText('Tell us a bit more about why you want to lead'),
@@ -144,7 +178,7 @@ export const ChapterSchema = z.object({
 export const VenturesSchema = z.object({
   companyName: companyField("What's your company called?"),
   founderName: nameField('What should we call you?'),
-  email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+  email: emailSchema,
   ...optionalLocationFields,
   phone: phoneSchema,
   website: optionalUrl('Please enter a valid URL'),
@@ -163,7 +197,7 @@ export const VenturesSchema = z.object({
 
 export const SolutionsSchema = z.object({
   providerName: nameField('What should we call you?'),
-  email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+  email: emailSchema,
   ...optionalLocationFields,
   phone: phoneSchema,
   category: z.enum(['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People'], {
@@ -184,18 +218,22 @@ export const EventSuggestionSchema = z.object({
 
 export const ContactSchema = z.object({
   name: z.string().min(1, 'What should we call you?').max(100).trim(),
-  email: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+  email: emailSchema,
   subject: z.enum(['General Inquiry', 'Partnership', 'Speaking', 'Media', 'Other'], {
     error: 'Please select a subject',
   }),
   message: z.string().min(10, 'Tell us a bit more').max(2000).trim(),
 });
 
+export const SubscribeSchema = z.object({
+  email: emailSchema,
+});
+
 export const SubmitPostSchema = z.object({
   postTitle: z.string().min(1, 'Give your post a title').max(200).trim(),
   category: z.string().min(1, 'Please select a category').max(100).trim(),
   yourName: z.string().min(1, 'What should we call you?').max(100).trim(),
-  yourEmail: z.string().email("That doesn't look like an email address").max(254).trim().toLowerCase(),
+  yourEmail: emailSchema,
   content: z.string().min(10, 'Tell us more — we need at least a few sentences').max(5000).trim(),
   url: optionalUrl('Please enter a valid URL'),
 });
