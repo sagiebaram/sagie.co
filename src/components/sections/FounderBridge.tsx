@@ -180,26 +180,43 @@ function FounderContent() {
           <p key={i}>{para}</p>
         ))}
       </div>
-      <a
-        href={SITE.founderUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="founder-link hover:-translate-y-px transition-transform duration-150"
-        style={{
-          fontSize: '11px',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: 'var(--silver)',
-          borderBottom: '0.5px solid var(--text-muted)',
-          paddingBottom: '2px',
-          display: 'inline-block',
-          marginTop: '20px',
-          textDecoration: 'none',
-          width: 'fit-content',
-        }}
-      >
-        {FOUNDER.link}
-      </a>
+      <div className="founder-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto', paddingTop: '20px' }}>
+        <a
+          href={SITE.founderUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:-translate-y-px transition-transform duration-150"
+          style={{
+            fontSize: '11px',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--silver)',
+            borderBottom: '0.5px solid var(--text-muted)',
+            paddingBottom: '2px',
+            textDecoration: 'none',
+          }}
+        >
+          {FOUNDER.link}
+        </a>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>|</span>
+        <a
+          href="https://www.linkedin.com/in/sagie-baram"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:-translate-y-px transition-transform duration-150"
+          style={{
+            fontSize: '11px',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--silver)',
+            borderBottom: '0.5px solid var(--text-muted)',
+            paddingBottom: '2px',
+            textDecoration: 'none',
+          }}
+        >
+          LinkedIn
+        </a>
+      </div>
     </>
   )
 }
