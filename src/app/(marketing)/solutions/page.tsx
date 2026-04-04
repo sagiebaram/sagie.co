@@ -87,16 +87,17 @@ export default function SolutionsPage() {
       {/* How it works */}
       <Section>
         <Eyebrow>How it works</Eyebrow>
+        <h2 className="sr-only">How it works</h2>
         <ScrollReveal selector=".step" stagger={0.12} y={20} duration={0.55}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {STEPS.map((step) => (
               <div key={step.num} className="step py-6 border-t border-border-subtle">
-                <p className="font-display text-foreground-dim text-caption tracking-heading mb-2">
+                <p className="font-display text-foreground-dim text-caption tracking-heading mb-2" aria-hidden="true">
                   {step.num}
                 </p>
-                <p className="font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
+                <h3 className="font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
                   {step.title}
-                </p>
+                </h3>
                 <p className="font-body text-foreground-muted text-body font-light leading-[1.75]">
                   {step.desc}
                 </p>
@@ -109,6 +110,7 @@ export default function SolutionsPage() {
       {/* Service categories */}
       <Section>
         <Eyebrow>Service categories</Eyebrow>
+        <h2 className="sr-only">Service categories</h2>
         <ScrollReveal selector=".cat-card" stagger={0.06} y={16} duration={0.45}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px">
             {SERVICE_CATEGORIES.map((cat) => (
@@ -158,6 +160,7 @@ export default function SolutionsPage() {
       {/* Community Providers */}
       <Section>
         <Eyebrow>Community Providers</Eyebrow>
+        <h2 className="sr-only">Community Providers</h2>
         <Suspense fallback={<ProvidersSkeleton />}>
           <ProvidersContent />
         </Suspense>

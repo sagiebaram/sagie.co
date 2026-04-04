@@ -49,12 +49,14 @@ export default function PrivacyPage() {
               <li>Email address</li>
               <li>City</li>
               <li>Role or title</li>
+              <li>Phone number</li>
+              <li>Country</li>
               <li>LinkedIn URL</li>
               <li>Company or organization</li>
               <li>Any free-text you write in open fields</li>
             </ul>
             <p className="mt-4">
-              We don&apos;t collect anything passively beyond what&apos;s described in the <a href="#who-processes-your-data" className="text-silver hover:text-foreground transition-colors underline">Who Processes Your Data</a> section below. No tracking pixels, no behavioral profiling, no third-party analytics — at least not yet. If that changes, this policy will be updated and you&apos;ll know about it.
+              We don&apos;t collect anything passively beyond what&apos;s described in the <a href="#who-processes-your-data" className="text-silver hover:text-foreground transition-colors underline">Who Processes Your Data</a>{' '}section below. No tracking pixels, no behavioral profiling, no third-party analytics — at least not yet. If that changes, this policy will be updated and you&apos;ll know about it.
             </p>
           </LegalSection>
 
@@ -75,7 +77,10 @@ export default function PrivacyPage() {
             <div className="mt-6 space-y-6">
               <div>
                 <p className="text-foreground font-medium">Notion</p>
-                <p className="mt-1">Stores form submissions. This is where your data lives.</p>
+                <p className="mt-1">
+                  Stores form submissions. This is where your data lives. See{' '}
+                  <a href="https://www.notion.so/privacy" target="_blank" rel="noopener noreferrer" className="text-silver hover:text-foreground transition-colors underline">Notion&apos;s privacy policy</a>.
+                </p>
               </div>
               <div>
                 <p className="text-foreground font-medium">Resend</p>
