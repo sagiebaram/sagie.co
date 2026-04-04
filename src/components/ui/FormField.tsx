@@ -3,6 +3,11 @@
 import { useState, useRef, useEffect } from 'react'
 import type { UseFormRegisterReturn } from 'react-hook-form'
 
+export interface OptionGroup {
+  label: string
+  options: string[]
+}
+
 interface FormFieldProps {
   label: string
   name: string
@@ -10,6 +15,8 @@ interface FormFieldProps {
   placeholder?: string | undefined
   required?: boolean | undefined
   options?: string[] | undefined
+  optionGroups?: OptionGroup[] | undefined
+  optionLabels?: Record<string, string> | undefined
   value?: string | string[] | undefined
   onValueChange?: ((value: string) => void) | undefined
   onArrayChange?: ((value: string[]) => void) | undefined
@@ -31,24 +38,31 @@ const INPUT_STYLE: React.CSSProperties = {
   display: 'block',
 }
 
-function DropdownSelect({ name, options, value, placeholder, onValueChange, allowOther }: {
+function DropdownSelect({ name, options, optionGroups, value, placeholder, onValueChange, allowOther, optionLabels }: {
   name: string
   options: string[]
+  optionGroups?: OptionGroup[] | undefined
   value: string
   placeholder?: string | undefined
   onValueChange?: ((value: string) => void) | undefined
   allowOther?: boolean | undefined
+  optionLabels?: Record<string, string> | undefined
 }) {
+  const getLabel = (option: string) => optionLabels?.[option] ?? option
   const [isOpen, setIsOpen] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const [otherText, setOtherText] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const allOptions = allowOther ? [...options, 'Other'] : options
+  // Build flat option list — from groups if provided, otherwise from options prop
+  const flatOptions = optionGroups
+    ? optionGroups.flatMap((g) => g.options)
+    : options
+  const allOptions = allowOther ? [...flatOptions, 'Other'] : flatOptions
   const isOtherSelected = allowOther && value === 'Other'
   const isCustomValue = allowOther && value !== '' && !allOptions.includes(value)
-  const displayValue = isCustomValue ? 'Other' : value
+  const displayValue = isCustomValue ? 'Other' : getLabel(value)
 
   useEffect(() => {
     function handleMouseDown(e: MouseEvent) {
@@ -158,26 +172,77 @@ function DropdownSelect({ name, options, value, placeholder, onValueChange, allo
           maxHeight: '200px',
           overflowY: 'auto',
         }}>
-          {allOptions.map((option, index) => (
-            <div
-              key={option}
-              role="option"
-              aria-selected={displayValue === option}
-              onClick={() => handleSelect(option)}
-              onMouseEnter={() => setHighlightedIndex(index)}
-              style={{
-                padding: '10px 14px',
-                cursor: 'pointer',
-                fontFamily: 'var(--font-body)',
-                fontSize: '13px',
-                color: displayValue === option ? 'var(--silver)' : 'var(--text-secondary)',
-                background: index === highlightedIndex ? 'rgba(255,255,255,0.05)' : 'transparent',
-                userSelect: 'none',
-              }}
-            >
-              {option}
-            </div>
-          ))}
+          {optionGroups ? (
+            // Grouped rendering
+            (() => {
+              let idx = 0
+              const groupsToRender = allowOther
+                ? [...optionGroups, { label: '', options: ['Other'] }]
+                : optionGroups
+              return groupsToRender.map((group) => (
+                <div key={group.label || '__other'} role="group" aria-label={group.label}>
+                  {group.label && (
+                    <div style={{
+                      padding: '8px 14px 4px',
+                      fontSize: '9px',
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: 'var(--text-dim)',
+                      fontFamily: 'var(--font-body)',
+                      userSelect: 'none',
+                    }}>
+                      {group.label}
+                    </div>
+                  )}
+                  {group.options.map((option) => {
+                    const currentIdx = idx++
+                    return (
+                      <div
+                        key={option}
+                        role="option"
+                        aria-selected={value === option}
+                        onClick={() => handleSelect(option)}
+                        onMouseEnter={() => setHighlightedIndex(currentIdx)}
+                        style={{
+                          padding: '10px 14px',
+                          cursor: 'pointer',
+                          fontFamily: 'var(--font-body)',
+                          fontSize: '13px',
+                          color: value === option ? 'var(--silver)' : 'var(--text-secondary)',
+                          background: currentIdx === highlightedIndex ? 'rgba(255,255,255,0.05)' : 'transparent',
+                          userSelect: 'none',
+                        }}
+                      >
+                        {getLabel(option)}
+                      </div>
+                    )
+                  })}
+                </div>
+              ))
+            })()
+          ) : (
+            // Flat rendering
+            allOptions.map((option, index) => (
+              <div
+                key={option}
+                role="option"
+                aria-selected={value === option}
+                onClick={() => handleSelect(option)}
+                onMouseEnter={() => setHighlightedIndex(index)}
+                style={{
+                  padding: '10px 14px',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '13px',
+                  color: value === option ? 'var(--silver)' : 'var(--text-secondary)',
+                  background: index === highlightedIndex ? 'rgba(255,255,255,0.05)' : 'transparent',
+                  userSelect: 'none',
+                }}
+              >
+                {getLabel(option)}
+              </div>
+            ))
+          )}
         </div>
       )}
 
@@ -196,7 +261,7 @@ function DropdownSelect({ name, options, value, placeholder, onValueChange, allo
 
 export function FormField({
   label, name, type = 'text', placeholder, required,
-  options, value, onValueChange, onArrayChange, registration, error, allowOther, autoComplete
+  options, optionGroups, optionLabels, value, onValueChange, onArrayChange, registration, error, allowOther, autoComplete
 }: FormFieldProps) {
   const stringValue = typeof value === 'string' ? value : ''
 
@@ -230,10 +295,12 @@ export function FormField({
         <DropdownSelect
           name={name}
           options={options ?? []}
+          optionGroups={optionGroups}
           value={stringValue}
           placeholder={placeholder}
           onValueChange={onValueChange}
           allowOther={allowOther}
+          optionLabels={optionLabels}
         />
       ) : type === 'checkbox-group' ? (
         <div id={name} role="group" aria-labelledby={`${name}-label`} style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>

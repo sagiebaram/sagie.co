@@ -34,7 +34,9 @@ const VALID_MEMBERSHIP_BODY = {
   fullName: 'Test User',
   email: 'test@example.com',
   role: 'Founder',
-  location: 'Tel Aviv',
+  country: 'IL',
+  city: 'Tel Aviv',
+  phone: '+972501234567',
 }
 
 // ---------------------------------------------------------------------------
