@@ -447,7 +447,11 @@ Missing features:
 Test gaps:
   [MEDIUM] API error paths untested (rate limit, validation, Notion failures)
   [MEDIUM] No E2E tests for critical user flows yet
-  [MEDIUM] Ventures founder/investor Notion submission E2E — verify Type property differentiation
+  [MEDIUM] Ventures founder/investor Notion submission E2E — verify Type property differentiation (PR #17)
+  [MEDIUM] Verify Phone/Country properties appear in Notion after form submission (PR #14)
+  [LOW] Test empty phone submission passes validation — optional field (PR #14)
+  [LOW] E2E: footer links navigate to /eco, /solutions, /ventures (PR #13)
+  [LOW] E2E: invalid email in newsletter form shows inline validation error (PR #13)
   [LOW] Validation edge cases not covered (empty strings, Unicode, max length)
 
 ---
