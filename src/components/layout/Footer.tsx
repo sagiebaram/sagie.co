@@ -1,5 +1,6 @@
 import { Logo } from '@/components/ui/Logo'
 import { GridBackground } from '@/components/ui/GridBackground'
+import { NewsletterForm } from '@/components/ui/NewsletterForm'
 import { FOOTER, SITE } from '@/constants/copy'
 
 
@@ -86,6 +87,18 @@ export function Footer() {
             </ul>
           </div>
 
+        </div>
+
+        <div className="py-10 border-b border-border-subtle">
+          <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
+            The SAGIE Letter
+          </p>
+          <p className="font-body text-foreground-muted text-caption mb-6 max-w-[400px]">
+            Weekly insights on ecosystem building and cross-border innovation.
+          </p>
+          <div className="max-w-[440px]">
+            <NewsletterForm variant="compact" />
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-end sm:justify-between py-8 gap-4">

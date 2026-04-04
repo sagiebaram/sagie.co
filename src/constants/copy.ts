@@ -152,7 +152,6 @@ export const FOOTER = {
     links: [
       { label: 'LinkedIn', url: 'https://www.linkedin.com/company/sagie-co' },
       { label: 'Instagram', url: 'https://www.instagram.com/sagie.co/' },
-      { label: 'X', url: '#' },
     ],
   },
   contact: {

@@ -8,6 +8,7 @@ import { BlogFilter } from '@/components/ui/BlogFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { SubmitPostForm } from '@/components/forms/SubmitPostForm'
+import { NewsletterForm } from '@/components/ui/NewsletterForm'
 import type { Metadata } from 'next'
 import { getAllPosts, type BlogPost } from '@/lib/blog'
 
@@ -68,6 +69,10 @@ export default function BlogPage() {
             Personal writing, community spotlights, event recaps and thought leadership from SAGIE.
           </p>
         </PageHeroAnimation>
+
+        <div className="mb-14">
+          <NewsletterForm variant="featured" />
+        </div>
 
         <Suspense fallback={<BlogCardsSkeleton />}>
           <BlogContent />
