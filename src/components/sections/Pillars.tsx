@@ -12,7 +12,8 @@ export function Pillars() {
         {PILLARS.map((pillar) => (
           <div
             key={pillar.word}
-            className="pillar-row group py-8 border-b border-border-subtle"
+            className="pillar-row group py-8 border-b border-border-subtle pl-5 border-l-2 transition-colors duration-150"
+            style={{ borderLeftColor: pillar.accent }}
           >
             {/* Desktop 2-col */}
             <div className="hidden md:grid items-start" style={{ gridTemplateColumns: '260px 1fr' }}>
