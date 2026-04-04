@@ -184,6 +184,7 @@ describe('ChapterSchema', () => {
 // ---------------------------------------------------------------------------
 describe('VenturesSchema', () => {
   const validVenture = {
+    ventureType: 'founder' as const,
     companyName: 'TechCo',
     founderName: 'Alice Brown',
     email: 'alice@techco.com',
@@ -345,6 +346,7 @@ describe('optional URL fields accept empty strings', () => {
   }
 
   const validVenture = {
+    ventureType: 'founder' as const,
     companyName: 'TechCo',
     founderName: 'Alice Brown',
     email: 'alice@techco.com',
@@ -485,6 +487,7 @@ describe('phone and country fields', () => {
 
   test('VenturesSchema accepts optional country', () => {
     const validVenture = {
+      ventureType: 'founder' as const,
       companyName: 'TechCo',
       founderName: 'Alice Brown',
       email: 'alice@techco.com',
@@ -554,6 +557,7 @@ describe('upgraded validation patterns', () => {
 
   test('VenturesSchema companyName accepts numbers and ampersand', () => {
     const result = VenturesSchema.safeParse({
+      ventureType: 'founder' as const,
       companyName: 'AT&T',
       founderName: 'Jane Doe',
       email: 'jane@att.com',

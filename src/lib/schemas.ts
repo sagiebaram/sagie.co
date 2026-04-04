@@ -176,6 +176,7 @@ export const ChapterSchema = z.object({
 }).superRefine((data, ctx) => locationSuperRefine(data, ctx));
 
 export const VenturesSchema = z.object({
+  ventureType: z.enum(['founder', 'investor']),
   companyName: companyField("What's your company called?"),
   founderName: nameField('What should we call you?'),
   email: emailSchema,

@@ -20,7 +20,7 @@ function SectionHeader({ label }: { label: string }) {
   )
 }
 
-export function VenturesForm() {
+export function VenturesForm({ type }: { type: 'founder' | 'investor' }) {
   const trapRef = useRef('')
   const loadTime = useRef(0)
   useEffect(() => { loadTime.current = Date.now() }, [])
@@ -37,6 +37,7 @@ export function VenturesForm() {
     mode: 'onBlur',
     reValidateMode: 'onChange',
     shouldFocusError: true,
+    defaultValues: { ventureType: type },
   })
 
   const onSubmit = async (data: FormData) => {

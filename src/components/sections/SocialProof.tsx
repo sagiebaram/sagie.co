@@ -8,8 +8,9 @@ import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { SOCIAL_STATS } from '@/constants/copy'
 
 const STAT_VALUES: Record<string, { end: number; suffix: string }> = {
-  '200+': { end: 200, suffix: '+' },
+  '883+': { end: 883, suffix: '+' },
   '1': { end: 1, suffix: '' },
+  '5': { end: 5, suffix: '' },
 }
 
 export function SocialProof({ globe }: { globe?: ReactNode }) {
@@ -19,7 +20,7 @@ export function SocialProof({ globe }: { globe?: ReactNode }) {
     <Section className="overflow-visible">
       <Eyebrow>The Network</Eyebrow>
 
-      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 mt-8">
+      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-3 mt-8">
         {SOCIAL_STATS.map((stat) => {
           const parsed = STAT_VALUES[stat.value]
           return (

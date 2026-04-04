@@ -48,8 +48,9 @@ export const BELIEF = {
 } as const
 
 export const SOCIAL_STATS: readonly SocialStat[] = [
-  { value: '200+', label: 'Community Members' },
+  { value: '883+', label: 'Community Members' },
   { value: '1', label: 'Active Chapters' },
+  { value: '5', label: 'Chapters in Progress' },
 ] as const
 
 export const CHAPTERS: readonly Chapter[] = [
