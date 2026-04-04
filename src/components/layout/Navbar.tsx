@@ -42,7 +42,7 @@ export function Navbar() {
         Skip to main content
       </a>
       <div className="max-w-[960px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
-        <a href="/">
+        <a href="/" className="block w-[180px] h-[38px] shrink-0">
           <Image
             src="/sagie_logo_nav.png"
             alt="SAGIE"
@@ -50,7 +50,7 @@ export function Navbar() {
             height={40}
             priority
             unoptimized
-            style={{ width: 'auto', height: '38px' }}
+            style={{ width: '100%', height: '100%' }}
           />
         </a>
 
