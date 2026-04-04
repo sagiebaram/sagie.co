@@ -17,6 +17,12 @@ import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/types/events'
 import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
 
+function formatEventDate(dateStr: string): string {
+  const d = dateStr.slice(0, 10)
+  const [y, m, day] = d.split('-')
+  return `${m}-${day}-${y}`
+}
+
 const STATUS_COLORS: Record<string, string> = {
   Confirmed: 'var(--silver)',
   Live: 'var(--color-eco)',
@@ -156,12 +162,20 @@ function EventAccordion({
             {/* Collapsed row */}
             <button
               onClick={() => onToggle(event.id)}
+              aria-expanded={isOpen}
+              aria-controls={`event-detail-${event.id}`}
               className="w-full text-left py-5 flex items-center gap-4 flex-wrap"
             >
               <span className="font-display uppercase flex-1 min-w-[180px] text-quote text-silver tracking-heading">
                 {event.name}
               </span>
-              <span className="font-body text-foreground-muted text-label shrink-0">{event.date}</span>
+              {event.date ? (
+                <time dateTime={event.date.slice(0, 10)} className="font-body text-foreground-muted text-label shrink-0">
+                  {formatEventDate(event.date)}
+                </time>
+              ) : (
+                <span className="font-body text-foreground-muted text-label shrink-0">{event.date}</span>
+              )}
               <div className="flex items-center gap-2 shrink-0">
                 <Badge label={event.status} color={STATUS_COLORS[event.status] ?? 'var(--text-dim)'} />
                 {event.format && <Badge label={event.format} color="var(--text-dim)" />}
@@ -179,6 +193,7 @@ function EventAccordion({
             <AnimatePresence>
               {isOpen && (
                 <motion.div
+                  id={`event-detail-${event.id}`}
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
@@ -217,7 +232,16 @@ function EventAccordion({
 
                         <div className="flex flex-col gap-2">
                           {event.date && (
-                            <DetailRow label="Date / Time" value={`${event.date}${event.time ? ' · ' + event.time : ''}`} />
+                            <div className="flex gap-4">
+                              <span className="font-body uppercase text-foreground-dim text-label tracking-label w-[100px] shrink-0">
+                                Date / Time
+                              </span>
+                              <span className="font-body text-foreground-muted text-label">
+                                <time dateTime={event.date.slice(0, 10)}>
+                                  {formatEventDate(event.date)}{event.time ? ` · ${event.time}` : ''}
+                                </time>
+                              </span>
+                            </div>
                           )}
                           {event.type === 'Webinar' && event.venue && (
                             <DetailRow label="Platform" value={event.venue} />
