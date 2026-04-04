@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
 
 const NAV_ROUTES: Record<string, string> = {
-  ECO: '/eco',
   Solutions: '/solutions',
+  ECO: '/eco',
   Ventures: '/ventures',
   Events: '/events',
   Resources: '/resources',
@@ -46,10 +46,11 @@ export function Navbar() {
           <Image
             src="/sagie_logo_nav.png"
             alt="SAGIE"
-            width={171}
-            height={38}
+            width={180}
+            height={40}
             priority
-            style={{ width: '171px', height: '38px' }}
+            unoptimized
+            style={{ width: 'auto', height: '38px' }}
           />
         </a>
 
