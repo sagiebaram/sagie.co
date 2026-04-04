@@ -117,7 +117,7 @@ export function Navbar() {
           borderTop: isOpen ? '1px solid var(--border-strong)' : '0px solid transparent',
         }}
       >
-        <div className="bg-background-nav backdrop-blur-md px-6 py-6 flex flex-col gap-1">
+        <div className="bg-background-nav backdrop-blur-md px-6 pt-6 pb-8 flex flex-col gap-1">
           {NAV_LINKS.map((item, i) => (
             <a
               key={item}
@@ -134,19 +134,6 @@ export function Navbar() {
               {item}
             </a>
           ))}
-          <a
-            href="/apply"
-            onClick={() => setIsOpen(false)}
-            tabIndex={isOpen ? 0 : -1}
-            className="font-body uppercase text-silver hover:text-foreground transition-all duration-200 text-label tracking-label py-3"
-            style={{
-              transitionDelay: isOpen ? `${NAV_LINKS.length * 60}ms` : '0ms',
-              transform: isOpen ? 'translateX(0)' : 'translateX(-12px)',
-              opacity: isOpen ? 1 : 0,
-            }}
-          >
-            Apply to Join
-          </a>
         </div>
       </div>
     </nav>
