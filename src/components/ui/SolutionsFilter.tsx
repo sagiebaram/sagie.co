@@ -81,8 +81,7 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
                   {provider.memberTier}
                 </span>
                 <a
-                  href={provider.website ?? '/apply/solutions'}
-                  {...(provider.website ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  href="/apply/solutions"
                   aria-label={`Work with ${provider.name}`}
                   className="font-body text-foreground-muted text-caption tracking-mid hover:text-silver transition-colors duration-150"
                 >

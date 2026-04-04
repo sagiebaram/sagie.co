@@ -9,6 +9,7 @@ export function HeroAnimation({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) {
+      // No animation — ensure content is visible and accessible
       if (ref.current) ref.current.removeAttribute('aria-hidden')
       return
     }
