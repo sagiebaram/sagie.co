@@ -10,8 +10,8 @@ async function selectDropdownOption(
 ) {
   // Click the dropdown trigger
   await page.locator(`[data-dropdown="${fieldName}"]`).click()
-  // Click the option in the listbox
-  await page.getByRole('option', { name: optionText }).click()
+  // Click the option scoped to this field's listbox (avoids phone input country collision)
+  await page.locator(`#${fieldName}-listbox`).getByRole('option', { name: optionText }).click()
 }
 
 // -----------------------------------------------------------------------
@@ -56,12 +56,19 @@ test('membership form submits and shows success state', async ({ page }) => {
   // Fill required text / email inputs using name attributes
   await page.fill('[name="fullName"]', 'Ada Lovelace');
   await page.fill('[name="email"]', 'ada@example.com');
-  await page.fill('[name="location"]', 'London');
+
+  // Country → State → City cascade (US requires state)
+  await selectDropdownOption(page, 'country', 'United Kingdom');
+  // UK has curated cities — select from dropdown
+  await selectDropdownOption(page, 'city', 'London');
+
+  // Phone (required) — react-phone-number-input renders an input inside .phone-input-dark
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
 
   // Role is a custom dropdown — click trigger then option
   await selectDropdownOption(page, 'role', 'Founder');
 
-  // Optional fields added by Plan 02
+  // Optional fields
   await page.fill('[name="company"]', 'Analytical Engine Co.');
   await page.fill('[name="whatTheyOffer"]', 'First algorithms ever written.');
 
@@ -110,7 +117,14 @@ test('chapter form submits and shows success state', async ({ page }) => {
 
   await page.fill('[name="fullName"]', 'Grace Hopper');
   await page.fill('[name="email"]', 'grace@example.com');
-  await page.fill('[name="city"]', 'New Haven');
+
+  // Country → City cascade (GB has no state field, curated city list)
+  await selectDropdownOption(page, 'country', 'United Kingdom');
+  await selectDropdownOption(page, 'city', 'Edinburgh');
+
+  // Phone (required)
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 131 496 0000');
+
   await page.fill('[name="communitySize"]', 'About 500 people');
   await page.fill('[name="whyLead"]', 'This city has a thriving startup scene that needs more structure.');
   await page.fill('[name="background"]', 'Former naval officer and computer scientist.');
@@ -145,11 +159,13 @@ test('solutions form submits and shows success state', async ({ page }) => {
   await mockApplicationRoute(page, 'solutions');
   await page.goto('/apply/solutions');
 
-  // Updated field names: providerName (was fullName), portfolioUrl (was website)
   await page.fill('[name="providerName"]', 'Margaret Hamilton');
   await page.fill('[name="email"]', 'margaret@example.com');
+
+  // Phone (required)
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+1 617 555 0199');
+
   await page.fill('[name="linkedIn"]', 'https://linkedin.com/in/margaret');
-  await page.fill('[name="location"]', 'Cambridge, MA');
 
   // Service Category is a custom dropdown
   await selectDropdownOption(page, 'category', 'Technology & Product');
@@ -188,11 +204,13 @@ test('ventures form submits and shows success state', async ({ page }) => {
   await mockApplicationRoute(page, 'ventures');
   await page.goto('/apply/ventures');
 
-  // Updated field names: founderName (was fullName), oneLineDescription (was building), whySAGIE (was whySagie)
   await page.fill('[name="founderName"]', 'Alan Turing');
   await page.fill('[name="email"]', 'alan@example.com');
   await page.fill('[name="companyName"]', 'Turing Machines Inc.');
   await page.fill('[name="oneLineDescription"]', 'A universal computing machine that solves the halting problem.');
+
+  // Phone (required)
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0123');
 
   // Stage is a custom dropdown
   await selectDropdownOption(page, 'stage', 'Pre-Seed');

@@ -15,6 +15,8 @@ const EnvSchema = z.object({
   REVALIDATE_SECRET: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
   ADMIN_EMAIL: z.string().email().optional().default('hello@sagie.co'),
+  BEEHIIV_API_KEY: z.string().min(1).optional(),
+  BEEHIIV_PUBLICATION_ID: z.string().min(1).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
 });
 

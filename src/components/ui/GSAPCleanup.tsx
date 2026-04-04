@@ -1,20 +1,21 @@
 'use client'
 
 import { useEffect } from 'react'
-import { ScrollTrigger } from '@/lib/gsap'
+import { getGSAP } from '@/lib/gsap'
 
 export function GSAPCleanup() {
   useEffect(() => {
-    // Disable browser scroll restoration — always start at top on refresh
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual'
     }
 
-    const handlePageHide = () => {
+    const handlePageHide = async () => {
+      const { ScrollTrigger } = await getGSAP()
       ScrollTrigger.getAll().forEach(t => t.kill())
     }
-    const handlePageShow = (e: PageTransitionEvent) => {
+    const handlePageShow = async (e: PageTransitionEvent) => {
       if (e.persisted) {
+        const { ScrollTrigger } = await getGSAP()
         ScrollTrigger.refresh()
       }
     }
@@ -23,7 +24,9 @@ export function GSAPCleanup() {
     return () => {
       window.removeEventListener('pagehide', handlePageHide)
       window.removeEventListener('pageshow', handlePageShow)
-      ScrollTrigger.getAll().forEach(t => t.kill())
+      getGSAP().then(({ ScrollTrigger }) => {
+        ScrollTrigger.getAll().forEach(t => t.kill())
+      })
     }
   }, [])
 

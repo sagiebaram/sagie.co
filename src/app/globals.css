@@ -23,7 +23,11 @@
   --color-border-strong: var(--border-strong);
 
   /* ── Pillar accents — fixed in both modes ── */
-  --color-eco: #2E7D32;
+  --color-eco: #7A9E7E;
+  --color-eco-bright: #8BAF8E;
+  --color-eco-dim: #1E3322;
+  --color-eco-bg: #0F1A12;
+  --color-eco-glow: #162B1A;
   --color-solutions: #1565C0;
   --color-ventures: #757575;
 
@@ -230,6 +234,49 @@ select:-webkit-autofill {
   -webkit-text-fill-color: var(--text-primary) !important;
   caret-color: var(--text-primary) !important;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Phone Input (react-phone-number-input) dark theme */
+.phone-input-dark {
+  display: flex !important;
+  gap: 0 !important;
+}
+
+.phone-input-dark .PhoneInputCountry {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border-default);
+  border-right: none;
+  padding: 10px 10px;
+  margin-right: 0;
+}
+
+.phone-input-dark .PhoneInputCountrySelect {
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+.phone-input-dark .PhoneInputCountryIcon--border {
+  box-shadow: none;
+  background: none;
+}
+
+.phone-input-dark .PhoneInputInput {
+  width: 100%;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border-default);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.phone-input-dark .PhoneInputInput::placeholder {
+  color: var(--text-secondary);
+}
+
+.phone-input-dark .PhoneInputInput:focus {
+  border-color: var(--silver);
 }
 
 .skeleton {

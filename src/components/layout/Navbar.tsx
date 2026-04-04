@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
 
 const NAV_ROUTES: Record<string, string> = {
+  ECO: '/eco',
   Solutions: '/solutions',
   Events: '/events',
   Resources: '/resources',

@@ -1,50 +1,58 @@
 'use client'
 
-import { useLayoutEffect, useRef } from 'react'
-import { gsap } from '@/lib/gsap'
+import { useEffect, useRef } from 'react'
+import { getGSAP } from '@/lib/gsap'
 
 export function PageHeroAnimation({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) return
 
-    const ctx = gsap.context((self) => {
-      const eyebrow = self.selector?.('.page-hero-eyebrow')
-      const lines = self.selector?.('.page-hero-line')
-      const sub = self.selector?.('.page-hero-sub')
+    let ctx: any
 
-      const tl = gsap.timeline({ delay: 0.15 })
+    const init = async () => {
+      const { gsap } = await getGSAP()
 
-      if (eyebrow?.length) {
-        tl.fromTo(
-          eyebrow,
-          { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
-        )
-      }
+      ctx = gsap.context((self) => {
+        const eyebrow = self.selector?.('.page-hero-eyebrow')
+        const lines = self.selector?.('.page-hero-line')
+        const sub = self.selector?.('.page-hero-sub')
 
-      if (lines?.length) {
-        tl.fromTo(
-          lines,
-          { opacity: 0, y: 32 },
-          { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12 },
-          eyebrow?.length ? '-=0.2' : 0
-        )
-      }
+        const tl = gsap.timeline({ delay: 0.15 })
 
-      if (sub?.length) {
-        tl.fromTo(
-          sub,
-          { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-          lines?.length ? '-=0.3' : (eyebrow?.length ? '-=0.1' : 0)
-        )
-      }
-    }, ref)
+        if (eyebrow?.length) {
+          tl.fromTo(
+            eyebrow,
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+          )
+        }
 
-    return () => ctx.revert()
+        if (lines?.length) {
+          tl.fromTo(
+            lines,
+            { opacity: 0, y: 32 },
+            { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12 },
+            eyebrow?.length ? '-=0.2' : 0
+          )
+        }
+
+        if (sub?.length) {
+          tl.fromTo(
+            sub,
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+            lines?.length ? '-=0.3' : (eyebrow?.length ? '-=0.1' : 0)
+          )
+        }
+      }, ref)
+    }
+
+    init()
+
+    return () => { ctx?.revert() }
   }, [])
 
   return <div ref={ref}>{children}</div>

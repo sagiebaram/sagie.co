@@ -103,6 +103,46 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     cancelledRef.current = false
     return () => {
       cancelledRef.current = true
+
+      // Dispose Three.js resources to prevent memory leaks
+      const globe = globeRef.current
+      if (!globe) return
+
+      const renderer = globe.renderer?.()
+      const scene = globe.scene?.()
+      const controls = globe.controls?.()
+
+      if (controls) {
+        controls.autoRotate = false
+        controls.dispose?.()
+      }
+
+      if (scene) {
+        scene.traverse((object: any) => {
+          if (object.geometry) {
+            object.geometry.dispose()
+          }
+          if (object.material) {
+            const materials = Array.isArray(object.material)
+              ? object.material
+              : [object.material]
+            for (const material of materials) {
+              for (const key of Object.keys(material)) {
+                const value = material[key]
+                if (value && typeof value === 'object' && typeof value.dispose === 'function') {
+                  value.dispose()
+                }
+              }
+              material.dispose()
+            }
+          }
+        })
+      }
+
+      if (renderer) {
+        renderer.dispose()
+        renderer.forceContextLoss?.()
+      }
     }
   }, [])
 
@@ -300,19 +340,19 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           style={{ maxWidth: '240px' }}
         >
           <div
-            className="text-xs uppercase tracking-widest mb-2"
+            className="text-label uppercase tracking-widest mb-2"
             style={{ color: selectedCity.isChapter ? 'var(--silver)' : 'var(--text-muted)' }}
           >
             {selectedCity.isChapter ? 'Active Chapter' : 'Community Hub'}
           </div>
-          <div className="font-display text-2xl" style={{ color: 'var(--text-primary)' }}>
+          <div className="font-display text-manifesto" style={{ color: 'var(--text-primary)' }}>
             {selectedCity.name}
           </div>
-          <div className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+          <div className="text-caption mt-1" style={{ color: 'var(--text-muted)' }}>
             {selectedCity.members} Members
           </div>
           <div
-            className="text-xs mt-3 uppercase tracking-widest"
+            className="text-label mt-3 uppercase tracking-widest"
             style={{
               color: selectedCity.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
               borderTop: '0.5px solid var(--border-subtle)',
@@ -323,7 +363,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           </div>
           <button
             onClick={() => handleSelect(null)}
-            className="absolute top-2 right-3 text-xs cursor-pointer"
+            className="absolute top-2 right-3 text-label cursor-pointer"
             style={{ color: 'var(--text-muted)' }}
           >
             &#x2715;

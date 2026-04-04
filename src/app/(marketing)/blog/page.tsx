@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
@@ -5,7 +6,9 @@ import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { BlogFilter } from '@/components/ui/BlogFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { SubmitPostForm } from '@/components/forms/SubmitPostForm'
+import { NewsletterForm } from '@/components/ui/NewsletterForm'
 import type { Metadata } from 'next'
 import { getAllPosts, type BlogPost } from '@/lib/blog'
 
@@ -22,7 +25,22 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function BlogPage() {
+function BlogCardsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="p-7 border border-border-default">
+          <Skeleton className="h-4 w-20 mb-4" />
+          <Skeleton className="h-6 w-full mb-3" />
+          <Skeleton className="h-4 w-3/4 mb-2" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+async function BlogContent() {
   let posts: BlogPost[] = []
 
   try {
@@ -31,6 +49,10 @@ export default async function BlogPage() {
     console.error('Failed to fetch blog posts:', e)
   }
 
+  return <BlogFilter posts={posts} />
+}
+
+export default function BlogPage() {
   return (
     <main id="main-content" className="relative">
       <CircuitBackground />
@@ -48,7 +70,13 @@ export default async function BlogPage() {
           </p>
         </PageHeroAnimation>
 
-        <BlogFilter posts={posts} />
+        <div className="mb-14">
+          <NewsletterForm variant="featured" />
+        </div>
+
+        <Suspense fallback={<BlogCardsSkeleton />}>
+          <BlogContent />
+        </Suspense>
 
         <section style={{ borderTop: '0.5px solid var(--border-subtle)', padding: '48px 0' }}>
           <div style={{ marginBottom: '24px' }}>

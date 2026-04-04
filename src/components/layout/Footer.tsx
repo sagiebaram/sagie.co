@@ -1,6 +1,8 @@
 import { Logo } from '@/components/ui/Logo'
 import { GridBackground } from '@/components/ui/GridBackground'
+import { NewsletterForm } from '@/components/ui/NewsletterForm'
 import { FOOTER, SITE } from '@/constants/copy'
+
 
 export function Footer() {
   return (
@@ -15,9 +17,9 @@ export function Footer() {
             </p>
             <ul className="space-y-4">
               {FOOTER.navigate.links.map((item) => (
-                <li key={item}>
-                  <a href="#" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
-                    {item}
+                <li key={item.label}>
+                  <a href={item.url} className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                    {item.label}
                   </a>
                 </li>
               ))}
@@ -85,6 +87,18 @@ export function Footer() {
             </ul>
           </div>
 
+        </div>
+
+        <div className="py-10 border-b border-border-subtle">
+          <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
+            The SAGIE Letter
+          </p>
+          <p className="font-body text-foreground-muted text-caption mb-6 max-w-[400px]">
+            Weekly insights on ecosystem building and cross-border innovation.
+          </p>
+          <div className="max-w-[440px]">
+            <NewsletterForm variant="compact" />
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-end sm:justify-between py-8 gap-4">
