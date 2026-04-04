@@ -12,18 +12,14 @@ export function Pillars() {
         {PILLARS.map((pillar) => (
           <div
             key={pillar.word}
-            className="pillar-row group py-8 border-b border-border-subtle pl-5 border-l-2 transition-colors duration-150"
-            style={{ borderLeftColor: pillar.accent }}
+            className="pillar-row group py-8 border-b border-border-subtle"
           >
             {/* Desktop 2-col */}
             <div className="hidden md:grid items-start" style={{ gridTemplateColumns: '260px 1fr' }}>
               <div>
                 <h3 className="font-display uppercase text-pillar leading-none tracking-heading">
                   <span className="text-foreground-muted">SAGIE </span>
-                  <span
-                    className="transition-colors duration-150"
-                    style={{ color: pillar.accent }}
-                  >
+                  <span className="text-silver group-hover:text-foreground transition-colors duration-150">
                     {pillar.word}
                   </span>
                 </h3>
@@ -45,7 +41,7 @@ export function Pillars() {
             <div className="md:hidden flex flex-col gap-3">
               <h3 className="font-display uppercase text-founder leading-none">
                 <span className="text-foreground-muted">SAGIE </span>
-                <span style={{ color: pillar.accent }}>{pillar.word}</span>
+                <span className="text-silver">{pillar.word}</span>
               </h3>
               <p className="font-body uppercase text-foreground-muted text-label tracking-mid">
                 {pillar.subtitle}

@@ -3,7 +3,7 @@ export interface Pillar {
   readonly subtitle: string
   readonly where: string
   readonly desc: string
-  readonly accent: string
+
 }
 
 export interface Persona {
