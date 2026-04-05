@@ -20,6 +20,7 @@ Built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4.
 - **Newsletter:** Beehiiv API integration
 - **Error Monitoring:** Sentry (client + server + edge)
 - **Testing:** Vitest (unit) + Playwright (E2E)
+- **Linting:** ESLint (Flat Config)
 - **Deployment:** Vercel + GitHub Actions CI/CD
 
 ## Getting Started
@@ -52,8 +53,10 @@ Copy `.env.example` to `.env.local` and fill in the required values:
 | `ALLOWED_ORIGINS` | Yes | Comma-separated allowed origins |
 | `REVALIDATE_SECRET` | No | Secret for on-demand ISR revalidation |
 | `RESEND_API_KEY` | No | Email delivery via Resend (skipped in dev/test) |
+| `ADMIN_EMAIL` | No | Admin email for notifications (default: <hello@sagie.co>) |
 | `NEXT_PUBLIC_SENTRY_DSN` | No | Sentry DSN for error monitoring |
 | `SENTRY_AUTH_TOKEN` | No | Sentry auth token for source maps |
+| `NEXT_PUBLIC_SITE_URL` | Yes | Base URL for the site (e.g., <https://sagie.co>) |
 | `NODE_ENV` | Yes | `development`, `test`, or `production` |
 
 ## Scripts
