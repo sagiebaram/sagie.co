@@ -11,6 +11,7 @@ import { SolutionsFilter } from '@/components/ui/SolutionsFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { CardTilt } from '@/components/ui/CardTilt'
 import { SERVICE_CATEGORIES } from '@/constants/solutions'
 import { getSolutionProviders, type SolutionProvider } from '@/lib/solutions'
 
