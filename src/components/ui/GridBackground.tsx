@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { getGSAP } from '@/lib/gsap'
 
 export function GridBackground({ parallax }: { parallax?: boolean } = {}) {
   const ref = useRef<HTMLDivElement>(null)
@@ -10,10 +9,12 @@ export function GridBackground({ parallax }: { parallax?: boolean } = {}) {
     if (!parallax) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    let ctx: ReturnType<typeof import('gsap').gsap.context> | undefined
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let ctx: any
 
     const init = async () => {
-      const { gsap, ScrollTrigger } = await getGSAP()
+      const { getGSAP } = await import('@/lib/gsap')
+      const { gsap } = await getGSAP()
 
       const el = ref.current
       const parent = el?.parentElement
@@ -41,7 +42,7 @@ export function GridBackground({ parallax }: { parallax?: boolean } = {}) {
     <div
       ref={ref}
       aria-hidden="true"
-      className={`grid-bg absolute z-0 pointer-events-none inset-0${parallax ? ' -top-[15%] -bottom-[15%]' : ''}`}
+      className={`grid-bg absolute z-0 pointer-events-none${parallax ? ' inset-[-15%_0]' : ' inset-0'}`}
     />
   )
 }
