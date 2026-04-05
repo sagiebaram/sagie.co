@@ -171,10 +171,10 @@ export default function SolutionsPage() {
       <section className="relative z-1 overflow-hidden">
         <GridBackground />
         <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-20 md:py-32">
-          <h2 className="font-display uppercase text-hero leading-[0.9] mb-8">
-            <span className="block text-foreground-dim">READY TO OFFER</span>
-            <span className="block text-foreground-secondary">YOUR EXPERTISE?</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+            { text: 'READY TO OFFER', className: 'text-foreground-dim' },
+            { text: 'YOUR EXPERTISE?', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-10">
             Join the ecosystem first, then offer your expertise as a Builder.
           </p>

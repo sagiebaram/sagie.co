@@ -296,10 +296,10 @@ export default function EcoPage() {
       {/* ── 8. CTA ── */}
       <Section>
         <AnimatedSection className="text-center">
-          <h2 className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8">
-            <span className="block text-foreground-dim">THE GARDEN</span>
-            <span className="block text-foreground-secondary">IS GROWING.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8" lines={[
+            { text: 'THE GARDEN', className: 'text-foreground-dim' },
+            { text: 'IS GROWING.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[520px] mx-auto mb-10">
             People are good at their core. Everyone has a dream and a purpose. We&apos;re building the conditions where every dream could become a reality.
           </p>
