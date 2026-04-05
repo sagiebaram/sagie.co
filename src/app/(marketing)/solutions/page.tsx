@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { SolutionsFilter } from '@/components/ui/SolutionsFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { CardTilt } from '@/components/ui/CardTilt'
 import { SERVICE_CATEGORIES } from '@/constants/solutions'
 import { getSolutionProviders, type SolutionProvider } from '@/lib/solutions'
 
@@ -114,14 +115,14 @@ export default function SolutionsPage() {
         <ScrollReveal selector=".cat-card" stagger={0.06} y={16} duration={0.45}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px">
             {SERVICE_CATEGORIES.map((cat) => (
-              <div key={cat.name} className="cat-card border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
-                <p className="font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
+              <CardTilt key={cat.name} glowColor="#1565C0" className="cat-card border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
+                <p className="relative z-1 font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
                   {cat.name}
                 </p>
-                <p className="font-body text-foreground-muted text-caption font-light leading-[1.75]">
+                <p className="relative z-1 font-body text-foreground-muted text-caption font-light leading-[1.75]">
                   {cat.description}
                 </p>
-              </div>
+              </CardTilt>
             ))}
           </div>
         </ScrollReveal>
