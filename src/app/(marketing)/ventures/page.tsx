@@ -8,6 +8,16 @@ import { Button } from '@/components/ui/Button'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
+
+const SECTIONS: SectionNavItem[] = [
+  { id: 'ven-hero', label: 'Home' },
+  { id: 'ven-model', label: 'The Model' },
+  { id: 'ven-how', label: 'How It Works' },
+  { id: 'ven-portfolio', label: 'The Portfolio' },
+  { id: 'ven-ambassadors', label: 'Ambassadors' },
+  { id: 'ven-cta', label: 'Join' },
+]
 
 export const metadata: Metadata = {
   title: 'SAGIE Ventures — Trust Creates Deal Flow',
@@ -64,9 +74,10 @@ export default function VenturesPage() {
     <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
+      <SectionNav items={SECTIONS} />
 
       {/* ── 1. Hero ── */}
-      <Section className="pt-28 md:pt-36">
+      <Section id="ven-hero" className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow text-ventures">SAGIE Ventures</Eyebrow>
           <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
@@ -80,7 +91,7 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 2. The Model ── */}
-      <Section>
+      <Section id="ven-model">
         <AnimatedSection>
           <Eyebrow className="text-ventures">The Model</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
@@ -125,7 +136,7 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 3. How It Works ── */}
-      <Section>
+      <Section id="ven-how">
         <AnimatedSection>
           <Eyebrow className="text-ventures">How It Works</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-12" lines={[
@@ -154,7 +165,7 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 4. The Portfolio ── */}
-      <Section>
+      <Section id="ven-portfolio">
         <AnimatedSection>
           <Eyebrow className="text-ventures">The Portfolio</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
@@ -186,7 +197,7 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 5. Ambassador Program ── */}
-      <Section>
+      <Section id="ven-ambassadors">
         <AnimatedSection>
           <Eyebrow className="text-ventures">Ambassador Program</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
@@ -236,7 +247,7 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 6. CTA — Two Paths ── */}
-      <Section>
+      <Section id="ven-cta">
         <AnimatedSection className="text-center mb-12">
           <SplitTextReveal as="h2" className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8" lines={[
             { text: "LET'S BUILD", className: 'text-foreground-dim' },
