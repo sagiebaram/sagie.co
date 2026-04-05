@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export interface SectionNavItem {
   id: string
@@ -12,23 +12,15 @@ interface SectionNavProps {
 }
 
 /**
- * Section navigation with two modes:
- * - Desktop: subtle dot nav fixed on the right edge, labels on hover
- * - Mobile: thin progress bar at the top with tappable section labels
- *
- * Both respect prefers-reduced-motion.
+ * Fixed dot nav on the right edge of the viewport.
+ * Highlights the active section via IntersectionObserver.
+ * Labels always visible at low opacity, full opacity on hover/active.
+ * Hidden on mobile and when prefers-reduced-motion is set.
  */
 export function SectionNav({ items }: SectionNavProps) {
   const [active, setActive] = useState(items[0]?.id ?? '')
   const [visible, setVisible] = useState(false)
-  const [progress, setProgress] = useState(0)
   const observerRef = useRef<IntersectionObserver | null>(null)
-
-  const updateProgress = useCallback(() => {
-    const scrollTop = window.scrollY
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight
-    setProgress(docHeight > 0 ? scrollTop / docHeight : 0)
-  }, [])
 
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -73,111 +65,54 @@ export function SectionNav({ items }: SectionNavProps) {
 
     sectionEls.forEach((el) => observerRef.current!.observe(el))
 
-    // Scroll progress for mobile bar
-    window.addEventListener('scroll', updateProgress, { passive: true })
-    updateProgress()
-
     return () => {
       showObserver.disconnect()
       observerRef.current?.disconnect()
-      window.removeEventListener('scroll', updateProgress)
     }
-  }, [items, updateProgress])
+  }, [items])
 
   const handleClick = (id: string) => {
     const el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  const activeIndex = items.findIndex((item) => item.id === active)
-
   return (
-    <>
-      {/* ── Desktop: dot nav on right edge ── */}
-      <nav
-        aria-label="Page sections"
-        className="fixed right-5 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col items-end gap-2.5 transition-opacity duration-500"
-        style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none' }}
-      >
-        {items.map((item) => {
-          const isActive = active === item.id
-          return (
-            <button
-              key={item.id}
-              onClick={() => handleClick(item.id)}
-              className="group flex items-center gap-2.5 py-0.5"
-              aria-label={`Scroll to ${item.label}`}
-              aria-current={isActive ? 'true' : undefined}
+    <nav
+      aria-label="Page sections"
+      className="fixed right-4 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col items-end gap-3 transition-opacity duration-300"
+      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none' }}
+    >
+      {items.map((item) => {
+        const isActive = active === item.id
+        return (
+          <button
+            key={item.id}
+            onClick={() => handleClick(item.id)}
+            className="group flex items-center gap-2"
+            aria-label={`Scroll to ${item.label}`}
+            aria-current={isActive ? 'true' : undefined}
+          >
+            <span
+              className="font-body text-label uppercase tracking-widest transition-all duration-200 origin-right group-hover:opacity-100"
+              style={{
+                color: isActive ? 'var(--silver)' : 'var(--text-dim)',
+                opacity: isActive ? 1 : 0.35,
+              }}
             >
-              <span
-                className="font-body uppercase transition-all duration-300 origin-right group-hover:opacity-70 group-hover:translate-x-0"
-                style={{
-                  fontSize: '9px',
-                  letterSpacing: '0.15em',
-                  color: isActive ? 'var(--silver)' : 'var(--text-dim)',
-                  opacity: isActive ? 0.6 : 0,
-                  transform: isActive ? 'translateX(0)' : 'translateX(4px)',
-                }}
-              >
-                {item.label}
-              </span>
-              <span
-                className="block shrink-0 rounded-full transition-all duration-300 group-hover:opacity-60"
-                style={{
-                  width: isActive ? 6 : 3,
-                  height: isActive ? 6 : 3,
-                  backgroundColor: isActive ? 'var(--silver)' : 'var(--text-ghost)',
-                  opacity: isActive ? 0.7 : 0.25,
-                }}
-              />
-            </button>
-          )
-        })}
-      </nav>
-
-      {/* ── Mobile: progress bar + active label at top ── */}
-      <div
-        className="fixed top-0 left-0 right-0 z-50 md:hidden transition-opacity duration-500"
-        style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none' }}
-      >
-        {/* Progress track */}
-        <div className="h-[2px] bg-border-subtle">
-          <div
-            className="h-full transition-[width] duration-100 ease-linear"
-            style={{
-              width: `${progress * 100}%`,
-              backgroundColor: 'var(--silver)',
-              opacity: 0.5,
-            }}
-          />
-        </div>
-
-        {/* Section label bar */}
-        <div className="flex overflow-x-auto scrollbar-subtle bg-background/80 backdrop-blur-sm border-b border-border-subtle">
-          {items.map((item, i) => {
-            const isActive = i === activeIndex
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleClick(item.id)}
-                className="shrink-0 px-3 py-2 transition-colors duration-200"
-                aria-label={`Scroll to ${item.label}`}
-              >
-                <span
-                  className="font-body uppercase whitespace-nowrap"
-                  style={{
-                    fontSize: '8px',
-                    letterSpacing: '0.15em',
-                    color: isActive ? 'var(--silver)' : 'var(--text-ghost)',
-                  }}
-                >
-                  {item.label}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-    </>
+              {item.label}
+            </span>
+            <span
+              className="block shrink-0 rounded-full transition-all duration-200 group-hover:opacity-100"
+              style={{
+                width: isActive ? 8 : 5,
+                height: isActive ? 8 : 5,
+                backgroundColor: isActive ? 'var(--silver)' : 'var(--text-dim)',
+                opacity: isActive ? 1 : 0.5,
+              }}
+            />
+          </button>
+        )
+      })}
+    </nav>
   )
 }
