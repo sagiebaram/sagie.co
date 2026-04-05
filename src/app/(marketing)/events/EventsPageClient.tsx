@@ -145,13 +145,15 @@ function EventAccordion({
   openId,
   onToggle,
   dimmed = false,
+  filterKey,
 }: {
   events: SAGIEEvent[]
   openId: string | null
   onToggle: (id: string) => void
   dimmed?: boolean
+  filterKey?: string | undefined
 }) {
-  const ref = useScrollReveal({ selector: '.event-item', stagger: 0.06, y: 16, duration: 0.5 })
+  const ref = useScrollReveal({ selector: '.event-item', stagger: 0.06, y: 16, duration: 0.5, filterKey })
 
   return (
     <div ref={ref} style={{ opacity: dimmed ? 0.45 : 1 }}>
@@ -354,7 +356,7 @@ export function EventsPageClient({
 
       {/* Hero */}
       <section className="relative z-1 overflow-hidden">
-        <GridBackground />
+        <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-20">
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-6 text-label tracking-eyebrow">
@@ -407,21 +409,21 @@ export function EventsPageClient({
             {sagieEvents.length > 0 && (
               <>
                 <TypeDivider label="SAGIE Events" />
-                <EventAccordion events={sagieEvents} openId={openId} onToggle={handleToggle} />
+                <EventAccordion events={sagieEvents} openId={openId} onToggle={handleToggle} filterKey={activeLocation} />
               </>
             )}
 
             {localEvents.length > 0 && (
               <>
                 <TypeDivider label="Local Events" />
-                <EventAccordion events={localEvents} openId={openId} onToggle={handleToggle} />
+                <EventAccordion events={localEvents} openId={openId} onToggle={handleToggle} filterKey={activeLocation} />
               </>
             )}
 
             {webinars.length > 0 && (
               <>
                 <TypeDivider label="Webinars" />
-                <EventAccordion events={webinars} openId={openId} onToggle={handleToggle} />
+                <EventAccordion events={webinars} openId={openId} onToggle={handleToggle} filterKey={activeLocation} />
               </>
             )}
           </div>
