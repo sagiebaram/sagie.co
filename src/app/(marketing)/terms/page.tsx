@@ -5,6 +5,22 @@ import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
+
+const SECTIONS: SectionNavItem[] = [
+  { id: 'tos-hero', label: 'Home' },
+  { id: 'tos-what', label: 'What SAGIE Is' },
+  { id: 'tos-acceptance', label: 'Acceptance' },
+  { id: 'tos-membership', label: 'Membership' },
+  { id: 'tos-submit', label: 'What You Submit' },
+  { id: 'tos-ip', label: 'IP' },
+  { id: 'tos-liability', label: 'Liability' },
+  { id: 'tos-thirdparty', label: 'Third-Party' },
+  { id: 'tos-termination', label: 'Termination' },
+  { id: 'tos-law', label: 'Governing Law' },
+  { id: 'tos-changes', label: 'Changes' },
+  { id: 'tos-questions', label: 'Questions' },
+]
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
@@ -16,8 +32,9 @@ export default function TermsPage() {
     <main className="relative">
       <CircuitBackground />
       <Navbar />
+      <SectionNav items={SECTIONS} />
 
-      <Section className="pt-28 md:pt-36">
+      <Section id="tos-hero" className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow">Legal</Eyebrow>
           <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
@@ -40,7 +57,7 @@ export default function TermsPage() {
             These terms govern your use of sagie.co and participation in the SAGIE ecosystem. By using the site or submitting any form, you&apos;re agreeing to what&apos;s written here.
           </p>
 
-          <LegalSection title="What SAGIE Is">
+          <LegalSection title="What SAGIE Is" id="tos-what">
             <p>
               SAGIE — Shape a Great Impact Everywhere — is a community ecosystem for founders, operators, and builders. It&apos;s a place to connect, collaborate, and grow alongside people who are building things that matter.
             </p>
@@ -52,7 +69,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Acceptance of Terms">
+          <LegalSection title="Acceptance of Terms" id="tos-acceptance">
             <p>
               By accessing sagie.co or submitting a form on it, you agree to these terms. If you don&apos;t agree, please don&apos;t use the site.
             </p>
@@ -61,7 +78,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Membership and Community Access">
+          <LegalSection title="Membership and Community Access" id="tos-membership">
             <p>
               Membership tiers and community access within SAGIE are earned, not purchased. Participation, contribution, and alignment with the ecosystem&apos;s values are what determine how you move through the community.
             </p>
@@ -70,7 +87,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="What You Submit">
+          <LegalSection title="What You Submit" id="tos-submit">
             <p>
               When you fill out a form or send us information through the site, you&apos;re giving us permission to use that information to follow up, onboard you into the right part of the ecosystem, and communicate with you going forward.
             </p>
@@ -79,7 +96,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Intellectual Property">
+          <LegalSection title="Intellectual Property" id="tos-ip">
             <p>
               All original content on sagie.co — copy, structure, frameworks, branding — belongs to SAGIE / Sagie Baram unless otherwise stated. You&apos;re welcome to share and reference our work with proper attribution. Reproducing it wholesale, repackaging it, or passing it off as your own isn&apos;t okay.
             </p>
@@ -88,7 +105,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Limitation of Liability">
+          <LegalSection title="Limitation of Liability" id="tos-liability">
             <p>
               SAGIE and Sagie Baram are not liable for any direct, indirect, incidental, or consequential damages arising from your use of this site, participation in the ecosystem, or reliance on anything communicated through SAGIE channels.
             </p>
@@ -97,13 +114,13 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Third-Party Links and Connections">
+          <LegalSection title="Third-Party Links and Connections" id="tos-thirdparty">
             <p>
               SAGIE may connect you with other people, organizations, or resources. We don&apos;t control third parties and aren&apos;t responsible for their actions, content, or outcomes. Any relationship you form through SAGIE is yours to manage.
             </p>
           </LegalSection>
 
-          <LegalSection title="Termination">
+          <LegalSection title="Termination" id="tos-termination">
             <p>
               We can suspend or terminate your access to any part of the SAGIE ecosystem at any time, with or without notice, if we believe you&apos;ve violated these terms or acted in a way that&apos;s harmful to the community.
             </p>
@@ -114,19 +131,19 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Governing Law">
+          <LegalSection title="Governing Law" id="tos-law">
             <p>
               These terms are governed by the laws of the State of Florida, USA. Any disputes will be handled in the courts of Miami-Dade County, Florida, unless otherwise agreed.
             </p>
           </LegalSection>
 
-          <LegalSection title="Changes to These Terms">
+          <LegalSection title="Changes to These Terms" id="tos-changes">
             <p>
               We&apos;ll update these terms as the ecosystem evolves. The date at the top reflects the latest version. If you keep using the site after changes are posted, that counts as acceptance. For material changes, we&apos;ll do our best to give you a heads-up.
             </p>
           </LegalSection>
 
-          <LegalSection title="Questions?">
+          <LegalSection title="Questions?" id="tos-questions">
             <p>
               Email us at{' '}
               <a href="mailto:contact@sagie.co" className="text-silver hover:text-foreground transition-colors">contact@sagie.co</a>.
@@ -141,9 +158,9 @@ export default function TermsPage() {
   )
 }
 
-function LegalSection({ title, children }: { title: string; children: React.ReactNode }) {
+function LegalSection({ title, id, children }: { title: string; id?: string; children: React.ReactNode }) {
   return (
-    <div>
+    <div id={id} className={id ? 'scroll-mt-24' : undefined}>
       <h2 className="font-display uppercase text-chapter tracking-heading text-foreground mb-4">
         {title}
       </h2>

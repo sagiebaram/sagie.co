@@ -88,7 +88,7 @@ export function SectionNav({ items }: SectionNavProps) {
           <button
             key={item.id}
             onClick={() => handleClick(item.id)}
-            className="group flex items-center gap-2"
+            className="group flex items-center gap-2 cursor-pointer"
             aria-label={`Scroll to ${item.label}`}
             aria-current={isActive ? 'true' : undefined}
           >
