@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
+import { TransitionLink } from '@/components/ui/TransitionLink'
 
 const NAV_ROUTES: Record<string, string> = {
   Solutions: '/solutions',
@@ -42,7 +43,7 @@ export function Navbar() {
         Skip to main content
       </a>
       <div className="max-w-[960px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
-        <a href="/" className="block w-[180px] h-[38px] shrink-0">
+        <TransitionLink href="/" className="block w-[180px] h-[38px] shrink-0">
           <Image
             src="/sagie_logo_nav.png"
             alt="SAGIE"
@@ -52,28 +53,28 @@ export function Navbar() {
             unoptimized
             style={{ width: '100%', height: '100%' }}
           />
-        </a>
+        </TransitionLink>
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-6">
           {NAV_LINKS.map((item) => (
-            <a
+            <TransitionLink
               key={item}
               href={navHref(item)}
               className="font-body uppercase text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 text-label tracking-label"
             >
               {item}
-            </a>
+            </TransitionLink>
           ))}
         </div>
 
         <div className="flex items-center gap-4">
-          <a
+          <TransitionLink
             href="/apply"
             className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5"
           >
             Apply to Join
-          </a>
+          </TransitionLink>
 
           {/* Mobile burger */}
           <button
@@ -121,7 +122,7 @@ export function Navbar() {
       >
         <div className="bg-background-nav backdrop-blur-md px-6 py-6 flex flex-col gap-1">
           {NAV_LINKS.map((item, i) => (
-            <a
+            <TransitionLink
               key={item}
               href={navHref(item)}
               onClick={() => setIsOpen(false)}
@@ -134,9 +135,9 @@ export function Navbar() {
               }}
             >
               {item}
-            </a>
+            </TransitionLink>
           ))}
-          <a
+          <TransitionLink
             href="/apply"
             onClick={() => setIsOpen(false)}
             tabIndex={isOpen ? 0 : -1}
@@ -148,7 +149,7 @@ export function Navbar() {
             }}
           >
             Apply to Join
-          </a>
+          </TransitionLink>
         </div>
       </div>
     </nav>
