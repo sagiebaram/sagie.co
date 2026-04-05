@@ -92,8 +92,8 @@ function LogoSvg({ className, pathClass }: { className?: string; pathClass: stri
 }
 
 const VARIANT_COLORS = {
-  dark: { glow: '#C0C0C0', crisp: '#FFFDFD' },
-  light: { glow: '#2A2A2A', crisp: '#111111' },
+  dark: { glow: '#C0C0C0', crisp: '#FFFDFD', fallback: '/logo-white.png' },
+  light: { glow: '#555555', crisp: '#0C0C0C', fallback: '/logo-black.png' },
 } as const
 
 interface AnimatedLogoProps {
@@ -269,7 +269,7 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
       {/* Fallback: static logo shown if JS fails or during SSR */}
       <noscript>
         <Image
-          src="/logo-white.png"
+          src={colors.fallback}
           alt="SAGIE"
           width={420}
           height={252}
