@@ -21,8 +21,8 @@ export function GridParallaxWrapper({ children }: { children: React.ReactNode })
 
       ctx = gsap.context(() => {
         gsap.to(el, {
-          yPercent: -15,
-          ease: 'none',
+          yPercent: -25,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: parent,
             start: 'top top',
@@ -38,7 +38,7 @@ export function GridParallaxWrapper({ children }: { children: React.ReactNode })
   }, [])
 
   return (
-    <div ref={ref} className="absolute inset-y-[-15%] inset-x-0 z-0 pointer-events-none">
+    <div ref={ref} className="absolute inset-y-[-25%] inset-x-0 z-0 pointer-events-none">
       {children}
     </div>
   )

@@ -111,7 +111,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
       {/* Featured resource */}
       {featured && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
-          <GridBackground />
+          <GridBackground parallax />
           <div ref={featuredRef} className="relative z-10 max-w-[880px] mx-auto" style={{ opacity: 0 }}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
@@ -185,7 +185,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
 
       {/* Resource grid */}
       <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
-        <GridBackground />
+        <GridBackground parallax />
         <div ref={gridRef} className="relative z-10 max-w-[880px] mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
             {filtered.map((resource) => {
@@ -326,7 +326,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
 
       {/* Submit section */}
       <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
-        <GridBackground />
+        <GridBackground parallax />
         <div ref={submitRef} className="relative z-10 max-w-[880px] mx-auto">
           <Eyebrow>Contribute</Eyebrow>
           <h2
