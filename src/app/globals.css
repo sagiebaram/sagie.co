@@ -225,6 +225,22 @@
   background-size: 28px 28px;
 }
 
+/* Parallax: grid drifts ±25px on scroll for depth illusion */
+@supports (animation-timeline: scroll()) {
+  .grid-bg-parallax {
+    animation: grid-parallax linear both;
+    animation-timeline: scroll();
+  }
+  @keyframes grid-parallax {
+    from { transform: translateY(-25px); }
+    to   { transform: translateY(25px); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-bg-parallax { animation: none !important; }
+}
+
 /* ── Skeleton shimmer ── */
 @keyframes skeleton-sweep {
   0% { background-position: -200% 0; }

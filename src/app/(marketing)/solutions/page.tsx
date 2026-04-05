@@ -79,7 +79,7 @@ export default function SolutionsPage() {
 
       {/* Hero */}
       <section id="sol-hero" className="relative z-1 overflow-hidden">
-        <GridBackground />
+        <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-24">
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">

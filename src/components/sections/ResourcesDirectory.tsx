@@ -87,7 +87,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
     <>
       {/* Hero */}
       <section className="relative z-1 overflow-hidden">
-        <GridBackground />
+        <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-0 pt-32 pb-8 md:pt-40 md:pb-10">
             <Eyebrow>Resources</Eyebrow>
