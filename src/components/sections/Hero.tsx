@@ -10,7 +10,7 @@ export function Hero() {
       <GridBackground />
       <HeroAnimation>
         <div className="relative z-10 max-w-[880px] mx-auto px-8 min-h-screen flex items-center pt-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
 
             <div className="hidden md:flex justify-center">
               <div className="relative w-full max-w-[420px]">

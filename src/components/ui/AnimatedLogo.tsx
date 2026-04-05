@@ -109,11 +109,13 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
 
   const handleMouseEnter = useCallback(() => {
     isHoveringRef.current = true
+    const stage = stageRef.current
     const glow = glowRef.current
-    if (!glow) return
+    if (!stage || !glow) return
 
     import('gsap').then(({ gsap }) => {
       gsap.killTweensOf(glow)
+      // Boost container
       gsap.to(glow, {
         opacity: 1,
         filter: 'blur(25px)',
@@ -121,15 +123,40 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
         ease: 'power2.out',
         overwrite: true,
       })
+      // Stagger each glow path: dim then brighten per letter
+      const glowPaths = stage.querySelectorAll<SVGPathElement>('.anim-logo-glow')
+      gsap.fromTo(glowPaths,
+        { opacity: 0.4 },
+        {
+          opacity: 1,
+          attr: { fill: '#FFFFFF' },
+          duration: 0.25,
+          ease: 'power2.out',
+          stagger: { each: 0.06, from: 'start' },
+          overwrite: true,
+        }
+      )
     })
   }, [])
 
   const handleMouseLeave = useCallback(() => {
     isHoveringRef.current = false
+    const stage = stageRef.current
     const glow = glowRef.current
 
     import('gsap').then(({ gsap }) => {
-      if (!glow) return
+      if (!stage || !glow) return
+      // Restore each glow path
+      const glowPaths = stage.querySelectorAll<SVGPathElement>('.anim-logo-glow')
+      gsap.to(glowPaths, {
+        opacity: 1,
+        attr: { fill: colors.glow },
+        duration: 0.3,
+        ease: 'power2.inOut',
+        stagger: { each: 0.05, from: 'end' },
+        overwrite: true,
+      })
+      // Restore container
       gsap.to(glow, {
         opacity: 0.5,
         filter: 'blur(18px)',
@@ -221,6 +248,28 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
           3.3
         )
 
+        // Initials pop in with glow
+        tl.fromTo('.anim-initial',
+          { scale: 1, opacity: 0, y: 6, textShadow: '0 0 0px transparent' },
+          {
+            scale: 1.3,
+            opacity: 1,
+            y: 0,
+            textShadow: '0 0 14px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.4)',
+            duration: 0.45,
+            ease: 'back.out(2)',
+            stagger: 0.12,
+          },
+          3.6
+        )
+        tl.to('.anim-initial', {
+          scale: 1,
+          textShadow: '0 0 6px rgba(255,255,255,0.3), 0 0 12px rgba(255,255,255,0.15)',
+          duration: 0.4,
+          ease: 'power2.inOut',
+          stagger: 0.12,
+        }, 4.3)
+
         tl.to('.anim-divider', {
           opacity: 1, width: 60, duration: 0.6, ease: 'power2.out',
         }, 3.8)
@@ -295,15 +344,30 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
           className="anim-tagline"
           style={{
             opacity: 0,
-            fontWeight: 300,
-            fontSize: 'clamp(0.7rem, 1.5vw, 1rem)',
+            fontWeight: 400,
+            fontSize: 'clamp(0.75rem, 1.6vw, 1.05rem)',
             letterSpacing: '0.35em',
             textTransform: 'uppercase',
-            color: variant === 'dark' ? '#C0C0C0' : '#444444',
+            color: variant === 'dark' ? 'rgba(192,192,192,0.45)' : 'rgba(0,0,0,0.3)',
             textAlign: 'center',
+            lineHeight: 1.8,
           }}
         >
-          Shape a Great Impact Everywhere
+          {['Shape', 'A', 'Great', 'Impact'].map((word) => (
+            <span key={word} style={{ marginRight: '0.35em' }}>
+              <span className="anim-initial" style={{ display: 'inline-block', color: '#FFFFFF', fontWeight: 700 }}>
+                {word[0]}
+              </span>
+              {word.length > 1 ? word.slice(1) : null}
+            </span>
+          ))}
+          <br />
+          <span>
+            <span className="anim-initial" style={{ display: 'inline-block', color: '#FFFFFF', fontWeight: 700 }}>
+              E
+            </span>
+            verywhere
+          </span>
         </div>
         <div
           className="anim-divider"
