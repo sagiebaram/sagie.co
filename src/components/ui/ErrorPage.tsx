@@ -13,7 +13,7 @@ interface ErrorPageProps {
 export function ErrorPage({ title, message, illustration, onRetry }: ErrorPageProps) {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-background overflow-hidden">
-      <GridBackground />
+      <GridBackground parallax />
       <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg mx-auto">
         <div className="mb-8 opacity-60" aria-hidden="true">
           {illustration}

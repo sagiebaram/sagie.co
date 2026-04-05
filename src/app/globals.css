@@ -231,8 +231,9 @@
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-size: 50px 50px;
 }
+
 
 /* ── Skeleton shimmer ── */
 @keyframes skeleton-sweep {

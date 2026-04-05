@@ -7,7 +7,7 @@ import { HERO } from '@/constants/copy'
 export function Hero() {
   return (
     <section className="relative z-[1] overflow-hidden min-h-screen">
-      <GridBackground />
+      <GridBackground parallax />
       <HeroAnimation>
         <div className="relative z-10 max-w-[880px] mx-auto px-8 min-h-screen flex items-center pt-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">

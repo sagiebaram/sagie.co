@@ -13,7 +13,7 @@ export function Section({ children, id, className, style, ...rest }: SectionProp
       style={style}
       {...rest}
     >
-      <GridBackground />
+      <GridBackground parallax />
       <div className="relative z-10 mx-auto max-w-[880px]">{children}</div>
     </section>
   )

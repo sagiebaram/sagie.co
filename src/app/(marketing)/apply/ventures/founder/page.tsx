@@ -17,7 +17,7 @@ export default function ApplyVenturesFounderPage() {
       <Navbar />
 
       <section className="relative z-1 overflow-hidden">
-        <GridBackground />
+        <GridBackground parallax />
         <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-24">
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             SAGIE Ventures — Founders

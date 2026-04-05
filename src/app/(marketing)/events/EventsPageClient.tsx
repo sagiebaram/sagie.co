@@ -375,7 +375,7 @@ export function EventsPageClient({
 
       {/* Hero */}
       <section className="relative z-1 overflow-hidden">
-        <GridBackground />
+        <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-20">
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-6 text-label tracking-eyebrow">
@@ -396,7 +396,7 @@ export function EventsPageClient({
       {/* Error state */}
       {fetchError && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
-          <GridBackground />
+          <GridBackground parallax />
           <div className="relative z-10 max-w-[880px] mx-auto">
             <ErrorPage
               title="Connection Issue"
@@ -417,7 +417,7 @@ export function EventsPageClient({
       {/* Upcoming Events */}
       {!fetchError && upcoming.length > 0 && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
-          <GridBackground />
+          <GridBackground parallax />
           <div ref={upcomingRef} className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Upcoming</Eyebrow>
 
@@ -452,7 +452,7 @@ export function EventsPageClient({
       {/* No upcoming events fallback */}
       {!fetchError && upcoming.length === 0 && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
-          <GridBackground />
+          <GridBackground parallax />
           <div className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Upcoming</Eyebrow>
             <p className="font-body text-foreground-muted text-body font-light leading-[1.7] mt-6">
@@ -465,7 +465,7 @@ export function EventsPageClient({
       {/* Past Events */}
       {!fetchError && past.length > 0 && (
         <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle py-12 md:py-20 px-6 md:px-8">
-          <GridBackground />
+          <GridBackground parallax />
           <div className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Past Events</Eyebrow>
             <EventAccordion events={past} openId={openId} onToggle={handleToggle} dimmed />
@@ -475,7 +475,7 @@ export function EventsPageClient({
 
       {/* Suggest an Event */}
       <section className="relative z-1 overflow-hidden border-t border-border-strong md:border-border-subtle">
-        <GridBackground />
+        <GridBackground parallax />
         <div ref={suggestRef} className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-16 md:py-24">
           <Eyebrow>Contribute</Eyebrow>
           <h2 className="font-display uppercase text-pillar leading-none text-foreground-secondary mb-4">

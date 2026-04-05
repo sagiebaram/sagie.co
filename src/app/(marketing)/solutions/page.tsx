@@ -79,7 +79,7 @@ export default function SolutionsPage() {
 
       {/* Hero */}
       <section id="sol-hero" className="relative z-1 overflow-hidden">
-        <GridBackground />
+        <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-24">
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
@@ -158,7 +158,7 @@ export default function SolutionsPage() {
 
       {/* CTA */}
       <section id="sol-cta" className="relative z-1 overflow-hidden">
-        <GridBackground />
+        <GridBackground parallax />
         <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-20 md:py-32">
           <SplitTextReveal as="h2" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
             { text: 'READY TO OFFER', className: 'text-foreground-dim' },
