@@ -177,7 +177,7 @@ export default function SolutionsPage() {
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-10">
             Join the ecosystem first, then offer your expertise as a Builder.
           </p>
-          <Button variant="primary" href="/apply">Join SAGIE ECO →</Button>
+          <Button variant="primary" href="/apply" magnetic>Join SAGIE ECO →</Button>
         </div>
       </section>
 

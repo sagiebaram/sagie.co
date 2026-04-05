@@ -37,7 +37,7 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
           <p className="font-body text-foreground-muted mb-10 text-body-lg font-light leading-[1.75] max-w-[380px]">
             {CHAPTER_SECTION.body}
           </p>
-          <Button variant="primary" href="/apply/chapter">{CHAPTER_SECTION.cta}</Button>
+          <Button variant="primary" href="/apply/chapter" magnetic>{CHAPTER_SECTION.cta}</Button>
         </div>
 
         <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto scrollbar-subtle">

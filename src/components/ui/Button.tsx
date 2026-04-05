@@ -1,9 +1,13 @@
+'use client'
+
 import { cn } from '@/lib/utils'
+import { useMagnetic } from '@/hooks/useMagnetic'
 import type { ButtonVariant } from '@/types'
 
 interface ButtonProps extends React.ComponentPropsWithoutRef<'a'> {
   variant?: ButtonVariant
   children: React.ReactNode
+  magnetic?: boolean | undefined
 }
 
 const variants: Record<ButtonVariant, string> = {
@@ -15,8 +19,10 @@ const variants: Record<ButtonVariant, string> = {
     'border border-silver text-silver hover:bg-silver hover:text-background text-button tracking-button px-[34px] py-4',
 }
 
-export function Button({ variant = 'primary', children, className, href = '#', ...rest }: ButtonProps) {
-  return (
+export function Button({ variant = 'primary', magnetic, children, className, href = '#', ...rest }: ButtonProps) {
+  const magneticRef = useMagnetic<HTMLDivElement>()
+
+  const link = (
     <a
       href={href}
       className={cn(
@@ -29,4 +35,14 @@ export function Button({ variant = 'primary', children, className, href = '#', .
       {children}
     </a>
   )
+
+  if (magnetic) {
+    return (
+      <div ref={magneticRef} style={{ display: 'inline-block' }}>
+        {link}
+      </div>
+    )
+  }
+
+  return link
 }

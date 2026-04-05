@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { NAV_LINKS } from '@/constants/copy'
+import { useMagnetic } from '@/hooks/useMagnetic'
 
 const NAV_ROUTES: Record<string, string> = {
   Solutions: '/solutions',
@@ -19,6 +20,7 @@ function navHref(item: string) {
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const navCtaRef = useMagnetic<HTMLDivElement>({ radius: 60, strength: 6 })
 
   useEffect(() => {
     if (isOpen) {
@@ -68,12 +70,14 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <a
-            href="/apply"
-            className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5"
-          >
-            Apply to Join
-          </a>
+          <div ref={navCtaRef} style={{ display: 'inline-block' }}>
+            <a
+              href="/apply"
+              className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5"
+            >
+              Apply to Join
+            </a>
+          </div>
 
           {/* Mobile burger */}
           <button

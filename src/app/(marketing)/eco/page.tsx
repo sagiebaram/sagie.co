@@ -261,7 +261,7 @@ export default function EcoPage() {
           <p className="font-body text-foreground-muted text-body mb-4">
             Want to lead a chapter in your city?
           </p>
-          <Button variant="outline" href="/apply/chapter">
+          <Button variant="outline" href="/apply/chapter" magnetic>
             Start a Chapter
           </Button>
         </AnimatedSection>
@@ -302,7 +302,7 @@ export default function EcoPage() {
           <p className="font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[520px] mx-auto mb-10">
             People are good at their core. Everyone has a dream and a purpose. We&apos;re building the conditions where every dream could become a reality.
           </p>
-          <Button href="/apply">Apply to Join &rarr;</Button>
+          <Button href="/apply" magnetic>Apply to Join &rarr;</Button>
         </AnimatedSection>
       </Section>
 
