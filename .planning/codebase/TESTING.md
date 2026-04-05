@@ -212,12 +212,18 @@ npm run test:coverage
 - Approach: Mock external services, test flow through libraries
 - Example: `email.test.ts` tests `sendEmails()` with mocked Resend client and Sentry
 - Database integration: Not tested (uses mocked Notion API)
-- No dedicated E2E tests
+- No dedicated E2E tests for integration flows
 
 **E2E Tests:**
-- Framework: Playwright (`@playwright/test` in devDependencies)
-- Status: Installed but not found in test suite discovery
-- Not actively used for feature validation
+- Framework: Playwright (`@playwright/test` v1.58)
+- Location: `tests/` directory with 3 active spec files:
+  - `tests/smoke.spec.ts` — basic page load checks
+  - `tests/content-pages.spec.ts` — content page rendering
+  - `tests/forms.spec.ts` — form submission and blur validation
+- Config: `baseURL` from `PLAYWRIGHT_TEST_BASE_URL` env var, Vercel bypass header
+- CI: `workers: 1` in CI environment
+- Network mocking: `page.route()` pattern for API interception
+- Helpers: `mockApplicationRoute()` and `mockRoute()` for API mocking
 
 ## Common Patterns
 
