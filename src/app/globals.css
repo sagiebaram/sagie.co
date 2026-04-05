@@ -311,6 +311,32 @@ select:-webkit-autofill {
   border-color: var(--silver);
 }
 
+/* ── View Transition API — soft blur (desktop only) ── */
+::view-transition-old(root) {
+  animation: vt-blur-out 300ms linear both;
+}
+
+::view-transition-new(root) {
+  animation: vt-blur-in 390ms linear 150ms both;
+}
+
+@keyframes vt-blur-out {
+  from { opacity: 1; filter: blur(0); }
+  to   { opacity: 0; filter: blur(6px); }
+}
+
+@keyframes vt-blur-in {
+  from { opacity: 0; filter: blur(6px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
 .skeleton {
   background: linear-gradient(
     90deg,

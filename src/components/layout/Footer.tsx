@@ -1,6 +1,9 @@
+'use client'
+
 import { Logo } from '@/components/ui/Logo'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { NewsletterForm } from '@/components/ui/NewsletterForm'
+import { TransitionLink } from '@/components/ui/TransitionLink'
 import { FOOTER, SITE } from '@/constants/copy'
 
 
@@ -18,9 +21,9 @@ export function Footer() {
             <ul className="space-y-4">
               {FOOTER.navigate.links.map((item) => (
                 <li key={item.label}>
-                  <a href={item.url} className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                  <TransitionLink href={item.url} className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                     {item.label}
-                  </a>
+                  </TransitionLink>
                 </li>
               ))}
               <li>
@@ -70,19 +73,19 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/apply" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                <TransitionLink href="/apply" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                   Apply to Join
-                </a>
+                </TransitionLink>
               </li>
               <li>
-                <a href="/apply/chapter" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                <TransitionLink href="/apply/chapter" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                   Start a Chapter
-                </a>
+                </TransitionLink>
               </li>
               <li>
-                <a href="/contact" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                <TransitionLink href="/contact" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                   Contact
-                </a>
+                </TransitionLink>
               </li>
             </ul>
           </div>
@@ -105,12 +108,12 @@ export function Footer() {
           <Logo width={160} height={45} className="-ml-6 -mb-2" />
           <div className="flex flex-col items-start sm:items-end gap-2">
             <div className="flex gap-4">
-              <a href="/privacy" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
+              <TransitionLink href="/privacy" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
                 Privacy Policy
-              </a>
-              <a href="/terms" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
+              </TransitionLink>
+              <TransitionLink href="/terms" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
                 Terms of Service
-              </a>
+              </TransitionLink>
             </div>
             <p className="font-body text-white text-caption tracking-copyright mb-0">
               {FOOTER.copyright}
