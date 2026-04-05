@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
@@ -43,9 +43,27 @@ function Badge({ label, color }: { label: string; color: string }) {
   )
 }
 
-function TypeDivider({ label }: { label: string }) {
+function TypeDivider({ label, filterKey }: { label: string; filterKey?: string }) {
+  const divRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = divRef.current
+    if (!el) return
+    // Reveal after mount (initial scroll-reveal or filter change)
+    const rafId = requestAnimationFrame(() => {
+      el.style.transition = 'opacity 0.4s ease-out, transform 0.4s ease-out'
+      el.style.opacity = '1'
+      el.style.transform = 'translateY(0)'
+    })
+    return () => cancelAnimationFrame(rafId)
+  }, [filterKey])
+
   return (
-    <div className="type-divider flex items-center gap-4 mt-10 mb-4">
+    <div
+      ref={divRef}
+      className="type-divider flex items-center gap-4 mt-10 mb-4"
+      style={{ opacity: 0, transform: 'translateY(12px)' }}
+    >
       <span className="font-display uppercase shrink-0 text-subhead tracking-heading text-foreground-muted">
         {label}
       </span>
@@ -146,13 +164,15 @@ function EventAccordion({
   openId,
   onToggle,
   dimmed = false,
+  filterKey,
 }: {
   events: SAGIEEvent[]
   openId: string | null
   onToggle: (id: string) => void
   dimmed?: boolean
+  filterKey?: string | undefined
 }) {
-  const ref = useScrollReveal({ selector: '.event-item', stagger: 0.06, y: 16, duration: 0.5 })
+  const ref = useScrollReveal({ selector: '.event-item', stagger: 0.06, y: 16, duration: 0.5, filterKey })
 
   return (
     <div ref={ref} style={{ opacity: dimmed ? 0.45 : 1 }}>
@@ -407,22 +427,22 @@ export function EventsPageClient({
 
             {sagieEvents.length > 0 && (
               <>
-                <TypeDivider label="SAGIE Events" />
-                <EventAccordion events={sagieEvents} openId={openId} onToggle={handleToggle} />
+                <TypeDivider label="SAGIE Events" filterKey={activeLocation} />
+                <EventAccordion events={sagieEvents} openId={openId} onToggle={handleToggle} filterKey={activeLocation} />
               </>
             )}
 
             {localEvents.length > 0 && (
               <>
-                <TypeDivider label="Local Events" />
-                <EventAccordion events={localEvents} openId={openId} onToggle={handleToggle} />
+                <TypeDivider label="Local Events" filterKey={activeLocation} />
+                <EventAccordion events={localEvents} openId={openId} onToggle={handleToggle} filterKey={activeLocation} />
               </>
             )}
 
             {webinars.length > 0 && (
               <>
-                <TypeDivider label="Webinars" />
-                <EventAccordion events={webinars} openId={openId} onToggle={handleToggle} />
+                <TypeDivider label="Webinars" filterKey={activeLocation} />
+                <EventAccordion events={webinars} openId={openId} onToggle={handleToggle} filterKey={activeLocation} />
               </>
             )}
           </div>
