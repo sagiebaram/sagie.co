@@ -66,8 +66,8 @@ const OFFSETS: Record<string, { x: number; y: number; r: number }> = {
   'e-mid': { x: 45, y: 15, r: 3 },
 }
 
-/** Assembly timing — start time (seconds) for each letter group */
-const ASSEMBLY_STARTS: readonly number[] = [0, 0.7, 1.3, 2.3, 3.2] as const
+/** Assembly timing — start time (seconds) for each letter group (~3s total) */
+const ASSEMBLY_STARTS: readonly number[] = [0, 0.4, 0.8, 1.4, 1.9] as const
 
 function LogoSvg({ className, pathClass }: { className?: string; pathClass: string }) {
   return (
@@ -188,19 +188,19 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
           group.pieces.forEach((key, pi) => {
             const crisp = stage.querySelector<SVGPathElement>(`.anim-logo-crisp[data-p="${key}"]`)
             const glowP = stage.querySelector<SVGPathElement>(`.anim-logo-glow[data-p="${key}"]`)
-            const t = groupStart + pi * 0.2
+            const t = groupStart + pi * 0.12
 
             if (crisp) {
               tl.to(crisp, {
                 opacity: 1, x: 0, y: 0, rotation: 0,
-                duration: 1.2,
+                duration: 0.8,
                 ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
               }, t)
             }
             if (glowP) {
               tl.to(glowP, {
                 opacity: 1, x: 0, y: 0, rotation: 0,
-                duration: 1.2,
+                duration: 0.8,
                 ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
               }, t)
             }
@@ -208,13 +208,36 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
         })
 
         // Glow layer fades in as first pieces land
-        tl.to(glow, { opacity: 0.55, duration: 2.0, ease: 'power2.out' }, 0.4)
+        tl.to(glow, { opacity: 0.55, duration: 1.5, ease: 'power2.out' }, 0.3)
 
         // Glow surge after assembly
-        tl.to(glow, { opacity: 0.75, filter: 'blur(22px)', duration: 0.8, ease: 'power2.out' }, 4.5)
-        tl.to(glow, { opacity: 0.5, filter: 'blur(18px)', duration: 1.0, ease: 'power2.inOut' }, 5.3)
+        tl.to(glow, { opacity: 0.75, filter: 'blur(22px)', duration: 0.6, ease: 'power2.out' }, 2.7)
+        tl.to(glow, { opacity: 0.5, filter: 'blur(18px)', duration: 0.8, ease: 'power2.inOut' }, 3.3)
 
-        // Start breathing loop after assembly completes
+        // Text reveals after logo assembly
+        tl.fromTo('.anim-tagline',
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.8, ease: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+          3.3
+        )
+
+        tl.to('.anim-divider', {
+          opacity: 1, width: 60, duration: 0.6, ease: 'power2.out',
+        }, 3.8)
+
+        tl.fromTo('.anim-pillar-text',
+          { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', stagger: 0.15 },
+          4.1
+        )
+
+        tl.fromTo('.anim-pillar-dot',
+          { opacity: 0 },
+          { opacity: 1, duration: 0.4, stagger: 0.1 },
+          4.2
+        )
+
+        // Start breathing loop after everything completes
         tl.call(() => {
           gsap.to(glow, {
             opacity: 0.7,
@@ -264,6 +287,96 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
       <div style={{ position: 'relative', width: '100%' }}>
         <LogoSvg pathClass="anim-logo-crisp" />
         <style>{`.anim-logo-crisp { fill: ${colors.crisp}; }`}</style>
+      </div>
+
+      {/* Text elements below logo */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem', marginTop: '2rem' }}>
+        <div
+          className="anim-tagline"
+          style={{
+            opacity: 0,
+            fontWeight: 300,
+            fontSize: 'clamp(0.7rem, 1.5vw, 1rem)',
+            letterSpacing: '0.35em',
+            textTransform: 'uppercase',
+            color: variant === 'dark' ? '#C0C0C0' : '#444444',
+            textAlign: 'center',
+          }}
+        >
+          Shape a Great Impact Everywhere
+        </div>
+        <div
+          className="anim-divider"
+          style={{
+            opacity: 0,
+            width: 0,
+            height: 1,
+            background: variant === 'dark'
+              ? 'linear-gradient(90deg, transparent, rgba(192,192,192,0.5), transparent)'
+              : 'linear-gradient(90deg, transparent, rgba(0,0,0,0.2), transparent)',
+          }}
+        />
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <span
+            className="anim-pillar-text"
+            style={{
+              opacity: 0,
+              fontWeight: 400,
+              fontSize: 'clamp(0.6rem, 1.2vw, 0.8rem)',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: variant === 'dark' ? 'rgba(192,192,192,0.4)' : 'rgba(0,0,0,0.35)',
+            }}
+          >
+            Solutions
+          </span>
+          <div
+            className="anim-pillar-dot"
+            style={{
+              opacity: 0,
+              width: 3,
+              height: 3,
+              borderRadius: '50%',
+              background: variant === 'dark' ? 'rgba(192,192,192,0.3)' : 'rgba(0,0,0,0.2)',
+            }}
+          />
+          <span
+            className="anim-pillar-text"
+            style={{
+              opacity: 0,
+              fontWeight: 400,
+              fontSize: 'clamp(0.6rem, 1.2vw, 0.8rem)',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: variant === 'dark' ? 'rgba(192,192,192,0.4)' : 'rgba(0,0,0,0.35)',
+            }}
+          >
+            Ecosystem
+          </span>
+          <div
+            className="anim-pillar-dot"
+            style={{
+              opacity: 0,
+              width: 3,
+              height: 3,
+              borderRadius: '50%',
+              background: variant === 'dark' ? 'rgba(192,192,192,0.3)' : 'rgba(0,0,0,0.2)',
+            }}
+          />
+          <span
+            className="anim-pillar-text"
+            style={{
+              opacity: 0,
+              fontWeight: 400,
+              fontSize: 'clamp(0.6rem, 1.2vw, 0.8rem)',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: variant === 'dark' ? 'rgba(192,192,192,0.4)' : 'rgba(0,0,0,0.35)',
+            }}
+          >
+            Ventures
+          </span>
+        </div>
       </div>
 
       {/* Fallback: static logo shown if JS fails or during SSR */}
