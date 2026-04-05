@@ -32,7 +32,7 @@
 **Formatting:**
 - Uses implicit Prettier configuration (inferred from codebase)
 - Single quotes for strings: `'server-only'`, `'@/lib/validation'`
-- Semicolons consistently used
+- Semicolons omitted (no-semi convention in most lib/component files)
 - 2-space indentation (standard for Next.js/Node.js)
 - Trailing commas in multiline objects/arrays: `{ ...VALID_MEMBERSHIP_BODY }`
 - Line wrapping at logical boundaries, not enforced at specific column
