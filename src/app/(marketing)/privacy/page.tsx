@@ -5,6 +5,20 @@ import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
+
+const SECTIONS: SectionNavItem[] = [
+  { id: 'priv-hero', label: 'Home' },
+  { id: 'priv-collect', label: 'What We Collect' },
+  { id: 'priv-store', label: 'How We Store' },
+  { id: 'priv-process', label: 'Who Processes' },
+  { id: 'priv-dont', label: "What We Don't Do" },
+  { id: 'priv-retention', label: 'Data Retention' },
+  { id: 'priv-rights', label: 'Your Rights' },
+  { id: 'priv-security', label: 'Security' },
+  { id: 'priv-changes', label: 'Policy Changes' },
+  { id: 'priv-questions', label: 'Questions' },
+]
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -16,9 +30,10 @@ export default function PrivacyPage() {
     <main className="relative">
       <CircuitBackground />
       <Navbar />
+      <SectionNav items={SECTIONS} />
 
       <Section className="pt-28 md:pt-36">
-        <PageHeroAnimation>
+        <PageHeroAnimation id="priv-hero">
           <Eyebrow className="page-hero-eyebrow">Legal</Eyebrow>
           <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
             <span className="page-hero-line block text-foreground">PRIVACY POLICY</span>
@@ -40,7 +55,7 @@ export default function PrivacyPage() {
             This policy explains what data we collect when you use sagie.co, how we handle it, and what rights you have. No legalese. No fluff. Just what you need to know.
           </p>
 
-          <LegalSection title="What We Collect">
+          <LegalSection title="What We Collect" id="priv-collect">
             <p>
               When you fill out a form on sagie.co — whether to join the community, get in touch, or apply for something — we collect the information you provide directly:
             </p>
@@ -55,11 +70,11 @@ export default function PrivacyPage() {
               <li>Any free-text you write in open fields</li>
             </ul>
             <p className="mt-4">
-              We don&apos;t collect anything passively beyond what&apos;s described in the <a href="#who-processes-your-data" className="text-silver hover:text-foreground transition-colors underline">Who Processes Your Data</a>{' '}section below. No tracking pixels, no behavioral profiling, no third-party analytics — at least not yet. If that changes, this policy will be updated and you&apos;ll know about it.
+              We don&apos;t collect anything passively beyond what&apos;s described in the <a href="#priv-process" className="text-silver hover:text-foreground transition-colors underline">Who Processes Your Data</a>{' '}section below. No tracking pixels, no behavioral profiling, no third-party analytics — at least not yet. If that changes, this policy will be updated and you&apos;ll know about it.
             </p>
           </LegalSection>
 
-          <LegalSection title="How We Store Your Data">
+          <LegalSection title="How We Store Your Data" id="priv-store">
             <p>
               Form submissions are stored in <strong className="text-foreground">Notion</strong>, which serves as our operational database. Notion is a third-party service operated by Notion Labs, Inc. Data stored there is subject to{' '}
               <a href="https://www.notion.so/privacy" target="_blank" rel="noopener noreferrer" className="text-silver hover:text-foreground transition-colors underline">Notion&apos;s privacy policy</a>{' '}
@@ -70,7 +85,7 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Who Processes Your Data" id="who-processes-your-data">
+          <LegalSection title="Who Processes Your Data" id="priv-process">
             <p>We use a small, intentional set of tools. Here&apos;s what each one touches:</p>
 
             <div className="mt-6 space-y-6">
@@ -105,7 +120,7 @@ export default function PrivacyPage() {
             </div>
           </LegalSection>
 
-          <LegalSection title="What We Don't Do">
+          <LegalSection title="What We Don't Do" id="priv-dont">
             <ul className="list-disc pl-6 space-y-2">
               <li>We don&apos;t sell your data. Ever.</li>
               <li>We don&apos;t share your information with advertisers.</li>
@@ -114,13 +129,13 @@ export default function PrivacyPage() {
             </ul>
           </LegalSection>
 
-          <LegalSection title="Data Retention">
+          <LegalSection title="Data Retention" id="priv-retention">
             <p>
               We keep your data for as long as it&apos;s relevant to our relationship with you — typically as long as you&apos;re engaged with the SAGIE community or ecosystem. If you ask us to delete your data, we&apos;ll do it promptly (see Your Rights below).
             </p>
           </LegalSection>
 
-          <LegalSection title="Your Rights">
+          <LegalSection title="Your Rights" id="priv-rights">
             <p>You have the right to:</p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
               <li><strong className="text-foreground">Access</strong> — Ask us what data we hold about you.</li>
@@ -135,22 +150,22 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection title="Security">
+          <LegalSection title="Security" id="priv-security">
             <p>
               We take reasonable steps to protect the data you share with us. Our tools (Notion, Resend, Sentry, Vercel) all maintain their own security standards. That said, no system is 100% bulletproof, and we can&apos;t guarantee absolute security.
             </p>
           </LegalSection>
 
-          <LegalSection title="Changes to This Policy">
+          <LegalSection title="Changes to This Policy" id="priv-changes">
             <p>
               If we make meaningful changes, we&apos;ll update the date at the top of this page. For significant changes — especially anything that affects how we use your data — we&apos;ll make a reasonable effort to let you know directly.
             </p>
           </LegalSection>
 
-          <LegalSection title="Questions?">
+          <LegalSection title="Questions?" id="priv-questions">
             <p>
               Reach us at{' '}
-              <a href="mailto:contact@sagie.co" className="text-silver hover:text-foreground transition-colors">contact@sagie.co</a>.
+              <a href="mailto:contact@sagie.co" className="text-foreground hover:text-silver transition-colors underline">contact@sagie.co</a>.
               {' '}We&apos;re real people and we actually respond.
             </p>
           </LegalSection>

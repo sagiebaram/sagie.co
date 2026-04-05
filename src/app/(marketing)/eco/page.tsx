@@ -8,6 +8,18 @@ import { Button } from '@/components/ui/Button'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
+
+const SECTIONS: SectionNavItem[] = [
+  { id: 'eco-hero', label: 'Home' },
+  { id: 'eco-belief', label: 'The Belief' },
+  { id: 'eco-paradoxes', label: 'The Paradoxes' },
+  { id: 'eco-vision', label: 'The Vision' },
+  { id: 'eco-grow', label: 'How You Grow' },
+  { id: 'eco-chapters', label: 'The Chapters' },
+  { id: 'eco-impact', label: 'Impact' },
+  { id: 'eco-cta', label: 'Join' },
+]
 
 export const metadata: Metadata = {
   title: 'SAGIE ECO — The Ecosystem',
@@ -82,9 +94,10 @@ export default function EcoPage() {
     <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
+      <SectionNav items={SECTIONS} />
 
       {/* ── 1. Hero ── */}
-      <Section className="pt-28 md:pt-36">
+      <Section id="eco-hero" className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow text-eco">SAGIE ECO</Eyebrow>
           <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
@@ -98,7 +111,7 @@ export default function EcoPage() {
       </Section>
 
       {/* ── 2. The Belief ── */}
-      <Section>
+      <Section id="eco-belief">
         <AnimatedSection>
           <Eyebrow className="text-eco">The Belief</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
@@ -117,7 +130,7 @@ export default function EcoPage() {
       </Section>
 
       {/* ── 3. What We Will Disrupt ── */}
-      <Section>
+      <Section id="eco-paradoxes">
         <AnimatedSection>
           <Eyebrow className="text-eco">What We Will Disrupt</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-12" lines={[
@@ -149,7 +162,7 @@ export default function EcoPage() {
       </Section>
 
       {/* ── 4. The Vision ── */}
-      <Section>
+      <Section id="eco-vision">
         <AnimatedSection>
           <Eyebrow className="text-eco">The Vision</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
@@ -190,7 +203,7 @@ export default function EcoPage() {
       </Section>
 
       {/* ── 5. How You Grow (Tiers) ── */}
-      <Section>
+      <Section id="eco-grow">
         <AnimatedSection>
           <Eyebrow className="text-eco">How You Grow</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-4" lines={[
@@ -222,7 +235,7 @@ export default function EcoPage() {
       </Section>
 
       {/* ── 6. City By City (Chapters) ── */}
-      <Section>
+      <Section id="eco-chapters">
         <AnimatedSection>
           <Eyebrow className="text-eco">City By City</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
@@ -269,7 +282,7 @@ export default function EcoPage() {
       </Section>
 
       {/* ── 7. Where The Mission Lives ── */}
-      <Section>
+      <Section id="eco-impact">
         <AnimatedSection>
           <Eyebrow className="text-eco">Impact</Eyebrow>
           <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
@@ -294,7 +307,7 @@ export default function EcoPage() {
       </Section>
 
       {/* ── 8. CTA ── */}
-      <Section>
+      <Section id="eco-cta">
         <AnimatedSection className="text-center">
           <SplitTextReveal as="h2" className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8" lines={[
             { text: 'THE GARDEN', className: 'text-foreground-dim' },
