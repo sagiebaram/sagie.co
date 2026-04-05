@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { getGSAP } from '@/lib/gsap'
 
-export function PageHeroAnimation({ children }: { children: React.ReactNode }) {
+export function PageHeroAnimation({ children, id }: { children: React.ReactNode; id?: string }) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -55,5 +55,5 @@ export function PageHeroAnimation({ children }: { children: React.ReactNode }) {
     return () => { ctx?.revert() }
   }, [])
 
-  return <div ref={ref}>{children}</div>
+  return <div ref={ref} id={id}>{children}</div>
 }

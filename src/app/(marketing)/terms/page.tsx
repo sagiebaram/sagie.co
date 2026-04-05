@@ -34,8 +34,8 @@ export default function TermsPage() {
       <Navbar />
       <SectionNav items={SECTIONS} />
 
-      <Section id="tos-hero" className="pt-28 md:pt-36">
-        <PageHeroAnimation>
+      <Section className="pt-28 md:pt-36">
+        <PageHeroAnimation id="tos-hero">
           <Eyebrow className="page-hero-eyebrow">Legal</Eyebrow>
           <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
             <span className="page-hero-line block text-foreground">TERMS OF SERVICE</span>

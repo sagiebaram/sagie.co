@@ -32,8 +32,8 @@ export default function PrivacyPage() {
       <Navbar />
       <SectionNav items={SECTIONS} />
 
-      <Section id="priv-hero" className="pt-28 md:pt-36">
-        <PageHeroAnimation>
+      <Section className="pt-28 md:pt-36">
+        <PageHeroAnimation id="priv-hero">
           <Eyebrow className="page-hero-eyebrow">Legal</Eyebrow>
           <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
             <span className="page-hero-line block text-foreground">PRIVACY POLICY</span>

@@ -19,7 +19,8 @@ interface SectionNavProps {
  */
 export function SectionNav({ items }: SectionNavProps) {
   const [active, setActive] = useState(items[0]?.id ?? '')
-  const [visible, setVisible] = useState(false)
+  const [pastHero, setPastHero] = useState(false)
+  const [inFooter, setInFooter] = useState(false)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
@@ -27,15 +28,26 @@ export function SectionNav({ items }: SectionNavProps) {
     if (prefersReduced) return
 
     // Show nav after scrolling past hero
-    const showObserver = new IntersectionObserver(
+    const heroObserver = new IntersectionObserver(
       ([entry]) => {
-        setVisible(!entry!.isIntersecting)
+        setPastHero(!entry!.isIntersecting)
       },
       { threshold: 0 },
     )
 
     const heroEl = document.getElementById(items[0]?.id ?? '')
-    if (heroEl) showObserver.observe(heroEl)
+    if (heroEl) heroObserver.observe(heroEl)
+
+    // Hide nav when footer is visible
+    const footerObserver = new IntersectionObserver(
+      ([entry]) => {
+        setInFooter(entry!.isIntersecting)
+      },
+      { threshold: 0 },
+    )
+
+    const footerEl = document.querySelector('footer')
+    if (footerEl) footerObserver.observe(footerEl)
 
     // Track active section
     const sectionEls = items
@@ -66,7 +78,8 @@ export function SectionNav({ items }: SectionNavProps) {
     sectionEls.forEach((el) => observerRef.current!.observe(el))
 
     return () => {
-      showObserver.disconnect()
+      heroObserver.disconnect()
+      footerObserver.disconnect()
       observerRef.current?.disconnect()
     }
   }, [items])
@@ -80,7 +93,7 @@ export function SectionNav({ items }: SectionNavProps) {
     <nav
       aria-label="Page sections"
       className="fixed right-4 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col items-end gap-3 transition-opacity duration-300"
-      style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none' }}
+      style={{ opacity: pastHero && !inFooter ? 1 : 0, pointerEvents: pastHero && !inFooter ? 'auto' : 'none' }}
     >
       {items.map((item) => {
         const isActive = active === item.id
