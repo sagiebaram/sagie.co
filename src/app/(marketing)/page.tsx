@@ -17,14 +17,14 @@ import { FinalCTA } from '@/components/sections/FinalCTA'
 
 const SECTIONS: SectionNavItem[] = [
   { id: 'hero', label: 'Home' },
-  { id: 'belief', label: 'Belief' },
-  { id: 'pillars', label: 'Pillars' },
-  { id: 'who', label: 'Who' },
-  { id: 'proof', label: 'Proof' },
-  { id: 'chapters', label: 'Chapters' },
+  { id: 'belief', label: 'The Belief' },
+  { id: 'pillars', label: 'The Pillars' },
+  { id: 'who', label: "Who's it for" },
+  { id: 'proof', label: 'The Network' },
+  { id: 'chapters', label: 'The Chapters' },
   { id: 'tiers', label: 'Tiers' },
   { id: 'faq', label: 'FAQ' },
-  { id: 'founder', label: 'Founder' },
+  { id: 'founder', label: 'The Founder' },
   { id: 'cta', label: 'Join' },
 ]
 
