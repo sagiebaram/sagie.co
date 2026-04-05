@@ -30,11 +30,9 @@ export function TransitionLink({ href, onClick, children, ...rest }: TransitionL
 
       e.preventDefault()
 
-      const prefersReduced =
-        typeof window !== 'undefined' &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-      // If View Transition API is available and motion is OK, use it
+      // Skip transition on reduced-motion or unsupported browsers
       if ('startViewTransition' in document && !prefersReduced) {
         ;(document as any).startViewTransition(() => {
           router.push(href)
