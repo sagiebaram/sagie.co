@@ -8,6 +8,7 @@ import { GridBackground } from '@/components/ui/GridBackground'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { ResourceFilter } from '@/components/ui/ResourceFilter'
 import { SubmitResourceForm } from '@/components/ui/SubmitResourceForm'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { Resource } from '@/lib/resources'
@@ -90,10 +91,10 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-0 pt-32 pb-8 md:pt-40 md:pb-10">
             <Eyebrow>Resources</Eyebrow>
-            <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
-              <span className="page-hero-line block text-foreground-secondary">TOOLS FOR THE</span>
-              <span className="page-hero-line block text-foreground">ECOSYSTEM.</span>
-            </h1>
+            <SplitTextReveal as="h1" className="font-display uppercase mb-8 text-hero leading-[0.9]" lines={[
+              { text: 'TOOLS FOR THE', className: 'text-foreground-secondary' },
+              { text: 'ECOSYSTEM.', className: 'text-foreground' },
+            ]} />
             <p className="page-hero-sub font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[520px]">
               Curated by SAGIE and contributed by the community. Accelerators, incubators, providers and more.
             </p>
