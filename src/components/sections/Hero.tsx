@@ -2,6 +2,7 @@ import { Logo } from '@/components/ui/Logo'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { Button } from '@/components/ui/Button'
 import { HeroAnimation } from '@/components/sections/HeroAnimation'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 import { HERO } from '@/constants/copy'
 
 export function Hero() {
@@ -24,13 +25,14 @@ export function Hero() {
                 <Logo width={260} height={156} priority className="hero-line object-contain" />
               </div>
             </div>
-            <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
-              {HERO.headingLines.map((line) => (
-                <span key={line.text} className={`hero-line block ${line.colorClass}`}>
-                  {line.text}
-                </span>
-              ))}
-            </h1>
+            <SplitTextReveal
+              as="h1"
+              className="font-display uppercase mb-8 text-hero leading-[0.9]"
+              lines={HERO.headingLines.map((line) => ({
+                text: line.text,
+                className: line.colorClass,
+              }))}
+            />
 
             <p className="hero-body font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[380px]">
               {HERO.subtitle}

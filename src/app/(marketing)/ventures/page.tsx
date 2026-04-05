@@ -7,6 +7,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 
 export const metadata: Metadata = {
   title: 'SAGIE Ventures — Trust Creates Deal Flow',
@@ -68,10 +69,10 @@ export default function VenturesPage() {
       <Section className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow text-ventures">SAGIE Ventures</Eyebrow>
-          <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
-            <span className="page-hero-line block text-foreground-dim">TRUST CREATES</span>
-            <span className="page-hero-line block text-foreground-secondary">DEAL FLOW.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
+            { text: 'TRUST CREATES', className: 'text-foreground-dim' },
+            { text: 'DEAL FLOW.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[480px] mb-0">
             SAGIE Ventures connects accredited investors with innovative founders building movements — not just companies. We back startups as ambassadors, facilitate the right introductions, and build a portfolio where conviction meets community.
           </p>

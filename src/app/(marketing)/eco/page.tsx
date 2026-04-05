@@ -87,10 +87,10 @@ export default function EcoPage() {
       <Section className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow text-eco">SAGIE ECO</Eyebrow>
-          <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
-            <span className="page-hero-line block text-foreground-dim">THE ECOSYSTEM</span>
-            <span className="page-hero-line block text-foreground-secondary">IS THE PRODUCT.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
+            { text: 'THE ECOSYSTEM', className: 'text-foreground-dim' },
+            { text: 'IS THE PRODUCT.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[480px] mb-0">
             SAGIE ECO is the community foundation — where genuine human relationships create real business opportunities across borders.
           </p>

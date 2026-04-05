@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { SolutionsFilter } from '@/components/ui/SolutionsFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 import { SERVICE_CATEGORIES } from '@/constants/solutions'
 import { getSolutionProviders, type SolutionProvider } from '@/lib/solutions'
 
@@ -73,10 +74,10 @@ export default function SolutionsPage() {
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
               SAGIE Solutions
             </p>
-            <h1 className="font-display uppercase text-hero leading-[0.9] mb-8">
-              <span className="page-hero-line block text-foreground-dim">THE EXPERTISE</span>
-              <span className="page-hero-line block text-foreground-secondary">IS IN THE ROOM.</span>
-            </h1>
+            <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+              { text: 'THE EXPERTISE', className: 'text-foreground-dim' },
+              { text: 'IS IN THE ROOM.', className: 'text-foreground-secondary' },
+            ]} />
             <p className="page-hero-sub font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px]">
               Operated by vetted community members who offer expertise to one another and to external clients. Revenue flows back to fund the mission.
             </p>
