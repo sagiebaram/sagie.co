@@ -7,6 +7,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 
 export const metadata: Metadata = {
   title: 'SAGIE ECO — The Ecosystem',
@@ -86,10 +87,10 @@ export default function EcoPage() {
       <Section className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow text-eco">SAGIE ECO</Eyebrow>
-          <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
-            <span className="page-hero-line block text-foreground-dim">THE ECOSYSTEM</span>
-            <span className="page-hero-line block text-foreground-secondary">IS THE PRODUCT.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
+            { text: 'THE ECOSYSTEM', className: 'text-foreground-dim' },
+            { text: 'IS THE PRODUCT.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[480px] mb-0">
             SAGIE ECO is the community foundation — where genuine human relationships create real business opportunities across borders.
           </p>
@@ -100,10 +101,10 @@ export default function EcoPage() {
       <Section>
         <AnimatedSection>
           <Eyebrow className="text-eco">The Belief</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8">
-            <span className="block text-foreground-dim">GIVE FIRST.</span>
-            <span className="block text-foreground-secondary">EVERYTHING FOLLOWS.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
+            { text: 'GIVE FIRST.', className: 'text-foreground-dim' },
+            { text: 'EVERYTHING FOLLOWS.', className: 'text-foreground-secondary' },
+          ]} />
           <div className="max-w-[720px] space-y-6">
             <p className="font-body text-foreground-secondary text-body-lg leading-[1.8] font-light">
               SAGIE ECO is not a networking group. It&apos;s a living ecosystem built on a tested belief — that helping others creates opportunities you wouldn&apos;t find by chasing them. Trust compounds in ways that calculation never can.
@@ -119,10 +120,10 @@ export default function EcoPage() {
       <Section>
         <AnimatedSection>
           <Eyebrow className="text-eco">What We Will Disrupt</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-12">
-            <span className="block text-foreground-dim">THREE PARADOXES.</span>
-            <span className="block text-foreground-secondary">ONE ECOSYSTEM.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-12" lines={[
+            { text: 'THREE PARADOXES.', className: 'text-foreground-dim' },
+            { text: 'ONE ECOSYSTEM.', className: 'text-foreground-secondary' },
+          ]} />
         </AnimatedSection>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -151,9 +152,9 @@ export default function EcoPage() {
       <Section>
         <AnimatedSection>
           <Eyebrow className="text-eco">The Vision</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8">
-            <span className="block text-foreground-secondary">WHAT WE&apos;RE BUILDING</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
+            { text: "WHAT WE'RE BUILDING", className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body text-foreground-secondary text-body-lg leading-[1.8] font-light max-w-[720px] mb-6">
             Break the paradoxes by creating parallel systems. Using open source principles as a philosophy and a mental model to create transparency, trust, accountability, and collaboration will bridge cultures so people understand each other well enough to build together as a collective.
           </p>
@@ -192,10 +193,10 @@ export default function EcoPage() {
       <Section>
         <AnimatedSection>
           <Eyebrow className="text-eco">How You Grow</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-4">
-            <span className="block text-foreground-dim">WHAT YOU GIVE</span>
-            <span className="block text-foreground-secondary">IS WHAT YOU RECEIVE.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-4" lines={[
+            { text: 'WHAT YOU GIVE', className: 'text-foreground-dim' },
+            { text: 'IS WHAT YOU RECEIVE.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body text-foreground-muted text-body-lg leading-[1.7] font-light max-w-[560px] mb-12">
             The people who create the most value earn the most access. Growth is recognized, not bought.
           </p>
@@ -224,10 +225,10 @@ export default function EcoPage() {
       <Section>
         <AnimatedSection>
           <Eyebrow className="text-eco">City By City</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8">
-            <span className="block text-foreground-dim">ROOTED LOCALLY.</span>
-            <span className="block text-foreground-secondary">CONNECTED GLOBALLY.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
+            { text: 'ROOTED LOCALLY.', className: 'text-foreground-dim' },
+            { text: 'CONNECTED GLOBALLY.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body text-foreground-secondary text-body-lg leading-[1.8] font-light max-w-[720px] mb-12">
             SAGIE ECO operates through chapters — each one a micro-community with its own events, energy, and leadership. Chapter leads are trusted partners who carry the SAGIE ethos into their city and curate membership personally.
           </p>
@@ -271,9 +272,9 @@ export default function EcoPage() {
       <Section>
         <AnimatedSection>
           <Eyebrow className="text-eco">Impact</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8">
-            <span className="block text-foreground-secondary">WHERE THE MISSION LIVES</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
+            { text: 'WHERE THE MISSION LIVES', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body text-foreground-secondary text-body-lg leading-[1.8] font-light max-w-[720px] mb-12">
             Once established as an NPO, revenue from SAGIE Solutions flows back here. Every engagement funds what matters.
           </p>
@@ -295,10 +296,10 @@ export default function EcoPage() {
       {/* ── 8. CTA ── */}
       <Section>
         <AnimatedSection className="text-center">
-          <h2 className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8">
-            <span className="block text-foreground-dim">THE GARDEN</span>
-            <span className="block text-foreground-secondary">IS GROWING.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8" lines={[
+            { text: 'THE GARDEN', className: 'text-foreground-dim' },
+            { text: 'IS GROWING.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[520px] mx-auto mb-10">
             People are good at their core. Everyone has a dream and a purpose. We&apos;re building the conditions where every dream could become a reality.
           </p>

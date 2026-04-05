@@ -4,6 +4,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 
 export const metadata: Metadata = {
   title: 'Apply — Ventures',
@@ -21,10 +22,10 @@ export default function ApplyVenturesForkPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             SAGIE Ventures
           </p>
-          <h1 className="font-display uppercase text-hero leading-[0.9] mb-8">
-            <span className="block text-foreground-dim">BUILD SOMETHING</span>
-            <span className="block text-foreground-secondary">THAT MATTERS.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+            { text: 'BUILD SOMETHING', className: 'text-foreground-dim' },
+            { text: 'THAT MATTERS.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[480px] mb-16">
             Whether you&apos;re building the next big thing or backing it — start here.
           </p>

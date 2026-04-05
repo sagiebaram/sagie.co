@@ -13,6 +13,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { EventFilter } from '@/components/ui/EventFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ErrorPage } from '@/components/ui/ErrorPage'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/types/events'
 import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
@@ -360,11 +361,11 @@ export function EventsPageClient({
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-6 text-label tracking-eyebrow">
               SAGIE ECO Events
             </p>
-            <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
-              <span className="page-hero-line block text-foreground-dim">WHERE THE</span>
-              <span className="page-hero-line block text-foreground-secondary">ECOSYSTEM</span>
-              <span className="page-hero-line block text-foreground">COMES TOGETHER.</span>
-            </h1>
+            <SplitTextReveal as="h1" className="font-display uppercase mb-8 text-hero leading-[0.9]" lines={[
+              { text: 'WHERE THE', className: 'text-foreground-dim' },
+              { text: 'ECOSYSTEM', className: 'text-foreground-secondary' },
+              { text: 'COMES TOGETHER.', className: 'text-foreground' },
+            ]} />
             <p className="page-hero-sub font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[520px]">
               Curated events, local happenings and online conversations — designed to create real connection.
             </p>
