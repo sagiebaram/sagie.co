@@ -225,15 +225,16 @@
   background-size: 28px 28px;
 }
 
-/* Parallax: grid drifts ±25px on scroll for depth illusion */
+/* Parallax: grid drifts on scroll for depth illusion */
 @supports (animation-timeline: scroll()) {
   .grid-bg-parallax {
     animation: grid-parallax linear both;
     animation-timeline: scroll();
+    animation-range: 0vh 100vh;
   }
   @keyframes grid-parallax {
-    from { transform: translateY(-25px); }
-    to   { transform: translateY(25px); }
+    from { transform: translateY(-60px); }
+    to   { transform: translateY(60px); }
   }
 }
 
