@@ -6,6 +6,7 @@ import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { BlogFilter } from '@/components/ui/BlogFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { SubmitPostForm } from '@/components/forms/SubmitPostForm'
 import { NewsletterForm } from '@/components/ui/NewsletterForm'
@@ -61,10 +62,10 @@ export default function BlogPage() {
       <Section className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow">The Blog</Eyebrow>
-          <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
-            <span className="page-hero-line block text-foreground-dim">IDEAS FROM</span>
-            <span className="page-hero-line block text-foreground-secondary">THE ECOSYSTEM.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
+            { text: 'IDEAS FROM', className: 'text-foreground-dim' },
+            { text: 'THE ECOSYSTEM.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[380px] mb-14">
             Personal writing, community spotlights, event recaps and thought leadership from SAGIE.
           </p>

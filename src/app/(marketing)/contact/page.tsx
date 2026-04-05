@@ -4,6 +4,7 @@ import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { ContactForm } from '@/components/forms/ContactForm'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -22,10 +23,10 @@ export default function ContactPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             Get in Touch
           </p>
-          <h1 className="font-display uppercase text-hero leading-[0.9] mb-8">
-            <span className="block text-foreground-dim">LET&apos;S</span>
-            <span className="block text-foreground-secondary">CONNECT.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+            { text: "LET'S", className: 'text-foreground-dim' },
+            { text: 'CONNECT.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
             Whether it&apos;s a partnership, a speaking opportunity, or just a conversation — we&apos;re listening.
           </p>

@@ -10,7 +10,18 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { SolutionsFilter } from '@/components/ui/SolutionsFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { CardTilt } from '@/components/ui/CardTilt'
+import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
 import { SERVICE_CATEGORIES } from '@/constants/solutions'
+
+const SECTIONS: SectionNavItem[] = [
+  { id: 'sol-hero', label: 'Home' },
+  { id: 'sol-how', label: 'How It Works' },
+  { id: 'sol-categories', label: 'Categories' },
+  { id: 'sol-providers', label: 'Providers' },
+  { id: 'sol-cta', label: 'Join' },
+]
 import { getSolutionProviders, type SolutionProvider } from '@/lib/solutions'
 
 export const revalidate = 3600
@@ -64,19 +75,20 @@ export default function SolutionsPage() {
     <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
+      <SectionNav items={SECTIONS} />
 
       {/* Hero */}
-      <section className="relative z-1 overflow-hidden">
+      <section id="sol-hero" className="relative z-1 overflow-hidden">
         <GridBackground />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-24">
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
               SAGIE Solutions
             </p>
-            <h1 className="font-display uppercase text-hero leading-[0.9] mb-8">
-              <span className="page-hero-line block text-foreground-dim">THE EXPERTISE</span>
-              <span className="page-hero-line block text-foreground-secondary">IS IN THE ROOM.</span>
-            </h1>
+            <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+              { text: 'THE EXPERTISE', className: 'text-foreground-dim' },
+              { text: 'IS IN THE ROOM.', className: 'text-foreground-secondary' },
+            ]} />
             <p className="page-hero-sub font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px]">
               Operated by vetted community members who offer expertise to one another and to external clients. Revenue flows back to fund the mission.
             </p>
@@ -85,7 +97,7 @@ export default function SolutionsPage() {
       </section>
 
       {/* How it works */}
-      <Section>
+      <Section id="sol-how">
         <Eyebrow>How it works</Eyebrow>
         <h2 className="sr-only">How it works</h2>
         <ScrollReveal selector=".step" stagger={0.12} y={20} duration={0.55}>
@@ -108,76 +120,62 @@ export default function SolutionsPage() {
       </Section>
 
       {/* Service categories */}
-      <Section>
+      <Section id="sol-categories">
         <Eyebrow>Service categories</Eyebrow>
         <h2 className="sr-only">Service categories</h2>
         <ScrollReveal selector=".cat-card" stagger={0.06} y={16} duration={0.45}>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px">
             {SERVICE_CATEGORIES.map((cat) => (
-              <div key={cat.name} className="cat-card border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
-                <p className="font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
+              <CardTilt key={cat.name} glowColor="#1565C0" className="cat-card border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
+                <p className="relative z-1 font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
                   {cat.name}
                 </p>
-                <p className="font-body text-foreground-muted text-caption font-light leading-[1.75]">
+                <p className="relative z-1 font-body text-foreground-muted text-caption font-light leading-[1.75]">
                   {cat.description}
                 </p>
-              </div>
+              </CardTilt>
             ))}
           </div>
         </ScrollReveal>
       </Section>
 
-      {/* Gated bar */}
-      <section className="relative z-1 border-t border-border-strong border-b border-b-border-strong">
-        <ScrollReveal y={12} duration={0.4}>
-          <div className="max-w-[880px] mx-auto px-6 md:px-8 py-10 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="max-w-[560px]">
-              <p className="font-body text-foreground-muted text-body font-light leading-[1.75]">
-                Specific providers, pricing and availability are visible to Builder members and above.
-              </p>
-              <p className="font-body italic text-foreground-dim text-body font-light leading-[1.75] mt-2">
-                Builder members access all services at a discounted rate. Every engagement funds the ecosystem.
-              </p>
-            </div>
-            <div className="flex flex-col items-end gap-3">
-              <a
-                href="/apply"
-                className="font-body text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 text-button tracking-button uppercase whitespace-nowrap"
-              >
-                Join the Ecosystem →
-              </a>
-              <a
-                href="/apply/solutions"
-                className="font-body text-foreground-dim hover:text-foreground-muted text-caption transition-colors duration-150 whitespace-nowrap"
-              >
-                Already a Builder? Apply as a Solutions Provider →
-              </a>
-            </div>
-          </div>
-        </ScrollReveal>
-      </section>
-
       {/* Community Providers */}
-      <Section>
+      <Section id="sol-providers">
         <Eyebrow>Community Providers</Eyebrow>
         <h2 className="sr-only">Community Providers</h2>
+        <div className="mb-10 max-w-[640px]">
+          <p className="font-body text-foreground-muted text-body font-light leading-[1.75]">
+            Specific providers, pricing and availability are visible to Builder members and above.
+          </p>
+          <p className="font-body italic text-foreground-dim text-body font-light leading-[1.75] mt-2">
+            Builder members access all services at a discounted rate. Every engagement funds the ecosystem.
+          </p>
+        </div>
         <Suspense fallback={<ProvidersSkeleton />}>
           <ProvidersContent />
         </Suspense>
       </Section>
 
       {/* CTA */}
-      <section className="relative z-1 overflow-hidden">
+      <section id="sol-cta" className="relative z-1 overflow-hidden">
         <GridBackground />
         <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-20 md:py-32">
-          <h2 className="font-display uppercase text-hero leading-[0.9] mb-8">
-            <span className="block text-foreground-dim">READY TO OFFER</span>
-            <span className="block text-foreground-secondary">YOUR EXPERTISE?</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+            { text: 'READY TO OFFER', className: 'text-foreground-dim' },
+            { text: 'YOUR EXPERTISE?', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-10">
             Join the ecosystem first, then offer your expertise as a Builder.
           </p>
-          <Button variant="primary" href="/apply">Join SAGIE ECO →</Button>
+          <div className="flex flex-col gap-3">
+            <Button variant="primary" href="/apply">Join SAGIE ECO →</Button>
+            <a
+              href="/apply/solutions"
+              className="font-body text-foreground-dim hover:text-foreground-muted text-caption transition-colors duration-150"
+            >
+              Already a Builder? Apply as a Solutions Provider →
+            </a>
+          </div>
         </div>
       </section>
 

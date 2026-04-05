@@ -4,6 +4,7 @@ import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { VenturesForm } from '@/components/forms/VenturesForm'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 
 export const metadata: Metadata = {
   title: 'Apply — Ventures Founder',
@@ -21,10 +22,10 @@ export default function ApplyVenturesFounderPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             SAGIE Ventures — Founders
           </p>
-          <h1 className="font-display uppercase text-hero leading-[0.9] mb-8">
-            <span className="block text-foreground-dim">SHOW US WHAT</span>
-            <span className="block text-foreground-secondary">YOU&apos;RE BUILDING.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+            { text: 'SHOW US WHAT', className: 'text-foreground-dim' },
+            { text: "YOU'RE BUILDING.", className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
             Positive impact or innovation? Reach out and see if we&apos;re a match.
           </p>

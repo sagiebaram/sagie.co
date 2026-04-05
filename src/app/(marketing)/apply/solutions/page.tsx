@@ -4,6 +4,7 @@ import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { SolutionsForm } from '@/components/forms/SolutionsForm'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
 
 export const metadata: Metadata = {
   title: 'Apply — Solutions Provider',
@@ -21,10 +22,10 @@ export default function ApplySolutionsPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             SAGIE Solutions
           </p>
-          <h1 className="font-display uppercase text-hero leading-[0.9] mb-8">
-            <span className="block text-foreground-dim">OFFER YOUR</span>
-            <span className="block text-foreground-secondary">EXPERTISE.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
+            { text: 'OFFER YOUR', className: 'text-foreground-dim' },
+            { text: 'EXPERTISE.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
             You need to be a Builder member first. Your expertise will be vetted before being offered to the ecosystem.
           </p>

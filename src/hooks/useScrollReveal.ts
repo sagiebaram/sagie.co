@@ -8,7 +8,7 @@ export interface UseScrollRevealOptions {
   delay?: number
   stagger?: number
   selector?: string
-  filterKey?: string
+  filterKey?: string | undefined
 }
 
 /**
@@ -78,7 +78,7 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
     return () => observer.disconnect()
   }, [y, duration, delay, stagger, selector])
 
-  // Filter-key effect: fade out and back in when filter changes (e.g. BlogFilter)
+  // Filter-key effect: fade-out → stagger-fade-in when filter changes
   useEffect(() => {
     if (filterKey === undefined) return
 
@@ -90,22 +90,41 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
     const el = ref.current
     if (!el) return
 
-    el.style.opacity = '0'
-    el.style.transition = ''
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+    if (!selector || prefersReduced) {
+      // Container-level fade for non-selector usage or reduced motion
+      el.style.opacity = '0'
+      el.style.transition = ''
+      const rafId = requestAnimationFrame(() => {
+        el.style.transition = 'opacity 200ms ease-out'
+        el.style.opacity = '1'
+      })
+      return () => cancelAnimationFrame(rafId)
+    }
+
+    // Staggered card animation
+    const children = Array.from(el.querySelectorAll(selector)) as HTMLElement[]
+
+    // Instant hide all cards
+    children.forEach((child) => {
+      child.style.transition = ''
+      child.style.opacity = '0'
+      child.style.transform = `translateY(${y}px)`
+    })
+
+    // Stagger-reveal on next frame
     const rafId = requestAnimationFrame(() => {
-      el.style.transition = 'opacity 200ms ease-out'
-      el.style.opacity = '1'
-
-      if (selector) {
-        el.querySelectorAll(selector).forEach((child) => {
-          ;(child as HTMLElement).style.opacity = '1'
-        })
-      }
+      children.forEach((child, i) => {
+        const d = i * stagger
+        child.style.transition = `opacity ${duration}s cubic-bezier(0.33,1,0.68,1) ${d}s, transform ${duration}s cubic-bezier(0.33,1,0.68,1) ${d}s`
+        child.style.opacity = '1'
+        child.style.transform = 'translateY(0)'
+      })
     })
 
     return () => cancelAnimationFrame(rafId)
-  }, [filterKey, selector])
+  }, [filterKey, selector, y, duration, stagger])
 
   return ref
 }

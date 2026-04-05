@@ -7,6 +7,17 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
+import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
+
+const SECTIONS: SectionNavItem[] = [
+  { id: 'ven-hero', label: 'Home' },
+  { id: 'ven-model', label: 'The Model' },
+  { id: 'ven-how', label: 'How It Works' },
+  { id: 'ven-portfolio', label: 'The Portfolio' },
+  { id: 'ven-ambassadors', label: 'Ambassadors' },
+  { id: 'ven-cta', label: 'Join' },
+]
 
 export const metadata: Metadata = {
   title: 'SAGIE Ventures — Trust Creates Deal Flow',
@@ -63,15 +74,16 @@ export default function VenturesPage() {
     <main id="main-content" className="relative">
       <CircuitBackground />
       <Navbar />
+      <SectionNav items={SECTIONS} />
 
       {/* ── 1. Hero ── */}
-      <Section className="pt-28 md:pt-36">
+      <Section id="ven-hero" className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow text-ventures">SAGIE Ventures</Eyebrow>
-          <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
-            <span className="page-hero-line block text-foreground-dim">TRUST CREATES</span>
-            <span className="page-hero-line block text-foreground-secondary">DEAL FLOW.</span>
-          </h1>
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
+            { text: 'TRUST CREATES', className: 'text-foreground-dim' },
+            { text: 'DEAL FLOW.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[480px] mb-0">
             SAGIE Ventures connects accredited investors with innovative founders building movements — not just companies. We back startups as ambassadors, facilitate the right introductions, and build a portfolio where conviction meets community.
           </p>
@@ -79,13 +91,13 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 2. The Model ── */}
-      <Section>
+      <Section id="ven-model">
         <AnimatedSection>
           <Eyebrow className="text-ventures">The Model</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8">
-            <span className="block text-foreground-dim">NOT A FUND.</span>
-            <span className="block text-foreground-secondary">A BRIDGE.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
+            { text: 'NOT A FUND.', className: 'text-foreground-dim' },
+            { text: 'A BRIDGE.', className: 'text-foreground-secondary' },
+          ]} />
           <div className="max-w-[720px] space-y-6 mb-12">
             <p className="font-body text-foreground-secondary text-body-lg leading-[1.8] font-light">
               SAGIE Ventures exists at the intersection of the ecosystem and the capital markets. We don&apos;t sit between investors and founders — we bring them into the same room, with trust already established.
@@ -124,13 +136,13 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 3. How It Works ── */}
-      <Section>
+      <Section id="ven-how">
         <AnimatedSection>
           <Eyebrow className="text-ventures">How It Works</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-12">
-            <span className="block text-foreground-dim">FROM ECOSYSTEM</span>
-            <span className="block text-foreground-secondary">TO OPPORTUNITY.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-12" lines={[
+            { text: 'FROM ECOSYSTEM', className: 'text-foreground-dim' },
+            { text: 'TO OPPORTUNITY.', className: 'text-foreground-secondary' },
+          ]} />
         </AnimatedSection>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -153,12 +165,12 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 4. The Portfolio ── */}
-      <Section>
+      <Section id="ven-portfolio">
         <AnimatedSection>
           <Eyebrow className="text-ventures">The Portfolio</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8">
-            <span className="block text-foreground-secondary">WHAT WE BACK</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
+            { text: 'WHAT WE BACK', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body text-foreground-secondary text-body-lg leading-[1.8] font-light max-w-[720px] mb-12">
             SAGIE Ventures is building its portfolio — innovative startups, impact-driven companies, and movements that align with the ecosystem&apos;s values. We&apos;re looking for:
           </p>
@@ -185,12 +197,12 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 5. Ambassador Program ── */}
-      <Section>
+      <Section id="ven-ambassadors">
         <AnimatedSection>
           <Eyebrow className="text-ventures">Ambassador Program</Eyebrow>
-          <h2 className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8">
-            <span className="block text-foreground-secondary">VENTURE AMBASSADORS</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-chapter leading-[0.95] tracking-heading mb-8" lines={[
+            { text: 'VENTURE AMBASSADORS', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body text-foreground-secondary text-body-lg leading-[1.8] font-light max-w-[720px] mb-12">
             SAGIE Venture Ambassadors are experienced operators and investors within the ecosystem who help source, evaluate, and support portfolio companies. They&apos;re the bridge between community trust and capital deployment.
           </p>
@@ -235,12 +247,12 @@ export default function VenturesPage() {
       </Section>
 
       {/* ── 6. CTA — Two Paths ── */}
-      <Section>
+      <Section id="ven-cta">
         <AnimatedSection className="text-center mb-12">
-          <h2 className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8">
-            <span className="block text-foreground-dim">LET&apos;S BUILD</span>
-            <span className="block text-foreground-secondary">TOGETHER.</span>
-          </h2>
+          <SplitTextReveal as="h2" className="font-display uppercase text-hero-cta leading-[0.9] tracking-heading mb-8" lines={[
+            { text: "LET'S BUILD", className: 'text-foreground-dim' },
+            { text: 'TOGETHER.', className: 'text-foreground-secondary' },
+          ]} />
           <p className="font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[520px] mx-auto">
             Whether you&apos;re investing or building — the first step is a conversation.
           </p>
