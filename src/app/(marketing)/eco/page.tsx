@@ -22,11 +22,11 @@ const SECTIONS: SectionNavItem[] = [
 ]
 
 export const metadata: Metadata = {
-  title: 'ECO',
+  title: 'Eco',
   description:
     'SAGIE ECO is the community foundation — where genuine human relationships create real business opportunities across borders.',
   openGraph: {
-    title: 'ECO | SAGIE',
+    title: 'Eco | SAGIE',
     description:
       'SAGIE ECO is the community foundation — where genuine human relationships create real business opportunities across borders.',
   },
