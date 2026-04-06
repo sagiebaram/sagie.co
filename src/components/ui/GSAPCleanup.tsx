@@ -5,8 +5,10 @@ import { getGSAP } from '@/lib/gsap'
 
 export function GSAPCleanup() {
   useEffect(() => {
+    // Let the browser handle scroll restoration natively on back/forward.
+    // 'manual' was preventing scroll restore without implementing a replacement.
     if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual'
+      history.scrollRestoration = 'auto'
     }
 
     const handlePageHide = async () => {

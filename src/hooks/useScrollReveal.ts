@@ -37,15 +37,27 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
       return
     }
 
-    // Set initial hidden state
+    // Set initial hidden state — but only for elements below the viewport.
+    // Elements already in or above the viewport (e.g., scroll restored on
+    // back/forward navigation) are shown immediately to prevent a flash.
     const targets = selector
       ? (Array.from(currentRef.querySelectorAll(selector)) as HTMLElement[])
       : [currentRef]
 
+    // Match the observer's rootMargin: bottom shrunk by 10%
+    const triggerLine = window.innerHeight * 0.9
+
     targets.forEach((el) => {
-      el.style.opacity = '0'
-      el.style.transform = `translateY(${y}px)`
-      el.style.willChange = 'opacity, transform'
+      const rect = el.getBoundingClientRect()
+      if (rect.top < triggerLine) {
+        // Already in or above the visible area — show immediately
+        el.style.opacity = '1'
+        el.style.transform = 'none'
+      } else {
+        el.style.opacity = '0'
+        el.style.transform = `translateY(${y}px)`
+        el.style.willChange = 'opacity, transform'
+      }
     })
 
     const observer = new IntersectionObserver(
