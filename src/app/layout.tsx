@@ -87,6 +87,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body>
+        {/* Scroll to top on reload before the browser restores a stale position.
+            Must run synchronously — useEffect fires too late. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: `
+            if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+              history.scrollRestoration = 'manual';
+              window.scrollTo(0, 0);
+            }
+          `}}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

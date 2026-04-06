@@ -6,15 +6,9 @@ import { getGSAP } from '@/lib/gsap'
 export function GSAPCleanup() {
   useEffect(() => {
     // Let the browser handle scroll restoration natively on back/forward.
+    // Reload is handled by an inline script in layout.tsx that runs before hydration.
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'auto'
-    }
-
-    // On reload, scroll to top to prevent the browser from restoring a
-    // stale position before the page has fully rendered.
-    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
-    if (navEntry?.type === 'reload') {
-      window.scrollTo(0, 0)
     }
 
     const handlePageHide = async () => {
