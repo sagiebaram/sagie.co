@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Suggest an Event',
+  title: 'Suggest Event',
 }
 
 import { Navbar } from '@/components/layout/Navbar'
