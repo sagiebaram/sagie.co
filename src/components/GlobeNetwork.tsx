@@ -4,30 +4,42 @@ import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react'
 import dynamic from 'next/dynamic'
 import type { CityData } from '@/lib/members'
 import type { ChapterPin } from './GlobeClient'
+import type { GlobePoint, GlobeArc, GlobeRing, GeoJsonFeatureCollection } from '@/types/globe'
+import type { GlobeMethods, GlobeProps } from 'react-globe.gl'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const Globe = dynamic(() => import('react-globe.gl').then((mod) => mod.default) as any, {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-background-card">
-      <div className="w-8 h-8 border-2 border-border-subtle border-t-globe-cyan rounded-full animate-spin" />
-    </div>
-  ),
-}) as any
+// react-globe.gl types don't include globeColor (runtime-only prop from three-globe)
+type ExtendedGlobeProps = GlobeProps & { globeColor?: string }
+type GlobeComponent = React.FC<ExtendedGlobeProps & { ref?: React.MutableRefObject<GlobeMethods | undefined> }>
 
-interface Arc {
-  startLat: number
-  startLng: number
-  endLat: number
-  endLng: number
+const Globe = dynamic(
+  () => import('react-globe.gl').then((mod) => mod.default as unknown as GlobeComponent),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-background-card">
+        <div className="w-8 h-8 border-2 border-border-subtle border-t-globe-cyan rounded-full animate-spin" />
+      </div>
+    ),
+  },
+)
+
+interface ThreeObject3D {
+  geometry?: { dispose(): void }
+  material?: ThreeMaterial | ThreeMaterial[]
+}
+
+interface ThreeMaterial {
+  dispose(): void
+  [key: string]: unknown
 }
 
 export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[]; chapterPins?: ChapterPin[] }) {
-  const globeRef = useRef<any>(null)
+  const globeRef = useRef<GlobeMethods | undefined>(undefined)
   const containerRef = useRef<HTMLDivElement>(null)
   const cancelledRef = useRef(false)
-  const [dimensions, setDimensions] = useState({ width: 800, height: 500 })
-  const [countries, setCountries] = useState<{ features: any[] }>({ features: [] })
+  const [dimensions, setDimensions] = useState({ width: 800, height: 600 })
+  const [isMobile, setIsMobile] = useState(false)
+  const [countries, setCountries] = useState<GeoJsonFeatureCollection>({ features: [] })
 
   const [altitude, setAltitude] = useState(2.2)
   const isZoomedIn = altitude < 1.8
@@ -43,9 +55,10 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     polygonCapColor: () => 'rgba(0,0,0,0)',
     polygonSideColor: () => 'rgba(0,0,0,0)',
     polygonStrokeColor: () => 'rgba(255,255,255,0.35)',
-    pointColor: (d: any) => {
-      if (d.isChapterPin && d.chapterStatus !== 'Active') return 'rgba(255,255,255,0.45)'
-      return d.isChapter ? '#ffffff' : 'rgba(255,255,255,0.3)'
+    pointColor: (d: object) => {
+      const point = d as GlobePoint
+      if (point.isChapterPin && point.chapterStatus !== 'Active') return 'rgba(255,255,255,0.45)'
+      return point.isChapter ? '#ffffff' : 'rgba(255,255,255,0.3)'
     },
     arcColorConnected: ['#ffffff', '#ffffff'] as [string, string],
     arcColorIdle: ['rgba(255,255,255,0.15)', 'rgba(255,255,255,0.15)'] as [string, string],
@@ -89,7 +102,9 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     const handleResize = () => {
       if (containerRef.current) {
         const width = containerRef.current.offsetWidth
-        const height = Math.max(500, width * 0.75)
+        const mobile = width < 768
+        setIsMobile(mobile)
+        const height = mobile ? Math.max(350, width * 0.9) : Math.max(500, width * 0.75)
         setDimensions({ width, height })
       }
     }
@@ -118,19 +133,20 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
       }
 
       if (scene) {
-        scene.traverse((object: any) => {
-          if (object.geometry) {
-            object.geometry.dispose()
+        scene.traverse((object: unknown) => {
+          const obj = object as ThreeObject3D
+          if (obj.geometry) {
+            obj.geometry.dispose()
           }
-          if (object.material) {
-            const materials = Array.isArray(object.material)
-              ? object.material
-              : [object.material]
+          if (obj.material) {
+            const materials = Array.isArray(obj.material)
+              ? obj.material
+              : [obj.material]
             for (const material of materials) {
               for (const key of Object.keys(material)) {
                 const value = material[key]
-                if (value && typeof value === 'object' && typeof value.dispose === 'function') {
-                  value.dispose()
+                if (value && typeof value === 'object' && typeof (value as { dispose?: unknown }).dispose === 'function') {
+                  (value as { dispose(): void }).dispose()
                 }
               }
               material.dispose()
@@ -161,6 +177,13 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
       controls.autoRotateSpeed = 0.8
       controls.enableZoom = true
 
+      // Mobile: enable touch gestures for rotate + pinch-to-zoom
+      if (isMobile) {
+        controls.enableRotate = true
+        controls.enablePan = true
+        controls.touches = { ONE: 0 /* ROTATE */, TWO: 2 /* DOLLY_PAN */ }
+      }
+
       controls.addEventListener('change', () => {
         if (globeRef.current) {
           const pov = globeRef.current.pointOfView()
@@ -183,9 +206,9 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
 
   // Merge chapter pins into the city list for rendering
   // Chapter pins that don't overlap with member cities get added as extra points
-  const allPoints = useMemo(() => {
+  const allPoints = useMemo((): GlobePoint[] => {
     const memberCityIds = new Set(cities.map((c) => c.id))
-    const extraChapterPoints: CityData[] = chapterPins
+    const extraChapterPoints: GlobePoint[] = chapterPins
       .filter((cp) => !memberCityIds.has(cp.id))
       .map((cp) => ({
         id: cp.id,
@@ -197,11 +220,11 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
         isChapterPin: true,
         chapterStatus: cp.chapterStatus,
       }))
-    return [...cities, ...extraChapterPoints] as (CityData & { isChapterPin?: boolean; chapterStatus?: string })[]
+    return [...cities, ...extraChapterPoints]
   }, [cities, chapterPins])
 
   const ringsData = useMemo(
-    () =>
+    (): GlobeRing[] =>
       chapterPins.filter((cp) => cp.chapterStatus === 'Active').map((cp) => ({
         lat: cp.lat,
         lng: cp.lng,
@@ -213,9 +236,9 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
   )
 
   // Generate arcs connecting all locations
-  const arcsData = useMemo((): Arc[] => {
+  const arcsData = useMemo((): GlobeArc[] => {
     if (allPoints.length < 2) return []
-    const arcs: Arc[] = []
+    const arcs: GlobeArc[] = []
     for (let i = 0; i < allPoints.length; i++) {
       for (let j = i + 1; j < allPoints.length; j++) {
         arcs.push({
@@ -237,16 +260,37 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     })
   }, [isZoomedIn])
 
+  // Mobile: imperatively highlight city labels on hover/selection
+  useEffect(() => {
+    if (!isMobile) return
+    const activeId = hoveredCity || selectedCity?.id
+    const labels = document.querySelectorAll<HTMLElement>('[data-city-id]')
+    labels.forEach((el) => {
+      const id = el.getAttribute('data-city-id')
+      const nameEl = el.querySelector<HTMLElement>('.globe-city-name')
+      if (!nameEl) return
+      if (id === activeId) {
+        nameEl.style.color = 'var(--text-primary)'
+      } else if (activeId) {
+        nameEl.style.color = 'var(--text-dim)'
+      } else {
+        nameEl.style.color = nameEl.getAttribute('data-default-color') || 'var(--text-secondary)'
+      }
+    })
+  }, [hoveredCity, selectedCity, isMobile])
+
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-visible flex justify-center items-center min-h-[500px] bg-transparent"
+      className="relative w-full overflow-visible flex justify-center items-center min-h-[350px] md:min-h-[500px] bg-transparent"
+      style={isMobile ? { touchAction: 'none' } : undefined}
       role="img"
       aria-label="Interactive globe showing SAGIE community locations worldwide"
     >
       <div
         className="relative z-0"
         style={{
+          ...(isMobile ? { touchAction: 'none' } : {}),
           width: dimensions.width,
           height: dimensions.height,
           maskImage: isZoomedIn ? 'none' : `radial-gradient(circle, black ${30 + Math.min(altitude, 2.5) * 5}%, transparent ${60 + Math.min(altitude, 2.5) * 6}%)`,
@@ -264,27 +308,41 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           showAtmosphere={globeColors.showAtmosphere}
           atmosphereColor={globeColors.atmosphereColor}
           atmosphereAltitude={globeColors.atmosphereAltitude}
+          {...(isMobile ? { onGlobeClick: ({ lat, lng }: { lat: number; lng: number }) => {
+            // Mobile: find nearest city within 15° and select it
+            let nearest: GlobePoint | null = null
+            let minDist = Infinity
+            for (const p of allPoints) {
+              const dLat = p.lat - lat
+              const dLng = p.lng - lng
+              const dist = dLat * dLat + dLng * dLng
+              if (dist < minDist) {
+                minDist = dist
+                nearest = p
+              }
+            }
+            if (nearest && minDist < 15 * 15) {
+              handleSelect(selectedCity?.id === nearest.id ? null : nearest)
+            } else {
+              handleSelect(null)
+            }
+          }} : {})}
           polygonsData={countries.features}
           polygonCapColor={globeColors.polygonCapColor}
           polygonSideColor={globeColors.polygonSideColor}
           polygonStrokeColor={globeColors.polygonStrokeColor}
-          pointsData={[...allPoints]}
-          pointColor={(d: any) => {
-            if (hoveredCity === d.id) return '#ffffff'
-            return hoveredCity
+          pointsData={allPoints}
+          pointColor={(d: object) => {
+            const point = d as GlobePoint
+            // Desktop: highlight on hover only. Mobile: highlight on hover or selection.
+            const activeId = isMobile ? (hoveredCity || selectedCity?.id) : hoveredCity
+            if (activeId === point.id) return '#ffffff'
+            return activeId
               ? 'rgba(255,255,255,0.15)'
               : globeColors.pointColor(d)
           }}
-          pointAltitude={(d: any) => 0.02 + (d.members / 200) * 0.04}
-          pointRadius={(d: any) => {
-            if (hoveredCity === d.id) return 0.8
-            if (d.isChapterPin && d.chapterStatus !== 'Active') {
-              return 0.45 + Math.log10(Math.max(d.members, 1) + 1) * 0.3
-            }
-            const base = d.isChapter ? 0.6 : 0.3
-            const scale = Math.log10(Math.max(d.members, 1) + 1) * 0.4
-            return base + scale
-          }}
+          pointAltitude={0.010}
+          pointRadius={0.1}
           pointsMerge={false}
           ringsData={ringsData}
           ringColor={globeColors.ringColor}
@@ -292,9 +350,12 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           ringPropagationSpeed="propagationSpeed"
           ringRepeatPeriod="repeatPeriod"
           arcsData={arcsData}
-          arcColor={(arc: any) => {
-            if (!hoveredCity) return globeColors.arcColorIdle
-            const city = allPoints.find(c => c.id === hoveredCity)
+          arcColor={(d: object) => {
+            const arc = d as GlobeArc
+            // Desktop: highlight on hover only. Mobile: highlight on hover or selection.
+            const activeId = isMobile ? (hoveredCity || selectedCity?.id) : hoveredCity
+            if (!activeId) return globeColors.arcColorIdle
+            const city = allPoints.find(c => c.id === activeId)
             const isConnected =
               arc.startLat === city?.lat || arc.endLat === city?.lat
             return isConnected ? globeColors.arcColorConnected : globeColors.arcColorIdle
@@ -304,42 +365,74 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           arcDashAnimateTime={3000}
           arcAltitudeAutoScale={0.3}
           arcStroke={0.3}
-          onPointHover={(point: any) => setHoveredCity(point ? point.id : null)}
-          onPointClick={(point: any) => {
-            const city = allPoints.find(c => c.id === point.id)
+          {...(isMobile ? { lineHoverPrecision: 4 } : {})}
+          onPointHover={(point: object | null) => {
+            const p = point as GlobePoint | null
+            setHoveredCity(p ? p.id : null)
+          }}
+          onPointClick={(point: object) => {
+            const p = point as GlobePoint
+            const city = allPoints.find(c => c.id === p.id)
             if (city) {
               handleSelect(selectedCity?.id === city.id ? null : city)
             }
           }}
-          htmlElementsData={[...allPoints]}
-          htmlElement={(d: any) => {
+          htmlElementsData={allPoints}
+          htmlElement={(d: object) => {
+            const point = d as GlobePoint
             const el = document.createElement('div')
-            el.innerHTML = `
-              <div style="font-family: var(--font-bebas-neue, sans-serif); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); padding-bottom: 6px; pointer-events: auto; cursor: pointer;">
-                <div style="font-size: 24px; letter-spacing: 0.1em; line-height: 1; ${
-                  d.isChapter ? 'color: var(--text-primary);' : 'color: var(--text-secondary);'
-                }">${d.isChapter ? '★ ' : ''}${d.name}</div>
-                <div class="globe-zoom-label" style="font-family: var(--font-dm-sans, sans-serif); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; transition: opacity 0.3s; opacity: 0;">${d.members} Members</div>
-              </div>
-            `
-            el.onclick = (e: MouseEvent) => {
-              e.stopPropagation()
-              const city = allPoints.find(c => c.id === d.id) || null
-              const prev = selectedCityRef.current
-              handleSelectRef.current(prev?.id === city?.id ? null : city)
+
+            if (isMobile) {
+              // Mobile: data attributes for imperative label highlighting + touch handling
+              const defaultColor = point.isChapter ? 'var(--text-primary)' : 'var(--text-secondary)'
+              el.setAttribute('data-city-id', point.id)
+              el.innerHTML = `
+                <div style="font-family: var(--font-bebas-neue, sans-serif); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); padding-bottom: 6px; pointer-events: auto; touch-action: none; cursor: pointer;">
+                  <div class="globe-city-name" data-default-color="${defaultColor}" style="font-size: 16px; letter-spacing: 0.1em; line-height: 1; color: ${defaultColor}; transition: color 0.15s;">${point.isChapter ? '★ ' : ''}${point.name}</div>
+                  <div class="globe-zoom-label" style="font-family: var(--font-dm-sans, sans-serif); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; transition: opacity 0.3s; opacity: 0;">${point.members} Members</div>
+                </div>
+              `
+              const handleTap = (e: MouseEvent | TouchEvent) => {
+                e.stopPropagation()
+                e.preventDefault()
+                const city = allPoints.find(c => c.id === point.id) || null
+                const prev = selectedCityRef.current
+                handleSelectRef.current(prev?.id === city?.id ? null : city)
+              }
+              el.addEventListener('touchend', handleTap, { passive: false })
+              el.onclick = handleTap as (e: MouseEvent) => void
+            } else {
+              // Desktop: original behavior
+              el.innerHTML = `
+                <div style="font-family: var(--font-bebas-neue, sans-serif); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); padding-bottom: 6px; pointer-events: auto; cursor: pointer;">
+                  <div style="font-size: 24px; letter-spacing: 0.1em; line-height: 1; ${
+                    point.isChapter ? 'color: var(--text-primary);' : 'color: var(--text-secondary);'
+                  }">${point.isChapter ? '★ ' : ''}${point.name}</div>
+                  <div class="globe-zoom-label" style="font-family: var(--font-dm-sans, sans-serif); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; transition: opacity 0.3s; opacity: 0;">${point.members} Members</div>
+                </div>
+              `
+              el.onclick = (e: MouseEvent) => {
+                e.stopPropagation()
+                const city = allPoints.find(c => c.id === point.id) || null
+                const prev = selectedCityRef.current
+                handleSelectRef.current(prev?.id === city?.id ? null : city)
+              }
             }
-            el.onmouseenter = () => setHoveredCity(d.id)
+            el.onmouseenter = () => setHoveredCity(point.id)
             el.onmouseleave = () => setHoveredCity(null)
             return el
           }}
         />
       </div>
 
-      {/* Info card — bottom left */}
+      {/* Info card */}
       {selectedCity && (
         <div
-          className="absolute bottom-6 left-6 z-20 border border-border-default bg-background-card p-4"
-          style={{ maxWidth: '240px' }}
+          className={isMobile
+            ? "absolute z-20 border border-border-default bg-background-card bottom-16 left-1/2 -translate-x-1/2 p-3 max-w-[200px]"
+            : "absolute bottom-6 left-6 z-20 border border-border-default bg-background-card p-4"
+          }
+          style={isMobile ? undefined : { maxWidth: '240px' }}
         >
           <div
             className="text-label uppercase tracking-widest mb-2"
@@ -347,7 +440,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           >
             {selectedCity.isChapter ? 'Active Chapter' : 'Community Hub'}
           </div>
-          <div className="font-display text-manifesto" style={{ color: 'var(--text-primary)' }}>
+          <div className={`font-display ${isMobile ? 'text-body' : 'text-manifesto'}`} style={{ color: 'var(--text-primary)' }}>
             {selectedCity.name}
           </div>
           <div className="text-caption mt-1" style={{ color: 'var(--text-muted)' }}>
@@ -375,68 +468,118 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
       )}
 
       {/* Legend */}
-      <div
-        className="absolute bottom-6 right-6 z-20"
-        style={{ minWidth: '160px' }}
-      >
-        {allPoints.map((city) => (
-          <button
-            key={city.id}
-            onClick={() => handleSelect(selectedCity?.id === city.id ? null : city)}
-            onMouseEnter={() => setHoveredCity(city.id)}
-            onMouseLeave={() => setHoveredCity(null)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '5px 0',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              width: '100%',
-              textAlign: 'left',
-              transition: 'opacity 0.15s',
-              opacity: hoveredCity && hoveredCity !== city.id ? 0.4 : 1,
-            }}
-          >
-            <span
+      {isMobile ? (
+        <div
+          className="absolute z-20 bottom-2 left-0 right-0 flex gap-3 overflow-x-auto px-4 py-2"
+        >
+          {allPoints.map((city) => (
+            <button
+              key={city.id}
+              onClick={() => handleSelect(selectedCity?.id === city.id ? null : city)}
+              className="flex items-center gap-1.5 shrink-0"
               style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                background: city.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
-                flexShrink: 0,
-              }}
-            />
-            <span
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '13px',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: hoveredCity === city.id || selectedCity?.id === city.id
-                  ? 'var(--text-primary)'
-                  : city.isChapter
-                    ? 'var(--silver)'
-                    : 'var(--text-muted)',
-                transition: 'color 0.15s',
+                padding: '4px 8px',
+                background: 'rgba(0,0,0,0.5)',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                transition: 'opacity 0.15s',
+                opacity: hoveredCity && hoveredCity !== city.id ? 0.4 : 1,
               }}
             >
-              {city.name}
-            </span>
-            <span
+              <span
+                style={{
+                  width: '5px',
+                  height: '5px',
+                  borderRadius: '50%',
+                  background: city.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '11px',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                  color: hoveredCity === city.id || selectedCity?.id === city.id
+                    ? 'var(--text-primary)'
+                    : city.isChapter
+                      ? 'var(--silver)'
+                      : 'var(--text-muted)',
+                  transition: 'color 0.15s',
+                }}
+              >
+                {city.name}
+              </span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div
+          className="absolute bottom-6 right-6 z-20"
+          style={{ minWidth: '160px' }}
+        >
+          {allPoints.map((city) => (
+            <button
+              key={city.id}
+              onClick={() => handleSelect(selectedCity?.id === city.id ? null : city)}
+              onMouseEnter={() => setHoveredCity(city.id)}
+              onMouseLeave={() => setHoveredCity(null)}
               style={{
-                fontSize: '10px',
-                color: hoveredCity === city.id ? 'var(--text-secondary)' : 'var(--text-dim)',
-                letterSpacing: '0.06em',
-                marginLeft: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '5px 0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                width: '100%',
+                textAlign: 'left',
+                transition: 'opacity 0.15s',
+                opacity: hoveredCity && hoveredCity !== city.id ? 0.4 : 1,
               }}
             >
-              {city.members}
-            </span>
-          </button>
-        ))}
-      </div>
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: city.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '13px',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: hoveredCity === city.id || selectedCity?.id === city.id
+                    ? 'var(--text-primary)'
+                    : city.isChapter
+                      ? 'var(--silver)'
+                      : 'var(--text-muted)',
+                  transition: 'color 0.15s',
+                }}
+              >
+                {city.name}
+              </span>
+              <span
+                style={{
+                  fontSize: '10px',
+                  color: hoveredCity === city.id ? 'var(--text-secondary)' : 'var(--text-dim)',
+                  letterSpacing: '0.06em',
+                  marginLeft: 'auto',
+                }}
+              >
+                {city.members}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

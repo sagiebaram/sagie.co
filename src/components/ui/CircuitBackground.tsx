@@ -37,8 +37,9 @@ const DARK_COLORS: CircuitColors = {
 const PULSE_LENGTH = 40
 const DOT_ACTIVE_DURATION = 300
 
-function generatePaths(w: number, h: number): CircuitPath[] {
-  const count = Math.min(60, Math.floor((w * h) / 28000))
+function generatePaths(w: number, h: number, isMobile = false): CircuitPath[] {
+  const base = Math.min(60, Math.floor((w * h) / 28000))
+  const count = isMobile ? Math.ceil(base * 0.5) : base
   const paths: CircuitPath[] = []
 
   for (let i = 0; i < count; i++) {
@@ -258,7 +259,7 @@ export function CircuitBackground() {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const dpr = window.devicePixelRatio || 1
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
     const w = canvas.offsetWidth
     const h = canvas.offsetHeight
     canvas.width = w * dpr
@@ -266,7 +267,7 @@ export function CircuitBackground() {
     const ctx = canvas.getContext('2d')
     if (ctx) ctx.scale(dpr, dpr)
 
-    pathsRef.current = generatePaths(w, h)
+    pathsRef.current = generatePaths(w, h, w < 768)
   }, [])
 
   useEffect(() => {
@@ -361,6 +362,7 @@ export function CircuitBackground() {
         height: '100%',
         zIndex: 0,
         pointerEvents: 'none',
+        willChange: 'transform',
       }}
     />
   )
