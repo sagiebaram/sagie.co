@@ -5,10 +5,11 @@ import { getGSAP } from '@/lib/gsap'
 
 export function GSAPCleanup() {
   useEffect(() => {
-    // Let the browser handle scroll restoration natively on back/forward.
-    // 'manual' was preventing scroll restore without implementing a replacement.
+    // Prevent the browser from restoring stale scroll positions on refresh.
+    // Next.js App Router handles scroll restoration for client-side
+    // back/forward navigations internally, so 'manual' is safe here.
     if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'auto'
+      history.scrollRestoration = 'manual'
     }
 
     const handlePageHide = async () => {
