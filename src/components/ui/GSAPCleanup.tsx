@@ -5,8 +5,10 @@ import { getGSAP } from '@/lib/gsap'
 
 export function GSAPCleanup() {
   useEffect(() => {
+    // Let the browser handle scroll restoration natively on back/forward.
+    // Reload is handled by an inline script in layout.tsx that runs before hydration.
     if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual'
+      history.scrollRestoration = 'auto'
     }
 
     const handlePageHide = async () => {

@@ -87,6 +87,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body>
+        {/* Block browser scroll restore on this page load (prevents stale
+            position on refresh). GSAPCleanup switches to 'auto' after
+            hydration so back/forward still works natively. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: `history.scrollRestoration='manual';window.scrollTo(0,0)` }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
