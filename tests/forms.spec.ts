@@ -278,3 +278,112 @@ test('suggest event form shows blur validation errors', async ({ page }) => {
   await page.locator('[name="eventName"]').blur();
   await expect(page.getByText("What's the event called?")).not.toBeVisible({ timeout: 5000 });
 });
+
+// -----------------------------------------------------------------------
+// API Error Paths
+// -----------------------------------------------------------------------
+test('API rate limiting returns 429 and shows error', async ({ page }) => {
+  await page.route('**/api/applications/membership', async (route) => {
+    if (route.request().method() === 'POST') {
+      await route.fulfill({ status: 429, contentType: 'application/json', body: JSON.stringify({ error: 'Too many requests' }) });
+    } else {
+      await route.continue();
+    }
+  });
+  await page.goto('/apply');
+  // Fill necessary fields to enable submit
+  await page.fill('[name="fullName"]', 'Ada Lovelace');
+  await page.fill('[name="email"]', 'ada@example.com');
+  await selectDropdownOption(page, 'country', 'United Kingdom');
+  await selectDropdownOption(page, 'city', 'London');
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
+  await selectDropdownOption(page, 'role', 'Founder');
+  await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
+  await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
+  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
+
+  await page.getByRole('button', { name: /submit application/i }).click();
+  // Form submission failure shows generic fallback or specific error. Usually a toast or error block
+  await expect(page.getByText(/We couldn't submit your application|Too many requests/i)).toBeVisible({ timeout: 10000 });
+});
+
+test('API invalid data returns 422 and shows field errors', async ({ page }) => {
+  await page.route('**/api/applications/membership', async (route) => {
+    if (route.request().method() === 'POST') {
+      await route.fulfill({ status: 422, contentType: 'application/json', body: JSON.stringify({ error: 'Validation failed', fieldErrors: { email: ['Invalid email address (from mocked)'] } }) });
+    } else {
+      await route.continue();
+    }
+  });
+  await page.goto('/apply');
+  
+  await page.fill('[name="fullName"]', 'Ada Lovelace');
+  await page.fill('[name="email"]', 'ada@example.com');
+  await selectDropdownOption(page, 'country', 'United Kingdom');
+  await selectDropdownOption(page, 'city', 'London');
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
+  await selectDropdownOption(page, 'role', 'Founder');
+  await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
+  await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
+  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
+
+  await page.getByRole('button', { name: /submit application/i }).click();
+
+  // The form component maps 422 errors back to UI fields
+  await expect(page.getByText('Invalid email address (from mocked)')).toBeVisible({ timeout: 10000 });
+});
+
+test('API Notion failure returns 500 and shows generic error', async ({ page }) => {
+  await page.route('**/api/applications/membership', async (route) => {
+    if (route.request().method() === 'POST') {
+      await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Internal Server Error' }) });
+    } else {
+      await route.continue();
+    }
+  });
+  await page.goto('/apply');
+  
+  await page.fill('[name="fullName"]', 'Ada Lovelace');
+  await page.fill('[name="email"]', 'ada@example.com');
+  await selectDropdownOption(page, 'country', 'United Kingdom');
+  await selectDropdownOption(page, 'city', 'London');
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
+  await selectDropdownOption(page, 'role', 'Founder');
+  await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
+  await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
+  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
+
+  await page.getByRole('button', { name: /submit application/i }).click();
+
+  await expect(page.getByText(/We couldn't submit your application|Internal Server Error/i)).toBeVisible({ timeout: 10000 });
+});
+
+// -----------------------------------------------------------------------
+// Type property differentiation constraint verify
+// -----------------------------------------------------------------------
+test('ventures form differentiation - founder type is submitted', async ({ page }) => {
+  await mockApplicationRoute(page, 'ventures');
+  await page.goto('/apply/ventures/founder');
+
+  await page.fill('[name="founderName"]', 'Alan Turing');
+  await page.fill('[name="email"]', 'alan@example.com');
+  await page.fill('[name="companyName"]', 'Turing Machines Inc.');
+  await page.fill('[name="oneLineDescription"]', 'A universal computing machine that solves the halting problem.');
+  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0123');
+  await selectDropdownOption(page, 'stage', 'Pre-Seed');
+  await selectDropdownOption(page, 'sector', 'AI / ML');
+  await page.fill('[name="raiseAmount"]', '$500K');
+  await page.fill('[name="linkedIn"]', 'https://linkedin.com/in/turing');
+  await page.fill('[name="pitchDeckUrl"]', 'https://deck.turing.io');
+  await page.fill('[name="whySAGIE"]', 'Looking for founders who think in abstractions.');
+
+  const requestPromise = page.waitForRequest(req => req.url().includes('/api/applications/ventures') && req.method() === 'POST');
+  
+  await page.getByRole('button', { name: /submit application/i }).click();
+
+  const request = await requestPromise;
+  const postData = JSON.parse(request.postData() || '{}');
+  
+  // Verify Type is Founder
+  expect(postData.type).toBe('Founder');
+});

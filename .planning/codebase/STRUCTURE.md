@@ -38,6 +38,9 @@ sagie.co/
 │   │   └── sitemap.ts          # Dynamic sitemap from Notion data
 │   │
 │   ├── components/
+│   │   ├── GlobeClient.tsx         # Client-side globe loader
+│   │   ├── GlobeNetwork.tsx        # Three.js interactive globe (442 lines)
+│   │   ├── GlobeShell.tsx          # Globe wrapper/shell
 │   │   ├── forms/              # Form components (7 forms)
 │   │   │   ├── ChapterForm.tsx
 │   │   │   ├── ContactForm.tsx
@@ -48,18 +51,47 @@ sagie.co/
 │   │   │   └── VenturesForm.tsx
 │   │   ├── layout/             # Navbar.tsx, Footer.tsx
 │   │   ├── mdx/                # BlogContent.tsx (markdown rendering)
-│   │   ├── sections/           # Page sections (Hero, Pillars, FAQ, etc.)
-│   │   └── ui/                 # Reusable UI primitives (30+ components)
+│   │   ├── sections/           # Full-width page sections (12 total: Hero, HeroAnimation, Pillars, FAQ, ChapterMap, Tiers, FounderBridge, ResourcesDirectory, Belief, SocialProof, FinalCTA, WhoItsFor)
+│   │   └── ui/                 # Reusable UI primitives (32 components)
+│   │       ├── AnimatedLogo.tsx        # SVG logo with GSAP letter animations
+│   │       ├── AnimatedSection.tsx     # Scroll-triggered section wrapper
+│   │       ├── BlogFilter.tsx          # Blog category filter
+│   │       ├── BlogPostHeaderAnimation.tsx  # Blog header entrance animation
+│   │       ├── Button.tsx
+│   │       ├── CardTilt.tsx            # 3D tilt effect on hover
+│   │       ├── CircuitBackground.tsx   # Decorative circuit pattern
+│   │       ├── CountUp.tsx             # Animated number counter
+│   │       ├── ErrorPage.tsx           # Reusable error display
+│   │       ├── EventFilter.tsx         # Event category/date filter
+│   │       ├── Eyebrow.tsx             # Section eyebrow label
+│   │       ├── FAQAccordion.tsx
+│   │       ├── FormField.tsx
+│   │       ├── FormSuccess.tsx
+│   │       ├── GSAPCleanup.tsx         # Global GSAP cleanup on page hide
+│   │       ├── GridBackground.tsx      # Parallax grid pattern
+│   │       ├── GridParallaxWrapper.tsx  # GSAP ScrollTrigger parallax wrapper
+│   │       ├── LocationFields.tsx      # Country/city dropdowns
+│   │       ├── Logo.tsx
+│   │       ├── NewsletterForm.tsx
+│   │       ├── PageHeroAnimation.tsx   # Page-level hero entrance animation
+│   │       ├── PhoneField.tsx          # International phone input
+│   │       ├── PillarIcon.tsx
+│   │       ├── ResourceFilter.tsx
 │   │       ├── ScrollReveal.tsx
 │   │       ├── Section.tsx
-│   │       ├── GridBackground.tsx
-│   │       ├── SplitTextReveal.tsx
-│   │       └── ...
+│   │       ├── SectionNav.tsx          # Floating dot navigation for sections
+│   │       ├── Skeleton.tsx            # Loading skeleton
+│   │       ├── SolutionsFilter.tsx
+│   │       ├── SplitTextReveal.tsx     # GSAP SplitText animation
+│   │       ├── SubmitResourceForm.tsx
+│   │       └── TransitionLink.tsx      # View Transition API link wrapper
 │   │
 │   ├── constants/              # Static data (copy, FAQ, tiers, pillars, etc.)
 │   ├── emails/                 # React Email templates (admin alert, confirmation)
 │   ├── env/                    # server.ts — Zod-validated env schema
-│   ├── hooks/                  # useCardTilt.ts, useScrollReveal.ts
+│   ├── hooks/                  # Custom React hooks
+│   │   ├── useCardTilt.ts      # 3D card tilt effect hook
+│   │   └── useScrollReveal.ts  # GSAP ScrollTrigger reveal hook
 │   ├── lib/                    # Core business logic and data fetching
 │   │   ├── __tests__/          # Vitest unit tests (11 test files)
 │   │   ├── notion.ts           # Notion client + query helpers
@@ -69,9 +101,17 @@ sagie.co/
 │   │   ├── email.ts            # Resend email sending
 │   │   ├── schemas.ts          # Zod validation schemas
 │   │   ├── validation.ts       # withValidation helper
-│   │   ├── gsap.ts             # GSAP dynamic import + lazy loading
-│   │   ├── calendar.ts         # Google Calendar + ICS generation
-│   │   └── ...
+│   │   ├── gsap.ts             # GSAP dynamic import + plugin registration
+│   │   ├── calendar.ts         # ICS calendar generation
+│   │   ├── chapters.ts         # Chapter data fetching from Notion
+│   │   ├── location.ts         # Location utilities
+│   │   ├── locationData.ts     # Country/city data
+│   │   ├── members.ts          # Member data fetching from Notion
+│   │   ├── notion-monitor.ts   # Sentry-wrapped Notion write operations
+│   │   ├── resources.ts        # Resources data fetching from Notion
+│   │   ├── sanitize.ts         # Input sanitization for XSS prevention
+│   │   ├── solutions.ts        # Solutions data fetching from Notion
+│   │   └── utils.ts            # General utilities
 │   │
 │   └── types/                  # TypeScript type definitions
 │       ├── index.ts            # Shared types
@@ -80,11 +120,16 @@ sagie.co/
 ├── tests/                      # Playwright E2E tests
 ├── public/                     # Static assets
 ├── .planning/                  # GSD planning documents
-├── next.config.ts              # Next.js configuration
-├── tailwind.config.ts          # Tailwind v4 config (if present)
+├── next.config.ts              # Next.js configuration (Sentry, React Compiler)
 ├── vitest.config.ts            # Vitest configuration
+├── playwright.config.ts        # Playwright E2E test configuration
 ├── tsconfig.json               # TypeScript configuration
 ├── package.json                # Dependencies and scripts
+├── eslint.config.mjs           # ESLint flat config
+├── postcss.config.mjs          # PostCSS with Tailwind v4 plugin
+├── sentry.client.config.ts     # Sentry browser SDK config
+├── sentry.server.config.ts     # Sentry server SDK config
+├── sentry.edge.config.ts       # Sentry edge runtime config
 └── .env.example                # Environment variable template
 ```
 
@@ -112,7 +157,12 @@ sagie.co/
 - `src/components/ui/ScrollReveal.tsx` — Scroll-triggered reveal animations
 - `src/components/ui/SplitTextReveal.tsx` — Text split animations
 - `src/components/ui/GridBackground.tsx` — Parallax grid backgrounds
+- `src/components/ui/GridParallaxWrapper.tsx` — GSAP ScrollTrigger parallax wrapper
+- `src/components/ui/TransitionLink.tsx` — View Transition API page transitions
+- `src/components/ui/AnimatedLogo.tsx` — SVG logo with per-letter GSAP animations
+- `src/components/ui/SectionNav.tsx` — Floating dot navigation for page sections
 - `src/hooks/useScrollReveal.ts` — GSAP ScrollTrigger hook
+- `src/hooks/useCardTilt.ts` — 3D card tilt effect hook
 
 ### Testing
 - `src/lib/__tests__/*.test.ts` — Unit tests (11 files)

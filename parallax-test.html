@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parallax + Circuit-on-Grid Tester</title>
+  <style>
+    :root {
+      --bg: #0C0C0C;
+      --bg-subtle: #131313;
+      --text-primary: #EDECEA;
+      --text-secondary: #B0AFAB;
+      --text-muted: #6E6D69;
+      --silver: #C0C0C0;
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --grid-line: rgba(255, 255, 255, 0.025);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(12, 12, 12, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 72px;
+    }
+
+    nav .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--text-primary);
+    }
+
+    /* ── Grid background ── */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Parallax wrapper */
+    .parallax-wrap {
+      position: absolute;
+      left: 0; right: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Circuit canvas (fixed, full viewport) */
+    #circuit-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Hero section ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 120px 40px 80px;
+    }
+
+    .hero-content .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(48px, 8vw, 90px);
+      line-height: 0.95;
+      letter-spacing: 0.04em;
+      margin-bottom: 28px;
+    }
+
+    .hero-content p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 480px;
+    }
+
+    /* ── Content sections ── */
+    .section {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border-top: 1px solid var(--border-strong);
+      padding: 80px 40px;
+    }
+
+    .section-inner {
+      position: relative;
+      z-index: 10;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .section .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .section h2 {
+      font-size: 36px;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+
+    .section p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-subtle);
+      margin-top: 40px;
+    }
+
+    .grid-cards .card {
+      background: var(--bg);
+      padding: 32px;
+    }
+
+    .grid-cards .card h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .grid-cards .card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Controls ── */
+    .controls {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      background: #1a1a1a;
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 460px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .controls h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .controls .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .controls button {
+      background: var(--bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-strong);
+      padding: 6px 14px;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .controls button:hover {
+      color: var(--text-primary);
+      border-color: var(--silver);
+    }
+
+    .controls button.selected {
+      background: var(--silver);
+      color: var(--bg);
+      border-color: var(--silver);
+    }
+
+    .controls .info {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 10px;
+    }
+
+    .controls .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .controls input[type="range"] {
+      flex: 1;
+      accent-color: var(--silver);
+      height: 4px;
+    }
+
+    .controls .val {
+      font-size: 12px;
+      color: var(--text-secondary);
+      min-width: 48px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .controls .divider {
+      border-top: 1px solid var(--border-subtle);
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">SAGIE</div>
+  </nav>
+
+  <!-- Circuit canvas (fixed, full viewport) -->
+  <canvas id="circuit-canvas"></canvas>
+
+  <!-- Hero with parallax grid -->
+  <section class="hero" id="hero-section">
+    <div class="parallax-wrap" id="parallax-grid" style="top:-25%;bottom:-25%;">
+      <div class="grid-bg" id="hero-grid-bg"></div>
+    </div>
+    <div class="hero-content">
+      <div class="eyebrow">The Global Business Collective</div>
+      <h1>Build Beyond<br>Borders</h1>
+      <p>SAGIE connects entrepreneurs, operators, and investors across the globe through curated ecosystems designed to accelerate cross-border growth.</p>
+    </div>
+  </section>
+
+  <!-- Filler sections -->
+  <section class="section">
+    <div class="grid-bg section-grid"></div>
+    <div class="section-inner">
+      <div class="eyebrow">The Belief</div>
+      <h2>Business is Built<br>on Trust</h2>
+      <p>The strongest companies are built within communities of trust, shared ambition, and mutual accountability.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="grid-bg section-grid"></div>
+    <div class="section-inner">
+      <div class="eyebrow">The Pillars</div>
+      <h2>Three Pillars,<br>One Ecosystem</h2>
+      <p>Every element of SAGIE feeds the others — creating a compounding network effect for members at every stage.</p>
+      <div class="grid-cards">
+        <div class="card"><h3>ECO</h3><p>City-based chapters for curated events and deal flow.</p></div>
+        <div class="card"><h3>Solutions</h3><p>Vetted marketplace across legal, finance, marketing, and tech.</p></div>
+        <div class="card"><h3>Ventures</h3><p>Strategic funding backed by the SAGIE operator network.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="grid-bg section-grid"></div>
+    <div class="section-inner">
+      <div class="eyebrow">Who's It For</div>
+      <h2>Built for Builders</h2>
+      <p>Whether you're a first-time founder or a seasoned operator scaling across borders, SAGIE provides the infrastructure to accelerate your next chapter.</p>
+    </div>
+  </section>
+
+  <section class="section" style="min-height: 60vh;">
+    <div class="grid-bg section-grid"></div>
+    <div class="section-inner">
+      <div class="eyebrow">The Network</div>
+      <h2>Global by Design</h2>
+      <p>Active chapters across three continents. One shared mission. A network that compounds with every new member.</p>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <div class="controls">
+    <h3>Parallax yPercent</h3>
+    <div class="slider-row">
+      <input type="range" id="yPercent" min="-50" max="0" value="-25" step="1">
+      <span class="val" id="yPercent-val">-25%</span>
+    </div>
+
+    <h3>Grid Size</h3>
+    <div class="slider-row">
+      <input type="range" id="gridSize" min="12" max="80" value="50" step="2">
+      <span class="val" id="gridSize-val">50px</span>
+    </div>
+
+    <h3>Grid Opacity</h3>
+    <div class="slider-row">
+      <input type="range" id="gridOpacity" min="0" max="15" value="2.5" step="0.5">
+      <span class="val" id="gridOpacity-val">2.5%</span>
+    </div>
+
+    <h3>Parallax Scope</h3>
+    <div class="row" id="scope-buttons">
+      <button onclick="setScope('hero')">Hero Only</button>
+      <button onclick="setScope('all')" class="selected">All Sections</button>
+    </div>
+
+    <h3>Easing</h3>
+    <div class="row" id="easing-buttons">
+      <button onclick="setEasing('linear')">Linear</button>
+      <button onclick="setEasing('power1.out')">Power1</button>
+      <button onclick="setEasing('power2.out')" class="selected">Power2</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>Circuit &rarr; Grid Snap</h3>
+    <div class="row" id="snap-buttons">
+      <button onclick="setSnap(false)">Free (current)</button>
+      <button onclick="setSnap(true)" class="selected">Snap to Grid</button>
+    </div>
+
+    <h3>Circuit Density</h3>
+    <div class="slider-row">
+      <input type="range" id="circuitDensity" min="10" max="80" value="40" step="5">
+      <span class="val" id="circuitDensity-val">40</span>
+    </div>
+
+    <h3>Pulse Speed</h3>
+    <div class="slider-row">
+      <input type="range" id="pulseSpeed" min="40" max="300" value="120" step="10">
+      <span class="val" id="pulseSpeed-val">120</span>
+    </div>
+
+    <div class="info" id="current-config"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ════════════════════════════════════════
+    //  CONFIG
+    // ════════════════════════════════════════
+    const config = {
+      yPercent: -25,
+      gridSize: 50,
+      gridOpacity: 2.5,
+      scope: 'all',
+      easing: 'power2.out',
+      snapToGrid: true,
+      circuitDensity: 40,
+      pulseSpeed: 120,
+    };
+
+    // ════════════════════════════════════════
+    //  GRID RENDERING
+    // ════════════════════════════════════════
+    function updateGridStyle() {
+      const opacity = config.gridOpacity / 100;
+      const size = config.gridSize;
+      const color = `rgba(255, 255, 255, ${opacity})`;
+      const bg = `linear-gradient(${color} 1px, transparent 1px), linear-gradient(90deg, ${color} 1px, transparent 1px)`;
+
+      document.querySelectorAll('.grid-bg').forEach(el => {
+        el.style.backgroundImage = bg;
+        el.style.backgroundSize = `${size}px ${size}px`;
+      });
+    }
+
+    // ════════════════════════════════════════
+    //  PARALLAX
+    // ════════════════════════════════════════
+    let heroTween = null;
+    let sectionTweens = [];
+
+    function buildParallax() {
+      if (heroTween) { heroTween.kill(); heroTween = null; }
+      sectionTweens.forEach(t => t.kill());
+      sectionTweens = [];
+      ScrollTrigger.getAll().forEach(st => st.kill());
+
+      const heroGrid = document.getElementById('parallax-grid');
+      const heroSection = document.getElementById('hero-section');
+      const extent = Math.abs(config.yPercent);
+      heroGrid.style.top = `-${extent}%`;
+      heroGrid.style.bottom = `-${extent}%`;
+
+      gsap.set(heroGrid, { yPercent: 0 });
+      heroTween = gsap.to(heroGrid, {
+        yPercent: config.yPercent,
+        ease: config.easing === 'linear' ? 'none' : config.easing,
+        scrollTrigger: { trigger: heroSection, start: 'top top', end: 'bottom top', scrub: true },
+      });
+
+      if (config.scope === 'all') {
+        document.querySelectorAll('.section').forEach(section => {
+          const grid = section.querySelector('.grid-bg');
+          if (!grid) return;
+
+          let wrap = section.querySelector('.section-parallax-wrap');
+          if (!wrap) {
+            wrap = document.createElement('div');
+            wrap.className = 'section-parallax-wrap';
+            wrap.style.cssText = `position:absolute;left:0;right:0;z-index:0;pointer-events:none;`;
+            grid.parentNode.insertBefore(wrap, grid);
+            wrap.appendChild(grid);
+          }
+          wrap.style.top = `${config.yPercent}%`;
+          wrap.style.bottom = `${config.yPercent}%`;
+
+          gsap.set(wrap, { yPercent: 0 });
+          sectionTweens.push(gsap.to(wrap, {
+            yPercent: config.yPercent,
+            ease: config.easing === 'linear' ? 'none' : config.easing,
+            scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true },
+          }));
+        });
+      } else {
+        document.querySelectorAll('.section-parallax-wrap').forEach(wrap => {
+          const grid = wrap.querySelector('.grid-bg');
+          if (grid) wrap.parentNode.insertBefore(grid, wrap);
+          wrap.remove();
+        });
+      }
+
+      ScrollTrigger.refresh();
+    }
+
+    // ════════════════════════════════════════
+    //  CIRCUIT BACKGROUND
+    // ════════════════════════════════════════
+    const PULSE_LENGTH = 40;
+    const DOT_ACTIVE_DURATION = 300;
+
+    const COLORS = {
+      line: 'rgba(192, 192, 192, 0.08)',
+      pulse: 'rgba(224, 224, 220, 0.35)',
+      dot: 'rgba(192, 192, 192, 0.12)',
+      dotActive: 'rgba(224, 224, 220, 0.5)',
+    };
+
+    let circuitPaths = [];
+    const canvas = document.getElementById('circuit-canvas');
+    const ctx = canvas.getContext('2d');
+    let lastTime = 0;
+
+    function setupCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.scale(dpr, dpr);
+      regenerateCircuit();
+    }
+
+    function snapTo(val, grid) {
+      return Math.round(val / grid) * grid;
+    }
+
+    function generatePaths(w, h) {
+      const count = config.circuitDensity;
+      const grid = config.gridSize;
+      const snap = config.snapToGrid;
+      const paths = [];
+
+      for (let i = 0; i < count; i++) {
+        const points = [];
+        const segmentCount = 4 + Math.floor(Math.random() * 6);
+
+        const edge = Math.floor(Math.random() * 4);
+        let x, y;
+        switch (edge) {
+          case 0: x = 0; y = snap ? snapTo(Math.random() * h, grid) : Math.random() * h; break;
+          case 1: x = snap ? snapTo(w, grid) : w; y = snap ? snapTo(Math.random() * h, grid) : Math.random() * h; break;
+          case 2: x = snap ? snapTo(Math.random() * w, grid) : Math.random() * w; y = 0; break;
+          default: x = snap ? snapTo(Math.random() * w, grid) : Math.random() * w; y = snap ? snapTo(h, grid) : h; break;
+        }
+        points.push({ x, y, active: false, activatedAt: 0 });
+
+        let dir = Math.floor(Math.random() * 4);
+
+        for (let s = 0; s < segmentCount; s++) {
+          let len;
+          if (snap) {
+            // Snap segment length to grid multiples (2-5 cells)
+            const cells = 2 + Math.floor(Math.random() * 4);
+            len = cells * grid;
+          } else {
+            len = 80 + Math.random() * 140;
+          }
+
+          let nx = x, ny = y;
+          switch (dir) {
+            case 0: nx = x + len; break;
+            case 1: ny = y + len; break;
+            case 2: nx = x - len; break;
+            case 3: ny = y - len; break;
+          }
+
+          nx = Math.max(0, Math.min(w, nx));
+          ny = Math.max(0, Math.min(h, ny));
+
+          if (snap) {
+            nx = snapTo(nx, grid);
+            ny = snapTo(ny, grid);
+          }
+
+          x = nx; y = ny;
+          points.push({ x, y, active: false, activatedAt: 0 });
+
+          if (dir === 0 || dir === 2) {
+            dir = Math.random() > 0.5 ? 1 : 3;
+          } else {
+            dir = Math.random() > 0.5 ? 0 : 2;
+          }
+        }
+
+        const segmentLengths = [];
+        let totalLength = 0;
+        for (let j = 1; j < points.length; j++) {
+          const dx = points[j].x - points[j - 1].x;
+          const dy = points[j].y - points[j - 1].y;
+          const len = Math.sqrt(dx * dx + dy * dy);
+          segmentLengths.push(len);
+          totalLength += len;
+        }
+
+        paths.push({
+          points, segmentLengths, totalLength,
+          pulseOffset: Math.random() * totalLength,
+          pulseSpeed: config.pulseSpeed + Math.random() * 60,
+          pulseDelay: 500 + Math.random() * 2000,
+          waitingToRestart: false,
+          restartAt: 0,
+        });
+      }
+
+      return paths;
+    }
+
+    function regenerateCircuit() {
+      circuitPaths = generatePaths(window.innerWidth, window.innerHeight);
+    }
+
+    function getPositionOnPath(points, segmentLengths, offset) {
+      let remaining = offset;
+      for (let i = 0; i < segmentLengths.length; i++) {
+        const segLen = segmentLengths[i];
+        if (remaining <= segLen) {
+          const t = remaining / segLen;
+          return {
+            x: points[i].x + (points[i + 1].x - points[i].x) * t,
+            y: points[i].y + (points[i + 1].y - points[i].y) * t,
+          };
+        }
+        remaining -= segLen;
+      }
+      const last = points[points.length - 1];
+      return { x: last.x, y: last.y };
+    }
+
+    function drawCircuit(now, dt) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      for (const path of circuitPaths) {
+        // Update pulse
+        if (path.waitingToRestart) {
+          if (now >= path.restartAt) {
+            path.waitingToRestart = false;
+            path.pulseOffset = 0;
+          }
+        } else {
+          path.pulseOffset += path.pulseSpeed * dt;
+
+          let accumulated = 0;
+          for (let i = 0; i < path.segmentLengths.length; i++) {
+            accumulated += path.segmentLengths[i];
+            if (Math.abs(path.pulseOffset - accumulated) < PULSE_LENGTH / 2 + 5) {
+              const node = path.points[i + 1];
+              if (node) { node.active = true; node.activatedAt = now; }
+            }
+          }
+          if (path.pulseOffset < PULSE_LENGTH / 2 + 5) {
+            path.points[0].active = true;
+            path.points[0].activatedAt = now;
+          }
+
+          if (path.pulseOffset > path.totalLength + PULSE_LENGTH) {
+            path.waitingToRestart = true;
+            path.restartAt = now + path.pulseDelay;
+          }
+        }
+
+        for (const pt of path.points) {
+          if (pt.active && now - pt.activatedAt > DOT_ACTIVE_DURATION) pt.active = false;
+        }
+
+        // Draw base trace
+        ctx.strokeStyle = COLORS.line;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(path.points[0].x, path.points[0].y);
+        for (let i = 1; i < path.points.length; i++) {
+          ctx.lineTo(path.points[i].x, path.points[i].y);
+        }
+        ctx.stroke();
+
+        // Draw dots
+        for (const pt of path.points) {
+          ctx.fillStyle = pt.active ? COLORS.dotActive : COLORS.dot;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pt.active ? 2.5 : 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw pulse
+        if (!path.waitingToRestart) {
+          const halfPulse = PULSE_LENGTH / 2;
+          const start = Math.max(0, path.pulseOffset - halfPulse);
+          const end = Math.min(path.totalLength, path.pulseOffset + halfPulse);
+          if (start < end) {
+            ctx.strokeStyle = COLORS.pulse;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            const steps = 12;
+            const step = (end - start) / steps;
+            for (let i = 0; i <= steps; i++) {
+              const pos = getPositionOnPath(path.points, path.segmentLengths, start + step * i);
+              if (i === 0) ctx.moveTo(pos.x, pos.y);
+              else ctx.lineTo(pos.x, pos.y);
+            }
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    // Animation loop
+    function loop(time) {
+      if (document.hidden) {
+        lastTime = time;
+        requestAnimationFrame(loop);
+        return;
+      }
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
+      drawCircuit(time, dt);
+      requestAnimationFrame(loop);
+    }
+
+    // ════════════════════════════════════════
+    //  CONTROLS
+    // ════════════════════════════════════════
+    function updateInfo() {
+      const e = config.easing === 'linear' ? 'linear' : config.easing;
+      document.getElementById('current-config').textContent =
+        `yPercent: ${config.yPercent}% · grid: ${config.gridOpacity}% / ${config.gridSize}px · ${config.scope} · ${e} · circuit: ${config.snapToGrid ? 'snapped' : 'free'} · density: ${config.circuitDensity} · speed: ${config.pulseSpeed}`;
+    }
+
+    document.getElementById('yPercent').addEventListener('input', (e) => {
+      config.yPercent = Number(e.target.value);
+      document.getElementById('yPercent-val').textContent = config.yPercent + '%';
+      buildParallax();
+      updateInfo();
+    });
+
+    document.getElementById('gridSize').addEventListener('input', (e) => {
+      config.gridSize = Number(e.target.value);
+      document.getElementById('gridSize-val').textContent = config.gridSize + 'px';
+      updateGridStyle();
+      if (config.snapToGrid) regenerateCircuit();
+      updateInfo();
+    });
+
+    document.getElementById('gridOpacity').addEventListener('input', (e) => {
+      config.gridOpacity = Number(e.target.value);
+      document.getElementById('gridOpacity-val').textContent = config.gridOpacity + '%';
+      updateGridStyle();
+      updateInfo();
+    });
+
+    document.getElementById('circuitDensity').addEventListener('input', (e) => {
+      config.circuitDensity = Number(e.target.value);
+      document.getElementById('circuitDensity-val').textContent = config.circuitDensity;
+      regenerateCircuit();
+      updateInfo();
+    });
+
+    document.getElementById('pulseSpeed').addEventListener('input', (e) => {
+      config.pulseSpeed = Number(e.target.value);
+      document.getElementById('pulseSpeed-val').textContent = config.pulseSpeed;
+      // Update existing paths' speeds
+      circuitPaths.forEach(p => p.pulseSpeed = config.pulseSpeed + Math.random() * 60);
+      updateInfo();
+    });
+
+    function setScope(val) {
+      config.scope = val;
+      document.querySelectorAll('#scope-buttons button').forEach(b => b.classList.remove('selected'));
+      event.target.classList.add('selected');
+      buildParallax();
+      updateInfo();
+    }
+
+    function setEasing(val) {
+      config.easing = val;
+      document.querySelectorAll('#easing-buttons button').forEach(b => b.classList.remove('selected'));
+      event.target.classList.add('selected');
+      buildParallax();
+      updateInfo();
+    }
+
+    function setSnap(val) {
+      config.snapToGrid = val;
+      document.querySelectorAll('#snap-buttons button').forEach(b => b.classList.remove('selected'));
+      event.target.classList.add('selected');
+      regenerateCircuit();
+      updateInfo();
+    }
+
+    // ════════════════════════════════════════
+    //  INIT
+    // ════════════════════════════════════════
+    setupCanvas();
+    updateGridStyle();
+    buildParallax();
+    updateInfo();
+    lastTime = performance.now();
+    requestAnimationFrame(loop);
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        setupCanvas();
+        buildParallax();
+      }, 150);
+    });
+  </script>
+</body>
+</html>
