@@ -2,7 +2,6 @@
 
 import { Logo } from '@/components/ui/Logo'
 import { GridBackground } from '@/components/ui/GridBackground'
-import { NewsletterForm } from '@/components/ui/NewsletterForm'
 import { TransitionLink } from '@/components/ui/TransitionLink'
 import { FOOTER, SITE } from '@/constants/copy'
 
@@ -12,13 +11,13 @@ export function Footer() {
     <footer className="relative z-1 overflow-hidden border-t border-border-strong">
       <GridBackground parallax />
       <div className="relative z-10 max-w-[880px] mx-auto px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-16 py-16 border-b border-border-subtle">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 py-10 border-b border-border-subtle">
 
           <div>
-            <p className="font-body uppercase text-foreground mb-6 text-label tracking-eyebrow">
+            <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
               {FOOTER.navigate.label}
             </p>
-            <ul className="space-y-4">
+            <ul className="space-y-2.5">
               {FOOTER.navigate.links.map((item) => (
                 <li key={item.label}>
                   <TransitionLink href={item.url} className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
@@ -40,10 +39,10 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="font-body uppercase text-foreground mb-6 text-label tracking-eyebrow">
+            <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
               {FOOTER.follow.label}
             </p>
-            <ul className="space-y-4">
+            <ul className="space-y-2.5">
               {FOOTER.follow.links.map((item) => (
                 <li key={item.label}>
                   <a
@@ -60,10 +59,10 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="font-body uppercase text-foreground mb-6 text-label tracking-eyebrow">
+            <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
               {FOOTER.contact.label}
             </p>
-            <ul className="space-y-4">
+            <ul className="space-y-2.5">
               <li>
                 <a
                   href={`mailto:${SITE.email}`}
@@ -92,19 +91,7 @@ export function Footer() {
 
         </div>
 
-        <div className="py-10 border-b border-border-subtle">
-          <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
-            The SAGIE Letter
-          </p>
-          <p className="font-body text-foreground-muted text-caption mb-6 max-w-[400px]">
-            Weekly insights on ecosystem building and cross-border innovation.
-          </p>
-          <div className="max-w-[440px]">
-            <NewsletterForm variant="compact" />
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-end sm:justify-between py-8 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end sm:justify-between py-6 gap-4">
           <Logo width={160} height={45} className="-ml-6 -mb-2" />
           <div className="flex flex-col items-start sm:items-end gap-2">
             <div className="flex gap-4">
