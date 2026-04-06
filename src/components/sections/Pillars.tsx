@@ -22,8 +22,8 @@ export function Pillars() {
             glowColor={PILLAR_GLOW[pillar.word]}
             className="pillar-row group py-8 border-b border-border-subtle"
           >
-            {/* Desktop 2-col */}
-            <div className="relative z-1 hidden md:grid items-start" style={{ gridTemplateColumns: '260px 1fr' }}>
+            {/* Desktop 2-col (hidden from screen readers — mobile version is canonical) */}
+            <div className="relative z-1 hidden md:grid items-start" aria-hidden="true" style={{ gridTemplateColumns: '260px 1fr' }}>
               <div>
                 <h3 className="font-display uppercase text-pillar leading-none tracking-heading">
                   <span className="text-foreground-muted">SAGIE </span>

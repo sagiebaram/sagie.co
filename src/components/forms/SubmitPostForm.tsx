@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { PrivacyConsent } from '@/components/ui/PrivacyConsent'
 import { SubmitPostSchema } from '@/lib/schemas'
 
 type FormData = z.infer<typeof SubmitPostSchema>
@@ -18,6 +19,8 @@ export function SubmitPostForm() {
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
+  const [privacyConsent, setPrivacyConsent] = useState(false)
+  const [privacyError, setPrivacyError] = useState(false)
 
   const {
     register,
@@ -33,6 +36,8 @@ export function SubmitPostForm() {
   })
 
   const onSubmit = async (data: FormData) => {
+    if (!privacyConsent) { setPrivacyError(true); return }
+    setPrivacyError(false)
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -105,6 +110,7 @@ export function SubmitPostForm() {
       </div>
       <FormField label="Write your post" name="content" type="textarea" placeholder="Share your perspective with the ecosystem." required registration={register('content')} error={errors.content?.message} />
       <FormField label="LinkedIn or website URL" name="url" type="url" placeholder="linkedin.com/in/yourname" registration={register('url')} error={errors.url?.message} />
+      <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.current.toString()} />
       {submitWarning && (

@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { PrivacyConsent } from '@/components/ui/PrivacyConsent'
 import { EventSuggestionSchema } from '@/lib/schemas'
 
 type FormData = z.infer<typeof EventSuggestionSchema>
@@ -17,6 +18,8 @@ export function SuggestEventForm() {
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
+  const [privacyConsent, setPrivacyConsent] = useState(false)
+  const [privacyError, setPrivacyError] = useState(false)
 
   const {
     register,
@@ -30,6 +33,8 @@ export function SuggestEventForm() {
   })
 
   const onSubmit = async (data: FormData) => {
+    if (!privacyConsent) { setPrivacyError(true); return }
+    setPrivacyError(false)
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -85,7 +90,9 @@ export function SuggestEventForm() {
     <form onSubmit={(e) => handleSubmit(onSubmit)(e)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <FormField label="Event Name" name="eventName" placeholder="What's the event called?" required registration={register('eventName')} error={errors.eventName?.message} />
       <FormField label="Your Name" name="suggestedBy" placeholder="Your full name" required registration={register('suggestedBy')} error={errors.suggestedBy?.message} />
+      <FormField label="Email" name="email" type="email" placeholder="your@email.com" required autoComplete="email" registration={register('email')} error={errors.email?.message} />
       <FormField label="Description" name="description" type="textarea" placeholder="What's the idea?" required registration={register('description')} error={errors.description?.message} />
+      <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.toString()} />
       {submitWarning && (

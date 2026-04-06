@@ -214,6 +214,7 @@ export const SolutionsSchema = z.object({
 export const EventSuggestionSchema = z.object({
   eventName: z.string().min(1, "What's the event called?").max(200).trim(),
   suggestedBy: z.string().min(1, "Who's suggesting this?").max(100).trim(),
+  email: emailSchema,
   description: z.string().min(10, 'Tell us more about the event').max(1000).trim(),
 });
 

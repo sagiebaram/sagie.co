@@ -1,10 +1,14 @@
 'use client'
 
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput, { getCountries } from 'react-phone-number-input'
 import type { E164Number } from 'libphonenumber-js'
 import type { Control, FieldValues, Path } from 'react-hook-form'
 import { Controller } from 'react-hook-form'
 import 'react-phone-number-input/style.css'
+import type { Country } from 'react-phone-number-input'
+
+const FILTERED_PHONE_COUNTRIES = new Set<Country>(['PS'])
+const PHONE_COUNTRIES = getCountries().filter((c) => !FILTERED_PHONE_COUNTRIES.has(c))
 
 interface PhoneFieldProps<T extends FieldValues> {
   label: string
@@ -40,6 +44,7 @@ export function PhoneField<T extends FieldValues>({
             id={name}
             international
             defaultCountry="US"
+            countries={PHONE_COUNTRIES}
             value={(field.value as E164Number | undefined) ?? ''}
             onChange={(val) => field.onChange(val ?? '')}
             onBlur={field.onBlur}

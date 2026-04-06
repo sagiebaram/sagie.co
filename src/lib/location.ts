@@ -22,8 +22,10 @@ const allCountries = Country.getAllCountries()
 const chapterCountries = CHAPTER_COUNTRY_CODES
   .map((code) => allCountries.find((c) => c.isoCode === code))
   .filter((c): c is ICountry => c !== undefined)
+const FILTERED_COUNTRY_CODES = new Set(['PS'])
+
 const otherCountries = allCountries
-  .filter((c) => !chapterSet.has(c.isoCode))
+  .filter((c) => !chapterSet.has(c.isoCode) && !FILTERED_COUNTRY_CODES.has(c.isoCode))
   .sort((a, b) => a.name.localeCompare(b.name))
 
 /** All countries — chapter countries first, then alphabetical rest */

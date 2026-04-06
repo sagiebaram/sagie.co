@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { ContactSchema } from '@/lib/schemas'
 import { FormField } from '@/components/ui/FormField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { PrivacyConsent } from '@/components/ui/PrivacyConsent'
 
 type FormData = z.input<typeof ContactSchema>
 
@@ -18,6 +19,8 @@ export function ContactForm() {
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [privacyConsent, setPrivacyConsent] = useState(false)
+  const [privacyError, setPrivacyError] = useState(false)
 
   const {
     register,
@@ -34,6 +37,8 @@ export function ContactForm() {
 
   const onSubmit = async (data: FormData) => {
     if (isRateLimited) return
+    if (!privacyConsent) { setPrivacyError(true); return }
+    setPrivacyError(false)
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -140,6 +145,8 @@ export function ContactForm() {
         style={{ display: 'none' }}
         onChange={e => { trapRef.current = e.target.value }}
       />
+
+      <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
 
       {submitWarning && (
         <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>
