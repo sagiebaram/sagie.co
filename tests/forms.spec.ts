@@ -304,7 +304,7 @@ test('API rate limiting returns 429 and shows error', async ({ page }) => {
 
   await page.getByRole('button', { name: /submit application/i }).click();
   // Form submission failure shows generic fallback or specific error. Usually a toast or error block
-  await expect(page.getByText(/We couldn't submit your application|Too many requests/i)).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(/You've submitted several times recently|Too many requests/i)).toBeVisible({ timeout: 10000 });
 });
 
 test('API invalid data returns 422 and shows field errors', async ({ page }) => {

@@ -20,7 +20,7 @@ test.describe('Homepage Critical Path', () => {
     await expect(mapContainer).toBeAttached();
 
     // 4. CTA
-    const applyLink = page.getByRole('link', { name: /Apply for Membership/i }).first();
+    const applyLink = page.getByRole('link', { name: /Apply to Join/i }).first();
     await expect(applyLink).toBeVisible();
   });
 });
