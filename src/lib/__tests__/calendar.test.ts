@@ -10,7 +10,7 @@ import type { SAGIEEvent } from '@/types/events'
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-const MOCK_EVENT_TIMED: SAGIEEvent = {
+const MOCK_EVENT_TIMED = {
   id: 'event-timed-1',
   name: 'SAGIE Summit',
   date: '2026-04-05',
@@ -23,9 +23,9 @@ const MOCK_EVENT_TIMED: SAGIEEvent = {
   description: 'Join us for the annual Summit.\nMultiple lines, and characters; like backslashes\\',
   registrationLink: 'https://sagie.co/register',
   speakers: '',
-}
+} as SAGIEEvent
 
-const MOCK_EVENT_ALL_DAY: SAGIEEvent = {
+const MOCK_EVENT_ALL_DAY = {
   id: 'event-allday-1',
   name: 'SAGIE Hackathon',
   date: '2026-04-10',
@@ -34,9 +34,9 @@ const MOCK_EVENT_ALL_DAY: SAGIEEvent = {
   status: 'Confirmed',
   tierTarget: 'All',
   speakers: '',
-}
+} as SAGIEEvent
 
-const MOCK_EVENT_MINIMAL: SAGIEEvent = {
+const MOCK_EVENT_MINIMAL = {
   id: 'event-minimal-1',
   name: 'Minimal Event',
   type: 'Webinar',
@@ -44,7 +44,7 @@ const MOCK_EVENT_MINIMAL: SAGIEEvent = {
   status: 'Planning',
   tierTarget: 'All',
   speakers: '',
-}
+} as SAGIEEvent
 
 // ---------------------------------------------------------------------------
 // Tests

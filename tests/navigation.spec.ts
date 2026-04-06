@@ -5,7 +5,7 @@ test.describe('Navigation', () => {
     await page.goto('/');
     
     // In a responsive nav, we target the desktop or main header nav
-    const header = page.locator('header').first();
+    const header = page.locator('nav').first();
     
     await header.getByRole('link', { name: /events/i }).click();
     await expect(page).toHaveURL(/.*\/events/);
@@ -24,6 +24,6 @@ test.describe('Navigation', () => {
     expect(response?.status()).toBe(404);
     
     // Expect the Next.js standard 404 page text
-    await expect(page.getByText('This page could not be found.')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText("This page doesn't exist, but there's plenty to explore.")).toBeVisible({ timeout: 10000 });
   });
 });

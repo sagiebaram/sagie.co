@@ -9,9 +9,9 @@ test.describe('Homepage Critical Path', () => {
     await expect(page.locator('nav').first()).toBeVisible();
 
     // 2. Critical sections
-    // Check for headings that identify key sections
-    await expect(page.getByRole('heading', { level: 2, name: /THE BELIEF/i }).first()).toBeVisible();
-    await expect(page.getByRole('heading', { level: 2, name: /PILLARS/i }).first()).toBeVisible();
+    // Check for text that identifies key sections instead of level 2 headings because they use Eyebrow paragraphs
+    await expect(page.getByText('The Belief', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('The Pillars', { exact: true }).first()).toBeVisible();
     
     // 3. Globe or map visualization
     // We expect either the lazy-loaded canvas or its placeholder to exist in the DOM

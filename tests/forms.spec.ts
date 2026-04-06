@@ -301,6 +301,7 @@ test('API rate limiting returns 429 and shows error', async ({ page }) => {
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
   await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
   await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
+  await page.getByRole('checkbox').check();
 
   await page.getByRole('button', { name: /submit application/i }).click();
   // Form submission failure shows generic fallback or specific error. Usually a toast or error block
@@ -326,6 +327,7 @@ test('API invalid data returns 422 and shows field errors', async ({ page }) => 
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
   await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
   await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
+  await page.getByRole('checkbox').check();
 
   await page.getByRole('button', { name: /submit application/i }).click();
 
@@ -352,6 +354,7 @@ test('API Notion failure returns 500 and shows generic error', async ({ page }) 
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
   await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
   await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
+  await page.getByRole('checkbox').check();
 
   await page.getByRole('button', { name: /submit application/i }).click();
 
@@ -376,6 +379,7 @@ test('ventures form differentiation - founder type is submitted', async ({ page 
   await page.fill('[name="linkedIn"]', 'https://linkedin.com/in/turing');
   await page.fill('[name="pitchDeckUrl"]', 'https://deck.turing.io');
   await page.fill('[name="whySAGIE"]', 'Looking for founders who think in abstractions.');
+  await page.getByRole('checkbox').check();
 
   const requestPromise = page.waitForRequest(req => req.url().includes('/api/applications/ventures') && req.method() === 'POST');
   
@@ -385,5 +389,5 @@ test('ventures form differentiation - founder type is submitted', async ({ page 
   const postData = JSON.parse(request.postData() || '{}');
   
   // Verify Type is Founder
-  expect(postData.type).toBe('Founder');
+  expect(postData.ventureType).toBe('founder');
 });
