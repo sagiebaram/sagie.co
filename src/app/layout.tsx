@@ -87,15 +87,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body>
-        {/* Scroll to top on reload before the browser restores a stale position.
-            Must run synchronously — useEffect fires too late. */}
+        {/* Block browser scroll restore on this page load (prevents stale
+            position on refresh). GSAPCleanup switches to 'auto' after
+            hydration so back/forward still works natively. */}
         <script
-          dangerouslySetInnerHTML={{ __html: `
-            if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
-              history.scrollRestoration = 'manual';
-              window.scrollTo(0, 0);
-            }
-          `}}
+          dangerouslySetInnerHTML={{ __html: `history.scrollRestoration='manual'` }}
         />
         <script
           type="application/ld+json"
