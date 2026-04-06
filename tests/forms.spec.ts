@@ -79,6 +79,9 @@ test('membership form submits and shows success state', async ({ page }) => {
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler for the next century.');
   await page.fill('[name="howTheyKnowSagie"]', 'I heard about SAGIE from a colleague at a conference.');
 
+  // Accept privacy consent
+  await page.getByRole('checkbox').check();
+
   // Click submit button
   await page.getByRole('button', { name: /submit application/i }).click();
 
@@ -130,6 +133,9 @@ test('chapter form submits and shows success state', async ({ page }) => {
   await page.fill('[name="background"]', 'Former naval officer and computer scientist.');
   await page.fill('[name="chapterVision"]', 'Monthly meetups, annual summit, mentorship programme.');
 
+  // Accept privacy consent
+  await page.getByRole('checkbox').check();
+
   await page.getByRole('button', { name: /submit application/i }).click();
 
   await expect(page.getByText('Application received')).toBeVisible({ timeout: 10000 });
@@ -174,6 +180,9 @@ test('solutions form submits and shows success state', async ({ page }) => {
   await page.fill('[name="servicesOffered"]', 'Technical architecture reviews and product strategy.');
   await page.fill('[name="portfolioUrl"]', 'https://hamilton.dev');
   await page.fill('[name="rateRange"]', '$200-300/hr');
+
+  // Accept privacy consent
+  await page.getByRole('checkbox').check();
 
   await page.getByRole('button', { name: /submit application/i }).click();
 
@@ -223,6 +232,9 @@ test('ventures form submits and shows success state', async ({ page }) => {
 
   await page.fill('[name="whySAGIE"]', 'Looking for founders who think in abstractions.');
 
+  // Accept privacy consent
+  await page.getByRole('checkbox').check();
+
   await page.getByRole('button', { name: /submit application/i }).click();
 
   await expect(page.getByText('Application received')).toBeVisible({ timeout: 10000 });
@@ -255,7 +267,11 @@ test('suggest event form submits and shows success state', async ({ page }) => {
   // Updated field names: suggestedBy (was yourName), removed eventType/proposedDate/yourEmail
   await page.fill('[name="eventName"]', 'SAGIE Miami Founder Meetup');
   await page.fill('[name="suggestedBy"]', 'Katherine Johnson');
+  await page.fill('[name="email"]', 'katherine@example.com');
   await page.locator('textarea[name="description"]').fill('A casual networking event for founders in the Miami ecosystem.');
+
+  // Accept privacy consent
+  await page.getByRole('checkbox').check();
 
   await page.getByRole('button', { name: /submit suggestion/i }).click();
 
