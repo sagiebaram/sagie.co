@@ -42,7 +42,42 @@ export function Navbar() {
       >
         Skip to main content
       </a>
-      <div className="max-w-[960px] mx-auto px-6 md:px-12 flex items-center justify-between h-20">
+      {/* Desktop: 3-column grid — logo | centered links | CTA */}
+      <div className="hidden md:grid grid-cols-[1fr_auto_1fr] items-center h-20 max-w-[960px] mx-auto px-12 gap-8">
+        <TransitionLink href="/" className="block w-[180px] h-[38px] shrink-0 justify-self-start">
+          <Image
+            src="/sagie_logo_nav.png"
+            alt="SAGIE"
+            width={360}
+            height={76}
+            priority
+            unoptimized
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          />
+        </TransitionLink>
+
+        <div className="flex items-center gap-6">
+          {NAV_LINKS.map((item) => (
+            <TransitionLink
+              key={item}
+              href={navHref(item)}
+              className="font-body uppercase text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 text-label tracking-label"
+            >
+              {item}
+            </TransitionLink>
+          ))}
+        </div>
+
+        <TransitionLink
+          href="/apply"
+          className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5 justify-self-end whitespace-nowrap"
+        >
+          Apply to Join
+        </TransitionLink>
+      </div>
+
+      {/* Mobile: flex row — logo | CTA + burger */}
+      <div className="md:hidden flex items-center justify-between h-20 px-6">
         <TransitionLink href="/" className="block w-[180px] h-[38px] shrink-0">
           <Image
             src="/sagie_logo_nav.png"
@@ -55,19 +90,6 @@ export function Navbar() {
           />
         </TransitionLink>
 
-        {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-6">
-          {NAV_LINKS.map((item) => (
-            <TransitionLink
-              key={item}
-              href={navHref(item)}
-              className="font-body uppercase text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 text-label tracking-label"
-            >
-              {item}
-            </TransitionLink>
-          ))}
-        </div>
-
         <div className="flex items-center gap-4">
           <TransitionLink
             href="/apply"
@@ -75,11 +97,9 @@ export function Navbar() {
           >
             Apply to Join
           </TransitionLink>
-
-          {/* Mobile burger */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden relative w-8 h-8 flex items-center justify-center"
+            className="relative w-8 h-8 flex items-center justify-center"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
