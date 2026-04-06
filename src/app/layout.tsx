@@ -91,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position on refresh). GSAPCleanup switches to 'auto' after
             hydration so back/forward still works natively. */}
         <script
-          dangerouslySetInnerHTML={{ __html: `history.scrollRestoration='manual'` }}
+          dangerouslySetInnerHTML={{ __html: `history.scrollRestoration='manual';window.scrollTo(0,0)` }}
         />
         <script
           type="application/ld+json"
