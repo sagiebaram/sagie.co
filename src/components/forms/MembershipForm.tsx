@@ -9,6 +9,7 @@ import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
 import { LocationFields } from '@/components/ui/LocationFields'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { PrivacyConsent } from '@/components/ui/PrivacyConsent'
 
 type FormData = z.input<typeof MembershipSchema>
 
@@ -40,6 +41,8 @@ export function MembershipForm() {
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [privacyConsent, setPrivacyConsent] = useState(false)
+  const [privacyError, setPrivacyError] = useState(false)
 
   const {
     register,
@@ -57,6 +60,8 @@ export function MembershipForm() {
 
   const onSubmit = async (data: FormData) => {
     if (isRateLimited) return
+    if (!privacyConsent) { setPrivacyError(true); return }
+    setPrivacyError(false)
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -158,6 +163,8 @@ export function MembershipForm() {
 
       <FormField label="Why SAGIE?" name="howTheyKnowSagie" type="textarea" placeholder="What does this community mean to you — or what are you hoping it will mean?" registration={register('howTheyKnowSagie')} error={errors.howTheyKnowSagie?.message} />
       <FormField label="How did you hear about us?" name="referral" placeholder="Name, event, social..." registration={register('referral')} error={errors.referral?.message} />
+
+      <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
 
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
 

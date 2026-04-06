@@ -9,6 +9,7 @@ import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
 import { LocationFields } from '@/components/ui/LocationFields'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { PrivacyConsent } from '@/components/ui/PrivacyConsent'
 
 type FormData = z.infer<typeof VenturesSchema>
 
@@ -28,6 +29,8 @@ export function VenturesForm({ type }: { type: 'founder' | 'investor' }) {
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [privacyConsent, setPrivacyConsent] = useState(false)
+  const [privacyError, setPrivacyError] = useState(false)
 
   const {
     register, handleSubmit, setValue, watch, control,
@@ -42,6 +45,8 @@ export function VenturesForm({ type }: { type: 'founder' | 'investor' }) {
 
   const onSubmit = async (data: FormData) => {
     if (isRateLimited) return
+    if (!privacyConsent) { setPrivacyError(true); return }
+    setPrivacyError(false)
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -84,7 +89,7 @@ export function VenturesForm({ type }: { type: 'founder' | 'investor' }) {
       <SectionHeader label="Company" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Company Name" name="companyName" placeholder="Your company or project name" required registration={register('companyName')} error={errors.companyName?.message} />
-        <FormField label="Founder Name" name="founderName" placeholder="Your full name" required registration={register('founderName')} error={errors.founderName?.message} />
+        <FormField label={type === 'investor' ? 'Your Name' : 'Founder Name'} name="founderName" placeholder="Your full name" required registration={register('founderName')} error={errors.founderName?.message} />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
@@ -118,6 +123,7 @@ export function VenturesForm({ type }: { type: 'founder' | 'investor' }) {
       <FormField label="One-line description" name="oneLineDescription" placeholder="Give us the elevator pitch — one sentence." required registration={register('oneLineDescription')} error={errors.oneLineDescription?.message} />
       <SectionHeader label="About SAGIE" />
       <FormField label="Why SAGIE Ventures?" name="whySAGIE" type="textarea" placeholder="What kind of alignment are you looking for?" registration={register('whySAGIE')} error={errors.whySAGIE?.message} />
+      <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       {submitWarning && (<span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>)}
       {submitError && (<span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>{submitError}</span>)}

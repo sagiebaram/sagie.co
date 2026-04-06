@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { PrivacyConsent } from '@/components/ui/PrivacyConsent'
 import { ChapterSchema } from '@/lib/schemas'
 import { LocationFields } from '@/components/ui/LocationFields'
 
@@ -19,6 +20,8 @@ export function ChapterForm() {
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
+  const [privacyConsent, setPrivacyConsent] = useState(false)
+  const [privacyError, setPrivacyError] = useState(false)
 
   const {
     register,
@@ -35,6 +38,8 @@ export function ChapterForm() {
   })
 
   const onSubmit = async (data: FormData) => {
+    if (!privacyConsent) { setPrivacyError(true); return }
+    setPrivacyError(false)
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -113,6 +118,7 @@ export function ChapterForm() {
       <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." registration={register('background')} error={errors.background?.message} />
       <FormField label="What does a chapter look like to you?" name="chapterVision" type="textarea" placeholder="Your vision for the chapter." registration={register('chapterVision')} error={errors.chapterVision?.message} />
       <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
+      <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.toString()} />
       {submitWarning && (<span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>)}

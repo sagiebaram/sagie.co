@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { FormField } from '@/components/ui/FormField'
 import { PhoneField } from '@/components/ui/PhoneField'
 import { FormSuccess } from '@/components/ui/FormSuccess'
+import { PrivacyConsent } from '@/components/ui/PrivacyConsent'
 import { SolutionsSchema } from '@/lib/schemas'
 import { LocationFields } from '@/components/ui/LocationFields'
 
@@ -20,6 +21,8 @@ export function SolutionsForm() {
   const [submitWarning, setSubmitWarning] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
+  const [privacyConsent, setPrivacyConsent] = useState(false)
+  const [privacyError, setPrivacyError] = useState(false)
 
   const {
     register, handleSubmit, setValue, watch, control,
@@ -32,6 +35,8 @@ export function SolutionsForm() {
   })
 
   const onSubmit = async (data: FormData) => {
+    if (!privacyConsent) { setPrivacyError(true); return }
+    setPrivacyError(false)
     setSubmitWarning(null)
     setSubmitError(null)
     try {
@@ -98,6 +103,7 @@ export function SolutionsForm() {
         <FormField label="Portfolio URL" name="portfolioUrl" type="url" placeholder="yoursite.com" registration={register('portfolioUrl')} error={errors.portfolioUrl?.message} />
         <FormField label="Rate Range" name="rateRange" placeholder="$100-200/hr" registration={register('rateRange')} error={errors.rateRange?.message} />
       </div>
+      <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       {submitWarning && (<span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>)}
       {submitError && (<span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>{submitError}</span>)}

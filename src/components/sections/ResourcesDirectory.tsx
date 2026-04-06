@@ -164,6 +164,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                   letterSpacing: '0.12em',
                   padding: '12px 28px',
                 }}
+                aria-label={`Visit ${featured.name}`}
               >
                 Visit resource →
               </a>
@@ -253,6 +254,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                           borderBottom: '0.5px solid var(--border-subtle)',
                           paddingBottom: '1px',
                         }}
+                        aria-label={`Visit ${resource.name}`}
                       >
                         Visit →
                       </a>

@@ -17,6 +17,7 @@ export const POST = withValidation(EventSuggestionSchema, async (_req: Request, 
         Description: { rich_text: [{ text: { content: body.description } }] },
         Status: { select: { name: 'Concept' } },
         'Submitted By': { rich_text: [{ text: { content: body.suggestedBy } }] },
+        Email: { email: body.email },
       },
     }))
 

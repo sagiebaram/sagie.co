@@ -85,11 +85,12 @@ export function NewsletterForm({ variant = 'compact' }: NewsletterFormProps) {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-3">
+          <label htmlFor="featured-email" className="sr-only">Email address</label>
           <input
+            id="featured-email"
             type="email"
             placeholder="Your email"
             autoComplete="email"
-            aria-label="Email address"
             aria-describedby={errors.email ? 'featured-email-error' : undefined}
             aria-invalid={errors.email ? true : undefined}
             disabled={status === 'loading'}

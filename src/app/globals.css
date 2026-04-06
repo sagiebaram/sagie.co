@@ -81,8 +81,8 @@
   --nav-bg: rgba(12, 12, 12, 0.85);
   --text-primary: #EDECEA;
   --text-secondary: #B0AFAB;
-  --text-muted: #6E6D69;
-  --text-dim: #5A5A58;
+  --text-muted: #8B8A86;
+  --text-dim: #706F6B;
   --text-dim-decorative: #3E3E3C; /* Original low-contrast value for intentional fade effects */
   --text-ghost: #242422;
   --silver: #C0C0C0;
@@ -113,6 +113,13 @@
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+    font-size: 16px;
+  }
+
+  /* ── Focus-visible outlines on all interactive elements ── */
+  :focus-visible {
+    outline: 2px solid var(--silver);
+    outline-offset: 2px;
   }
 }
 
