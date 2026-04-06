@@ -101,26 +101,27 @@ export function SectionNav({ items }: SectionNavProps) {
           <button
             key={item.id}
             onClick={() => handleClick(item.id)}
-            className="group flex items-center gap-2 cursor-pointer"
+            className="group flex items-center gap-2 cursor-pointer min-w-[20px] min-h-[20px] focus-visible:outline-none"
             aria-label={`Scroll to ${item.label}`}
             aria-current={isActive ? 'true' : undefined}
           >
             <span
-              className="font-body text-label uppercase tracking-widest transition-all duration-200 origin-right group-hover:opacity-100"
+              className="font-body text-label uppercase tracking-widest transition-all duration-200 origin-right group-hover:opacity-100 group-focus-visible:opacity-100"
               style={{
                 color: isActive ? 'var(--silver)' : 'var(--text-dim)',
-                opacity: isActive ? 1 : 0.35,
+                opacity: isActive ? 1 : 0.65,
               }}
             >
               {item.label}
             </span>
             <span
-              className="block shrink-0 rounded-full transition-all duration-200 group-hover:opacity-100"
+              className="block shrink-0 rounded-full transition-all duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
               style={{
-                width: isActive ? 8 : 5,
-                height: isActive ? 8 : 5,
+                width: isActive ? 8 : 6,
+                height: isActive ? 8 : 6,
                 backgroundColor: isActive ? 'var(--silver)' : 'var(--text-dim)',
-                opacity: isActive ? 1 : 0.5,
+                opacity: isActive ? 1 : 0.65,
+                padding: 0,
               }}
             />
           </button>

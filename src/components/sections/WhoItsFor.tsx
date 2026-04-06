@@ -61,8 +61,8 @@ export function WhoItsFor() {
       <Eyebrow>Who it&apos;s for</Eyebrow>
 
       <p style={{
-        fontSize: '11px',
-        color: 'var(--text-muted)',
+        fontSize: '13px',
+        color: 'var(--text-secondary)',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         marginBottom: '24px',
@@ -75,8 +75,8 @@ export function WhoItsFor() {
             <div
               key={persona.name}
               ref={el => { cardRefs.current[i] = el }}
-              className="persona-card cursor-pointer"
-              style={{ position: 'relative', overflow: 'hidden' }}
+              className="persona-card cursor-pointer border border-border-default hover:bg-background-card-featured transition-all duration-200"
+              style={{ position: 'relative' }}
               role="button"
               tabIndex={0}
               aria-label={`View details for ${persona.name}`}
@@ -86,16 +86,13 @@ export function WhoItsFor() {
             >
               {/* Front face */}
               <div
-                className="face-front group flex flex-col gap-5 border hover:bg-background-card-featured transition-all duration-200 px-8 py-10"
-                style={{
-                  position: 'relative',
-                  borderColor: 'var(--border-default)',
-                }}
+                className="face-front group flex flex-col gap-5 px-8 py-10"
+                style={{ position: 'relative' }}
               >
                 <span style={{
                   position: 'absolute',
-                  top: '16px',
-                  right: '16px',
+                  top: '12px',
+                  right: '12px',
                   fontSize: '9px',
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -120,7 +117,7 @@ export function WhoItsFor() {
 
               {/* Back face */}
               <div
-                className="face-back flex flex-col gap-5 border px-8 py-10"
+                className="face-back flex flex-col gap-5 px-8 py-10"
                 style={{
                   position: 'absolute',
                   inset: 0,
@@ -131,8 +128,8 @@ export function WhoItsFor() {
               >
                 <span style={{
                   position: 'absolute',
-                  top: '16px',
-                  right: '16px',
+                  top: '12px',
+                  right: '12px',
                   fontSize: '9px',
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
