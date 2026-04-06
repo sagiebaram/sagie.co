@@ -71,7 +71,7 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <TransitionLink
             href="/apply"
-            className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-button tracking-button px-[34px] py-4"
+            className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-5 py-2"
           >
             Apply to Join
           </TransitionLink>
