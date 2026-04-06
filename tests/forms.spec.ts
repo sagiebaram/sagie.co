@@ -80,7 +80,7 @@ test('membership form submits and shows success state', async ({ page }) => {
   await page.fill('[name="howTheyKnowSagie"]', 'I heard about SAGIE from a colleague at a conference.');
 
   // Accept privacy consent
-  await page.getByRole('checkbox').check();
+  await page.getByRole('checkbox', { name: /privacy policy/i }).check();
 
   // Click submit button
   await page.getByRole('button', { name: /submit application/i }).click();
