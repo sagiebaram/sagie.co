@@ -46,8 +46,6 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
 
     // Match the observer's rootMargin: bottom shrunk by 10%
     const triggerLine = window.innerHeight * 0.9
-    // Capture scroll position before style changes to prevent sub-pixel drift
-    const scrollY = window.scrollY
 
     targets.forEach((el) => {
       const rect = el.getBoundingClientRect()
@@ -61,11 +59,6 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
         el.style.willChange = 'opacity, transform'
       }
     })
-
-    // Restore exact scroll position if our style changes caused a sub-pixel shift
-    if (window.scrollY !== scrollY) {
-      window.scrollTo({ top: scrollY, behavior: 'instant' })
-    }
 
     const observer = new IntersectionObserver(
       (entries) => {
