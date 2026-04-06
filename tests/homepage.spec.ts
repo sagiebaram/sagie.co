@@ -14,8 +14,9 @@ test.describe('Homepage Critical Path', () => {
     await expect(page.getByText('The Pillars', { exact: true }).first()).toBeVisible();
     
     // 3. Globe or map visualization
-    // We expect either the lazy-loaded canvas or its placeholder to exist in the DOM
-    const mapContainer = page.locator('.aspect-\\[4\\/3\\], .aspect-square').first();
+    // GlobeShell renders a div.relative.w-full wrapping a Suspense > GlobeClient
+    // We just check the outer container is in the DOM (canvas may not hydrate in CI)
+    const mapContainer = page.locator('#proof').first();
     await expect(mapContainer).toBeAttached();
 
     // 4. CTA
