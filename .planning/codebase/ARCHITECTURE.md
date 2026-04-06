@@ -26,14 +26,14 @@
 **Section Components Layer:**
 - Purpose: Compose reusable, full-width page sections with marketing content
 - Location: `src/components/sections/`
-- Contains: Hero, Pillars, FAQ, ChapterMap, Tiers, FounderBridge, ResourcesDirectory
+- Contains: Hero, HeroAnimation, Pillars, FAQ, ChapterMap, Tiers, FounderBridge, ResourcesDirectory, Belief, SocialProof, FinalCTA, WhoItsFor
 - Depends on: UI components, data libraries, animations
 - Used by: Page components to assemble pages
 
 **UI Component Layer:**
 - Purpose: Reusable interactive and presentational elements
 - Location: `src/components/ui/`
-- Contains: Buttons, Accordions, Filters, Animation wrappers, Backgrounds, Reveals
+- Contains: Buttons, Accordions, Filters, Animation wrappers (AnimatedSection, AnimatedLogo, PageHeroAnimation, BlogPostHeaderAnimation), Backgrounds (GridBackground, GridParallaxWrapper, CircuitBackground), Reveals (ScrollReveal, SplitTextReveal), Navigation (SectionNav, TransitionLink), Cards (CardTilt), Skeletons, Error pages
 - Depends on: Hooks, GSAP, Tailwind
 - Used by: Sections, Forms, Pages
 
@@ -54,7 +54,7 @@
 **Business Logic Layer:**
 - Purpose: Data fetching, transformation, and validation
 - Location: `src/lib/`
-- Contains: Notion client wrapper, schema definitions, email service, sanitization
+- Contains: Notion client wrapper, schema definitions, email service, sanitization, data fetchers (blog, events, chapters, resources, solutions, members), utilities, location data
 - Depends on: External SDKs (Notion, Resend), Zod, Sentry
 - Used by: Pages, API routes, components
 
@@ -108,6 +108,13 @@
 3. ScrollTrigger initialized with scroll position tracking
 4. DOM element animated in sync with scroll progress
 5. On unmount, animations cleaned up via `gsap.context().revert()`
+
+**Page Transition Flow:**
+
+1. User clicks `TransitionLink` component (`src/components/ui/TransitionLink.tsx`)
+2. View Transition API invoked via `document.startViewTransition()`
+3. CSS animations applied via `::view-transition-old` / `::view-transition-new` pseudo-elements (defined in `globals.css`)
+4. Next.js router navigates to new page during transition
 
 **State Management:**
 
@@ -163,10 +170,15 @@
 - Triggers: POST /api/contact with form data
 - Responsibilities: Validates contact form, sanitizes input, sends email via Resend
 
-**API Route: Applications (Ventures/Chapter/Solutions):**
-- Location: `src/app/api/applications/{ventures,chapter,solutions}/route.ts`
+**API Route: Applications (Ventures/Chapter/Solutions/Membership):**
+- Location: `src/app/api/applications/{ventures,chapter,solutions,membership}/route.ts`
 - Triggers: POST to application endpoints
 - Responsibilities: Validates application data, stores to Notion database
+
+**API Route: ICS Calendar Export:**
+- Location: `src/app/api/events/[id]/ics/route.ts`
+- Triggers: GET /api/events/:id/ics
+- Responsibilities: Generates ICS calendar file for event download
 
 ## Error Handling
 
@@ -203,7 +215,9 @@
 **Accessibility:**
 - Skip-to-content link in Navbar (`src/components/layout/Navbar.tsx`)
 - Form labels properly associated with inputs
-- Animations respect `prefers-reduced-motion` media query
+- 60+ aria-* attributes across components
+- Animations respect `prefers-reduced-motion` in 10+ components (GSAP animations disabled)
+- `useSyncExternalStore` pattern for media queries in `AnimatedSection`
 - Semantic HTML with proper heading hierarchy
 
 **Performance:**

@@ -50,7 +50,7 @@
 
 ### Notion API Queries
 - No pagination on Notion queries — will fail silently if databases exceed 100 items
-- `unstable_cache` used for caching but cache invalidation relies on manual revalidation
+- `unstable_cache` used with tag-based revalidation (`notion:blog`, `notion:events`, `notion:resources`, `notion:solutions`, `notion:members`, `notion:chapters`) but cache invalidation relies on manual revalidation
 - Multiple sequential Notion queries on some pages (blog listing fetches all posts)
 
 ## Fragile Areas
@@ -86,8 +86,9 @@
 - Admin pages — no tests
 
 ### E2E Testing
-- Playwright configured but test coverage scope unclear
-- `tests/` directory exists but content not fully assessed
+- Playwright configured with 3 spec files: smoke, content-pages, forms
+- Tests cover page loads, content rendering, and form validation
+- No visual/animation testing (parallax, transitions, GSAP effects)
 
 ## Missing Features / Infrastructure
 
@@ -97,11 +98,12 @@
 - No audit trail for form submissions beyond Notion entries
 
 ### Observability
-- Sentry configured for error tracking
+- Sentry configured for error tracking (client, server, and edge configs at project root)
+- `src/lib/notion-monitor.ts` wraps Notion writes with Sentry error reporting (tags: service, type)
+- Email service uses `.catch()` chains with `Sentry.captureException` — failures don't block form responses
 - Vercel Analytics for page views
 - No structured logging
 - No performance monitoring beyond Vercel Speed Insights
-- `src/lib/notion-monitor.ts` exists but purpose/coverage unclear
 
 ### Content Management
 - No preview/draft mode for Notion content

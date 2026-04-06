@@ -315,9 +315,17 @@ expect((calls[0]![0] as { to: string }).to).toBe('user@example.com')
 - `src/lib/members.ts`
 
 **Test Statistics:**
-- Total test files: 11 (all in `src/lib/__tests__/`)
-- Lines of test code: ~2000+ across all test files
-- Largest test file: `schemas.test.ts` (620 lines covering schema validation variations)
+- Unit test files: 11 (all in `src/lib/__tests__/`)
+- E2E test files: 3 (in `tests/`)
+- Total test files: 14
+- Lines of test code: ~2500+ across all test files (unit ~2190, E2E ~338)
+- Largest test file: `schemas.test.ts` (619 lines covering schema validation variations)
+
+**Not Tested:**
+- Animation/parallax effects (GSAP ScrollTrigger, GridParallaxWrapper)
+- Page transitions (View Transition API, TransitionLink)
+- Visual effects (AnimatedLogo, SplitTextReveal, CardTilt)
+- Globe component (Three.js rendering)
 
 ---
 

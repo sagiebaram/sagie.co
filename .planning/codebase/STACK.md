@@ -28,10 +28,13 @@
 - React DOM 19.2.4 - DOM rendering
 
 **UI & Animation:**
-- GSAP 3.14.2 - Animation library with ScrollTrigger and SplitText plugins (`src/lib/gsap.ts`)
+- GSAP 3.14.2 - Animation library (`src/lib/gsap.ts`)
+  - ScrollTrigger plugin - Scroll-driven animations (parallax, reveals)
+  - SplitText plugin - Per-character/word text animations
 - Motion 12.38.0 - Animation framework
 - Tailwind CSS 4.2.2 - Utility-first CSS framework (`postcss.config.mjs`)
-- @tailwindcss/postcss 4.2.2 - PostCSS plugin for Tailwind
+- @tailwindcss/postcss 4.2.2 - PostCSS plugin for Tailwind (CSS-based config, no tailwind.config.ts)
+- View Transition API - Browser-native page transition animations (`src/components/ui/TransitionLink.tsx`, `src/app/globals.css`)
 
 **Form Handling:**
 - React Hook Form 7.72.0 - Form state management

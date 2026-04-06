@@ -495,15 +495,76 @@ Rules:
   Always use withValidation HOF for new API routes
   Always use GSAPCleanup for new GSAP animations
 
-Notion Development Tracker — Claude Code must update:
+Notion Development Tracker — Co-work handles all updates:
   Database: cd0d162c-6114-41a2-af28-3cba08086f63
   When starting a track → set Status to "In Development"
   When pushing a PR    → set Status to "In Review" + set PR field to GitHub URL
   If blocked           → set Status to "Blocked" + add note in Notes field
   On merge             → set Status to "Done"
   Priority labels: Critical, High, Medium, Low
-  Requires: Notion MCP connected in the Claude Code session
-  Each session prompt must include the relevant Notion page IDs for its items
+  All Notion tracker updates happen via Co-work only — never Claude Code.
+
+---
+
+## Git worktree workflow (parallel sessions)
+
+Every Claude Code session runs in its own git worktree.
+This gives full isolation — no file conflicts between parallel tracks.
+
+Setup (run ONCE at sprint start from the main repo root):
+  ```
+  # Create a worktree per track
+  git worktree add ../sagie-track-1 -b fix/accessibility-visual-tokens
+  git worktree add ../sagie-track-2 -b fix/ui-components
+  git worktree add ../sagie-track-3 -b fix/globe-performance
+  git worktree add ../sagie-track-4 -b fix/scroll-position
+  ```
+
+Starting a Claude Code session:
+  ```
+  cd ../sagie-track-N
+  claude   # opens Claude Code in the worktree
+  ```
+
+After PR is merged:
+  ```
+  cd /path/to/main/sagie.co
+  git worktree remove ../sagie-track-N
+  ```
+
+Wave 2 tracks (after Wave 1 merges):
+  ```
+  git pull origin main   # get Wave 1 changes
+  git worktree add ../sagie-track-5 -b feature/form-validation-ux
+  git worktree add ../sagie-track-6 -b feature/svg-icons
+  ```
+
+Rules:
+  Every branch = one worktree = one Claude Code session = one PR
+  Never work on the same branch from two worktrees
+  Always create worktree from latest main
+  Clean up worktrees after PR merge — don't let them pile up
+  If a worktree gets stale, remove and recreate from fresh main
+
+Helper script (optional — save as scripts/worktree-setup.sh):
+  ```bash
+  #!/bin/bash
+  # Usage: ./scripts/worktree-setup.sh branch-name
+  # Example: ./scripts/worktree-setup.sh fix/accessibility-visual-tokens
+
+  BRANCH=$1
+  DIRNAME=$(echo "$BRANCH" | sed 's|/|-|g')
+
+  if [ -z "$BRANCH" ]; then
+    echo "Usage: $0 <branch-name>"
+    exit 1
+  fi
+
+  git fetch origin main
+  git worktree add "../sagie-${DIRNAME}" -b "$BRANCH" origin/main
+  echo "✓ Worktree created at ../sagie-${DIRNAME}"
+  echo "  cd ../sagie-${DIRNAME} && claude"
+  ```
 
 ---
 
