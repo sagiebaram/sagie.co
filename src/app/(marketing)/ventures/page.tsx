@@ -20,11 +20,11 @@ const SECTIONS: SectionNavItem[] = [
 ]
 
 export const metadata: Metadata = {
-  title: 'SAGIE Ventures — Trust Creates Deal Flow',
+  title: 'Ventures',
   description:
     'SAGIE Ventures connects accredited investors with innovative founders. Ambassador-backed portfolio, community-informed diligence, ecosystem-native deal flow.',
   openGraph: {
-    title: 'SAGIE Ventures — Trust Creates Deal Flow',
+    title: 'Ventures | SAGIE',
     description:
       'SAGIE Ventures connects accredited investors with innovative founders. Ambassador-backed portfolio, community-informed diligence, ecosystem-native deal flow.',
   },
