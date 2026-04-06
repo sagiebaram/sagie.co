@@ -64,14 +64,6 @@ export function Footer() {
             </p>
             <ul className="space-y-2.5">
               <li>
-                <a
-                  href={`mailto:${SITE.email}`}
-                  className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body"
-                >
-                  {SITE.email}
-                </a>
-              </li>
-              <li>
                 <TransitionLink href="/apply" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
                   Apply to Join
                 </TransitionLink>

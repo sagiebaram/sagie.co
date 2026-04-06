@@ -48,10 +48,10 @@ export function Navbar() {
             src="/sagie_logo_nav.png"
             alt="SAGIE"
             width={360}
-            height={80}
+            height={76}
             priority
             unoptimized
-            style={{ width: '100%', height: 'auto' }}
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           />
         </TransitionLink>
 
@@ -71,7 +71,7 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <TransitionLink
             href="/apply"
-            className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-5 py-2"
+            className="font-body uppercase border border-silver text-silver hover:bg-silver hover:text-background hover:-translate-y-px transition-all duration-150 text-label tracking-button px-[22px] py-2.5"
           >
             Apply to Join
           </TransitionLink>
