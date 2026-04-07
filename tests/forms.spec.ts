@@ -63,7 +63,9 @@ test('membership form submits and shows success state', async ({ page }) => {
   await selectDropdownOption(page, 'city', 'London');
 
   // Phone (required) — react-phone-number-input renders an input inside .phone-input-dark
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
+  const memberPhone = page.locator('.phone-input-dark input[type="tel"]');
+  await memberPhone.click();
+  await memberPhone.pressSequentially('+442079460958', { delay: 30 });
 
   // Role is a custom dropdown — click trigger then option
   await selectDropdownOption(page, 'role', 'Founder');
@@ -123,7 +125,9 @@ test('chapter form submits and shows success state', async ({ page }) => {
   await selectDropdownOption(page, 'city', 'Edinburgh');
 
   // Phone (required)
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 131 496 0000');
+  const chapterPhone = page.locator('.phone-input-dark input[type="tel"]');
+  await chapterPhone.click();
+  await chapterPhone.pressSequentially('+441314960000', { delay: 30 });
 
   await page.fill('[name="communitySize"]', 'About 500 people');
   await page.fill('[name="whyLead"]', 'This city has a thriving startup scene that needs more structure.');
@@ -163,7 +167,9 @@ test('solutions form submits and shows success state', async ({ page }) => {
   await page.fill('[name="email"]', 'margaret@example.com');
 
   // Phone (required)
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+1 617 555 0199');
+  const solutionsPhone = page.locator('.phone-input-dark input[type="tel"]');
+  await solutionsPhone.click();
+  await solutionsPhone.pressSequentially('+16175550199', { delay: 30 });
 
   await page.fill('[name="linkedIn"]', 'https://linkedin.com/in/margaret');
 
@@ -210,7 +216,9 @@ test('ventures form submits and shows success state', async ({ page }) => {
   await page.fill('[name="oneLineDescription"]', 'A universal computing machine that solves the halting problem.');
 
   // Phone (required)
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0123');
+  const venturesPhone = page.locator('.phone-input-dark input[type="tel"]');
+  await venturesPhone.click();
+  await venturesPhone.pressSequentially('+442079460123', { delay: 30 });
 
   // Stage is a custom dropdown
   await selectDropdownOption(page, 'stage', 'Pre-Seed');
@@ -296,7 +304,9 @@ test('API rate limiting returns 429 and shows error', async ({ page }) => {
   await page.fill('[name="email"]', 'ada@example.com');
   await selectDropdownOption(page, 'country', 'United Kingdom');
   await selectDropdownOption(page, 'city', 'London');
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
+  const phoneFill = page.locator('.phone-input-dark input[type="tel"]');
+  await phoneFill.click();
+  await phoneFill.pressSequentially('+442079460958', { delay: 30 });
   await selectDropdownOption(page, 'role', 'Founder');
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
   await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
@@ -321,7 +331,9 @@ test('API invalid data returns 422 and shows field errors', async ({ page }) => 
   await page.fill('[name="email"]', 'ada@example.com');
   await selectDropdownOption(page, 'country', 'United Kingdom');
   await selectDropdownOption(page, 'city', 'London');
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
+  const phoneFill = page.locator('.phone-input-dark input[type="tel"]');
+  await phoneFill.click();
+  await phoneFill.pressSequentially('+442079460958', { delay: 30 });
   await selectDropdownOption(page, 'role', 'Founder');
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
   await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
@@ -347,7 +359,9 @@ test('API Notion failure returns 500 and shows generic error', async ({ page }) 
   await page.fill('[name="email"]', 'ada@example.com');
   await selectDropdownOption(page, 'country', 'United Kingdom');
   await selectDropdownOption(page, 'city', 'London');
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
+  const phoneFill = page.locator('.phone-input-dark input[type="tel"]');
+  await phoneFill.click();
+  await phoneFill.pressSequentially('+442079460958', { delay: 30 });
   await selectDropdownOption(page, 'role', 'Founder');
   await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
   await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
@@ -355,7 +369,7 @@ test('API Notion failure returns 500 and shows generic error', async ({ page }) 
 
   await page.getByRole('button', { name: /submit application/i }).click();
 
-  await expect(page.getByText(/We couldn't submit your application|Internal Server Error/i)).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(/Something went wrong|Internal Server Error/i)).toBeVisible({ timeout: 10000 });
 });
 
 // -----------------------------------------------------------------------
@@ -369,7 +383,9 @@ test('ventures form differentiation - founder type is submitted', async ({ page 
   await page.fill('[name="email"]', 'alan@example.com');
   await page.fill('[name="companyName"]', 'Turing Machines Inc.');
   await page.fill('[name="oneLineDescription"]', 'A universal computing machine that solves the halting problem.');
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0123');
+  const venturesPhone = page.locator('.phone-input-dark input[type="tel"]');
+  await venturesPhone.click();
+  await venturesPhone.pressSequentially('+442079460123', { delay: 30 });
   await selectDropdownOption(page, 'stage', 'Pre-Seed');
   await selectDropdownOption(page, 'sector', 'AI / ML');
   await page.fill('[name="raiseAmount"]', '$500K');
