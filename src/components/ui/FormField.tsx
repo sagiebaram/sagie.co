@@ -8,6 +8,8 @@ export interface OptionGroup {
   options: string[]
 }
 
+type ValidationState = 'neutral' | 'valid' | 'invalid'
+
 interface FormFieldProps {
   label: string
   name: string
@@ -24,6 +26,8 @@ interface FormFieldProps {
   error?: string | undefined
   allowOther?: boolean | undefined
   autoComplete?: string | undefined
+  isTouched?: boolean | undefined
+  disabled?: boolean | undefined
 }
 
 const INPUT_STYLE: React.CSSProperties = {
@@ -38,7 +42,39 @@ const INPUT_STYLE: React.CSSProperties = {
   display: 'block',
 }
 
-function DropdownSelect({ name, options, optionGroups, value, placeholder, onValueChange, allowOther, optionLabels }: {
+function getValidationState(error: string | undefined, isTouched: boolean | undefined, value: string | string[] | undefined): ValidationState {
+  if (!isTouched) return 'neutral'
+  if (error) return 'invalid'
+  const hasValue = Array.isArray(value) ? value.length > 0 : !!value
+  if (hasValue) return 'valid'
+  return 'neutral'
+}
+
+function getValidationBorderColor(state: ValidationState): string {
+  if (state === 'valid') return 'var(--field-valid)'
+  if (state === 'invalid') return 'var(--field-invalid)'
+  return 'var(--border-default)'
+}
+
+function CheckmarkIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+      <path d="M3 7L6 10L11 4" stroke="var(--field-valid)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function LockIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}>
+      <rect x="2" y="5" width="8" height="6" rx="1" stroke="var(--text-dim)" strokeWidth="1" />
+      <path d="M4 5V3.5C4 2.12 5.12 1 6.5 1h-1C4.12 1 3 2.12 3 3.5V5" stroke="var(--text-dim)" strokeWidth="1" />
+      <path d="M8 5V3.5C8 2.12 7.12 1 6 1s-2 1.12-2 2.5" stroke="var(--text-dim)" strokeWidth="1" />
+    </svg>
+  )
+}
+
+function DropdownSelect({ name, options, optionGroups, value, placeholder, onValueChange, allowOther, optionLabels, validationState, disabled }: {
   name: string
   options: string[]
   optionGroups?: OptionGroup[] | undefined
@@ -47,6 +83,8 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
   onValueChange?: ((value: string) => void) | undefined
   allowOther?: boolean | undefined
   optionLabels?: Record<string, string> | undefined
+  validationState: ValidationState
+  disabled?: boolean | undefined
 }) {
   const getLabel = (option: string) => optionLabels?.[option] ?? option
   const [isOpen, setIsOpen] = useState(false)
@@ -55,7 +93,6 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
   const [otherText, setOtherText] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Build flat option list — from groups if provided, otherwise from options prop
   const flatOptions = optionGroups
     ? optionGroups.flatMap((g) => g.options)
     : options
@@ -113,8 +150,12 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
     }
   }
 
+  const borderColor = isFocused
+    ? '0.5px solid var(--silver)'
+    : `0.5px solid ${getValidationBorderColor(validationState)}`
+
   return (
-    <div ref={dropdownRef} style={{ position: 'relative' }}>
+    <div ref={dropdownRef} style={{ position: 'relative' }} className={disabled ? 'field-locked' : undefined}>
       <input type="hidden" name={name} value={isCustomValue ? otherText : value} />
       <button
         id={name}
@@ -124,15 +165,17 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
         aria-controls={`${name}-listbox`}
         aria-haspopup="listbox"
         data-dropdown={name}
-        tabIndex={0}
-        onClick={() => { setIsOpen(o => !o); if (!isOpen) setHighlightedIndex(-1) }}
+        tabIndex={disabled ? -1 : 0}
+        disabled={disabled}
+        onClick={() => { if (!disabled) { setIsOpen(o => !o); if (!isOpen) setHighlightedIndex(-1) } }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={handleKeyDown}
+        className="field-transition"
         style={{
           ...INPUT_STYLE,
-          border: isFocused ? '0.5px solid var(--silver)' : INPUT_STYLE.border,
-          cursor: 'pointer',
+          border: borderColor,
+          cursor: disabled ? 'not-allowed' : 'pointer',
           textAlign: 'left',
           display: 'flex',
           alignItems: 'center',
@@ -146,7 +189,14 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
         }}>
-          {displayValue || placeholder || 'Select...'}
+          {disabled && !displayValue ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <LockIcon />
+              {placeholder || 'Select...'}
+            </span>
+          ) : (
+            displayValue || placeholder || 'Select...'
+          )}
         </span>
         <span style={{
           marginLeft: '8px',
@@ -173,7 +223,6 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
           overflowY: 'auto',
         }}>
           {optionGroups ? (
-            // Grouped rendering
             (() => {
               let idx = 0
               const groupsToRender = allowOther
@@ -221,7 +270,6 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
               ))
             })()
           ) : (
-            // Flat rendering
             allOptions.map((option, index) => (
               <div
                 key={option}
@@ -252,6 +300,7 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
           placeholder="Please specify..."
           value={otherText || (isCustomValue ? value : '')}
           onChange={e => { setOtherText(e.target.value); onValueChange?.(e.target.value) }}
+          className="field-transition"
           style={{ ...INPUT_STYLE, marginTop: '8px', boxSizing: 'border-box' }}
         />
       )}
@@ -261,12 +310,18 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
 
 export function FormField({
   label, name, type = 'text', placeholder, required,
-  options, optionGroups, optionLabels, value, onValueChange, onArrayChange, registration, error, allowOther, autoComplete
+  options, optionGroups, optionLabels, value, onValueChange, onArrayChange, registration, error, allowOther, autoComplete,
+  isTouched, disabled
 }: FormFieldProps) {
   const stringValue = typeof value === 'string' ? value : ''
+  const validationState = getValidationState(error, isTouched, value ?? stringValue)
+
+  const inputBorder = validationState !== 'neutral'
+    ? `0.5px solid ${getValidationBorderColor(validationState)}`
+    : INPUT_STYLE.border
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }} className={disabled ? 'field-locked' : undefined}>
       <label
         id={`${name}-label`}
         htmlFor={name}
@@ -276,9 +331,16 @@ export function FormField({
           textTransform: 'uppercase',
           color: 'var(--text-muted)',
           fontFamily: 'var(--font-body)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
         }}
       >
-        {label}{required && <span style={{ color: 'var(--silver)', marginLeft: '4px' }}>*</span>}
+        <span>
+          {label}{required && <span style={{ color: 'var(--silver)', marginLeft: '4px' }}>*</span>}
+        </span>
+        {validationState === 'valid' && <CheckmarkIcon />}
+        {disabled && <LockIcon />}
       </label>
 
       {type === 'textarea' ? (
@@ -286,9 +348,11 @@ export function FormField({
           id={name}
           placeholder={placeholder}
           rows={4}
+          disabled={disabled}
           aria-describedby={error ? `${name}-error` : undefined}
           aria-invalid={error ? true : undefined}
-          style={{ ...INPUT_STYLE, resize: 'vertical', lineHeight: '1.6' }}
+          className="field-transition"
+          style={{ ...INPUT_STYLE, border: inputBorder, resize: 'vertical', lineHeight: '1.6' }}
           {...(registration ?? { name, value: stringValue, onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => onValueChange?.(e.target.value) })}
         />
       ) : type === 'select' ? (
@@ -301,6 +365,8 @@ export function FormField({
           onValueChange={onValueChange}
           allowOther={allowOther}
           optionLabels={optionLabels}
+          validationState={validationState}
+          disabled={disabled}
         />
       ) : type === 'checkbox-group' ? (
         <div id={name} role="group" aria-labelledby={`${name}-label`} style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -357,18 +423,24 @@ export function FormField({
         <input
           id={name}
           type={type}
-          placeholder={placeholder}
+          placeholder={disabled ? '' : placeholder}
           autoComplete={autoComplete}
+          disabled={disabled}
           aria-describedby={error ? `${name}-error` : undefined}
           aria-invalid={error ? true : undefined}
-          style={INPUT_STYLE}
+          className="field-transition"
+          style={{ ...INPUT_STYLE, border: inputBorder }}
           {...(registration ?? { name, value: stringValue, onChange: (e: React.ChangeEvent<HTMLInputElement>) => onValueChange?.(e.target.value) })}
         />
       )}
 
-      {error && (
-        <span id={`${name}-error`} style={{ fontSize: '10px', color: 'var(--color-error)' }}>{error}</span>
-      )}
+      <div
+        id={`${name}-error`}
+        className={`field-error-text ${error ? 'field-error-visible' : ''}`}
+        role={error ? 'alert' : undefined}
+      >
+        {error ?? ''}
+      </div>
     </div>
   )
 }

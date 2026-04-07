@@ -91,6 +91,9 @@
   --border-default: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.14);
   --grid-line: rgba(255, 255, 255, 0.025);
+  --field-valid: #4ADE80;
+  --field-invalid: #EF4444;
+  --field-locked-opacity: 0.45;
 }
 
 @layer base {
@@ -354,4 +357,60 @@ select:-webkit-autofill {
   background-size: 200% 100%;
   animation: skeleton-sweep 2s ease-in-out infinite;
   border-radius: 2px;
+}
+
+/* ── Form field validation states ── */
+.field-locked {
+  opacity: var(--field-locked-opacity);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.field-transition {
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.field-error-text {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--field-invalid);
+}
+
+.field-error-text.field-error-visible {
+  max-height: 60px;
+  opacity: 1;
+}
+
+.phone-input-dark.phone-valid .PhoneInputCountry,
+.phone-input-dark.phone-valid .PhoneInputInput {
+  border-color: var(--field-valid) !important;
+}
+
+.phone-input-dark.phone-invalid .PhoneInputCountry,
+.phone-input-dark.phone-invalid .PhoneInputInput {
+  border-color: var(--field-invalid) !important;
+}
+
+.phone-input-dark .PhoneInputCountry,
+.phone-input-dark .PhoneInputInput {
+  transition: border-color 0.2s ease;
+}
+
+.phone-error-text {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--field-invalid);
+}
+
+.phone-error-text.phone-error-visible {
+  max-height: 60px;
+  opacity: 1;
 }

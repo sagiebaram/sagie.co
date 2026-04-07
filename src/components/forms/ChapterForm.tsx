@@ -29,7 +29,7 @@ export function ChapterForm() {
     setValue,
     watch,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, touchedFields },
   } = useForm<FormData>({
     resolver: zodResolver(ChapterSchema),
     mode: 'onBlur',
@@ -94,30 +94,33 @@ export function ChapterForm() {
   return (
     <form onSubmit={(e) => handleSubmit(onSubmit)(e)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Full Name" name="fullName" placeholder="Your full name" required registration={register('fullName')} error={errors.fullName?.message} />
-        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
+        <FormField label="Full Name" name="fullName" placeholder="Your full name" required registration={register('fullName')} error={errors.fullName?.message} isTouched={!!touchedFields.fullName} />
+        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} isTouched={!!touchedFields.email} />
       </div>
       <LocationFields
         country={watch('country') || ''}
         state={watch('state') || ''}
         city={watch('city') || ''}
-        onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
-        onStateChange={(v) => setValue('state', v, { shouldValidate: true })}
-        onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
+        onCountryChange={(v) => setValue('country', v, { shouldValidate: true, shouldTouch: true })}
+        onStateChange={(v) => setValue('state', v, { shouldValidate: true, shouldTouch: true })}
+        onCityChange={(v) => setValue('city', v, { shouldValidate: true, shouldTouch: true })}
         countryError={errors.country?.message}
         stateError={errors.state?.message}
         cityError={errors.city?.message}
         cityLabel="Which city do you want to lead?"
         cityPlaceholder="City name"
+        countryTouched={!!touchedFields.country}
+        stateTouched={!!touchedFields.state}
+        cityTouched={!!touchedFields.city}
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Community size (approx.)" name="communitySize" placeholder="e.g. 200 people in my network" registration={register('communitySize')} error={errors.communitySize?.message} />
-        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
+        <FormField label="Community size (approx.)" name="communitySize" placeholder="e.g. 200 people in my network" registration={register('communitySize')} error={errors.communitySize?.message} isTouched={!!touchedFields.communitySize} />
+        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} isTouched={!!touchedFields.phone} />
       </div>
-      <FormField label="Why is this city ready for a SAGIE chapter?" name="whyLead" type="textarea" placeholder="Tell us why this city is ready." required registration={register('whyLead')} error={errors.whyLead?.message} />
-      <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." registration={register('background')} error={errors.background?.message} />
-      <FormField label="What does a chapter look like to you?" name="chapterVision" type="textarea" placeholder="Your vision for the chapter." registration={register('chapterVision')} error={errors.chapterVision?.message} />
-      <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
+      <FormField label="Why is this city ready for a SAGIE chapter?" name="whyLead" type="textarea" placeholder="Tell us why this city is ready." required registration={register('whyLead')} error={errors.whyLead?.message} isTouched={!!touchedFields.whyLead} />
+      <FormField label="Tell us about yourself" name="background" type="textarea" placeholder="Your background and experience." registration={register('background')} error={errors.background?.message} isTouched={!!touchedFields.background} />
+      <FormField label="What does a chapter look like to you?" name="chapterVision" type="textarea" placeholder="Your vision for the chapter." registration={register('chapterVision')} error={errors.chapterVision?.message} isTouched={!!touchedFields.chapterVision} />
+      <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} isTouched={!!touchedFields.linkedIn} />
       <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.toString()} />

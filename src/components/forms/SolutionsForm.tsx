@@ -26,7 +26,7 @@ export function SolutionsForm() {
 
   const {
     register, handleSubmit, setValue, watch, control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, touchedFields },
   } = useForm<FormData>({
     resolver: zodResolver(SolutionsSchema),
     mode: 'onBlur',
@@ -77,31 +77,34 @@ export function SolutionsForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Your Name" name="providerName" placeholder="Your full name" required registration={register('providerName')} error={errors.providerName?.message} />
-        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
+        <FormField label="Your Name" name="providerName" placeholder="Your full name" required registration={register('providerName')} error={errors.providerName?.message} isTouched={!!touchedFields.providerName} />
+        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} isTouched={!!touchedFields.email} />
       </div>
       <LocationFields
         country={watch('country') || ''}
         state={watch('state') || ''}
         city={watch('city') || ''}
-        onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
-        onStateChange={(v) => setValue('state', v, { shouldValidate: true })}
-        onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
+        onCountryChange={(v) => setValue('country', v, { shouldValidate: true, shouldTouch: true })}
+        onStateChange={(v) => setValue('state', v, { shouldValidate: true, shouldTouch: true })}
+        onCityChange={(v) => setValue('city', v, { shouldValidate: true, shouldTouch: true })}
         countryError={errors.country?.message}
         stateError={errors.state?.message}
         cityError={errors.city?.message}
         required={false}
+        countryTouched={!!touchedFields.country}
+        stateTouched={!!touchedFields.state}
+        cityTouched={!!touchedFields.city}
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
-        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
+        <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} isTouched={!!touchedFields.linkedIn} />
+        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} isTouched={!!touchedFields.phone} />
       </div>
-      <FormField label="Service Category" name="category" type="select" options={['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People']} required value={watch('category') || ''} onValueChange={(v) => setValue('category', v as 'Operations & Systems' | 'Strategy & Advisory' | 'Technology & Product' | 'Growth & Marketing' | 'Finance & Legal' | 'Talent & People', { shouldValidate: true })} error={errors.category?.message} />
-      <FormField label="Tell us about your background" name="bio" type="textarea" placeholder="Your experience and expertise." required registration={register('bio')} error={errors.bio?.message} />
-      <FormField label="What specific services do you offer?" name="servicesOffered" type="textarea" placeholder="Describe the services you provide." required registration={register('servicesOffered')} error={errors.servicesOffered?.message} />
+      <FormField label="Service Category" name="category" type="select" options={['Operations & Systems', 'Strategy & Advisory', 'Technology & Product', 'Growth & Marketing', 'Finance & Legal', 'Talent & People']} required value={watch('category') || ''} onValueChange={(v) => setValue('category', v as 'Operations & Systems' | 'Strategy & Advisory' | 'Technology & Product' | 'Growth & Marketing' | 'Finance & Legal' | 'Talent & People', { shouldValidate: true, shouldTouch: true })} error={errors.category?.message} isTouched={!!touchedFields.category} />
+      <FormField label="Tell us about your background" name="bio" type="textarea" placeholder="Your experience and expertise." required registration={register('bio')} error={errors.bio?.message} isTouched={!!touchedFields.bio} />
+      <FormField label="What specific services do you offer?" name="servicesOffered" type="textarea" placeholder="Describe the services you provide." required registration={register('servicesOffered')} error={errors.servicesOffered?.message} isTouched={!!touchedFields.servicesOffered} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Portfolio URL" name="portfolioUrl" type="url" placeholder="yoursite.com" registration={register('portfolioUrl')} error={errors.portfolioUrl?.message} />
-        <FormField label="Rate Range" name="rateRange" placeholder="$100-200/hr" registration={register('rateRange')} error={errors.rateRange?.message} />
+        <FormField label="Portfolio URL" name="portfolioUrl" type="url" placeholder="yoursite.com" registration={register('portfolioUrl')} error={errors.portfolioUrl?.message} isTouched={!!touchedFields.portfolioUrl} />
+        <FormField label="Rate Range" name="rateRange" placeholder="$100-200/hr" registration={register('rateRange')} error={errors.rateRange?.message} isTouched={!!touchedFields.rateRange} />
       </div>
       <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />

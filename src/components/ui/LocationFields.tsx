@@ -18,6 +18,9 @@ interface LocationFieldsProps {
   cityLabel?: string | undefined
   cityPlaceholder?: string | undefined
   required?: boolean | undefined
+  countryTouched?: boolean | undefined
+  stateTouched?: boolean | undefined
+  cityTouched?: boolean | undefined
 }
 
 export function LocationFields({
@@ -33,11 +36,13 @@ export function LocationFields({
   cityLabel = 'City',
   cityPlaceholder = 'Where are you based?',
   required = true,
+  countryTouched,
+  stateTouched,
+  cityTouched,
 }: LocationFieldsProps) {
   const prevCountry = useRef(country)
   const prevState = useRef(state)
 
-  // Country change → reset state + city, auto-select single-city countries
   useEffect(() => {
     if (prevCountry.current !== country) {
       onStateChange('')
@@ -52,7 +57,6 @@ export function LocationFields({
     }
   }, [country, onStateChange, onCityChange])
 
-  // State change → reset city
   useEffect(() => {
     if (prevState.current !== state) {
       onCityChange('')
@@ -63,14 +67,13 @@ export function LocationFields({
   const hasStateField = showStateField(country)
   const states = useMemo(() => (hasStateField ? getStates(country) : []), [country, hasStateField])
 
-  // --- City resolution: curated groups take priority over library data ---
   const curatedGroups = useMemo(
     () => getCuratedCities(country, state),
     [country, state],
   )
 
   const libraryCities = useMemo(() => {
-    if (curatedGroups) return [] // curated takes priority
+    if (curatedGroups) return []
     if (!country) return []
     if (hasStateField && state) return getCities(country, state)
     if (!hasStateField) return getCities(country)
@@ -82,13 +85,11 @@ export function LocationFields({
     [country, libraryCities],
   )
 
-  // Convert library cities to flat options (existing behavior)
   const flatCityOptions = useMemo(
     () => sortedLibCities.map((c) => c.name),
     [sortedLibCities],
   )
 
-  // --- Country/state option helpers (unchanged) ---
   const countryOptions = useMemo(
     () => SORTED_COUNTRIES.map((c) => c.isoCode),
     [],
@@ -115,17 +116,16 @@ export function LocationFields({
     return map
   }, [states])
 
-  // Decide if city should be shown (need country, and if state-field country, need state)
+  const stateDisabled = !country
+  const cityDisabled = !country || (hasStateField && !state)
   const showCity = country && (!hasStateField || state)
 
-  // Convert curated groups to OptionGroup[] for FormField
   const cityOptionGroups: OptionGroup[] | undefined = curatedGroups
     ? curatedGroups.map((g) => ({ label: g.label, options: g.cities }))
     : undefined
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      {/* Country + State row */}
       <div style={{ display: 'grid', gridTemplateColumns: hasStateField ? '1fr 1fr' : '1fr', gap: '16px' }}>
         <FormField
           label="Country"
@@ -137,6 +137,7 @@ export function LocationFields({
           value={country}
           onValueChange={onCountryChange}
           error={countryError}
+          isTouched={countryTouched}
         />
         {hasStateField && (
           <FormField
@@ -149,14 +150,14 @@ export function LocationFields({
             value={state}
             onValueChange={onStateChange}
             error={stateError}
+            isTouched={stateTouched}
+            disabled={stateDisabled}
           />
         )}
       </div>
 
-      {/* City */}
       {showCity ? (
         cityOptionGroups ? (
-          // Curated grouped city list
           <FormField
             label={cityLabel}
             name="city"
@@ -167,9 +168,9 @@ export function LocationFields({
             onValueChange={onCityChange}
             allowOther
             error={cityError}
+            isTouched={cityTouched}
           />
         ) : flatCityOptions.length > 0 ? (
-          // Library city data (flat list, chapter cities sorted first)
           <FormField
             label={cityLabel}
             name="city"
@@ -180,9 +181,9 @@ export function LocationFields({
             onValueChange={onCityChange}
             allowOther
             error={cityError}
+            isTouched={cityTouched}
           />
         ) : (
-          // No city data — free text
           <FormField
             label={cityLabel}
             name="city"
@@ -191,10 +192,10 @@ export function LocationFields({
             value={city}
             onValueChange={onCityChange}
             error={cityError}
+            isTouched={cityTouched}
           />
         )
       ) : (
-        // Country not selected yet, or state-field country without state selected
         <FormField
           label={cityLabel}
           name="city"
@@ -203,6 +204,8 @@ export function LocationFields({
           value={city}
           onValueChange={onCityChange}
           error={cityError}
+          isTouched={cityTouched}
+          disabled={cityDisabled}
         />
       )}
     </div>

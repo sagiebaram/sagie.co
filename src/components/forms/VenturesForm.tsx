@@ -34,7 +34,7 @@ export function VenturesForm({ type }: { type: 'founder' | 'investor' }) {
 
   const {
     register, handleSubmit, setValue, watch, control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, touchedFields },
   } = useForm<FormData>({
     resolver: zodResolver(VenturesSchema),
     mode: 'onBlur',
@@ -88,41 +88,44 @@ export function VenturesForm({ type }: { type: 'founder' | 'investor' }) {
     <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <SectionHeader label="Company" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Company Name" name="companyName" placeholder="Your company or project name" required registration={register('companyName')} error={errors.companyName?.message} />
-        <FormField label={type === 'investor' ? 'Your Name' : 'Founder Name'} name="founderName" placeholder="Your full name" required registration={register('founderName')} error={errors.founderName?.message} />
+        <FormField label="Company Name" name="companyName" placeholder="Your company or project name" required registration={register('companyName')} error={errors.companyName?.message} isTouched={!!touchedFields.companyName} />
+        <FormField label={type === 'investor' ? 'Your Name' : 'Founder Name'} name="founderName" placeholder="Your full name" required registration={register('founderName')} error={errors.founderName?.message} isTouched={!!touchedFields.founderName} />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} />
-        <FormField label="Website" name="website" type="url" placeholder="https://yoursite.com" registration={register('website')} error={errors.website?.message} />
+        <FormField label="Email" name="email" type="email" placeholder="your@email.com" required registration={register('email')} error={errors.email?.message} isTouched={!!touchedFields.email} />
+        <FormField label="Website" name="website" type="url" placeholder="https://yoursite.com" registration={register('website')} error={errors.website?.message} isTouched={!!touchedFields.website} />
       </div>
       <LocationFields
         country={watch('country') || ''}
         state={watch('state') || ''}
         city={watch('city') || ''}
-        onCountryChange={(v) => setValue('country', v, { shouldValidate: true })}
-        onStateChange={(v) => setValue('state', v, { shouldValidate: true })}
-        onCityChange={(v) => setValue('city', v, { shouldValidate: true })}
+        onCountryChange={(v) => setValue('country', v, { shouldValidate: true, shouldTouch: true })}
+        onStateChange={(v) => setValue('state', v, { shouldValidate: true, shouldTouch: true })}
+        onCityChange={(v) => setValue('city', v, { shouldValidate: true, shouldTouch: true })}
         countryError={errors.country?.message}
         stateError={errors.state?.message}
         cityError={errors.city?.message}
         required={false}
+        countryTouched={!!touchedFields.country}
+        stateTouched={!!touchedFields.state}
+        cityTouched={!!touchedFields.city}
       />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="https://linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} />
-        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} />
+        <FormField label="LinkedIn URL" name="linkedIn" type="url" placeholder="https://linkedin.com/in/yourname" registration={register('linkedIn')} error={errors.linkedIn?.message} isTouched={!!touchedFields.linkedIn} />
+        <PhoneField label="Phone" name="phone" control={control} required error={errors.phone?.message} isTouched={!!touchedFields.phone} />
       </div>
       <SectionHeader label="Details" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Sector" name="sector" type="select" options={['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other']} value={watch('sector') || ''} onValueChange={(v) => setValue('sector', v as 'Fintech' | 'AI / ML' | 'SaaS' | 'Health Tech' | 'EdTech' | 'Impact / Social' | 'Deep Tech' | 'Other', { shouldValidate: true })} error={errors.sector?.message} />
-        <FormField label="Stage" name="stage" type="select" options={['Pre-Seed', 'Seed', 'Series A', 'Series B+', 'Revenue-Stage']} value={watch('stage') || ''} onValueChange={(v) => setValue('stage', v as 'Pre-Seed' | 'Seed' | 'Series A' | 'Series B+' | 'Revenue-Stage', { shouldValidate: true })} error={errors.stage?.message} />
+        <FormField label="Sector" name="sector" type="select" options={['Fintech', 'AI / ML', 'SaaS', 'Health Tech', 'EdTech', 'Impact / Social', 'Deep Tech', 'Other']} value={watch('sector') || ''} onValueChange={(v) => setValue('sector', v as 'Fintech' | 'AI / ML' | 'SaaS' | 'Health Tech' | 'EdTech' | 'Impact / Social' | 'Deep Tech' | 'Other', { shouldValidate: true, shouldTouch: true })} error={errors.sector?.message} isTouched={!!touchedFields.sector} />
+        <FormField label="Stage" name="stage" type="select" options={['Pre-Seed', 'Seed', 'Series A', 'Series B+', 'Revenue-Stage']} value={watch('stage') || ''} onValueChange={(v) => setValue('stage', v as 'Pre-Seed' | 'Seed' | 'Series A' | 'Series B+' | 'Revenue-Stage', { shouldValidate: true, shouldTouch: true })} error={errors.stage?.message} isTouched={!!touchedFields.stage} />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <FormField label="Raise Amount" name="raiseAmount" placeholder="e.g. $500K, $2M" registration={register('raiseAmount')} error={errors.raiseAmount?.message} />
-        <FormField label="Pitch Deck URL" name="pitchDeckUrl" type="url" placeholder="https://deck.link/yourpitch" registration={register('pitchDeckUrl')} error={errors.pitchDeckUrl?.message} />
+        <FormField label="Raise Amount" name="raiseAmount" placeholder="e.g. $500K, $2M" registration={register('raiseAmount')} error={errors.raiseAmount?.message} isTouched={!!touchedFields.raiseAmount} />
+        <FormField label="Pitch Deck URL" name="pitchDeckUrl" type="url" placeholder="https://deck.link/yourpitch" registration={register('pitchDeckUrl')} error={errors.pitchDeckUrl?.message} isTouched={!!touchedFields.pitchDeckUrl} />
       </div>
-      <FormField label="One-line description" name="oneLineDescription" placeholder="Give us the elevator pitch — one sentence." required registration={register('oneLineDescription')} error={errors.oneLineDescription?.message} />
+      <FormField label="One-line description" name="oneLineDescription" placeholder="Give us the elevator pitch — one sentence." required registration={register('oneLineDescription')} error={errors.oneLineDescription?.message} isTouched={!!touchedFields.oneLineDescription} />
       <SectionHeader label="About SAGIE" />
-      <FormField label="Why SAGIE Ventures?" name="whySAGIE" type="textarea" placeholder="What kind of alignment are you looking for?" registration={register('whySAGIE')} error={errors.whySAGIE?.message} />
+      <FormField label="Why SAGIE Ventures?" name="whySAGIE" type="textarea" placeholder="What kind of alignment are you looking for?" registration={register('whySAGIE')} error={errors.whySAGIE?.message} isTouched={!!touchedFields.whySAGIE} />
       <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       {submitWarning && (<span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>)}

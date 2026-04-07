@@ -24,7 +24,7 @@ export function SuggestEventForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, touchedFields },
   } = useForm<FormData>({
     resolver: zodResolver(EventSuggestionSchema),
     mode: 'onBlur',
@@ -88,39 +88,20 @@ export function SuggestEventForm() {
 
   return (
     <form onSubmit={(e) => handleSubmit(onSubmit)(e)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <FormField label="Event Name" name="eventName" placeholder="What's the event called?" required registration={register('eventName')} error={errors.eventName?.message} />
-      <FormField label="Your Name" name="suggestedBy" placeholder="Your full name" required registration={register('suggestedBy')} error={errors.suggestedBy?.message} />
-      <FormField label="Email" name="email" type="email" placeholder="your@email.com" required autoComplete="email" registration={register('email')} error={errors.email?.message} />
-      <FormField label="Description" name="description" type="textarea" placeholder="What's the idea?" required registration={register('description')} error={errors.description?.message} />
+      <FormField label="Event Name" name="eventName" placeholder="What's the event called?" required registration={register('eventName')} error={errors.eventName?.message} isTouched={!!touchedFields.eventName} />
+      <FormField label="Your Name" name="suggestedBy" placeholder="Your full name" required registration={register('suggestedBy')} error={errors.suggestedBy?.message} isTouched={!!touchedFields.suggestedBy} />
+      <FormField label="Email" name="email" type="email" placeholder="your@email.com" required autoComplete="email" registration={register('email')} error={errors.email?.message} isTouched={!!touchedFields.email} />
+      <FormField label="Description" name="description" type="textarea" placeholder="What's the idea?" required registration={register('description')} error={errors.description?.message} isTouched={!!touchedFields.description} />
       <PrivacyConsent checked={privacyConsent} onChange={(v) => { setPrivacyConsent(v); if (v) setPrivacyError(false) }} error={privacyError} />
       <input type="text" name="_trap" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ display: 'none' }} onChange={e => { trapRef.current = e.target.value }} />
       <input type="hidden" name="_t" value={loadTime.toString()} />
       {submitWarning && (
-        <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>
-          {submitWarning}
-        </span>
+        <span style={{ fontSize: '11px', color: 'var(--color-warning)', lineHeight: '1.5' }}>{submitWarning}</span>
       )}
       {submitError && (
-        <span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>
-          {submitError}
-        </span>
+        <span style={{ fontSize: '13px', color: 'var(--color-error)', lineHeight: '1.5' }}>{submitError}</span>
       )}
-      <button
-        type="submit"
-        disabled={isSubmitting || isRateLimited}
-        style={{
-          background: isSubmitting ? 'var(--border-default)' : 'var(--silver)',
-          color: 'var(--bg)',
-          fontFamily: 'var(--font-body)',
-          fontSize: '14px',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          padding: '14px 32px',
-          border: 'none',
-          cursor: isSubmitting ? 'not-allowed' : 'pointer',
-          alignSelf: 'flex-start',
-        }}
-      >
+      <button type="submit" disabled={isSubmitting || isRateLimited} style={{ background: isSubmitting ? 'var(--border-default)' : 'var(--silver)', color: 'var(--bg)', fontFamily: 'var(--font-body)', fontSize: '14px', letterSpacing: '0.14em', textTransform: 'uppercase', padding: '14px 32px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', alignSelf: 'flex-start' }}>
         {isSubmitting ? 'Submitting...' : 'Submit Suggestion →'}
       </button>
     </form>

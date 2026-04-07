@@ -16,11 +16,16 @@ interface PhoneFieldProps<T extends FieldValues> {
   control: Control<T>
   error?: string | undefined
   required?: boolean | undefined
+  isTouched?: boolean | undefined
 }
 
 export function PhoneField<T extends FieldValues>({
-  label, name, control, error, required,
+  label, name, control, error, required, isTouched,
 }: PhoneFieldProps<T>) {
+  const validationClass = isTouched
+    ? error ? 'phone-invalid' : 'phone-valid'
+    : ''
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
       <label
@@ -31,9 +36,19 @@ export function PhoneField<T extends FieldValues>({
           textTransform: 'uppercase',
           color: 'var(--text-muted)',
           fontFamily: 'var(--font-body)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
         }}
       >
-        {label}{required && <span style={{ color: 'var(--silver)', marginLeft: '4px' }}>*</span>}
+        <span>
+          {label}{required && <span style={{ color: 'var(--silver)', marginLeft: '4px' }}>*</span>}
+        </span>
+        {isTouched && !error && (
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+            <path d="M3 7L6 10L11 4" stroke="var(--field-valid)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
       </label>
 
       <Controller
@@ -48,16 +63,20 @@ export function PhoneField<T extends FieldValues>({
             value={(field.value as E164Number | undefined) ?? ''}
             onChange={(val) => field.onChange(val ?? '')}
             onBlur={field.onBlur}
-            className="phone-input-dark"
+            className={`phone-input-dark ${validationClass}`}
             aria-describedby={error ? `${name}-error` : undefined}
             aria-invalid={error ? true : undefined}
           />
         )}
       />
 
-      {error && (
-        <span id={`${name}-error`} style={{ fontSize: '10px', color: 'var(--color-error)' }}>{error}</span>
-      )}
+      <div
+        id={`${name}-error`}
+        className={`phone-error-text ${error ? 'phone-error-visible' : ''}`}
+        role={error ? 'alert' : undefined}
+      >
+        {error ?? ''}
+      </div>
     </div>
   )
 }
