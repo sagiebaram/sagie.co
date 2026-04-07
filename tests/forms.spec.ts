@@ -371,7 +371,7 @@ test('API Notion failure returns 500 and shows generic error', async ({ page }) 
 
   await page.getByRole('button', { name: /submit application/i }).click();
 
-  await expect(page.getByText(/We couldn't submit your application|Internal Server Error/i)).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(/Something went wrong|Internal Server Error/i)).toBeVisible({ timeout: 10000 });
 });
 
 // -----------------------------------------------------------------------
