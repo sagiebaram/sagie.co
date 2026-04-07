@@ -3,18 +3,20 @@ import { test, expect } from '@playwright/test';
 test.describe('Navigation', () => {
   test('navigates to major pages via main menu', async ({ page }) => {
     await page.goto('/');
-    
+    // Wait for full hydration — TransitionLink needs its onClick handler
+    await page.waitForLoadState('networkidle');
+
     // In a responsive nav, we target the desktop or main header nav
     const header = page.locator('nav').first();
-    
+
     await header.getByRole('link', { name: /events/i }).click();
-    await expect(page).toHaveURL(/.*\/events/);
-    
+    await expect(page).toHaveURL(/.*\/events/, { timeout: 10000 });
+
     await header.getByRole('link', { name: /resources/i }).click();
-    await expect(page).toHaveURL(/.*\/resources/);
-    
+    await expect(page).toHaveURL(/.*\/resources/, { timeout: 10000 });
+
     await header.getByRole('link', { name: /solutions/i }).click();
-    await expect(page).toHaveURL(/.*\/solutions/);
+    await expect(page).toHaveURL(/.*\/solutions/, { timeout: 10000 });
   });
 
   test('404 page for nonexistent route', async ({ page }) => {

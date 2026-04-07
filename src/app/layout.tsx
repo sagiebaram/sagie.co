@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Analytics } from '@vercel/analytics/react'
@@ -79,7 +80,9 @@ const jsonLd = {
   ],
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = (await headers()).get('x-nonce') ?? ''
+
   return (
     <html
       lang="en"
@@ -89,8 +92,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {/* Block browser scroll restore on this page load (prevents stale
             position on refresh). GSAPCleanup switches to 'auto' after
-            hydration so back/forward still works natively. */}
+            hydration so back/forward still works natively.
+            Nonce required by CSP in proxy.ts. */}
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: `history.scrollRestoration='manual';window.scrollTo(0,0)` }}
         />
         <script
