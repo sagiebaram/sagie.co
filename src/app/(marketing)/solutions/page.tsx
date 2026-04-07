@@ -11,6 +11,7 @@ import { SolutionsFilter } from '@/components/ui/SolutionsFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { PageIcon } from '@/components/ui/PageIcon'
 import { CardTilt } from '@/components/ui/CardTilt'
 import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
 import { SERVICE_CATEGORIES } from '@/constants/solutions'
@@ -82,6 +83,7 @@ export default function SolutionsPage() {
         <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-24">
+            <PageIcon name="Solutions" />
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
               SAGIE Solutions
             </p>

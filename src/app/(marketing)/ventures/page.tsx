@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { PageIcon } from '@/components/ui/PageIcon'
 import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
 
 const SECTIONS: SectionNavItem[] = [
@@ -79,6 +80,7 @@ export default function VenturesPage() {
       {/* ── 1. Hero ── */}
       <Section id="ven-hero" className="pt-28 md:pt-36">
         <PageHeroAnimation>
+          <PageIcon name="Ventures" />
           <Eyebrow className="page-hero-eyebrow text-ventures">SAGIE Ventures</Eyebrow>
           <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
             { text: 'TRUST CREATES', className: 'text-foreground-dim' },

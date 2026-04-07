@@ -14,6 +14,7 @@ import { EventFilter } from '@/components/ui/EventFilter'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { ErrorPage } from '@/components/ui/ErrorPage'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { PageIcon } from '@/components/ui/PageIcon'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { SAGIEEvent } from '@/types/events'
 import { buildGoogleCalendarUrl, buildOutlookCalendarUrl } from '@/lib/calendar'
@@ -378,6 +379,7 @@ export function EventsPageClient({
         <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 pt-32 pb-16 md:pt-40 md:pb-20">
+            <PageIcon name="Events" />
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-6 text-label tracking-eyebrow">
               SAGIE ECO Events
             </p>

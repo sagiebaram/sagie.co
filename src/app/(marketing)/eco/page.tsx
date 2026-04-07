@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { PageIcon } from '@/components/ui/PageIcon'
 import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
 
 const SECTIONS: SectionNavItem[] = [
@@ -99,6 +100,7 @@ export default function EcoPage() {
       {/* ── 1. Hero ── */}
       <Section id="eco-hero" className="pt-28 md:pt-36">
         <PageHeroAnimation>
+          <PageIcon name="Community" />
           <Eyebrow className="page-hero-eyebrow text-eco">SAGIE ECO</Eyebrow>
           <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
             { text: 'THE ECOSYSTEM', className: 'text-foreground-dim' },

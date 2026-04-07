@@ -9,6 +9,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { ResourceFilter } from '@/components/ui/ResourceFilter'
 import { SubmitResourceForm } from '@/components/ui/SubmitResourceForm'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
+import { PageIcon } from '@/components/ui/PageIcon'
 import { PageHeroAnimation } from '@/components/ui/PageHeroAnimation'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import type { Resource } from '@/lib/resources'
@@ -90,6 +91,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
         <GridBackground parallax />
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-0 pt-32 pb-8 md:pt-40 md:pb-10">
+            <PageIcon name="Resources" />
             <Eyebrow>Resources</Eyebrow>
             <SplitTextReveal as="h1" className="font-display uppercase mb-8 text-hero leading-[0.9]" lines={[
               { text: 'TOOLS FOR THE', className: 'text-foreground-secondary' },
