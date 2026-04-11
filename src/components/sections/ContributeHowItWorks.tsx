@@ -1,74 +1,60 @@
+import { Section } from '@/components/ui/Section'
+import { Eyebrow } from '@/components/ui/Eyebrow'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { CONTRIBUTE_HOW_SECTION, CONTRIBUTE_STEPS } from '@/constants/contribute'
 
 /**
- * "How It Works" — 4 step cards in a single row on desktop, 2×2 on tablet,
- * stacked on mobile. Matches .planning/mockups/contribute-page.html lines
- * 724–751 (including the step-num gold overlay and connector dot between
- * adjacent cards).
+ * "How It Works" section — 4 step cards, matching the `/solutions` pillar
+ * page pattern (Eyebrow + sr-only H2 + ScrollReveal-wrapped step cards).
+ *
+ * Render bug fix (v1): the previous implementation put the `.step` class on
+ * each step card *without* a `<ScrollReveal selector=".step">` wrapper. The
+ * global stylesheet declares `.step { opacity: 0 }` as a scroll-reveal initial
+ * state (src/app/globals.css:222), and without a reveal trigger the cards
+ * stayed at opacity 0 forever. The H2 rendered, the section had height, but
+ * every step body was invisible — which read as "the section doesn't render"
+ * on visual inspection.
+ *
+ * Fix: wrap the step cards in a <ScrollReveal selector=".step"> exactly the
+ * way Solutions/Events/Resources pages do, so the global initial state is
+ * matched by the reveal animation and opacity transitions back to 1.
  */
 export function ContributeHowItWorks() {
   const { eyebrow, title, desc } = CONTRIBUTE_HOW_SECTION
 
   return (
-    <section className="relative py-20 px-6 md:px-8" aria-labelledby="how-title">
-      <div className="relative max-w-[1200px] mx-auto">
-        <div className="font-body uppercase text-[10px] tracking-[0.22em] text-foreground-dim mb-3">
-          {eyebrow}
-        </div>
-        <h2
-          id="how-title"
-          className="font-display text-foreground leading-none mb-4"
-          style={{
-            fontSize: 'clamp(36px, 5vw, 56px)',
-            letterSpacing: '0.03em',
-          }}
-        >
-          {title}
-        </h2>
-        <p className="text-silver opacity-70 max-w-[540px] leading-[1.7] mb-[52px]">{desc}</p>
+    <Section id="contribute-how">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 className="font-display uppercase text-foreground-secondary text-pillar leading-none tracking-heading mb-4">
+        {title}
+      </h2>
+      <p className="font-body text-foreground-muted text-body font-light leading-[1.75] max-w-[560px] mb-12">
+        {desc}
+      </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-0">
-          {CONTRIBUTE_STEPS.map((step, i) => (
+      <ScrollReveal selector=".step" stagger={0.12} y={20} duration={0.55}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-px">
+          {CONTRIBUTE_STEPS.map((step) => (
             <div
               key={step.num}
-              className="step relative bg-background-card border border-border-subtle px-7 py-9 md:border-r-0 md:last:border-r"
+              className="step border border-border-default bg-background-card px-7 py-9"
             >
-              <span
+              <p
+                className="font-display text-foreground-dim text-caption tracking-heading mb-2"
                 aria-hidden="true"
-                className="block font-display leading-none mb-3"
-                style={{
-                  fontSize: '64px',
-                  color: 'rgba(201,168,76,0.12)',
-                }}
               >
                 {step.num}
-              </span>
-              <h3
-                className="font-display text-foreground mb-2"
-                style={{
-                  fontSize: '20px',
-                  letterSpacing: '0.04em',
-                }}
-              >
+              </p>
+              <h3 className="font-display uppercase text-foreground-secondary text-subhead leading-none mb-3">
                 {step.title}
               </h3>
-              <p className="text-[13px] leading-[1.6] text-silver opacity-65">{step.body}</p>
-
-              {/* Connector dot between cards (mockup .step::after) — desktop only */}
-              {i < CONTRIBUTE_STEPS.length - 1 && (
-                <span
-                  aria-hidden="true"
-                  className="hidden md:block absolute top-9 -right-[5px] w-2 h-2 rounded-full z-[2]"
-                  style={{
-                    background: '#C9A84C',
-                    border: '1px solid var(--bg)',
-                  }}
-                />
-              )}
+              <p className="font-body text-foreground-muted text-body font-light leading-[1.75]">
+                {step.body}
+              </p>
             </div>
           ))}
         </div>
-      </div>
-    </section>
+      </ScrollReveal>
+    </Section>
   )
 }
