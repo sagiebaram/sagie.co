@@ -4,6 +4,11 @@ vi.mock('server-only', () => ({}))
 
 import {
   MembershipSchema,
+  StepAboutYouSchema,
+  StepLocationSchema,
+  StepProfessionalIdentitySchema,
+  StepRoleAndNeedsSchema,
+  StepTellUsMoreSchema,
   ChapterSchema,
   VenturesSchema,
   SolutionsSchema,
@@ -11,18 +16,34 @@ import {
 } from '@/lib/schemas'
 
 // ---------------------------------------------------------------------------
-// MembershipSchema
+// Membership Wizard — full schema
 // ---------------------------------------------------------------------------
-describe('MembershipSchema', () => {
-  const validMembership = {
-    fullName: 'Jane Doe',
-    email: 'JANE@EXAMPLE.COM',
-    role: 'Founder',
-    country: 'IL',
-    city: 'Tel Aviv',
-    phone: '+972501234567',
-  }
 
+const LONG_TEXT = 'This is a real answer with enough words to pass the spam check.'
+
+const validMembership = {
+  // Step 1
+  fullName: 'Jane Doe',
+  email: 'JANE@EXAMPLE.COM',
+  phone: '+972501234567',
+  // Step 2
+  country: 'IL',
+  city: 'Tel Aviv',
+  // Step 3
+  workStyle: ['Company'],
+  companyName: 'SAGIE',
+  // Step 4
+  identityTags: ['Founder'],
+  needTags: ['Funding'],
+  // Step 5
+  whatTheyNeed: LONG_TEXT,
+  communityExpectation: LONG_TEXT,
+  communityMeaning: LONG_TEXT,
+  howTheyKnowSagie: LONG_TEXT,
+  referralSource: 'Google Search',
+}
+
+describe('MembershipSchema', () => {
   test('accepts a fully valid input', () => {
     const result = MembershipSchema.safeParse(validMembership)
     expect(result.success).toBe(true)
@@ -45,20 +66,33 @@ describe('MembershipSchema', () => {
     expect(result.success).toBe(false)
   })
 
-  test('rejects missing role', () => {
-    const { role: _r, ...rest } = validMembership
-    const result = MembershipSchema.safeParse(rest)
-    expect(result.success).toBe(false)
-  })
-
   test('rejects missing country', () => {
     const { country: _c, ...rest } = validMembership
     const result = MembershipSchema.safeParse(rest)
     expect(result.success).toBe(false)
   })
 
-  test('rejects non-string email (number)', () => {
-    const result = MembershipSchema.safeParse({ ...validMembership, email: 42 })
+  test('rejects missing workStyle', () => {
+    const { workStyle: _ws, ...rest } = validMembership
+    const result = MembershipSchema.safeParse(rest)
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects missing identityTags', () => {
+    const { identityTags: _it, ...rest } = validMembership
+    const result = MembershipSchema.safeParse(rest)
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects missing needTags', () => {
+    const { needTags: _nt, ...rest } = validMembership
+    const result = MembershipSchema.safeParse(rest)
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects missing referralSource', () => {
+    const { referralSource: _rs, ...rest } = validMembership
+    const result = MembershipSchema.safeParse(rest)
     expect(result.success).toBe(false)
   })
 
@@ -86,27 +120,280 @@ describe('MembershipSchema', () => {
     }
   })
 
-  test('accepts any non-empty string as role (free-text Other support)', () => {
-    const result = MembershipSchema.safeParse({ ...validMembership, role: 'InvalidRole' })
+  test('defaults newsletterConsent to false', () => {
+    const result = MembershipSchema.safeParse(validMembership)
     expect(result.success).toBe(true)
-  })
-
-  test('rejects empty string for role', () => {
-    const result = MembershipSchema.safeParse({ ...validMembership, role: '' })
-    expect(result.success).toBe(false)
-  })
-
-  test('accepts all predefined role values', () => {
-    const validRoles = ['Founder', 'Investor', 'Operator', 'Ecosystem Builder', 'Academic', 'Partner']
-    for (const role of validRoles) {
-      const result = MembershipSchema.safeParse({ ...validMembership, role })
-      expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.newsletterConsent).toBe(false)
     }
   })
 
-  test('accepts custom Other free-text for role', () => {
-    const result = MembershipSchema.safeParse({ ...validMembership, role: 'Blockchain Developer' })
+  test('surfaces refinement errors from later steps on full submit', () => {
+    // Company work style without companyName — should fail via refinement
+    const { companyName: _c, ...rest } = validMembership
+    const result = MembershipSchema.safeParse(rest)
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// StepAboutYouSchema
+// ---------------------------------------------------------------------------
+describe('StepAboutYouSchema', () => {
+  const valid = {
+    fullName: 'Jane Doe',
+    email: 'jane@example.com',
+    phone: '+14155551234',
+  }
+
+  test('accepts valid input', () => {
+    expect(StepAboutYouSchema.safeParse(valid).success).toBe(true)
+  })
+
+  test('accepts empty linkedIn', () => {
+    expect(StepAboutYouSchema.safeParse({ ...valid, linkedIn: '' }).success).toBe(true)
+  })
+
+  test('rejects invalid linkedIn URL', () => {
+    expect(
+      StepAboutYouSchema.safeParse({ ...valid, linkedIn: 'https://twitter.com/jane' }).success,
+    ).toBe(false)
+  })
+
+  test('rejects missing fullName', () => {
+    const { fullName: _, ...rest } = valid
+    expect(StepAboutYouSchema.safeParse(rest).success).toBe(false)
+  })
+
+  test('rejects missing email', () => {
+    const { email: _, ...rest } = valid
+    expect(StepAboutYouSchema.safeParse(rest).success).toBe(false)
+  })
+
+  test('rejects missing phone', () => {
+    const { phone: _, ...rest } = valid
+    expect(StepAboutYouSchema.safeParse(rest).success).toBe(false)
+  })
+
+  test('rejects bad phone', () => {
+    expect(StepAboutYouSchema.safeParse({ ...valid, phone: '123' }).success).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// StepLocationSchema
+// ---------------------------------------------------------------------------
+describe('StepLocationSchema', () => {
+  test('accepts country without state when state is not required', () => {
+    const result = StepLocationSchema.safeParse({ country: 'IL', city: 'Tel Aviv' })
     expect(result.success).toBe(true)
+  })
+
+  test('rejects unknown country', () => {
+    const result = StepLocationSchema.safeParse({ country: 'ZZ', city: 'Nowhere' })
+    expect(result.success).toBe(false)
+  })
+
+  test('requires state for US', () => {
+    const result = StepLocationSchema.safeParse({ country: 'US', city: 'Miami' })
+    expect(result.success).toBe(false)
+  })
+
+  test('accepts US with valid state', () => {
+    const result = StepLocationSchema.safeParse({ country: 'US', state: 'FL', city: 'Miami' })
+    expect(result.success).toBe(true)
+  })
+
+  test('rejects US with state code not belonging to the country', () => {
+    const result = StepLocationSchema.safeParse({ country: 'US', state: 'ZZ', city: 'Miami' })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects missing city', () => {
+    const result = StepLocationSchema.safeParse({ country: 'IL' })
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// StepProfessionalIdentitySchema
+// ---------------------------------------------------------------------------
+describe('StepProfessionalIdentitySchema', () => {
+  test('accepts Company with companyName', () => {
+    const result = StepProfessionalIdentitySchema.safeParse({
+      workStyle: ['Company'],
+      companyName: 'SAGIE',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  test('rejects empty workStyle', () => {
+    const result = StepProfessionalIdentitySchema.safeParse({ workStyle: [] })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects Company without companyName', () => {
+    const result = StepProfessionalIdentitySchema.safeParse({ workStyle: ['Company'] })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues.some((i) => i.path.includes('companyName'))).toBe(true)
+    }
+  })
+
+  test('rejects Organization without organizationName', () => {
+    const result = StepProfessionalIdentitySchema.safeParse({ workStyle: ['Organization'] })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues.some((i) => i.path.includes('organizationName'))).toBe(true)
+    }
+  })
+
+  test('rejects Freelancer without freelancerDescription', () => {
+    const result = StepProfessionalIdentitySchema.safeParse({ workStyle: ['Freelancer'] })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues.some((i) => i.path.includes('freelancerDescription'))).toBe(true)
+    }
+  })
+
+  test('accepts multiple workStyle values with all sub-fields filled', () => {
+    const result = StepProfessionalIdentitySchema.safeParse({
+      workStyle: ['Company', 'Freelancer'],
+      companyName: 'SAGIE',
+      freelancerDescription: 'Strategy consulting on the side',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  test('rejects invalid workStyle value', () => {
+    const result = StepProfessionalIdentitySchema.safeParse({
+      workStyle: ['Nonprofit'],
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// StepRoleAndNeedsSchema
+// ---------------------------------------------------------------------------
+describe('StepRoleAndNeedsSchema', () => {
+  test('accepts minimal valid selection', () => {
+    const result = StepRoleAndNeedsSchema.safeParse({
+      identityTags: ['Founder'],
+      needTags: ['Funding'],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  test('rejects empty identityTags', () => {
+    const result = StepRoleAndNeedsSchema.safeParse({
+      identityTags: [],
+      needTags: ['Funding'],
+    })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects empty needTags', () => {
+    const result = StepRoleAndNeedsSchema.safeParse({
+      identityTags: ['Founder'],
+      needTags: [],
+    })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects Service Provider without serviceProviderDetail', () => {
+    const result = StepRoleAndNeedsSchema.safeParse({
+      identityTags: ['Service Provider'],
+      needTags: ['Clients / Customers'],
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues.some((i) => i.path.includes('serviceProviderDetail'))).toBe(true)
+    }
+  })
+
+  test('accepts Service Provider with detail text', () => {
+    const result = StepRoleAndNeedsSchema.safeParse({
+      identityTags: ['Service Provider'],
+      needTags: ['Clients / Customers'],
+      serviceProviderDetail: 'Legal and compliance consulting for early-stage startups.',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  test('rejects unknown identity tag', () => {
+    const result = StepRoleAndNeedsSchema.safeParse({
+      identityTags: ['Freeloader'],
+      needTags: ['Funding'],
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// StepTellUsMoreSchema
+// ---------------------------------------------------------------------------
+describe('StepTellUsMoreSchema', () => {
+  const valid = {
+    whatTheyNeed: LONG_TEXT,
+    communityExpectation: LONG_TEXT,
+    communityMeaning: LONG_TEXT,
+    howTheyKnowSagie: LONG_TEXT,
+    referralSource: 'Google Search',
+  }
+
+  test('accepts valid non-referral submission', () => {
+    expect(StepTellUsMoreSchema.safeParse(valid).success).toBe(true)
+  })
+
+  test('rejects short whatTheyNeed', () => {
+    const result = StepTellUsMoreSchema.safeParse({ ...valid, whatTheyNeed: 'nope' })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects short communityExpectation', () => {
+    const result = StepTellUsMoreSchema.safeParse({ ...valid, communityExpectation: 'nope' })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects short communityMeaning', () => {
+    const result = StepTellUsMoreSchema.safeParse({ ...valid, communityMeaning: 'nope' })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects short howTheyKnowSagie', () => {
+    const result = StepTellUsMoreSchema.safeParse({ ...valid, howTheyKnowSagie: 'nope' })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects unknown referralSource', () => {
+    const result = StepTellUsMoreSchema.safeParse({ ...valid, referralSource: 'TikTok' })
+    expect(result.success).toBe(false)
+  })
+
+  test('rejects Referral without referralName', () => {
+    const result = StepTellUsMoreSchema.safeParse({ ...valid, referralSource: 'Referral' })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues.some((i) => i.path.includes('referralName'))).toBe(true)
+    }
+  })
+
+  test('accepts Referral with referralName', () => {
+    const result = StepTellUsMoreSchema.safeParse({
+      ...valid,
+      referralSource: 'Referral',
+      referralName: 'Sagie Baram',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  test('spam check still rejects repeated characters', () => {
+    const result = StepTellUsMoreSchema.safeParse({
+      ...valid,
+      whatTheyNeed: 'aaaaaaaaaaaaaaaaaaaaaa',
+    })
+    expect(result.success).toBe(false)
   })
 })
 
@@ -327,15 +614,6 @@ describe('SolutionsSchema', () => {
 // optional URL fields accept empty strings
 // ---------------------------------------------------------------------------
 describe('optional URL fields accept empty strings', () => {
-  const validMembership = {
-    fullName: 'Jane Doe',
-    email: 'jane@example.com',
-    role: 'Founder',
-    country: 'IL',
-    city: 'Tel Aviv',
-    phone: '+972501234567',
-  }
-
   const validChapter = {
     fullName: 'John Smith',
     email: 'john@example.com',
@@ -431,15 +709,6 @@ describe('optional URL fields accept empty strings', () => {
 // Phone + Country fields
 // ---------------------------------------------------------------------------
 describe('phone and country fields', () => {
-  const validMembership = {
-    fullName: 'Jane Doe',
-    email: 'jane@example.com',
-    role: 'Founder',
-    country: 'IL',
-    city: 'Tel Aviv',
-    phone: '+972501234567',
-  }
-
   const validChapter = {
     fullName: 'John Smith',
     email: 'john@example.com',
@@ -520,9 +789,9 @@ describe('phone and country fields', () => {
 describe('upgraded validation patterns', () => {
   test('MembershipSchema name accepts Unicode (Chinese)', () => {
     const result = MembershipSchema.safeParse({
+      ...validMembership,
       fullName: '李明',
       email: 'li@example.com',
-      role: 'Founder',
       country: 'CN',
       city: 'Shanghai',
       phone: '+8613800138000',
@@ -532,9 +801,9 @@ describe('upgraded validation patterns', () => {
 
   test('MembershipSchema name accepts hyphens and apostrophes', () => {
     const result = MembershipSchema.safeParse({
+      ...validMembership,
       fullName: "O'Brien-Smith",
       email: 'ob@example.com',
-      role: 'Investor',
       country: 'IE',
       city: 'Dublin',
       phone: '+353871234567',
@@ -544,9 +813,9 @@ describe('upgraded validation patterns', () => {
 
   test('MembershipSchema name rejects numbers', () => {
     const result = MembershipSchema.safeParse({
+      ...validMembership,
       fullName: 'Test123',
       email: 'test@example.com',
-      role: 'Founder',
       country: 'US',
       state: 'NY',
       city: 'Manhattan',
@@ -569,12 +838,7 @@ describe('upgraded validation patterns', () => {
 
   test('MembershipSchema LinkedIn validates domain', () => {
     const result = MembershipSchema.safeParse({
-      fullName: 'Jane Doe',
-      email: 'jane@example.com',
-      role: 'Founder',
-      country: 'IL',
-      city: 'Tel Aviv',
-      phone: '+972501234567',
+      ...validMembership,
       linkedIn: 'https://linkedin.com/in/janedoe',
     })
     expect(result.success).toBe(true)
@@ -582,12 +846,7 @@ describe('upgraded validation patterns', () => {
 
   test('MembershipSchema LinkedIn rejects non-LinkedIn URL', () => {
     const result = MembershipSchema.safeParse({
-      fullName: 'Jane Doe',
-      email: 'jane@example.com',
-      role: 'Founder',
-      country: 'IL',
-      city: 'Tel Aviv',
-      phone: '+972501234567',
+      ...validMembership,
       linkedIn: 'https://twitter.com/janedoe',
     })
     expect(result.success).toBe(false)

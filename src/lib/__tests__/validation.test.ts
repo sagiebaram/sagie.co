@@ -30,13 +30,30 @@ function makeRequest(body: unknown, extraHeaders?: Record<string, string>): Requ
   })
 }
 
+// Matches the 6-step wizard MembershipSchema (ADR-MEMBERSHIP-WIZARD §5).
+// spamCheckedText requires >=10 chars + passes spam heuristics.
+const LONG_TEXT = 'This is a real answer with enough words to pass the spam check.'
+
 const VALID_MEMBERSHIP_BODY = {
+  // Step 1
   fullName: 'Test User',
   email: 'test@example.com',
-  role: 'Founder',
+  phone: '+972501234567',
+  // Step 2
   country: 'IL',
   city: 'Tel Aviv',
-  phone: '+972501234567',
+  // Step 3
+  workStyle: ['Company'],
+  companyName: 'SAGIE',
+  // Step 4
+  identityTags: ['Founder'],
+  needTags: ['Funding'],
+  // Step 5
+  whatTheyNeed: LONG_TEXT,
+  communityExpectation: LONG_TEXT,
+  communityMeaning: LONG_TEXT,
+  howTheyKnowSagie: LONG_TEXT,
+  referralSource: 'Google Search',
 }
 
 // ---------------------------------------------------------------------------

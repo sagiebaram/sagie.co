@@ -355,3 +355,24 @@ select:-webkit-autofill {
   animation: skeleton-sweep 2s ease-in-out infinite;
   border-radius: 2px;
 }
+
+/* ── Membership wizard step fade transition (ADR-MEMBERSHIP-WIZARD §1) ── */
+.wizard-step-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.wizard-step-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wizard-step-enter,
+  .wizard-step-active {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
