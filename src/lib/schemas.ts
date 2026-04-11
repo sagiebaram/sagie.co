@@ -118,7 +118,7 @@ const requiredLocationFields = {
 }
 
 /** Cascading location validation — state required only for 6 countries (US, AU, CA, BR, MX, IN) */
-function locationSuperRefine(data: { country: string; state?: string | undefined; city: string }, ctx: z.RefinementCtx) {
+export function locationSuperRefine(data: { country: string; state?: string | undefined; city: string }, ctx: z.RefinementCtx) {
   if (!Country.getCountryByCode(data.country)) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Invalid country.', path: ['country'] })
     return
@@ -143,25 +143,203 @@ const optionalLocationFields = {
   city: z.string().max(100).trim().optional(),
 }
 
-// --- Schemas ---
+// --- Membership Wizard Schemas ---
+//
+// The membership form is a 6-step wizard (see .planning/ADR-MEMBERSHIP-WIZARD.md).
+// Each step exports its own schema for `trigger()`-based step validation, and
+// the final `MembershipSchema` composes every field + refinement for submit.
 
-export const MembershipSchema = z.object({
+/** Step 3: Professional identity — how the applicant works */
+export const workStyleOptions = ['Company', 'Organization', 'Freelancer'] as const
+
+/** Step 4: "I am a..." identity tags — the supply side of matchmaking */
+export const identityTagOptions = [
+  'Founder',
+  'Investor',
+  'Service Provider',
+  'Job Seeker',
+  'Corporate Executive',
+  'Ecosystem Builder',
+  'Advisor / Mentor',
+  'Student / Early Career',
+] as const
+
+/** Step 4: "I'm looking for..." need tags — the demand side of matchmaking */
+export const needTagOptions = [
+  'Co-founder',
+  'Funding',
+  'Deal flow',
+  'Talent / Hiring',
+  'Clients / Customers',
+  'Mentorship',
+  'Service providers',
+  'Community / Network',
+  'Partnership opportunities',
+  'A job',
+] as const
+
+/** Step 5: Referral source dropdown options */
+export const referralSourceOptions = [
+  'Google Search',
+  'Social Media',
+  'Friend or Colleague',
+  'Event',
+  'Podcast',
+  'Article / Blog',
+  'Referral',
+] as const
+
+export type WorkStyle = (typeof workStyleOptions)[number]
+export type IdentityTag = (typeof identityTagOptions)[number]
+export type NeedTag = (typeof needTagOptions)[number]
+export type ReferralSource = (typeof referralSourceOptions)[number]
+
+// Base object holding every membership field. Per-step schemas `pick()` from
+// this, and the final `MembershipSchema` layers all superRefines on top.
+const membershipBase = z.object({
+  // Step 1: About You
   fullName: nameField('What should we call you?'),
   email: emailSchema,
-  role: z.string().min(1, 'Please select your role'),
-  company: z.string().max(100).trim().optional(),
-  ...requiredLocationFields,
   phone: phoneSchema,
-  tier: z.enum(['Explorer', 'Builder', 'Shaper']).default('Explorer'),
   linkedIn: optionalLinkedIn(),
-  whatTheyNeed: z.string().max(500).trim().optional(),
-  whatTheyOffer: z.string().max(500).trim().optional(),
-  howTheyKnowSagie: z.string().max(500).trim().optional(),
-  referral: z.string().max(500).trim().optional(),
-  category: z.array(
-    z.enum(['Founder', 'Investor', 'Tech Pro', 'Ecosystem Builder', 'Sponsor', 'Partner', 'Advisor'])
-  ).optional(),
-}).superRefine((data, ctx) => locationSuperRefine(data, ctx));
+
+  // Step 2: Location
+  ...requiredLocationFields,
+
+  // Step 3: Professional identity
+  workStyle: z.array(z.enum(workStyleOptions)).min(1, 'Select at least one'),
+  companyName: z.string().max(200).trim().optional(),
+  organizationName: z.string().max(200).trim().optional(),
+  freelancerDescription: z.string().max(200).trim().optional(),
+
+  // Step 4: Role & needs (matchmaking)
+  identityTags: z.array(z.enum(identityTagOptions)).min(1, 'Select at least one'),
+  needTags: z.array(z.enum(needTagOptions)).min(1, 'Select at least one'),
+  serviceProviderDetail: z.string().max(500).trim().optional(),
+
+  // Step 5: Tell us more
+  whatTheyNeed: spamCheckedText("Tell us what you're working on."),
+  communityExpectation: spamCheckedText("Tell us what you're looking for."),
+  communityMeaning: spamCheckedText('Tell us what community means to you.'),
+  howTheyKnowSagie: spamCheckedText('Tell us why SAGIE.'),
+  referralSource: z.enum(referralSourceOptions, { error: 'Please select how you heard about us.' }),
+  referralName: z.string().max(100).trim().optional(),
+
+  // Step 6: Consent + hidden defaults
+  // NOTE: privacyConsent is managed outside react-hook-form (existing pattern)
+  newsletterConsent: z.boolean().default(false),
+  tier: z.literal('Explorer').default('Explorer'),
+})
+
+/** Step 3 refinement: each selected work style requires its companion text field */
+function professionalIdentitySuperRefine(
+  data: {
+    workStyle: readonly WorkStyle[]
+    companyName?: string | undefined
+    organizationName?: string | undefined
+    freelancerDescription?: string | undefined
+  },
+  ctx: z.RefinementCtx,
+) {
+  if (data.workStyle.includes('Company') && !data.companyName?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Please enter your company name.',
+      path: ['companyName'],
+    })
+  }
+  if (data.workStyle.includes('Organization') && !data.organizationName?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Please enter your organization name.',
+      path: ['organizationName'],
+    })
+  }
+  if (data.workStyle.includes('Freelancer') && !data.freelancerDescription?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Please describe what you do.',
+      path: ['freelancerDescription'],
+    })
+  }
+}
+
+/** Step 4 refinement: Service Provider identity tag requires a detail field */
+function roleAndNeedsSuperRefine(
+  data: { identityTags: readonly IdentityTag[]; serviceProviderDetail?: string | undefined },
+  ctx: z.RefinementCtx,
+) {
+  if (data.identityTags.includes('Service Provider') && !data.serviceProviderDetail?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Please describe what you offer.',
+      path: ['serviceProviderDetail'],
+    })
+  }
+}
+
+/** Step 5 refinement: Referral source "Referral" requires a name */
+function tellUsMoreSuperRefine(
+  data: { referralSource: ReferralSource; referralName?: string | undefined },
+  ctx: z.RefinementCtx,
+) {
+  if (data.referralSource === 'Referral' && !data.referralName?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Please tell us who referred you.',
+      path: ['referralName'],
+    })
+  }
+}
+
+// ── Per-step schemas (used by `trigger()` for step-level validation) ──────────
+
+export const StepAboutYouSchema = membershipBase.pick({
+  fullName: true,
+  email: true,
+  phone: true,
+  linkedIn: true,
+})
+
+export const StepLocationSchema = membershipBase
+  .pick({ country: true, state: true, city: true })
+  .superRefine((data, ctx) => locationSuperRefine(data, ctx))
+
+export const StepProfessionalIdentitySchema = membershipBase
+  .pick({
+    workStyle: true,
+    companyName: true,
+    organizationName: true,
+    freelancerDescription: true,
+  })
+  .superRefine((data, ctx) => professionalIdentitySuperRefine(data, ctx))
+
+export const StepRoleAndNeedsSchema = membershipBase
+  .pick({
+    identityTags: true,
+    needTags: true,
+    serviceProviderDetail: true,
+  })
+  .superRefine((data, ctx) => roleAndNeedsSuperRefine(data, ctx))
+
+export const StepTellUsMoreSchema = membershipBase
+  .pick({
+    whatTheyNeed: true,
+    communityExpectation: true,
+    communityMeaning: true,
+    howTheyKnowSagie: true,
+    referralSource: true,
+    referralName: true,
+  })
+  .superRefine((data, ctx) => tellUsMoreSuperRefine(data, ctx))
+
+// ── Full schema: every field + every refinement, validated on submit ──────────
+
+export const MembershipSchema = membershipBase
+  .superRefine((data, ctx) => locationSuperRefine(data, ctx))
+  .superRefine((data, ctx) => professionalIdentitySuperRefine(data, ctx))
+  .superRefine((data, ctx) => roleAndNeedsSuperRefine(data, ctx))
+  .superRefine((data, ctx) => tellUsMoreSuperRefine(data, ctx))
 
 export const ChapterSchema = z.object({
   fullName: nameField('What should we call you?'),

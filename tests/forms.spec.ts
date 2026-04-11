@@ -48,8 +48,12 @@ async function mockRoute(page: import('@playwright/test').Page, path: string) {
 
 // -----------------------------------------------------------------------
 // Membership form  (/apply)
+// NOTE: The legacy MembershipForm has been removed as part of Track 1
+// (wizard foundation). The 6-step MembershipWizard ships in Track 3 — the
+// membership E2E tests below are skipped until then. See
+// .planning/ADR-MEMBERSHIP-WIZARD.md.
 // -----------------------------------------------------------------------
-test('membership form submits and shows success state', async ({ page }) => {
+test.skip('membership form submits and shows success state', async ({ page }) => {
   await mockApplicationRoute(page, 'membership');
   await page.goto('/apply');
 
@@ -91,9 +95,9 @@ test('membership form submits and shows success state', async ({ page }) => {
 });
 
 // -----------------------------------------------------------------------
-// Membership form — blur validation
+// Membership form — blur validation (skipped — see note above)
 // -----------------------------------------------------------------------
-test('membership form shows blur validation errors', async ({ page }) => {
+test.skip('membership form shows blur validation errors', async ({ page }) => {
   await page.goto('/apply');
   // Wait for react-hook-form hydration — submit button is rendered by the form component
   await page.getByRole('button', { name: /submit application/i }).waitFor();
@@ -298,7 +302,7 @@ test('suggest event form shows blur validation errors', async ({ page }) => {
 // -----------------------------------------------------------------------
 // API Error Paths
 // -----------------------------------------------------------------------
-test('API rate limiting returns 429 and shows error', async ({ page }) => {
+test.skip('API rate limiting returns 429 and shows error', async ({ page }) => {
   await page.route('**/api/applications/membership', async (route) => {
     if (route.request().method() === 'POST') {
       await route.fulfill({ status: 429, contentType: 'application/json', body: JSON.stringify({ error: 'Too many requests' }) });
@@ -324,7 +328,7 @@ test('API rate limiting returns 429 and shows error', async ({ page }) => {
   await expect(page.getByText(/You've submitted several times recently|Too many requests/i)).toBeVisible({ timeout: 10000 });
 });
 
-test('API invalid data returns 422 and shows field errors', async ({ page }) => {
+test.skip('API invalid data returns 422 and shows field errors', async ({ page }) => {
   await page.route('**/api/applications/membership', async (route) => {
     if (route.request().method() === 'POST') {
       await route.fulfill({ status: 422, contentType: 'application/json', body: JSON.stringify({ error: 'Validation failed', fieldErrors: { email: ['Invalid email address (from mocked)'] } }) });
@@ -351,7 +355,7 @@ test('API invalid data returns 422 and shows field errors', async ({ page }) => 
   await expect(page.getByText('Invalid email address (from mocked)')).toBeVisible({ timeout: 10000 });
 });
 
-test('API Notion failure returns 500 and shows generic error', async ({ page }) => {
+test.skip('API Notion failure returns 500 and shows generic error', async ({ page }) => {
   await page.route('**/api/applications/membership', async (route) => {
     if (route.request().method() === 'POST') {
       await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Internal Server Error' }) });
