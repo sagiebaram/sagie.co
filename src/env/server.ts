@@ -11,8 +11,6 @@ const EnvSchema = z.object({
   NOTION_MEMBER_DB_ID: z.string().min(1),
   NOTION_CHAPTERS_DB_ID: z.string().min(1).optional(),
   NOTION_VENTURES_INTAKE_DB_ID: z.string().min(1),
-  // Required for the /contribute form — script: scripts/notion-create-contributions-db.ts
-  NOTION_CONTRIBUTIONS_DB_ID: z.string().min(1).optional(),
   ALLOWED_ORIGINS: z.string().min(1),
   REVALIDATE_SECRET: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
