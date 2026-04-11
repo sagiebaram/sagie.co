@@ -1,3 +1,5 @@
+import { Section } from '@/components/ui/Section'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import {
   CONTRIBUTE_WAYS_SECTION,
   CONTRIBUTE_CARDS,
@@ -6,56 +8,35 @@ import {
 } from '@/constants/contribute'
 
 /**
- * "Ways to Contribute" section — 6 cards in two 3-card rows.
- * Matches .planning/mockups/contribute-page.html lines 645–719.
+ * "Ways to Contribute" section — 6 cards in a 3×2 grid on desktop.
  *
- * Tint colors driven by the accent token on each card (see constants):
- *   Time + Skills  = gold     (#C9A84C)
- *   Capital + Space = ECO     (#7A9E7E)
- *   Network         = Solutions (#6B9EC0)   — mockup blue, not theme blue
- *   Sponsorship     = Ventures  (#8A8A8A)   — mockup gray, not theme gray
+ * Uses the shared <Section> + <Eyebrow> primitives so it matches the other
+ * pillar pages. Per the revised scope, all card CTAs point at /apply (form
+ * deferred to a future sprint).
  */
 export function ContributeGrid() {
   const { eyebrow, titleLines, desc } = CONTRIBUTE_WAYS_SECTION
-  const topRow = CONTRIBUTE_CARDS.slice(0, 3)
-  const bottomRow = CONTRIBUTE_CARDS.slice(3, 6)
 
   return (
-    <section id="ways" className="relative py-20 px-6 md:px-8" aria-labelledby="ways-title">
-      <div className="relative max-w-[1200px] mx-auto">
-        <div className="font-body uppercase text-[10px] tracking-[0.22em] text-foreground-dim mb-3">
-          {eyebrow}
-        </div>
-        <h2
-          id="ways-title"
-          className="font-display text-foreground leading-none mb-4"
-          style={{
-            fontSize: 'clamp(36px, 5vw, 56px)',
-            letterSpacing: '0.03em',
-          }}
-        >
-          {titleLines.map((line, i) => (
-            <span key={line} className="block">
-              {line}
-            </span>
-          ))}
-          {/* Render fallback from array length for accessibility — not used for text */}
-          <span className="sr-only">{desc}</span>
-        </h2>
-        <p className="text-silver opacity-70 max-w-[540px] leading-[1.7] mb-[52px]">{desc}</p>
+    <Section id="ways">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 className="font-display uppercase text-foreground-secondary text-pillar leading-none tracking-heading mb-4">
+        {titleLines.map((line) => (
+          <span key={line} className="block">
+            {line}
+          </span>
+        ))}
+      </h2>
+      <p className="font-body text-foreground-muted text-body font-light leading-[1.75] max-w-[560px] mb-12">
+        {desc}
+      </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-[2px] mb-[2px]">
-          {topRow.map((card) => (
-            <ContributeCardTile key={card.id} card={card} />
-          ))}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-[2px]">
-          {bottomRow.map((card) => (
-            <ContributeCardTile key={card.id} card={card} />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-px">
+        {CONTRIBUTE_CARDS.map((card) => (
+          <ContributeCardTile key={card.id} card={card} />
+        ))}
       </div>
-    </section>
+    </Section>
   )
 }
 
@@ -64,14 +45,14 @@ function ContributeCardTile({ card }: { card: ContributeCard }) {
 
   return (
     <a
-      href="#form"
-      className="contrib-card group relative block border border-border-subtle bg-background-card px-9 py-10 overflow-hidden transition-[background,border-color] duration-300 hover:border-border-default"
+      href="/apply"
+      className="group relative block border border-border-default bg-background-card px-8 py-9 overflow-hidden transition-[background-color,border-color] duration-300 hover:bg-background-card-featured hover:border-border-strong"
       style={{
-        // Expose accent to CSS so child elements and the ::before rail can read it.
         ['--accent' as string]: accent,
       }}
       aria-label={`${card.tag} — ${card.title}`}
     >
+      {/* Top accent rail — fades in on hover */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -79,7 +60,7 @@ function ContributeCardTile({ card }: { card: ContributeCard }) {
       />
 
       <div
-        className="w-[42px] h-[42px] flex items-center justify-center mb-6"
+        className="w-10 h-10 flex items-center justify-center mb-6 shrink-0"
         style={{ border: `1px solid ${accent}`, color: accent }}
         aria-hidden="true"
       >
@@ -94,23 +75,24 @@ function ContributeCardTile({ card }: { card: ContributeCard }) {
       </span>
 
       <h3
-        className="font-display text-foreground mb-3 leading-none"
-        style={{
-          fontSize: '26px',
-          letterSpacing: '0.04em',
-        }}
+        className="font-display uppercase text-foreground-secondary text-[26px] leading-[1.05] tracking-heading mb-3"
       >
         {card.title}
       </h3>
 
-      <p className="text-[13px] leading-[1.65] text-silver opacity-75 mb-7">{card.body}</p>
+      <p className="font-body text-foreground-muted text-caption font-light leading-[1.7] mb-7">
+        {card.body}
+      </p>
 
       <span
         className="font-body uppercase text-[11px] tracking-[0.12em] inline-flex items-center gap-2"
         style={{ color: accent }}
       >
         {card.link}
-        <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
+        <span
+          aria-hidden="true"
+          className="transition-transform duration-200 group-hover:translate-x-1"
+        >
           →
         </span>
       </span>
@@ -118,7 +100,7 @@ function ContributeCardTile({ card }: { card: ContributeCard }) {
   )
 }
 
-/** Icon sprites — copied from the mockup one-for-one so visual parity holds. */
+/** Icon sprites — copied from mockup one-for-one so visual parity holds. */
 function CardIcon({ id }: { id: string }) {
   const common = {
     width: 20,
