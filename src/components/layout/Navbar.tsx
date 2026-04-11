@@ -12,6 +12,7 @@ const NAV_ROUTES: Record<string, string> = {
   Events: '/events',
   Resources: '/resources',
   Blog: '/blog',
+  Contribute: '/contribute',
 }
 
 function navHref(item: string) {
