@@ -1,96 +1,73 @@
-'use client'
-
 import type { ReactNode } from 'react'
-import { useId } from 'react'
 
 export interface TickerProps {
   /** Ordered list of strings rendered between separators. */
   items: readonly string[]
   /**
    * Content rendered between adjacent items. Defaults to a gold diamond.
-   * Rendered twice: once in the primary copy, once in the duplicate used to
-   * produce a seamless loop.
+   * Rendered inside each item so the clone gets one too.
    */
   separator?: ReactNode
-  /** Loop duration in seconds. Lower = faster. Defaults to 28s (matches mockup). */
+  /**
+   * Loop duration in seconds. Lower = snappier.
+   * Revised default is 25s (v1 used 28s and felt slow per Sagie's review).
+   */
   durationSeconds?: number
   /** Extra className merged onto the outer band. */
   className?: string
-  /** Optional id — mostly useful for tests. */
+  /** Optional id — mostly useful for anchors / tests. */
   id?: string
 }
 
 /**
  * Horizontal marquee / ticker band.
  *
- * - CSS animation only (no GSAP, no JS ticker loop).
- * - Respects `prefers-reduced-motion: reduce` (animation pauses).
- * - Pauses on hover / keyboard focus inside the band.
- * - Duplicates its item list so `translateX(-50%)` produces a seamless loop.
+ * True CSS-only infinite loop:
+ *   - The track renders the items list duplicated once ([...items, ...items]).
+ *   - A `ticker-scroll` keyframe animates `transform: translateX(0) → -50%`.
+ *   - When the first copy has scrolled fully off-screen, the second copy is
+ *     exactly where the first started, so the loop is seamless.
+ *   - Pauses on hover or keyboard focus inside the band.
+ *   - Respects `prefers-reduced-motion: reduce`.
+ *   - Overflow is clipped at the band so the animated track never pushes
+ *     horizontal page scroll.
  *
- * Closes Sprint 04-07 carryover B-2: shared reusable ticker primitive.
+ * Closes Sprint 04-07 carryover B-2 (reusable ticker primitive) and fixes the
+ * v1 implementation which used a dynamic `useId`-derived keyframe and a
+ * fragile `inline-flex` wrapper.
  */
 export function Ticker({
   items,
   separator = <span aria-hidden="true">◆</span>,
-  durationSeconds = 28,
+  durationSeconds = 25,
   className,
   id,
 }: TickerProps) {
-  const uid = useId()
-  const animationName = `ticker-${uid.replace(/[:]/g, '')}`
-
-  const renderRun = (key: string) => (
-    <span key={key} className="inline-flex items-center whitespace-nowrap" aria-hidden={key === 'clone' ? true : undefined}>
-      {items.map((item, idx) => (
-        <span key={`${key}-${idx}`} className="inline-flex items-center">
-          <span className="px-3">{item}</span>
-          <span className="text-[color:var(--ticker-sep,#C9A84C)] px-1">
-            {separator}
-          </span>
-        </span>
-      ))}
-    </span>
-  )
+  // Render the list twice so the translateX(-50%) keyframe produces a
+  // seamless loop. A Fragment array is fine — React keys are stable per index.
+  const doubled = [...items, ...items]
 
   return (
     <div
       id={id}
       role="marquee"
       aria-label={`Contribution areas: ${items.join(', ')}`}
-      className={`ticker-band relative overflow-hidden border-y border-border-subtle py-[10px] ${className ?? ''}`}
+      className={`ticker-band relative overflow-hidden border-y border-border-subtle py-[10px] w-full ${className ?? ''}`}
       style={{
-        // Expose the computed animation name to the inner track.
-        ['--ticker-anim' as string]: animationName,
         ['--ticker-duration' as string]: `${durationSeconds}s`,
       }}
     >
-      <style>{`
-        @keyframes ${animationName} {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        .ticker-band .ticker-track {
-          display: inline-flex;
-          white-space: nowrap;
-          animation: ${animationName} var(--ticker-duration) linear infinite;
-          will-change: transform;
-        }
-        .ticker-band:hover .ticker-track,
-        .ticker-band:focus-within .ticker-track {
-          animation-play-state: paused;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ticker-band .ticker-track {
-            animation: none;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
-
-      <div className="ticker-track font-body uppercase text-[11px] tracking-[0.14em] text-foreground-muted">
-        {renderRun('primary')}
-        {renderRun('clone')}
+      <div className="ticker-track flex items-center whitespace-nowrap font-body uppercase text-[11px] tracking-[0.14em] text-foreground-muted">
+        {doubled.map((item, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center flex-shrink-0"
+            aria-hidden={i >= items.length ? true : undefined}
+          >
+            <span className="px-4">{item}</span>
+            <span className="text-[#C9A84C] px-1">{separator}</span>
+          </span>
+        ))}
       </div>
     </div>
   )

@@ -355,3 +355,30 @@ select:-webkit-autofill {
   animation: skeleton-sweep 2s ease-in-out infinite;
   border-radius: 2px;
 }
+
+/* ── Ticker band (src/components/ui/Ticker.tsx) ─────────────────────────── */
+/* True CSS-only infinite marquee. The component renders [...items, ...items]
+   inside .ticker-track; animating translateX(0) → -50% produces a seamless
+   loop because the second half starts exactly where the first begins. */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.ticker-band .ticker-track {
+  animation: ticker-scroll var(--ticker-duration, 25s) linear infinite;
+  will-change: transform;
+  width: max-content;
+}
+
+.ticker-band:hover .ticker-track,
+.ticker-band:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-band .ticker-track {
+    animation: none;
+    transform: translateX(0);
+  }
+}
