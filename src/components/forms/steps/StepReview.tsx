@@ -1,4 +1,5 @@
 'use client'
+'use no memo' // react-hook-form's useFormContext().watch() is not compiler-safe
 
 import { useFormContext } from 'react-hook-form'
 
