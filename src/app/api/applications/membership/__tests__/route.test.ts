@@ -121,7 +121,7 @@ describe('POST /api/applications/membership', () => {
       expect(res.status).toBe(200)
       expect(mockNotionCreate).toHaveBeenCalledOnce()
 
-      const { properties } = mockNotionCreate.mock.calls[0][0]
+      const { properties } = mockNotionCreate.mock.calls[0]![0] as { properties: Record<string, unknown> }
 
       // Title
       expect(properties['Full Name']).toEqual({
@@ -179,7 +179,7 @@ describe('POST /api/applications/membership', () => {
       const body = validBody({ _t: 1_700_000_000_000 - 5000 })
 
       await POST(makeRequest(body))
-      const { properties } = mockNotionCreate.mock.calls[0][0]
+      const { properties } = mockNotionCreate.mock.calls[0]![0] as { properties: Record<string, unknown> }
 
       // These should NOT be present when the input doesn't include them
       expect(properties['LinkedIn URL']).toBeUndefined()
@@ -196,7 +196,7 @@ describe('POST /api/applications/membership', () => {
       // Miami
       let res = await POST(makeRequest(validBody({ _t: 1_700_000_000_000 - 5000, city: 'Miami Beach' })))
       expect(res.status).toBe(200)
-      expect(mockNotionCreate.mock.calls[0][0].properties['Location']).toEqual({
+      expect((mockNotionCreate.mock.calls[0]![0] as Record<string, unknown> & { properties: Record<string, unknown> }).properties['Location']).toEqual({
         select: { name: 'Miami' },
       })
 
@@ -204,7 +204,7 @@ describe('POST /api/applications/membership', () => {
 
       // US city
       res = await POST(makeRequest(validBody({ _t: 1_700_000_000_000 - 5000, city: 'New York', email: 'ny@example.com' })))
-      expect(mockNotionCreate.mock.calls[0][0].properties['Location']).toEqual({
+      expect((mockNotionCreate.mock.calls[0]![0] as Record<string, unknown> & { properties: Record<string, unknown> }).properties['Location']).toEqual({
         select: { name: 'Other US' },
       })
 
@@ -212,14 +212,14 @@ describe('POST /api/applications/membership', () => {
 
       // International
       res = await POST(makeRequest(validBody({ _t: 1_700_000_000_000 - 5000, city: 'London', email: 'london@example.com' })))
-      expect(mockNotionCreate.mock.calls[0][0].properties['Location']).toEqual({
+      expect((mockNotionCreate.mock.calls[0]![0] as Record<string, unknown> & { properties: Record<string, unknown> }).properties['Location']).toEqual({
         select: { name: 'International' },
       })
     })
 
     test('database_id uses env.NOTION_MEMBER_DB_ID', async () => {
       await POST(makeRequest(validBody({ _t: 1_700_000_000_000 - 5000 })))
-      expect(mockNotionCreate.mock.calls[0][0].parent).toEqual({
+      expect((mockNotionCreate.mock.calls[0]![0] as Record<string, unknown>).parent).toEqual({
         database_id: 'mock-member-db',
       })
     })

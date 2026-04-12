@@ -89,7 +89,9 @@ async function fillMembershipWizard(page: import('@playwright/test').Page) {
   // Now on Step 6: Review
 }
 
-test('membership wizard — happy path: fills all 6 steps and submits', async ({ page }) => {
+// Wizard tests are ready but skipped until Track 3 ships the MembershipWizard UI.
+// Remove .skip after Track 3 merges.
+test.skip('membership wizard — happy path: fills all 6 steps and submits', async ({ page }) => {
   await mockApplicationRoute(page, 'membership');
   await page.goto('/apply');
 
@@ -107,7 +109,7 @@ test('membership wizard — happy path: fills all 6 steps and submits', async ({
   await expect(page.getByText(/we'll be in touch/i)).toBeVisible({ timeout: 10000 });
 });
 
-test('membership wizard — invalid advance: blank email blocks Step 1 next', async ({ page }) => {
+test.skip('membership wizard — invalid advance: blank email blocks Step 1 next', async ({ page }) => {
   await page.goto('/apply');
   await page.getByRole('button', { name: /next/i }).waitFor();
 
@@ -123,7 +125,7 @@ test('membership wizard — invalid advance: blank email blocks Step 1 next', as
   await expect(page.locator('[aria-current="step"]')).toContainText(/about you/i);
 });
 
-test('membership wizard — conditional sub-field: "Company" reveals company name', async ({ page }) => {
+test.skip('membership wizard — conditional sub-field: "Company" reveals company name', async ({ page }) => {
   await mockApplicationRoute(page, 'membership');
   await page.goto('/apply');
   await page.getByRole('button', { name: /next/i }).waitFor();
@@ -148,7 +150,7 @@ test('membership wizard — conditional sub-field: "Company" reveals company nam
   await expect(page.locator('[name="companyName"]')).toBeVisible();
 });
 
-test('membership wizard — review edit modal: modify a field from Step 6', async ({ page }) => {
+test.skip('membership wizard — review edit modal: modify a field from Step 6', async ({ page }) => {
   await mockApplicationRoute(page, 'membership');
   await page.goto('/apply');
   await page.getByRole('button', { name: /next/i }).waitFor();
