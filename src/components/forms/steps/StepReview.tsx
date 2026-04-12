@@ -100,13 +100,12 @@ function EditableField({
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(null)
 
+  // Focus the input when entering edit mode
   useEffect(() => {
     if (editing) {
-      setLocalValue(value ?? '')
-      setError(null)
       requestAnimationFrame(() => inputRef.current?.focus())
     }
-  }, [editing, value])
+  }, [editing])
 
   if (!value && !editing) return null
 
@@ -191,7 +190,7 @@ function EditableField({
         <span style={FIELD_LABEL_STYLE}>{label}</span>
         <button
           type="button"
-          onClick={() => setEditing(true)}
+          onClick={() => { setLocalValue(value ?? ''); setError(null); setEditing(true) }}
           aria-label={`Edit ${label}`}
           style={EDIT_ICON_STYLE}
           onMouseEnter={(e) => { e.currentTarget.style.opacity = '1' }}
