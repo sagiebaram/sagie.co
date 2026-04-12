@@ -9,7 +9,6 @@ import type { z } from 'zod'
 import { MembershipSchema } from '@/lib/schemas'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { WizardNav } from '@/components/ui/WizardNav'
-import { StepEditModal } from '@/components/ui/StepEditModal'
 import { StepAboutYou } from '@/components/forms/steps/StepAboutYou'
 import { StepLocation } from '@/components/forms/steps/StepLocation'
 import { StepProfessionalIdentity } from '@/components/forms/steps/StepProfessionalIdentity'
@@ -79,9 +78,6 @@ export function MembershipWizard() {
   const [isRateLimited, setIsRateLimited] = useState(false)
   const [privacyConsent, setPrivacyConsent] = useState(false)
   const [privacyError, setPrivacyError] = useState(false)
-
-  // Edit modal state
-  const [editingStep, setEditingStep] = useState<StepId | null>(null)
 
   const methods = useForm<MembershipFormData>({
     resolver: zodResolver(MembershipSchema),
@@ -249,22 +245,6 @@ export function MembershipWizard() {
     }
   }, [isRateLimited, privacyConsent, trigger, methods])
 
-  // --- Edit modal handlers ---
-  const handleOpenEdit = useCallback((stepId: StepId) => {
-    setEditingStep(stepId)
-  }, [])
-
-  const handleCloseEdit = useCallback(() => {
-    setEditingStep(null)
-  }, [])
-
-  const handleSaveEdit = useCallback(async () => {
-    if (!editingStep) return
-    const fields = STEP_FIELDS[editingStep]
-    const valid = await trigger(fields)
-    if (valid) setEditingStep(null)
-  }, [editingStep, trigger])
-
   // --- Success state ---
   if (success) {
     return (
@@ -298,27 +278,8 @@ export function MembershipWizard() {
             privacyConsent={privacyConsent}
             onPrivacyChange={setPrivacyConsent}
             privacyError={privacyError}
-            onOpenEdit={handleOpenEdit}
           />
         )
-      default:
-        return null
-    }
-  })()
-
-  const editStepContent = (() => {
-    if (!editingStep) return null
-    switch (editingStep) {
-      case 'about-you':
-        return <StepAboutYou />
-      case 'location':
-        return <StepLocation />
-      case 'professional-identity':
-        return <StepProfessionalIdentity />
-      case 'role-and-needs':
-        return <StepRoleAndNeeds />
-      case 'tell-us-more':
-        return <StepTellUsMore />
       default:
         return null
     }
@@ -378,24 +339,6 @@ export function MembershipWizard() {
           />
         </form>
 
-        {/* Edit modal (ADR §7) */}
-        <StepEditModal
-          isOpen={editingStep !== null}
-          onClose={handleCloseEdit}
-          stepId={editingStep ?? ''}
-          stepLabel={editingStep ? STEP_LABELS[editingStep] : ''}
-        >
-          {editStepContent}
-          <div className="mt-6 flex justify-end">
-            <button
-              type="button"
-              onClick={handleSaveEdit}
-              className="inline-flex items-center justify-center font-body uppercase text-[13px] tracking-[0.14em] px-[28px] py-3 bg-silver text-background hover:bg-silver-bright transition-all duration-150"
-            >
-              Save
-            </button>
-          </div>
-        </StepEditModal>
       </FormProvider>
     </div>
   )
