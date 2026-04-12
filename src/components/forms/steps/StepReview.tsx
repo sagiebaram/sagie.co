@@ -14,8 +14,6 @@ interface StepReviewProps {
   privacyError: boolean
 }
 
-// --- Styles ---
-
 const SECTION_HEADER_STYLE: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -35,22 +33,10 @@ const SECTION_TITLE_STYLE: React.CSSProperties = {
   margin: 0,
 }
 
-const PREVIEW_STYLE: React.CSSProperties = {
-  fontSize: '11px',
-  color: 'var(--text-dim)',
-  fontFamily: 'var(--font-body)',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  maxWidth: '60%',
-  textAlign: 'right',
-}
-
 const CHEVRON_STYLE: React.CSSProperties = {
   fontSize: '10px',
   color: 'var(--text-dim)',
   transition: 'transform 0.15s',
-  marginLeft: '8px',
   flexShrink: 0,
 }
 
@@ -74,11 +60,11 @@ const EDIT_ICON_STYLE: React.CSSProperties = {
   border: 'none',
   color: 'var(--text-dim)',
   cursor: 'pointer',
-  padding: '2px 4px',
-  fontSize: '11px',
+  padding: '0 4px',
+  fontSize: '10px',
   lineHeight: 1,
   flexShrink: 0,
-  opacity: 0.6,
+  opacity: 0.5,
   transition: 'opacity 0.15s',
 }
 
@@ -108,32 +94,41 @@ function EditableField({
   type?: 'text' | 'textarea' | 'select'
   options?: readonly string[]
 }) {
-  const { setValue } = useFormContext<MembershipFormData>()
+  const { setValue, trigger } = useFormContext<MembershipFormData>()
   const [editing, setEditing] = useState(false)
   const [localValue, setLocalValue] = useState(value ?? '')
+  const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(null)
 
   useEffect(() => {
     if (editing) {
       setLocalValue(value ?? '')
+      setError(null)
       requestAnimationFrame(() => inputRef.current?.focus())
     }
   }, [editing, value])
 
   if (!value && !editing) return null
 
-  const save = () => {
+  const save = async () => {
     setValue(fieldName, localValue as never, { shouldDirty: true })
-    setEditing(false)
+    const valid = await trigger(fieldName)
+    if (!valid) {
+      setError('Invalid value')
+    } else {
+      setError(null)
+      setEditing(false)
+    }
   }
 
   const cancel = () => {
     setLocalValue(value ?? '')
+    setError(null)
     setEditing(false)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && type !== 'textarea') save()
+    if (e.key === 'Enter' && type !== 'textarea') { e.preventDefault(); void save() }
     if (e.key === 'Escape') cancel()
   }
 
@@ -146,7 +141,7 @@ function EditableField({
             ref={inputRef as React.RefObject<HTMLTextAreaElement>}
             value={localValue}
             onChange={(e) => setLocalValue(e.target.value)}
-            onBlur={save}
+            onBlur={() => void save()}
             onKeyDown={(e) => { if (e.key === 'Escape') cancel() }}
             rows={3}
             style={{ ...INPUT_STYLE, resize: 'vertical', lineHeight: '1.5' }}
@@ -156,10 +151,14 @@ function EditableField({
             ref={inputRef as React.RefObject<HTMLSelectElement>}
             value={localValue}
             onChange={(e) => {
-              setValue(fieldName, e.target.value as never, { shouldDirty: true })
-              setEditing(false)
+              const v = e.target.value
+              setLocalValue(v)
+              setValue(fieldName, v as never, { shouldDirty: true })
+              void trigger(fieldName).then((valid) => {
+                if (valid) setEditing(false)
+              })
             }}
-            onBlur={save}
+            onBlur={() => void save()}
             onKeyDown={handleKeyDown}
             style={INPUT_STYLE}
           >
@@ -174,33 +173,34 @@ function EditableField({
             type="text"
             value={localValue}
             onChange={(e) => setLocalValue(e.target.value)}
-            onBlur={save}
+            onBlur={() => void save()}
             onKeyDown={handleKeyDown}
             style={INPUT_STYLE}
           />
+        )}
+        {error && (
+          <span style={{ fontSize: '10px', color: 'var(--color-error)', fontFamily: 'var(--font-body)' }}>{error}</span>
         )}
       </div>
     )
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '4px', padding: '4px 0' }}>
-      <div style={{ flex: 1, minWidth: 0 }}>
+    <div style={{ padding: '4px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
         <span style={FIELD_LABEL_STYLE}>{label}</span>
-        <div style={{ ...FIELD_VALUE_STYLE, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {value}
-        </div>
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          aria-label={`Edit ${label}`}
+          style={EDIT_ICON_STYLE}
+          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1' }}
+          onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.5' }}
+        >
+          ✎
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={() => setEditing(true)}
-        aria-label={`Edit ${label}`}
-        style={EDIT_ICON_STYLE}
-        onMouseEnter={(e) => { e.currentTarget.style.opacity = '1' }}
-        onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.6' }}
-      >
-        ✎
-      </button>
+      <div style={FIELD_VALUE_STYLE}>{value}</div>
     </div>
   )
 }
@@ -208,23 +208,21 @@ function EditableField({
 function ReviewTags({ label, tags }: { label: string; tags: readonly string[] }) {
   if (tags.length === 0) return null
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', padding: '4px 0' }}>
+    <div style={{ padding: '4px 0' }}>
       <span style={FIELD_LABEL_STYLE}>{label}</span>
-      <span style={FIELD_VALUE_STYLE}>{tags.join(', ')}</span>
+      <div style={FIELD_VALUE_STYLE}>{tags.join(', ')}</div>
     </div>
   )
 }
 
-// --- Collapsible section ---
+// --- Collapsible section (no preview snippet) ---
 
 function Section({
   title,
-  preview,
   defaultOpen,
   children,
 }: {
   title: string
-  preview: string
   defaultOpen?: boolean
   children: React.ReactNode
 }) {
@@ -241,10 +239,7 @@ function Section({
         aria-expanded={open}
       >
         <h3 style={SECTION_TITLE_STYLE}>{title}</h3>
-        <div style={{ display: 'flex', alignItems: 'center', minWidth: 0, flex: 1, justifyContent: 'flex-end' }}>
-          {!open && <span style={PREVIEW_STYLE}>{preview}</span>}
-          <span style={{ ...CHEVRON_STYLE, transform: open ? 'rotate(180deg)' : 'none' }}>▾</span>
-        </div>
+        <span style={{ ...CHEVRON_STYLE, transform: open ? 'rotate(180deg)' : 'none' }}>▾</span>
       </div>
       {open && (
         <div style={{ padding: '4px 0 8px' }}>
@@ -255,34 +250,6 @@ function Section({
   )
 }
 
-// --- Preview snippet helpers ---
-
-function aboutPreview(data: MembershipFormData): string {
-  const parts = [data.fullName, data.email].filter(Boolean)
-  return parts.join(' · ') || '—'
-}
-
-function locationPreview(data: MembershipFormData): string {
-  const parts = [data.city, data.state, data.country].filter(Boolean)
-  return parts.join(', ') || '—'
-}
-
-function identityPreview(data: MembershipFormData): string {
-  const styles = data.workStyle ?? []
-  return styles.join(', ') || '—'
-}
-
-function rolePreview(data: MembershipFormData): string {
-  const tags = data.identityTags ?? []
-  return tags.length > 0 ? tags.slice(0, 3).join(', ') + (tags.length > 3 ? '…' : '') : '—'
-}
-
-function morePreview(data: MembershipFormData): string {
-  return data.referralSource || '—'
-}
-
-// --- Main review component ---
-
 export function StepReview({ privacyConsent, onPrivacyChange, privacyError }: StepReviewProps) {
   const { watch, setValue } = useFormContext<MembershipFormData>()
   const data = watch()
@@ -291,33 +258,33 @@ export function StepReview({ privacyConsent, onPrivacyChange, privacyError }: St
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-      <Section title="About" preview={aboutPreview(data)}>
+      <Section title="About">
         <EditableField label="Name" value={data.fullName} fieldName="fullName" />
         <EditableField label="Email" value={data.email} fieldName="email" />
         <EditableField label="Phone" value={data.phone} fieldName="phone" />
         <EditableField label="LinkedIn" value={data.linkedIn} fieldName="linkedIn" />
       </Section>
 
-      <Section title="Location" preview={locationPreview(data)}>
+      <Section title="Location">
         <EditableField label="Country" value={data.country} fieldName="country" />
         <EditableField label="State" value={data.state} fieldName="state" />
         <EditableField label="City" value={data.city} fieldName="city" />
       </Section>
 
-      <Section title="Identity" preview={identityPreview(data)}>
+      <Section title="Identity">
         <ReviewTags label="Work Style" tags={data.workStyle ?? []} />
         <EditableField label="Company" value={data.companyName} fieldName="companyName" />
         <EditableField label="Organization" value={data.organizationName} fieldName="organizationName" />
         <EditableField label="Freelancer" value={data.freelancerDescription} fieldName="freelancerDescription" />
       </Section>
 
-      <Section title="Role" preview={rolePreview(data)}>
+      <Section title="Role">
         <ReviewTags label="I am a..." tags={data.identityTags ?? []} />
         <ReviewTags label="Looking for..." tags={data.needTags ?? []} />
         <EditableField label="Services offered" value={data.serviceProviderDetail} fieldName="serviceProviderDetail" type="textarea" />
       </Section>
 
-      <Section title="More" preview={morePreview(data)}>
+      <Section title="More">
         <EditableField label="Building / working on" value={data.whatTheyNeed} fieldName="whatTheyNeed" type="textarea" />
         <EditableField label="Looking for in community" value={data.communityExpectation} fieldName="communityExpectation" type="textarea" />
         <EditableField label="Community means" value={data.communityMeaning} fieldName="communityMeaning" type="textarea" />
