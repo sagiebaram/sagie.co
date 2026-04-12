@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Apply',
+  title: 'Apply to Join SAGIE ECO | SAGIE',
 }
 
 import { Navbar } from '@/components/layout/Navbar'
@@ -9,11 +9,7 @@ import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { GridBackground } from '@/components/ui/GridBackground'
 import { SplitTextReveal } from '@/components/ui/SplitTextReveal'
-
-// NOTE: The legacy MembershipForm has been removed. The 6-step MembershipWizard
-// is being built in Track 3 (see .planning/ADR-MEMBERSHIP-WIZARD.md). Until it
-// lands, this page renders a simple placeholder so the /apply route still
-// resolves and the rest of the site builds/typechecks cleanly.
+import { MembershipWizard } from '@/components/forms/MembershipWizard'
 
 export default function ApplyPage() {
   return (
@@ -34,18 +30,7 @@ export default function ApplyPage() {
           <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
             Every application is reviewed. The community is curated by design.
           </p>
-          <div
-            data-testid="membership-wizard-placeholder"
-            className="border border-border-default bg-background-card px-8 py-12 text-foreground-muted font-body text-body leading-[1.7]"
-          >
-            <p className="uppercase text-[11px] tracking-[0.14em] text-foreground-dim mb-3">
-              Coming soon
-            </p>
-            <p>
-              The new membership application is being rebuilt as a 6-step wizard.
-              Check back shortly — the form will live here.
-            </p>
-          </div>
+          <MembershipWizard />
         </div>
       </section>
 
