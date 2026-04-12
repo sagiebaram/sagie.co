@@ -73,6 +73,7 @@ export function MembershipWizard() {
 
   const [completedSteps, setCompletedSteps] = useState<Set<StepId>>(new Set())
   const [fadeClass, setFadeClass] = useState('wizard-step-active')
+  const isFirstRender = useRef(true)
   const [success, setSuccess] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
@@ -159,14 +160,24 @@ export function MembershipWizard() {
   }, [step])
 
   // --- Fade transition (ADR §1) ---
+  // Drive fade-in from useEffect so it fires AFTER React commits the new step
+  // to the DOM, avoiding the batched-state race condition.
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+    // Step just changed — the div is mounted with .wizard-step-enter (opacity:0).
+    // Wait one frame for the browser to paint, then swap to .wizard-step-active.
+    const rafId = requestAnimationFrame(() => {
+      setFadeClass('wizard-step-active')
+    })
+    return () => cancelAnimationFrame(rafId)
+  }, [step])
+
   const transitionToStep = useCallback((nextStep: StepId) => {
     setFadeClass('wizard-step-enter')
     setStep(nextStep)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setFadeClass('wizard-step-active')
-      })
-    })
   }, [setStep])
 
   // --- Navigation ---
