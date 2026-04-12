@@ -36,75 +36,69 @@ export const POST = withValidation(MembershipSchema, async (_req: Request, rawBo
   try {
     const body = sanitizeRecord(rawBody)
 
-    try {
-      await notionWrite(() =>
-        notion.pages.create({
-          parent: { database_id: env.NOTION_MEMBER_DB_ID },
-          properties: {
-            'Full Name': { title: [{ text: { content: body.fullName } }] },
-            Email: { email: body.email },
-            Location: { select: { name: mapLocation(body.city || '') } },
-            ...(body.country ? { Country: { select: { name: body.country } } } : {}),
-            Phone: { phone_number: body.phone },
-            Tier: { select: { name: body.tier || 'Explorer' } },
-            Status: { select: { name: 'New' } },
-            'Application Status': { select: { name: 'Pending Review' } },
-            'Application Source': { select: { name: 'Website Form' } },
-            ...(body.linkedIn
-              ? { 'LinkedIn URL': { url: body.linkedIn } }
-              : {}),
-            // ADR-MEMBERSHIP-WIZARD §5 — new properties for the 6-step wizard
-            'Work Style': {
-              multi_select: body.workStyle.map((w: string) => ({ name: w })),
-            },
-            'Identity Tags': {
-              multi_select: body.identityTags.map((t: string) => ({ name: t })),
-            },
-            'Need Tags': {
-              multi_select: body.needTags.map((t: string) => ({ name: t })),
-            },
-            ...(body.companyName
-              ? { 'Company Name': { rich_text: [{ text: { content: body.companyName } }] } }
-              : {}),
-            ...(body.organizationName
-              ? { 'Organization Name': { rich_text: [{ text: { content: body.organizationName } }] } }
-              : {}),
-            ...(body.freelancerDescription
-              ? {
-                  'Freelancer Description': {
-                    rich_text: [{ text: { content: body.freelancerDescription } }],
-                  },
-                }
-              : {}),
-            ...(body.serviceProviderDetail
-              ? {
-                  'Service Provider Detail': {
-                    rich_text: [{ text: { content: body.serviceProviderDetail } }],
-                  },
-                }
-              : {}),
-            'What They Need': { rich_text: [{ text: { content: body.whatTheyNeed } }] },
-            'Community Expectation': {
-              rich_text: [{ text: { content: body.communityExpectation } }],
-            },
-            'Community Meaning': {
-              rich_text: [{ text: { content: body.communityMeaning } }],
-            },
-            'How They Know Sagie': {
-              rich_text: [{ text: { content: body.howTheyKnowSagie } }],
-            },
-            'Referral Source': { select: { name: body.referralSource } },
-            ...(body.referralName
-              ? { 'Referral Name': { rich_text: [{ text: { content: body.referralName } }] } }
-              : {}),
-            'Newsletter Consent': { checkbox: body.newsletterConsent ?? false },
+    await notionWrite(() =>
+      notion.pages.create({
+        parent: { database_id: env.NOTION_MEMBER_DB_ID },
+        properties: {
+          'Full Name': { title: [{ text: { content: body.fullName } }] },
+          Email: { email: body.email },
+          Location: { select: { name: mapLocation(body.city || '') } },
+          ...(body.country ? { Country: { select: { name: body.country } } } : {}),
+          Phone: { phone_number: body.phone },
+          Tier: { select: { name: body.tier || 'Explorer' } },
+          Status: { select: { name: 'New' } },
+          'Application Status': { select: { name: 'Pending Review' } },
+          'Application Source': { select: { name: 'Website Form' } },
+          ...(body.linkedIn
+            ? { 'LinkedIn URL': { url: body.linkedIn } }
+            : {}),
+          'Work Style': {
+            multi_select: body.workStyle.map((w: string) => ({ name: w })),
           },
-        }),
-      )
-    } catch (notionError) {
-      // TODO: Remove bypass once new Notion DB properties are created
-      console.error('Notion write failed (bypassed for testing):', notionError)
-    }
+          'Identity Tags': {
+            multi_select: body.identityTags.map((t: string) => ({ name: t })),
+          },
+          'Need Tags': {
+            multi_select: body.needTags.map((t: string) => ({ name: t })),
+          },
+          ...(body.companyName
+            ? { 'Company Name': { rich_text: [{ text: { content: body.companyName } }] } }
+            : {}),
+          ...(body.organizationName
+            ? { 'Organization Name': { rich_text: [{ text: { content: body.organizationName } }] } }
+            : {}),
+          ...(body.freelancerDescription
+            ? {
+                'Freelancer Description': {
+                  rich_text: [{ text: { content: body.freelancerDescription } }],
+                },
+              }
+            : {}),
+          ...(body.serviceProviderDetail
+            ? {
+                'Service Provider Detail': {
+                  rich_text: [{ text: { content: body.serviceProviderDetail } }],
+                },
+              }
+            : {}),
+          'What They Need': { rich_text: [{ text: { content: body.whatTheyNeed } }] },
+          'Community Expectation': {
+            rich_text: [{ text: { content: body.communityExpectation } }],
+          },
+          'Community Meaning': {
+            rich_text: [{ text: { content: body.communityMeaning } }],
+          },
+          'How They Know Sagie': {
+            rich_text: [{ text: { content: body.howTheyKnowSagie } }],
+          },
+          'Referral Source': { select: { name: body.referralSource } },
+          ...(body.referralName
+            ? { 'Referral Name': { rich_text: [{ text: { content: body.referralName } }] } }
+            : {}),
+          'Newsletter Consent': { checkbox: body.newsletterConsent ?? false },
+        },
+      }),
+    )
 
     void sendEmails('Membership Application', body.email, body)
     return NextResponse.json({ success: true })

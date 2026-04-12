@@ -47,72 +47,135 @@ async function mockRoute(page: import('@playwright/test').Page, path: string) {
 }
 
 // -----------------------------------------------------------------------
-// Membership form  (/apply)
-// NOTE: The legacy MembershipForm has been removed as part of Track 1
-// (wizard foundation). The 6-step MembershipWizard ships in Track 3 — the
-// membership E2E tests below are skipped until then. See
-// .planning/ADR-MEMBERSHIP-WIZARD.md.
+// Membership wizard  (/apply) — 6-step flow
+// See .planning/ADR-MEMBERSHIP-WIZARD.md
 // -----------------------------------------------------------------------
-test.skip('membership form submits and shows success state', async ({ page }) => {
+
+/**
+ * Fill the full 6-step membership wizard and navigate to the review step.
+ * Extracted so individual tests can share setup without duplicating selectors.
+ */
+async function fillMembershipWizard(page: import('@playwright/test').Page) {
+  // ── Step 1: About You ──
+  await page.fill('[name="fullName"]', 'Ada Lovelace');
+  await page.fill('[name="email"]', 'ada@example.com');
+  await page.locator('.phone-input-dark input[type="tel"]').pressSequentially('+44 20 7946 0958');
+  await page.fill('[name="linkedIn"]', 'https://linkedin.com/in/ada-lovelace');
+  await page.getByRole('button', { name: /next/i }).click();
+
+  // ── Step 2: Location ──
+  await selectDropdownOption(page, 'country', 'United Kingdom');
+  await selectDropdownOption(page, 'city', 'London');
+  await page.getByRole('button', { name: /next/i }).click();
+
+  // ── Step 3: Professional Identity ──
+  await page.getByRole('checkbox', { name: /company/i }).check();
+  await page.fill('[name="companyName"]', 'Analytical Engine Co.');
+  await page.getByRole('button', { name: /next/i }).click();
+
+  // ── Step 4: Role & Needs ──
+  await page.getByRole('checkbox', { name: /founder/i }).check();
+  await page.getByRole('checkbox', { name: /funding/i }).check();
+  await page.getByRole('button', { name: /next/i }).click();
+
+  // ── Step 5: Tell Us More ──
+  await page.fill('[name="whatTheyNeed"]', 'Building a compiler for the next century of computing.');
+  await page.fill('[name="communityExpectation"]', 'Access to a network of forward-thinking technologists.');
+  await page.fill('[name="communityMeaning"]', 'A shared commitment to solving hard problems together.');
+  await page.fill('[name="howTheyKnowSagie"]', 'I heard about SAGIE from a colleague at a conference.');
+  await selectDropdownOption(page, 'referralSource', 'Friend or Colleague');
+  await page.getByRole('button', { name: /next/i }).click();
+
+  // Now on Step 6: Review
+}
+
+// Wizard tests are ready but skipped until Track 3 ships the MembershipWizard UI.
+// Remove .skip after Track 3 merges.
+test.skip('membership wizard — happy path: fills all 6 steps and submits', async ({ page }) => {
   await mockApplicationRoute(page, 'membership');
   await page.goto('/apply');
 
-  // Fill required text / email inputs using name attributes
-  await page.fill('[name="fullName"]', 'Ada Lovelace');
-  await page.fill('[name="email"]', 'ada@example.com');
+  // Wait for wizard hydration
+  await page.getByRole('button', { name: /next/i }).waitFor();
 
-  // Country → State → City cascade (US requires state)
-  await selectDropdownOption(page, 'country', 'United Kingdom');
-  // UK has curated cities — select from dropdown
-  await selectDropdownOption(page, 'city', 'London');
+  await fillMembershipWizard(page);
 
-  // Phone (required) — react-phone-number-input renders an input inside .phone-input-dark
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
-
-  // Role is a custom dropdown — click trigger then option
-  await selectDropdownOption(page, 'role', 'Founder');
-
-  // Optional fields
-  await page.fill('[name="company"]', 'Analytical Engine Co.');
-  await page.fill('[name="whatTheyOffer"]', 'First algorithms ever written.');
-
-  // Click at least one category checkbox (custom div role="checkbox")
-  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
-
-  // Required textareas
-  await page.fill('[name="whatTheyNeed"]', 'Building a compiler for the next century.');
-  await page.fill('[name="howTheyKnowSagie"]', 'I heard about SAGIE from a colleague at a conference.');
-
-  // Accept privacy consent
+  // Step 6: Review — accept privacy consent and submit
   await page.getByRole('checkbox', { name: /privacy policy/i }).check();
-
-  // Click submit button
   await page.getByRole('button', { name: /submit application/i }).click();
 
-  // FormSuccess renders "Application received" eyebrow + headline
+  // FormSuccess state
   await expect(page.getByText('Application received')).toBeVisible({ timeout: 10000 });
   await expect(page.getByText(/we'll be in touch/i)).toBeVisible({ timeout: 10000 });
 });
 
-// -----------------------------------------------------------------------
-// Membership form — blur validation (skipped — see note above)
-// -----------------------------------------------------------------------
-test.skip('membership form shows blur validation errors', async ({ page }) => {
+test.skip('membership wizard — invalid advance: blank email blocks Step 1 next', async ({ page }) => {
   await page.goto('/apply');
-  // Wait for react-hook-form hydration — submit button is rendered by the form component
-  await page.getByRole('button', { name: /submit application/i }).waitFor();
+  await page.getByRole('button', { name: /next/i }).waitFor();
 
-  // Click into fullName and blur without entering anything
-  await page.locator('[name="fullName"]').focus();
-  await page.locator('[name="fullName"]').blur();
+  // Fill only the name, leave email blank
+  await page.fill('[name="fullName"]', 'Ada Lovelace');
 
-  // Error message should appear
-  await expect(page.getByText('What should we call you?')).toBeVisible({ timeout: 5000 });
+  // Try to advance
+  await page.getByRole('button', { name: /next/i }).click();
 
-  // Type a valid value — error should clear (blur triggers revalidation)
-  await page.locator('[name="fullName"]').fill('Ada Lovelace');
-  await page.locator('[name="fullName"]').blur();
-  await expect(page.getByText('What should we call you?')).not.toBeVisible({ timeout: 5000 });
+  // Should show email validation error and remain on Step 1
+  await expect(page.getByText(/valid email/i)).toBeVisible({ timeout: 5000 });
+  // Progress bar should still show step 1 as current
+  await expect(page.locator('[aria-current="step"]')).toContainText(/about you/i);
+});
+
+test.skip('membership wizard — conditional sub-field: "Company" reveals company name', async ({ page }) => {
+  await mockApplicationRoute(page, 'membership');
+  await page.goto('/apply');
+  await page.getByRole('button', { name: /next/i }).waitFor();
+
+  // Navigate to Step 3 (fill Steps 1-2 first)
+  await page.fill('[name="fullName"]', 'Ada Lovelace');
+  await page.fill('[name="email"]', 'ada@example.com');
+  await page.locator('.phone-input-dark input[type="tel"]').pressSequentially('+44 20 7946 0958');
+  await page.getByRole('button', { name: /next/i }).click();
+
+  await selectDropdownOption(page, 'country', 'United Kingdom');
+  await selectDropdownOption(page, 'city', 'London');
+  await page.getByRole('button', { name: /next/i }).click();
+
+  // Step 3: Company name field should NOT be visible before selecting Company
+  await expect(page.locator('[name="companyName"]')).not.toBeVisible();
+
+  // Select "Company" checkbox
+  await page.getByRole('checkbox', { name: /company/i }).check();
+
+  // Company name field should now appear
+  await expect(page.locator('[name="companyName"]')).toBeVisible();
+});
+
+test.skip('membership wizard — review edit modal: modify a field from Step 6', async ({ page }) => {
+  await mockApplicationRoute(page, 'membership');
+  await page.goto('/apply');
+  await page.getByRole('button', { name: /next/i }).waitFor();
+
+  await fillMembershipWizard(page);
+
+  // Step 6: Review — verify summary shows the name we entered
+  await expect(page.getByText('Ada Lovelace')).toBeVisible();
+
+  // Click "Edit" for the About You section
+  await page.getByRole('button', { name: /edit.*about you/i }).click();
+
+  // Edit modal should open
+  const modal = page.getByRole('dialog');
+  await expect(modal).toBeVisible();
+
+  // Change the name in the modal
+  await modal.locator('[name="fullName"]').fill('Augusta Ada King');
+
+  // Close the modal (save / done button)
+  await modal.getByRole('button', { name: /save|done|close/i }).click();
+
+  // Modal should close and the review summary should show updated name
+  await expect(modal).not.toBeVisible();
+  await expect(page.getByText('Augusta Ada King')).toBeVisible();
 });
 
 // -----------------------------------------------------------------------
@@ -300,7 +363,7 @@ test('suggest event form shows blur validation errors', async ({ page }) => {
 });
 
 // -----------------------------------------------------------------------
-// API Error Paths
+// API Error Paths (membership wizard) — skipped until Track 3 UI ships
 // -----------------------------------------------------------------------
 test.skip('API rate limiting returns 429 and shows error', async ({ page }) => {
   await page.route('**/api/applications/membership', async (route) => {
@@ -311,20 +374,12 @@ test.skip('API rate limiting returns 429 and shows error', async ({ page }) => {
     }
   });
   await page.goto('/apply');
-  // Fill necessary fields to enable submit
-  await page.fill('[name="fullName"]', 'Ada Lovelace');
-  await page.fill('[name="email"]', 'ada@example.com');
-  await selectDropdownOption(page, 'country', 'United Kingdom');
-  await selectDropdownOption(page, 'city', 'London');
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
-  await selectDropdownOption(page, 'role', 'Founder');
-  await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
-  await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
-  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
-  await page.getByRole('checkbox', { name: /privacy policy/i }).check();
+  await page.getByRole('button', { name: /next/i }).waitFor();
 
+  await fillMembershipWizard(page);
+  await page.getByRole('checkbox', { name: /privacy policy/i }).check();
   await page.getByRole('button', { name: /submit application/i }).click();
-  // Form submission failure shows generic fallback or specific error. Usually a toast or error block
+
   await expect(page.getByText(/You've submitted several times recently|Too many requests/i)).toBeVisible({ timeout: 10000 });
 });
 
@@ -337,21 +392,12 @@ test.skip('API invalid data returns 422 and shows field errors', async ({ page }
     }
   });
   await page.goto('/apply');
-  
-  await page.fill('[name="fullName"]', 'Ada Lovelace');
-  await page.fill('[name="email"]', 'ada@example.com');
-  await selectDropdownOption(page, 'country', 'United Kingdom');
-  await selectDropdownOption(page, 'city', 'London');
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
-  await selectDropdownOption(page, 'role', 'Founder');
-  await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
-  await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
-  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
-  await page.getByRole('checkbox', { name: /privacy policy/i }).check();
+  await page.getByRole('button', { name: /next/i }).waitFor();
 
+  await fillMembershipWizard(page);
+  await page.getByRole('checkbox', { name: /privacy policy/i }).check();
   await page.getByRole('button', { name: /submit application/i }).click();
 
-  // The form component maps 422 errors back to UI fields
   await expect(page.getByText('Invalid email address (from mocked)')).toBeVisible({ timeout: 10000 });
 });
 
@@ -364,18 +410,10 @@ test.skip('API Notion failure returns 500 and shows generic error', async ({ pag
     }
   });
   await page.goto('/apply');
-  
-  await page.fill('[name="fullName"]', 'Ada Lovelace');
-  await page.fill('[name="email"]', 'ada@example.com');
-  await selectDropdownOption(page, 'country', 'United Kingdom');
-  await selectDropdownOption(page, 'city', 'London');
-  await page.locator('.phone-input-dark input[type="tel"]').fill('+44 20 7946 0958');
-  await selectDropdownOption(page, 'role', 'Founder');
-  await page.fill('[name="whatTheyNeed"]', 'Building a compiler.');
-  await page.fill('[name="howTheyKnowSagie"]', 'Word of mouth.');
-  await page.locator('#category [role="checkbox"]', { hasText: 'Founder' }).click();
-  await page.getByRole('checkbox', { name: /privacy policy/i }).check();
+  await page.getByRole('button', { name: /next/i }).waitFor();
 
+  await fillMembershipWizard(page);
+  await page.getByRole('checkbox', { name: /privacy policy/i }).check();
   await page.getByRole('button', { name: /submit application/i }).click();
 
   await expect(page.getByText(/Something went wrong|Internal Server Error/i)).toBeVisible({ timeout: 10000 });
