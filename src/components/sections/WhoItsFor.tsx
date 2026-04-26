@@ -61,7 +61,7 @@ export function WhoItsFor() {
       <Eyebrow>Who it&apos;s for</Eyebrow>
 
       <p style={{
-        fontSize: '14px',
+        fontSize: '13px',
         color: 'var(--silver)',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',

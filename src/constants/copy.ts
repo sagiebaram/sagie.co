@@ -112,9 +112,9 @@ export const FOUNDER = {
   name: 'Sagie Baram',
   title: 'Ecosystem Architect \u00B7 Fractional Executive \u00B7 Startup Consultant',
   paragraphs: [
-    'Community building started early. Gaming communities of 10, then 100, then 1,000+. The lesson learned then still drives everything today \u2014 shared vision and real engagement create something that lasts.',
-    'That principle deepened through open source work. Trust, accountability, collaboration, transparency \u2014 not values on a wall, but an actual operating system for how people build together. The collective always outlasts the individual.',
-    "SAGIE was built from that belief. Shaped by philosophies, by the people met along the way, by a neurodivergent mind that connects dots others don\u2019t see \u2014 ideas, people, industries, cultures.",
+    'Community building started early. Gaming communities of 10, then 100, then 1,000+. The lesson learned then still drives everything today - shared vision and real engagement create something that lasts.',
+    'That principle deepened through open source work, and building a community around it. Trust, transparency, accountability, contribuation, collaboration - not values on a wall, but an actual operating system for how people build together. The collective always outlasts the individual.',
+    "SAGIE was built from that belief. Shaped by philosophies, by the people met along the way, by a neurodivergent mind that connects dots others don\u2019t see - ideas, people, industries, cultures.",
     "What you give is what you receive. That\u2019s not a tagline. It\u2019s what made all of this real.",
     'What started as a vision became a system. What started as a system became a movement.',
   ],
