@@ -37,7 +37,7 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
           <p className="font-body text-foreground-muted mb-10 text-body-lg font-light leading-[1.75] max-w-[380px]">
             {CHAPTER_SECTION.body}
           </p>
-          <span className="inline-block font-body uppercase text-button tracking-button px-[34px] py-4 opacity-40 cursor-default border border-border-subtle text-foreground-muted">
+          <span className="inline-block font-body uppercase text-button tracking-button px-[34px] py-4 opacity-40 cursor-default border border-border-subtle text-foreground-muted hover:opacity-100 hover:text-silver hover:border-silver transition-all duration-200">
             Coming Soon
           </span>
         </div>

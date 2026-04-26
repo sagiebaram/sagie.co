@@ -38,7 +38,7 @@ export function Hero() {
               </p>
 
               <div className="flex flex-wrap items-center gap-5">
-                <span className="hero-cta inline-block font-body uppercase text-button tracking-button px-[34px] py-4 opacity-40 cursor-default border border-border-subtle text-foreground-muted">
+                <span className="hero-cta inline-block font-body uppercase text-button tracking-button px-[34px] py-4 opacity-40 cursor-default border border-border-subtle text-foreground-muted hover:opacity-100 hover:text-silver hover:border-silver transition-all duration-200">
                   Coming Soon
                 </span>
               </div>
