@@ -1,6 +1,6 @@
 import { AnimatedLogo } from '@/components/ui/AnimatedLogo'
 import { GridBackground } from '@/components/ui/GridBackground'
-import { Button } from '@/components/ui/Button'
+
 import { HeroAnimation } from '@/components/sections/HeroAnimation'
 import { HERO } from '@/constants/copy'
 
@@ -38,7 +38,9 @@ export function Hero() {
               </p>
 
               <div className="flex flex-wrap items-center gap-5">
-                <Button variant="primary" href="/apply" className="hero-cta">{HERO.primaryCta}</Button>
+                <span className="hero-cta inline-block font-body uppercase text-button tracking-button px-[34px] py-4 opacity-40 cursor-default border border-border-subtle text-foreground-muted">
+                  Coming Soon
+                </span>
               </div>
             </div>
 

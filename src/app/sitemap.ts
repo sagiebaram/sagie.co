@@ -3,6 +3,15 @@ import { SITE } from '@/constants/copy'
 import { getAllPosts } from '@/lib/blog'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (process.env.NEXT_PUBLIC_LAUNCH_MODE === 'simple') {
+    return [{
+      url: SITE.url,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1.0,
+    }]
+  }
+
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: SITE.url,

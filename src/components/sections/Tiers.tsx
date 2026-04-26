@@ -74,28 +74,15 @@ export function Tiers() {
                 {tier.desc}
               </p>
 
-              {tier.ctaActive ? (
-                <a
-                  href="/apply"
-                  className="relative z-1 font-body uppercase inline-block text-caption tracking-mid hover:text-silver hover:-translate-y-px transition-all duration-150"
-                  style={{
-                    color: styles.cta,
-                    borderBottom: '0.5px solid var(--text-muted)',
-                  }}
-                >
-                  {tier.cta}
-                </a>
-              ) : (
-                <span
-                  className="relative z-1 font-body uppercase inline-block text-caption tracking-mid"
-                  style={{
-                    color: styles.cta,
-                    cursor: 'default',
-                  }}
-                >
-                  {tier.cta}
-                </span>
-              )}
+              <span
+                className="relative z-1 font-body uppercase inline-block text-caption tracking-mid"
+                style={{
+                  color: styles.cta,
+                  cursor: 'default',
+                }}
+              >
+                {tier.cta}
+              </span>
             </CardTilt>
           )
         })}

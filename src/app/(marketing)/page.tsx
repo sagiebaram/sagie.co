@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/layout/Navbar'
+// import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { CircuitBackground } from '@/components/ui/CircuitBackground'
 import { SectionNav, type SectionNavItem } from '@/components/ui/SectionNav'
@@ -34,7 +34,7 @@ export default async function HomePage() {
   return (
     <main id="main-content" className="relative">
       <CircuitBackground />
-      <Navbar />
+      {/* <Navbar /> */}
       <SectionNav items={SECTIONS} />
       <div id="hero"><Hero /></div>
       <div id="belief"><Belief /></div>
