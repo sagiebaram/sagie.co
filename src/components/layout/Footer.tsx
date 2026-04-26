@@ -11,7 +11,7 @@ export function Footer() {
     <footer className="relative z-1 overflow-hidden border-t border-border-strong">
       <GridBackground parallax />
       <div className="relative z-10 max-w-[880px] mx-auto px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 py-10 border-b border-border-subtle">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 py-10 border-b border-border-subtle">
 
           <div>
             <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
