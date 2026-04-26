@@ -24,7 +24,7 @@ export function HeroAnimation({ children }: { children: React.ReactNode }) {
 
       ctx = gsap.context(() => {
         const tl = gsap.timeline({
-          delay: 0.2,
+          delay: 2.0,
           onComplete: () => {
             ref.current?.removeAttribute('aria-hidden')
           },
@@ -36,21 +36,21 @@ export function HeroAnimation({ children }: { children: React.ReactNode }) {
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
+            duration: 0.8,
             ease: 'power3.out',
-            stagger: 0.15,
+            stagger: 0.12,
           }
         )
           .fromTo(
             '.hero-body',
             { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-            '-=0.3'
+            { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+            '-=0.35'
           )
           .fromTo(
             '.hero-cta',
             { opacity: 0, y: 12 },
-            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', stagger: 0.1 },
+            { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', stagger: 0.1 },
             '-=0.2'
           )
       }, ref)
