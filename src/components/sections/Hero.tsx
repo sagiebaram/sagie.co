@@ -18,14 +18,14 @@ export function Hero() {
               </div>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center md:items-start">
               {/* Mobile-only logo */}
               <div className="flex md:hidden mb-8">
                 <div className="relative w-full max-w-[260px] hero-line">
                   <AnimatedLogo variant="dark" />
                 </div>
               </div>
-              <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
+              <h1 className="font-display uppercase mb-8 text-hero leading-[0.9] text-center md:text-left">
                 {HERO.headingLines.map((line) => (
                   <span key={line.text} className={`hero-line block ${line.colorClass}`}>
                     {line.text}
@@ -33,7 +33,7 @@ export function Hero() {
                 ))}
               </h1>
 
-              <p className="hero-body font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[380px]">
+              <p className="hero-body font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[380px] text-center md:text-left">
                 {HERO.subtitle}
               </p>
 
