@@ -39,7 +39,7 @@ export function Hero() {
 
               <div className="flex flex-wrap items-center gap-5">
                 <span className="hero-cta notify-glow inline-block font-body uppercase text-button tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
-                  Notify Me
+                  Coming Soon
                 </span>
               </div>
             </div>
