@@ -271,84 +271,83 @@ export function CircuitBackground() {
   }, [])
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    setupCanvas()
-
-    // If reduced motion, draw static frame and stop
-    if (prefersReduced) {
-      const canvas = canvasRef.current
-      const ctx = canvas?.getContext('2d')
-      if (ctx && canvas) {
-        const w = canvas.offsetWidth
-        const h = canvas.offsetHeight
-        ctx.clearRect(0, 0, w, h)
-        for (const path of pathsRef.current) {
-          ctx.strokeStyle = colorsRef.current.line
-          ctx.lineWidth = 1
-          ctx.beginPath()
-          ctx.moveTo(path.points[0]!.x, path.points[0]!.y)
-          for (let i = 1; i < path.points.length; i++) {
-            ctx.lineTo(path.points[i]!.x, path.points[i]!.y)
-          }
-          ctx.stroke()
-          for (const pt of path.points) {
-            ctx.fillStyle = colorsRef.current.dot
-            ctx.beginPath()
-            ctx.arc(pt.x, pt.y, 1.8, 0, Math.PI * 2)
-            ctx.fill()
-          }
-        }
-      }
-      return
-    }
-
-    // Animation loop
-    lastTimeRef.current = performance.now()
-
-    function loop(time: number) {
-      if (document.hidden) {
-        lastTimeRef.current = time
-        animationRef.current = requestAnimationFrame(loop)
-        return
-      }
-
-      const dt = Math.min((time - lastTimeRef.current) / 1000, 0.1)
-      lastTimeRef.current = time
-
-      const canvas = canvasRef.current
-      const ctx = canvas?.getContext('2d')
-      if (ctx) {
-        draw(ctx, pathsRef.current, colorsRef.current, time, dt)
-      }
-
-      animationRef.current = requestAnimationFrame(loop)
-    }
-
-    animationRef.current = requestAnimationFrame(loop)
-
-    // Debounced resize
     let resizeTimer: ReturnType<typeof setTimeout>
     function onResize() {
       clearTimeout(resizeTimer)
-      resizeTimer = setTimeout(() => {
-        setupCanvas()
-      }, 150)
+      resizeTimer = setTimeout(() => setupCanvas(), 150)
     }
-
-    window.addEventListener('resize', onResize)
-
-    // Re-render canvas when restored from bfcache (back navigation)
     const onPageShow = (e: PageTransitionEvent) => {
       if (e.persisted) setupCanvas()
     }
-    window.addEventListener('pageshow', onPageShow)
+
+    // Defer all canvas work so it doesn't block first paint
+    const deferTimer = setTimeout(() => {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      setupCanvas()
+
+      // If reduced motion, draw static frame and stop
+      if (prefersReduced) {
+        const canvas = canvasRef.current
+        const ctx = canvas?.getContext('2d')
+        if (ctx && canvas) {
+          const w = canvas.offsetWidth
+          const h = canvas.offsetHeight
+          ctx.clearRect(0, 0, w, h)
+          for (const path of pathsRef.current) {
+            ctx.strokeStyle = colorsRef.current.line
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(path.points[0]!.x, path.points[0]!.y)
+            for (let i = 1; i < path.points.length; i++) {
+              ctx.lineTo(path.points[i]!.x, path.points[i]!.y)
+            }
+            ctx.stroke()
+            for (const pt of path.points) {
+              ctx.fillStyle = colorsRef.current.dot
+              ctx.beginPath()
+              ctx.arc(pt.x, pt.y, 1.8, 0, Math.PI * 2)
+              ctx.fill()
+            }
+          }
+        }
+        return
+      }
+
+      // Animation loop
+      lastTimeRef.current = performance.now()
+
+      function loop(time: number) {
+        if (document.hidden) {
+          lastTimeRef.current = time
+          animationRef.current = requestAnimationFrame(loop)
+          return
+        }
+
+        const dt = Math.min((time - lastTimeRef.current) / 1000, 0.1)
+        lastTimeRef.current = time
+
+        const canvas = canvasRef.current
+        const ctx = canvas?.getContext('2d')
+        if (ctx) {
+          draw(ctx, pathsRef.current, colorsRef.current, time, dt)
+        }
+
+        animationRef.current = requestAnimationFrame(loop)
+      }
+
+      animationRef.current = requestAnimationFrame(loop)
+
+      window.addEventListener('resize', onResize)
+      window.addEventListener('pageshow', onPageShow)
+    }, 150)
 
     return () => {
+      clearTimeout(deferTimer)
+      clearTimeout(resizeTimer)
       cancelAnimationFrame(animationRef.current)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('pageshow', onPageShow)
-      clearTimeout(resizeTimer)
     }
   }, [setupCanvas])
 
