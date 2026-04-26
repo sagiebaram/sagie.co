@@ -66,8 +66,8 @@ const OFFSETS: Record<string, { x: number; y: number; r: number }> = {
   'e-mid': { x: 45, y: 15, r: 3 },
 }
 
-/** Assembly timing — start time (seconds) for each letter group (~3s total) */
-const ASSEMBLY_STARTS: readonly number[] = [0, 0.4, 0.8, 1.4, 1.9] as const
+/** Assembly timing — start time (seconds) for each letter group (~1s total) */
+const ASSEMBLY_STARTS: readonly number[] = [0, 0.15, 0.35, 0.55, 0.75] as const
 
 function LogoSvg({ className, pathClass }: { className?: string; pathClass: string }) {
   return (
@@ -207,27 +207,27 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
         glowPaths.forEach(applyOffset)
         gsap.set(glow, { opacity: 0 })
 
-        // Assembly timeline
-        const tl = gsap.timeline({ delay: 0.5 })
+        // Assembly timeline — everything lands by 2.0s
+        const tl = gsap.timeline({ delay: 0.3 })
 
         LETTER_GROUPS.forEach((group, gi) => {
           const groupStart = ASSEMBLY_STARTS[gi] ?? 0
           group.pieces.forEach((key, pi) => {
             const crisp = stage.querySelector<SVGPathElement>(`.anim-logo-crisp[data-p="${key}"]`)
             const glowP = stage.querySelector<SVGPathElement>(`.anim-logo-glow[data-p="${key}"]`)
-            const t = groupStart + pi * 0.12
+            const t = groupStart + pi * 0.06
 
             if (crisp) {
               tl.to(crisp, {
                 opacity: 1, x: 0, y: 0, rotation: 0,
-                duration: 0.8,
+                duration: 0.5,
                 ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
               }, t)
             }
             if (glowP) {
               tl.to(glowP, {
                 opacity: 1, x: 0, y: 0, rotation: 0,
-                duration: 0.8,
+                duration: 0.5,
                 ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
               }, t)
             }
@@ -235,17 +235,17 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
         })
 
         // Glow layer fades in as first pieces land
-        tl.to(glow, { opacity: 0.55, duration: 1.5, ease: 'power2.out' }, 0.3)
+        tl.to(glow, { opacity: 0.55, duration: 0.8, ease: 'power2.out' }, 0.2)
 
         // Glow surge after assembly
-        tl.to(glow, { opacity: 0.75, filter: 'blur(22px)', duration: 0.6, ease: 'power2.out' }, 2.7)
-        tl.to(glow, { opacity: 0.5, filter: 'blur(18px)', duration: 0.8, ease: 'power2.inOut' }, 3.3)
+        tl.to(glow, { opacity: 0.75, filter: 'blur(22px)', duration: 0.3, ease: 'power2.out' }, 1.1)
+        tl.to(glow, { opacity: 0.5, filter: 'blur(18px)', duration: 0.4, ease: 'power2.inOut' }, 1.4)
 
         // Text reveals after logo assembly
         tl.fromTo('.anim-tagline',
           { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'cubic-bezier(0.16, 1, 0.3, 1)' },
-          3.3
+          { opacity: 1, y: 0, duration: 0.4, ease: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+          1.3
         )
 
         // Initials pop in with glow
@@ -256,34 +256,34 @@ export function AnimatedLogo({ className, variant = 'dark' }: AnimatedLogoProps)
             opacity: 1,
             y: 0,
             textShadow: '0 0 14px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.4)',
-            duration: 0.45,
+            duration: 0.3,
             ease: 'back.out(2)',
-            stagger: 0.12,
+            stagger: 0.06,
           },
-          3.6
+          1.4
         )
         tl.to('.anim-initial', {
           scale: 1,
           textShadow: '0 0 6px rgba(255,255,255,0.3), 0 0 12px rgba(255,255,255,0.15)',
-          duration: 0.4,
+          duration: 0.25,
           ease: 'power2.inOut',
-          stagger: 0.12,
-        }, 4.3)
+          stagger: 0.06,
+        }, 1.7)
 
         tl.to('.anim-divider', {
-          opacity: 1, width: 60, duration: 0.6, ease: 'power2.out',
-        }, 3.8)
+          opacity: 1, width: 60, duration: 0.3, ease: 'power2.out',
+        }, 1.5)
 
         tl.fromTo('.anim-pillar-text',
           { opacity: 0, y: 8 },
-          { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', stagger: 0.15 },
-          4.1
+          { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out', stagger: 0.08 },
+          1.55
         )
 
         tl.fromTo('.anim-pillar-dot',
           { opacity: 0 },
-          { opacity: 1, duration: 0.4, stagger: 0.1 },
-          4.2
+          { opacity: 1, duration: 0.25, stagger: 0.06 },
+          1.6
         )
 
         // Start breathing loop after everything completes
