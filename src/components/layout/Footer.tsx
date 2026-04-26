@@ -84,7 +84,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-end sm:justify-between py-6 gap-4">
-          <Logo width={160} height={45} className="-ml-6 -mb-2" />
+          <Logo width={160} height={45} className="sm:-ml-6 -mb-2" />
           <div className="flex flex-col items-start sm:items-end gap-2">
             <div className="flex gap-4">
               <span className="font-body text-foreground-muted opacity-40 cursor-default text-caption">
