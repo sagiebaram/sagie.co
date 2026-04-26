@@ -203,7 +203,7 @@ function FounderContent() {
           <p key={i}>{para}</p>
         ))}
       </div>
-      <div className="founder-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto', paddingTop: '20px' }}>
+      <div className="founder-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto', paddingTop: '20px', flexWrap: 'wrap' }}>
         <a
           href={SITE.founderUrl}
           target="_blank"

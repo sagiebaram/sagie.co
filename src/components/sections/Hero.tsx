@@ -1,6 +1,6 @@
 import { AnimatedLogo } from '@/components/ui/AnimatedLogo'
 import { GridBackground } from '@/components/ui/GridBackground'
-import { Button } from '@/components/ui/Button'
+
 import { HeroAnimation } from '@/components/sections/HeroAnimation'
 import { HERO } from '@/constants/copy'
 
@@ -18,14 +18,14 @@ export function Hero() {
               </div>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center md:items-start">
               {/* Mobile-only logo */}
               <div className="flex md:hidden mb-8">
                 <div className="relative w-full max-w-[260px] hero-line">
                   <AnimatedLogo variant="dark" />
                 </div>
               </div>
-              <h1 className="font-display uppercase mb-8 text-hero leading-[0.9]">
+              <h1 className="font-display uppercase mb-8 text-hero leading-[0.9] text-center md:text-left">
                 {HERO.headingLines.map((line) => (
                   <span key={line.text} className={`hero-line block ${line.colorClass}`}>
                     {line.text}
@@ -33,12 +33,14 @@ export function Hero() {
                 ))}
               </h1>
 
-              <p className="hero-body font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[380px]">
+              <p className="hero-body font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[380px] text-center md:text-left">
                 {HERO.subtitle}
               </p>
 
               <div className="flex flex-wrap items-center gap-5">
-                <Button variant="primary" href="/apply" className="hero-cta">{HERO.primaryCta}</Button>
+                <span className="hero-cta notify-glow inline-block font-body uppercase text-button tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
+                  Coming Soon
+                </span>
               </div>
             </div>
 

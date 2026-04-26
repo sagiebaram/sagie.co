@@ -2,7 +2,7 @@
 
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { Button } from '@/components/ui/Button'
+
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { CHAPTER_SECTION } from '@/constants/copy'
 import type { Chapter } from '@/lib/chapters'
@@ -37,7 +37,9 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
           <p className="font-body text-foreground-muted mb-10 text-body-lg font-light leading-[1.75] max-w-[380px]">
             {CHAPTER_SECTION.body}
           </p>
-          <Button variant="primary" href="/apply/chapter">{CHAPTER_SECTION.cta}</Button>
+          <span className="notify-glow inline-block font-body uppercase text-button tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
+            Coming Soon
+          </span>
         </div>
 
         <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto scrollbar-subtle">

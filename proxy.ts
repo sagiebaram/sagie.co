@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+const LAUNCH_ALLOWED_PATHS = new Set(['/', '/coming-soon'])
+const LAUNCH_ALLOWED_PREFIXES = ['/_next', '/api', '/favicon', '/sitemap', '/robots']
+
 export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Launch-mode route gate: only homepage + coming-soon accessible
+  if (process.env.NEXT_PUBLIC_LAUNCH_MODE === 'simple') {
+    if (
+      !LAUNCH_ALLOWED_PATHS.has(pathname) &&
+      !LAUNCH_ALLOWED_PREFIXES.some(p => pathname.startsWith(p)) &&
+      !pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|css|js|map)$/)
+    ) {
+      return NextResponse.rewrite(new URL('/coming-soon', request.url))
+    }
+  }
+
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
   const isDev = process.env.NODE_ENV === 'development'
 

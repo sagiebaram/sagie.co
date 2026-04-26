@@ -44,7 +44,7 @@
   --color-globe-label: #ccffff;
 
   /* ── Font sizes ── */
-  --text-label: 13px;
+  --text-label: 15px;
   --text-caption: 14px;
   --text-button: 15px;
   --text-body: 16px;
@@ -258,8 +258,14 @@
   50% { opacity: 0.8; }
 }
 
+@keyframes pulse-glow {
+  0%, 100% { border-color: rgba(192, 192, 192, 0.2); box-shadow: 0 0 0 0 rgba(192, 192, 192, 0); }
+  50% { border-color: rgba(192, 192, 192, 0.6); box-shadow: 0 0 12px 0 rgba(192, 192, 192, 0.15); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .broken-node { animation: none !important; opacity: 0.5; }
+  .notify-glow { animation: none !important; }
   .skeleton { animation: none !important; }
 }
 

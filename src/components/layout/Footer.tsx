@@ -2,7 +2,7 @@
 
 import { Logo } from '@/components/ui/Logo'
 import { GridBackground } from '@/components/ui/GridBackground'
-import { TransitionLink } from '@/components/ui/TransitionLink'
+
 import { FOOTER, SITE } from '@/constants/copy'
 
 
@@ -11,7 +11,7 @@ export function Footer() {
     <footer className="relative z-1 overflow-hidden border-t border-border-strong">
       <GridBackground parallax />
       <div className="relative z-10 max-w-[880px] mx-auto px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 py-10 border-b border-border-subtle">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 py-10 border-b border-border-subtle">
 
           <div>
             <p className="font-body uppercase text-foreground mb-4 text-label tracking-eyebrow">
@@ -20,9 +20,9 @@ export function Footer() {
             <ul className="space-y-2.5">
               {FOOTER.navigate.links.map((item) => (
                 <li key={item.label}>
-                  <TransitionLink href={item.url} className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                  <span className="font-body text-foreground-muted opacity-40 cursor-default text-body">
                     {item.label}
-                  </TransitionLink>
+                  </span>
                 </li>
               ))}
               <li>
@@ -64,19 +64,19 @@ export function Footer() {
             </p>
             <ul className="space-y-2.5">
               <li>
-                <TransitionLink href="/apply" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                <span className="font-body text-foreground-muted opacity-40 cursor-default text-body">
                   Apply to Join
-                </TransitionLink>
+                </span>
               </li>
               <li>
-                <TransitionLink href="/apply/chapter" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                <span className="font-body text-foreground-muted opacity-40 cursor-default text-body">
                   Start a Chapter
-                </TransitionLink>
+                </span>
               </li>
               <li>
-                <TransitionLink href="/contact" className="font-body text-foreground-muted hover:text-silver hover:-translate-y-px transition-all duration-150 text-body">
+                <span className="font-body text-foreground-muted opacity-40 cursor-default text-body">
                   Contact
-                </TransitionLink>
+                </span>
               </li>
             </ul>
           </div>
@@ -84,15 +84,15 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-end sm:justify-between py-6 gap-4">
-          <Logo width={160} height={45} className="-ml-6 -mb-2" />
+          <Logo width={160} height={45} className="sm:-ml-6 -mb-2" />
           <div className="flex flex-col items-start sm:items-end gap-2">
             <div className="flex gap-4">
-              <TransitionLink href="/privacy" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
+              <span className="font-body text-foreground-muted opacity-40 cursor-default text-caption">
                 Privacy Policy
-              </TransitionLink>
-              <TransitionLink href="/terms" className="font-body text-foreground-muted hover:text-silver transition-colors duration-150 text-caption">
+              </span>
+              <span className="font-body text-foreground-muted opacity-40 cursor-default text-caption">
                 Terms of Service
-              </TransitionLink>
+              </span>
             </div>
             <p className="font-body text-white text-caption tracking-copyright mb-0">
               {FOOTER.copyright}

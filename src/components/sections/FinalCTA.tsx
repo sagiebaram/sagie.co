@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { Section } from '@/components/ui/Section'
-import { Button } from '@/components/ui/Button'
+
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { FINAL_CTA } from '@/constants/copy'
 
@@ -102,7 +102,9 @@ export function FinalCTA() {
           ))}
         </p>
 
-        <Button variant="primary" href="/apply">{FINAL_CTA.cta}</Button>
+        <span className="notify-glow inline-block font-body uppercase text-button tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
+          Coming Soon
+        </span>
       </div>
     </Section>
   )

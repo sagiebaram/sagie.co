@@ -62,7 +62,7 @@ export function WhoItsFor() {
 
       <p style={{
         fontSize: '13px',
-        color: 'var(--text-secondary)',
+        color: 'var(--silver)',
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
         marginBottom: '24px',
