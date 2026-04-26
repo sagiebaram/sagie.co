@@ -102,7 +102,7 @@ export function FinalCTA() {
           ))}
         </p>
 
-        <span className="inline-block font-body uppercase text-button tracking-button px-[34px] py-4 opacity-40 cursor-default border border-border-subtle text-foreground-muted hover:opacity-100 hover:text-silver hover:border-silver transition-all duration-200">
+        <span className="inline-block font-body uppercase text-button tracking-button px-[34px] py-4 opacity-40 cursor-default border border-border-subtle text-foreground-muted hover:opacity-100 hover:text-foreground hover:border-foreground transition-all duration-200">
           Coming Soon
         </span>
       </div>

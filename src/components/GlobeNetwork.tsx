@@ -42,6 +42,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
   const [countries, setCountries] = useState<GeoJsonFeatureCollection>({ features: [] })
 
   const [altitude, setAltitude] = useState(2.2)
+  const altitudeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isZoomedIn = altitude < 1.8
 
   // Atmosphere shrinks as you zoom in: 0.25 at altitude 2.2+, down to 0.05 at altitude 1.0
@@ -173,7 +174,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
     const camera = globeRef.current.camera()
 
     if (controls) {
-      controls.autoRotate = true
+      controls.autoRotate = false
       controls.autoRotateSpeed = 0.8
       controls.enableZoom = true
 
@@ -185,18 +186,24 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
       }
 
       controls.addEventListener('change', () => {
-        if (globeRef.current) {
-          const pov = globeRef.current.pointOfView()
-          if (pov && typeof pov.altitude === 'number') {
-            setAltitude(pov.altitude)
+        if (altitudeTimerRef.current) clearTimeout(altitudeTimerRef.current)
+        altitudeTimerRef.current = setTimeout(() => {
+          if (globeRef.current) {
+            const pov = globeRef.current.pointOfView()
+            if (pov && typeof pov.altitude === 'number') {
+              setAltitude(pov.altitude)
+            }
           }
-        }
+        }, 200)
       })
     }
 
     globeRef.current.pointOfView({ lat: 30, lng: -40, altitude: 2.2 }, 2000)
 
+    // Start auto-rotate after initial animation finishes to avoid jitter
     setTimeout(() => {
+      if (cancelledRef.current) return
+      if (controls) controls.autoRotate = true
       if (controls && camera) {
         controls.maxDistance = camera.position.distanceTo(controls.target)
         controls.minDistance = 200 // prevent zooming close enough to hit the fade edge
