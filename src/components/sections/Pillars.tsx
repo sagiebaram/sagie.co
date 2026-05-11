@@ -61,11 +61,8 @@ export function Pillars() {
                 </p>
                 <a
                   href={href}
-                  className="pillar-link font-body text-caption tracking-[0.06em] pb-1 transition-all duration-200"
-                  style={{
-                    color: accent,
-                    borderBottom: `1px solid color-mix(in oklch, ${accent} 40%, transparent)`,
-                  }}
+                  className="pillar-link font-body text-caption tracking-[0.06em] pb-1 border-b border-line-strong transition-all duration-200"
+                  style={{ color: accent }}
                 >
                   Explore /{pillar.word.toLowerCase()} →
                 </a>
