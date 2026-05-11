@@ -1,41 +1,13 @@
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
-import { CardTilt } from '@/components/ui/CardTilt'
 import { TIERS } from '@/constants/tiers'
 import { TIERS_EYEBROW } from '@/constants/copy'
 
-const TIER_GLOW: Record<string, string> = {
-  Explorer: '#9CA3AF',
-  Builder: '#C0C0C0',
-  Shaper: '#6B7280',
-}
-
-const TIER_STYLES: Record<string, { bg: string; hover: string; tag: string; name: string; desc: string; cta: string }> = {
-  Explorer: {
-    bg: '',
-    hover: 'hover:bg-background-card-featured',
-    tag: 'var(--text-muted)',
-    name: 'var(--text-secondary)',
-    desc: 'var(--text-muted)',
-    cta: 'var(--text-secondary)',
-  },
-  Builder: {
-    bg: '',
-    hover: 'hover:bg-background-card-featured',
-    tag: 'var(--silver)',
-    name: 'var(--silver)',
-    desc: 'var(--text-muted)',
-    cta: 'var(--silver)',
-  },
-  Shaper: {
-    bg: '',
-    hover: 'hover:bg-background-card-featured',
-    tag: 'var(--text-muted)',
-    name: 'var(--text-secondary)',
-    desc: 'var(--text-muted)',
-    cta: 'var(--text-dim)',
-  },
+const TIER_BG: Record<string, string> = {
+  Explorer: 'var(--bg)',
+  Builder: 'var(--bg-elev-1)',
+  Shaper: 'var(--bg-elev-2)',
 }
 
 export function Tiers() {
@@ -43,47 +15,53 @@ export function Tiers() {
     <Section>
       <Eyebrow>{TIERS_EYEBROW}</Eyebrow>
 
-      <ScrollReveal selector=".tier-card" stagger={0.12} y={24} duration={0.6} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px mt-8">
-        {TIERS.map((tier) => {
-          const styles = TIER_STYLES[tier.name] ?? TIER_STYLES.Explorer!
+      <ScrollReveal
+        selector=".tier-card"
+        stagger={0.12}
+        y={24}
+        duration={0.6}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px mt-8 border border-line bg-line"
+      >
+        {TIERS.map((tier, i) => {
+          const isBuilder = tier.name === 'Builder'
           return (
-            <CardTilt
+            <div
               key={tier.name}
-              glowColor={TIER_GLOW[tier.name]}
-              className={`tier-card group flex flex-col gap-5 p-10 transition-colors duration-200 border border-border-default ${styles.hover} ${styles.bg}`}
+              className={`tier-card flex flex-col gap-5 min-h-[320px] transition-colors duration-300 hover:bg-[var(--bg-card-hi)] ${isBuilder ? 'border-t-2 border-t-eco' : ''}`}
+              style={{ background: TIER_BG[tier.name] ?? 'var(--bg)', padding: '40px 32px 32px' }}
             >
-              <div className="relative z-1">
-                <p
-                  className="font-body uppercase mb-1.5 text-label tracking-spaced"
-                  style={{ color: styles.tag }}
-                >
+              <div className="flex justify-between items-center">
+                <span className="text-caption text-ink-dim tracking-[0.08em]">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="text-micro tracking-micro uppercase text-ink-muted">
                   {tier.tag}
-                </p>
-                <h3
-                  className="font-display uppercase text-tier tracking-heading"
-                  style={{ color: styles.name }}
-                >
-                  {tier.name}
-                </h3>
+                </span>
               </div>
 
-              <p
-                className="relative z-1 font-body flex-1 text-body font-light leading-[1.75]"
-                style={{ color: styles.desc }}
+              <h3
+                className="font-display uppercase text-ink"
+                style={{ fontSize: 'clamp(40px, 4vw, 56px)', lineHeight: '0.9' }}
               >
+                {tier.name}
+              </h3>
+
+              <p className="font-serif italic font-light text-ink-soft text-body-lg leading-[1.5] flex-1">
                 {tier.desc}
               </p>
 
-              <span
-                className="relative z-1 font-body uppercase inline-block text-caption tracking-mid"
-                style={{
-                  color: styles.cta,
-                  cursor: 'default',
-                }}
-              >
-                {tier.cta}
-              </span>
-            </CardTilt>
+              <div className="mt-auto">
+                {tier.ctaActive ? (
+                  <span className="text-caption text-ink-dim tracking-[0.06em] cursor-default">
+                    {tier.cta}
+                  </span>
+                ) : (
+                  <span className="text-caption text-ink-dim tracking-[0.06em] cursor-default">
+                    {tier.cta}
+                  </span>
+                )}
+              </div>
+            </div>
           )
         })}
       </ScrollReveal>

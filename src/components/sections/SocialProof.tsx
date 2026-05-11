@@ -20,19 +20,24 @@ export function SocialProof({ globe }: { globe?: ReactNode }) {
     <Section className="overflow-visible">
       <Eyebrow>The Network</Eyebrow>
 
-      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-3 mt-8">
+      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-8 border border-line bg-line">
         {SOCIAL_STATS.map((stat) => {
           const parsed = STAT_VALUES[stat.value]
           return (
-            <div key={stat.label} className="py-12 text-center">
-              <p className="font-display text-silver text-stat leading-none">
+            <div key={stat.label} className="bg-[var(--bg)] py-12 px-8 flex flex-col items-center justify-center min-h-[220px]">
+              <p className="font-display text-ink flex items-start" style={{ fontSize: 'clamp(72px, 8vw, 120px)', lineHeight: 1 }}>
                 {parsed ? (
-                  <CountUp end={parsed.end} suffix={parsed.suffix} />
+                  <>
+                    <CountUp end={parsed.end} suffix="" />
+                    {parsed.suffix && (
+                      <span className="text-eco text-[0.5em] ml-1 mt-1">{parsed.suffix}</span>
+                    )}
+                  </>
                 ) : (
                   stat.value
                 )}
               </p>
-              <p className="font-body uppercase text-foreground-muted mt-3 text-caption tracking-label">
+              <p className="font-body uppercase text-ink-muted mt-4 text-micro tracking-micro">
                 {stat.label}
               </p>
             </div>

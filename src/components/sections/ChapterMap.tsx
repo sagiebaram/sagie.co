@@ -2,17 +2,14 @@
 
 import { Section } from '@/components/ui/Section'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { CHAPTER_SECTION } from '@/constants/copy'
 import type { Chapter } from '@/lib/chapters'
 
-type ChapterStatus = Chapter['status']
-
-function statusToBadge(status: ChapterStatus): string {
+function statusLabel(status: Chapter['status']): string {
   switch (status) {
     case 'Active': return 'Live'
-    case 'Coming Soon': return 'Coming Soon'
+    case 'Coming Soon': return 'Soon'
     case 'Planned': return 'Planned'
   }
 }
@@ -34,99 +31,43 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
               </span>
             ))}
           </h2>
-          <p className="font-body text-foreground-muted mb-10 text-body-lg font-light leading-[1.75] max-w-[380px]">
+          <p className="font-body text-ink-muted mb-10 text-body-lg font-light leading-[1.65] max-w-[380px]">
             {CHAPTER_SECTION.body}
           </p>
-          <span className="notify-glow inline-block font-body uppercase text-button tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
+          <span className="notify-glow inline-block font-body uppercase text-label tracking-label px-[26px] py-[14px] cursor-default border border-silver/30 text-silver/70 hover:text-ink hover:border-ink transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
             Coming Soon
           </span>
         </div>
 
-        <div ref={rightRef} className="flex flex-col border-t border-border-subtle max-h-none md:max-h-[360px] md:overflow-y-auto scrollbar-subtle">
+        <div ref={rightRef} className="grid grid-cols-2 gap-px bg-line border border-line">
           {chapters.map((chapter) => {
             const isLive = chapter.status === 'Active'
-            const badge = statusToBadge(chapter.status)
-            const hasChapterUrl = !!chapter.chapterUrl
-            const hasWaitlistUrl = !!chapter.waitlistUrl
-
             return (
               <div
                 key={chapter.id}
-                className="py-5 border-b border-border-subtle"
+                className="bg-[var(--bg)] flex flex-col justify-between min-h-[140px] p-6 transition-colors duration-200 hover:bg-[var(--bg-card)]"
               >
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
                   <span
+                    className={`w-[7px] h-[7px] rounded-full shrink-0 ${isLive ? 'chapter-dot-live' : ''}`}
                     style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: '20px',
-                      letterSpacing: '0.06em',
-                      color: 'var(--text-primary)',
+                      background: isLive ? 'var(--eco)' : 'var(--ink-dim)',
+                      boxShadow: isLive ? '0 0 10px var(--eco)' : 'none',
                     }}
-                  >
-                    {chapter.name}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '10px',
-                      letterSpacing: '0.12em',
-                      textTransform: 'uppercase',
-                      padding: '3px 8px',
-                      border: `0.5px solid ${
-                        isLive
-                          ? 'var(--text-primary)'
-                          : 'rgba(255,255,255,0.2)'
-                      }`,
-                      color: isLive
-                        ? 'var(--text-primary)'
-                        : 'var(--text-muted)',
-                    }}
-                  >
-                    {badge}
+                  />
+                  <span className="text-micro tracking-micro uppercase text-ink-muted">
+                    {statusLabel(chapter.status)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span
-                    style={{
-                      fontSize: '13px',
-                      color: 'var(--text-muted)',
-                      fontWeight: 300,
-                    }}
-                  >
-                    {chapter.description ?? ''}
-                  </span>
-                  {hasChapterUrl ? (
-                    <a
-                      href={chapter.chapterUrl!}
-                      className="hover:text-silver hover:-translate-y-px transition-all duration-150"
-                      style={{
-                        fontSize: '11px',
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        color: 'var(--text-muted)',
-                        borderBottom: '0.5px solid var(--border-subtle)',
-                        paddingBottom: '1px',
-                        textDecoration: 'none',
-                      }}
-                    >
-                      View Chapter →
-                    </a>
-                  ) : hasWaitlistUrl ? (
-                    <a
-                      href={chapter.waitlistUrl!}
-                      className="hover:text-silver hover:-translate-y-px transition-all duration-150"
-                      style={{
-                        fontSize: '11px',
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        color: 'var(--text-muted)',
-                        borderBottom: '0.5px solid var(--border-subtle)',
-                        paddingBottom: '1px',
-                        textDecoration: 'none',
-                      }}
-                    >
-                      Join Waitlist →
-                    </a>
-                  ) : null}
+                <div className="mt-auto">
+                  <p className="font-display uppercase text-ink text-[32px] leading-none tracking-[-0.01em] mb-1">
+                    {chapter.name}
+                  </p>
+                  {chapter.description && (
+                    <p className="text-caption text-ink-muted tracking-[0.04em]">
+                      {chapter.description}
+                    </p>
+                  )}
                 </div>
               </div>
             )

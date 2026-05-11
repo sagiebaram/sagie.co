@@ -6,24 +6,22 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<'a'> {
   children: React.ReactNode
 }
 
+const base = 'inline-flex items-center gap-2.5 font-body text-label tracking-label uppercase font-medium border border-transparent transition-all duration-300 cursor-pointer whitespace-nowrap'
+
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-button-primary-bg [color:var(--color-button-primary-text)] hover:opacity-85 text-button tracking-button px-[34px] py-4',
-  ghost:
-    'text-foreground-muted hover:text-silver text-button tracking-button border-b border-border-default',
+    'bg-ink text-background px-[26px] py-[14px] hover:bg-silver hover:-translate-y-px',
   outline:
-    'border border-silver text-silver hover:bg-silver hover:text-background text-button tracking-button px-[34px] py-4',
+    'text-ink border-line-strong px-[26px] py-[14px] hover:bg-ink hover:text-background hover:border-ink hover:-translate-y-px',
+  ghost:
+    'text-ink-soft border-b-line-strong px-0 py-[14px] hover:text-ink hover:-translate-y-px',
 }
 
 export function Button({ variant = 'primary', children, className, href = '#', ...rest }: ButtonProps) {
   return (
     <a
       href={href}
-      className={cn(
-        'inline-block font-body uppercase transition-all duration-150 hover:-translate-y-px',
-        variants[variant],
-        className,
-      )}
+      className={cn(base, variants[variant], className)}
       {...rest}
     >
       {children}
