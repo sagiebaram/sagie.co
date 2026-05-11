@@ -203,6 +203,11 @@
   color: var(--ink-ghost);
 }
 
+/* ── Pillar link hover (inherits --pillar-accent from row) ── */
+.pillar-link:hover {
+  border-color: var(--pillar-accent) !important;
+}
+
 /* ── GSAP hero initial state ── */
 .hero-line,
 .hero-body,
