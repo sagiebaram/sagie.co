@@ -3,6 +3,12 @@ import { withSentryConfig } from '@sentry/nextjs'
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  experimental: {
+    optimizePackageImports: ['@vercel/analytics', '@sentry/nextjs', 'gsap'],
+  },
+  images: {
+    formats: ['image/webp', 'image/avif'],
+  },
   async headers() {
     return [
       {
