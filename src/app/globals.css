@@ -14,7 +14,6 @@
   --color-foreground: var(--text-primary);
   --color-foreground-secondary: var(--text-secondary);
   --color-foreground-muted: var(--text-muted);
-  --color-foreground-dim: var(--text-dim);
   --color-foreground-ghost: var(--text-ghost);
   --color-silver: var(--silver);
   --color-silver-bright: var(--silver-bright);
@@ -43,23 +42,19 @@
   --color-globe-blue: #0055ff;
   --color-globe-label: #ccffff;
 
-  /* ── Font sizes ── */
-  --text-label: 15px;
-  --text-caption: 14px;
-  --text-button: 15px;
+  /* ── Font sizes (8-stop scale) ── */
+  --text-label: 14px;
   --text-body: 16px;
-  --text-body-lg: 17px;
   --text-subhead: 18px;
-  --text-quote: 22px;
-  --text-manifesto: 24px;
-  --text-persona: 28px;
-  --text-founder: 32px;
-  --text-pillar: 36px;
-  --text-tier: 40px;
-  --text-chapter: 52px;
+  --text-heading: 24px;
+  --text-chapter: clamp(36px, 5vw, 52px);
   --text-stat: 96px;
-  --text-hero: clamp(60px, 8vw, 90px);
-  --text-hero-cta: clamp(72px, 10vw, 110px);
+  --text-hero: clamp(60px, 10vw, 96px);
+  --text-hero-cta: clamp(72px, 12vw, 110px);
+
+  /* ── Line heights ── */
+  --leading-display: 0.95;
+  --leading-body: 1.6;
 
   /* ── Letter spacing ── */
   --tracking-heading: 0.04em;
@@ -80,11 +75,9 @@
   --bg-card-featured: #181818;
   --nav-bg: rgba(12, 12, 12, 0.85);
   --text-primary: #EDECEA;
-  --text-secondary: #B0AFAB;
-  --text-muted: #8B8A86;
-  --text-dim: #706F6B;
-  --text-dim-decorative: #3E3E3C; /* Original low-contrast value for intentional fade effects */
-  --text-ghost: #242422;
+  --text-secondary: #A0A09C;
+  --text-muted: #6E6D69;
+  --text-ghost: #3E3E3C;
   --silver: #C0C0C0;
   --silver-bright: #E0E0DC;
   --border-subtle: rgba(255, 255, 255, 0.05);
@@ -142,11 +135,6 @@
 .split-word.vis {
   transform: translateY(0);
   opacity: 1;
-}
-
-/* ── Decorative low-contrast text (intentional fade effect, not for readable content) ── */
-.text-dim-decorative {
-  color: var(--text-dim-decorative);
 }
 
 /* ── GSAP hero initial state ── */

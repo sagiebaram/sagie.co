@@ -107,10 +107,10 @@ export function WhoItsFor() {
                 <div className="size-10">
                   <PillarIcon name={persona.name} />
                 </div>
-                <p className="font-display uppercase text-silver group-hover:text-foreground transition-colors duration-150 text-persona tracking-heading">
+                <p className="font-display uppercase text-silver group-hover:text-foreground transition-colors duration-150 text-heading tracking-heading">
                   {persona.name}
                 </p>
-                <p className="font-body text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150 text-body font-light leading-[1.7]">
+                <p className="font-body text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150 text-body font-light leading-body">
                   {persona.line}
                 </p>
               </div>

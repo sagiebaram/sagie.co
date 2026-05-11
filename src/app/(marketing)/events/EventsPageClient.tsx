@@ -27,9 +27,9 @@ function formatEventDate(dateStr: string): string {
 const STATUS_COLORS: Record<string, string> = {
   Confirmed: 'var(--silver)',
   Live: 'var(--color-eco)',
-  Planning: 'var(--text-dim)',
-  Complete: 'var(--text-dim)',
-  Concept: 'var(--text-dim)',
+  Planning: 'var(--text-muted)',
+  Complete: 'var(--text-muted)',
+  Concept: 'var(--text-muted)',
 }
 
 function Badge({ label, color }: { label: string; color: string }) {
@@ -187,7 +187,7 @@ function EventAccordion({
               aria-controls={`event-detail-${event.id}`}
               className="w-full text-left py-5 flex items-center gap-4 flex-wrap"
             >
-              <span className="font-display uppercase flex-1 min-w-[180px] text-quote text-silver tracking-heading">
+              <span className="font-display uppercase flex-1 min-w-[180px] text-heading text-silver tracking-heading">
                 {event.name}
               </span>
               {event.date ? (
@@ -198,12 +198,12 @@ function EventAccordion({
                 <span className="font-body text-foreground-muted text-label shrink-0">{event.date}</span>
               )}
               <div className="flex items-center gap-2 shrink-0">
-                <Badge label={event.status} color={STATUS_COLORS[event.status] ?? 'var(--text-dim)'} />
-                {event.format && <Badge label={event.format} color="var(--text-dim)" />}
-                {event.tierTarget && <Badge label={event.tierTarget} color="var(--text-dim)" />}
+                <Badge label={event.status} color={STATUS_COLORS[event.status] ?? 'var(--text-muted)'} />
+                {event.format && <Badge label={event.format} color="var(--text-muted)" />}
+                {event.tierTarget && <Badge label={event.tierTarget} color="var(--text-muted)" />}
               </div>
               <span
-                className="text-foreground-muted transition-transform duration-200 shrink-0 text-caption"
+                className="text-foreground-muted transition-transform duration-200 shrink-0 text-label"
                 style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
               >
                 ▾
@@ -246,7 +246,7 @@ function EventAccordion({
                       {/* Content */}
                       <div className="flex flex-col gap-4">
                         {event.description && (
-                          <p className="font-body text-foreground-muted text-body font-light leading-[1.7]">
+                          <p className="font-body text-foreground-muted text-body font-light leading-body">
                             {event.description}
                           </p>
                         )}
@@ -254,7 +254,7 @@ function EventAccordion({
                         <div className="flex flex-col gap-2">
                           {event.date && (
                             <div className="flex gap-4">
-                              <span className="font-body uppercase text-foreground-dim text-label tracking-label w-[100px] shrink-0">
+                              <span className="font-body uppercase text-foreground-muted text-label tracking-label w-[100px] shrink-0">
                                 Date / Time
                               </span>
                               <span className="font-body text-foreground-muted text-label">
@@ -329,7 +329,7 @@ function EventAccordion({
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex gap-4">
-      <span className="font-body uppercase text-foreground-dim text-label tracking-label w-[100px] shrink-0">
+      <span className="font-body uppercase text-foreground-muted text-label tracking-label w-[100px] shrink-0">
         {label}
       </span>
       <span className="font-body text-foreground-muted text-label">{value}</span>
@@ -381,12 +381,12 @@ export function EventsPageClient({
             <p className="page-hero-eyebrow font-body uppercase text-foreground-muted mb-6 text-label tracking-eyebrow">
               SAGIE ECO Events
             </p>
-            <SplitTextReveal as="h1" className="font-display uppercase mb-8 text-hero leading-[0.9]" lines={[
-              { text: 'WHERE THE', className: 'text-foreground-dim' },
+            <SplitTextReveal as="h1" className="font-display uppercase mb-8 text-hero leading-display" lines={[
+              { text: 'WHERE THE', className: 'text-foreground-muted' },
               { text: 'ECOSYSTEM', className: 'text-foreground-secondary' },
               { text: 'COMES TOGETHER.', className: 'text-foreground' },
             ]} />
-            <p className="page-hero-sub font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[520px]">
+            <p className="page-hero-sub font-body italic text-foreground-muted mb-10 text-body font-light leading-body max-w-[520px]">
               Curated events, local happenings and online conversations — designed to create real connection.
             </p>
           </div>
@@ -455,7 +455,7 @@ export function EventsPageClient({
           <GridBackground parallax />
           <div className="relative z-10 max-w-[880px] mx-auto">
             <Eyebrow>Upcoming</Eyebrow>
-            <p className="font-body text-foreground-muted text-body font-light leading-[1.7] mt-6">
+            <p className="font-body text-foreground-muted text-body font-light leading-body mt-6">
               No upcoming events right now. Check back soon.
             </p>
           </div>
@@ -478,15 +478,15 @@ export function EventsPageClient({
         <GridBackground parallax />
         <div ref={suggestRef} className="relative z-10 max-w-[880px] mx-auto px-6 md:px-8 py-16 md:py-24">
           <Eyebrow>Contribute</Eyebrow>
-          <h2 className="font-display uppercase text-pillar leading-none text-foreground-secondary mb-4">
+          <h2 className="font-display uppercase text-chapter leading-none text-foreground-secondary mb-4">
             Know of an event the ecosystem should attend?
           </h2>
-          <p className="font-body text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[480px] mb-8">
+          <p className="font-body text-foreground-muted text-body font-light leading-body max-w-[480px] mb-8">
             Suggest a local event, workshop or conference and we&apos;ll review it for the calendar.
           </p>
           <a
             href="/suggest-event"
-            className="font-body uppercase text-button tracking-button text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 border-b border-border-strong pb-px"
+            className="font-body uppercase text-label tracking-button text-foreground-secondary hover:text-silver hover:-translate-y-px transition-all duration-150 border-b border-border-strong pb-px"
           >
             Suggest an Event →
           </a>

@@ -35,7 +35,7 @@ const SECTION_TITLE_STYLE: React.CSSProperties = {
 
 const CHEVRON_STYLE: React.CSSProperties = {
   fontSize: '10px',
-  color: 'var(--text-dim)',
+  color: 'var(--text-muted)',
   transition: 'transform 0.15s',
   flexShrink: 0,
 }
@@ -44,7 +44,7 @@ const FIELD_LABEL_STYLE: React.CSSProperties = {
   fontSize: '9px',
   letterSpacing: '0.10em',
   textTransform: 'uppercase',
-  color: 'var(--text-dim)',
+  color: 'var(--text-muted)',
   fontFamily: 'var(--font-body)',
 }
 
@@ -58,7 +58,7 @@ const FIELD_VALUE_STYLE: React.CSSProperties = {
 const EDIT_ICON_STYLE: React.CSSProperties = {
   background: 'transparent',
   border: 'none',
-  color: 'var(--text-dim)',
+  color: 'var(--text-muted)',
   cursor: 'pointer',
   padding: '0 4px',
   fontSize: '10px',

@@ -34,7 +34,7 @@ const TIER_STYLES: Record<string, { bg: string; hover: string; tag: string; name
     tag: 'var(--text-muted)',
     name: 'var(--text-secondary)',
     desc: 'var(--text-muted)',
-    cta: 'var(--text-dim)',
+    cta: 'var(--text-muted)',
   },
 }
 
@@ -60,7 +60,7 @@ export function Tiers() {
                   {tier.tag}
                 </p>
                 <h3
-                  className="font-display uppercase text-tier tracking-heading"
+                  className="font-display uppercase text-chapter tracking-heading"
                   style={{ color: styles.name }}
                 >
                   {tier.name}
@@ -68,14 +68,14 @@ export function Tiers() {
               </div>
 
               <p
-                className="relative z-1 font-body flex-1 text-body font-light leading-[1.75]"
+                className="relative z-1 font-body flex-1 text-body font-light leading-body"
                 style={{ color: styles.desc }}
               >
                 {tier.desc}
               </p>
 
               <span
-                className="relative z-1 font-body uppercase inline-block text-caption tracking-mid"
+                className="relative z-1 font-body uppercase inline-block text-label tracking-mid"
                 style={{
                   color: styles.cta,
                   cursor: 'default',

@@ -18,17 +18,17 @@ export function ErrorPage({ title, message, illustration, onRetry }: ErrorPagePr
         <div className="mb-8 opacity-60" aria-hidden="true">
           {illustration}
         </div>
-        <h1 className="font-display text-silver text-tier mb-4 tracking-heading uppercase">
+        <h1 className="font-display text-silver text-chapter mb-4 tracking-heading uppercase">
           {title}
         </h1>
-        <p className="font-body text-foreground-secondary text-body-lg mb-10 leading-relaxed">
+        <p className="font-body text-foreground-secondary text-body mb-10 leading-body">
           {message}
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">
           {onRetry && (
             <button
               onClick={onRetry}
-              className="inline-block font-body uppercase transition-all duration-150 hover:-translate-y-px bg-button-primary-bg [color:var(--color-button-primary-text)] hover:opacity-85 text-button tracking-button px-[34px] py-4"
+              className="inline-block font-body uppercase transition-all duration-150 hover:-translate-y-px bg-button-primary-bg [color:var(--color-button-primary-text)] hover:opacity-85 text-label tracking-button px-[34px] py-4"
             >
               Try again
             </button>

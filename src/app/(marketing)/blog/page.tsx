@@ -62,11 +62,11 @@ export default function BlogPage() {
       <Section className="pt-28 md:pt-36">
         <PageHeroAnimation>
           <Eyebrow className="page-hero-eyebrow">The Blog</Eyebrow>
-          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8" lines={[
-            { text: 'IDEAS FROM', className: 'text-foreground-dim' },
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-display tracking-heading mb-8" lines={[
+            { text: 'IDEAS FROM', className: 'text-foreground-muted' },
             { text: 'THE ECOSYSTEM.', className: 'text-foreground-secondary' },
           ]} />
-          <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[380px] mb-14">
+          <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body leading-body max-w-[380px] mb-14">
             Personal writing, community spotlights, event recaps and thought leadership from SAGIE.
           </p>
         </PageHeroAnimation>

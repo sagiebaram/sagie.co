@@ -187,7 +187,7 @@ function DropdownSelect({ name, options, optionGroups, value, placeholder, onVal
                       fontSize: '9px',
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
-                      color: 'var(--text-dim)',
+                      color: 'var(--text-muted)',
                       fontFamily: 'var(--font-body)',
                       userSelect: 'none',
                     }}>

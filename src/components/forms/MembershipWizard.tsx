@@ -252,7 +252,7 @@ export function MembershipWizard() {
         <p className="font-body uppercase text-[11px] tracking-[0.14em] text-silver mb-4">
           Application Submitted
         </p>
-        <p className="font-body text-foreground-secondary text-body leading-[1.7] max-w-[420px] mx-auto">
+        <p className="font-body text-foreground-secondary text-body leading-body max-w-[420px] mx-auto">
           Thank you for applying to SAGIE ECO. We review every application personally
           and will be in touch soon.
         </p>

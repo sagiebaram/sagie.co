@@ -22,11 +22,11 @@ export default function ApplyVenturesForkPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             SAGIE Ventures
           </p>
-          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
-            { text: 'BUILD SOMETHING', className: 'text-foreground-dim' },
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-display mb-8" lines={[
+            { text: 'BUILD SOMETHING', className: 'text-foreground-muted' },
             { text: 'THAT MATTERS.', className: 'text-foreground-secondary' },
           ]} />
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[480px] mb-16">
+          <p className="font-body italic text-foreground-muted text-body font-light leading-body max-w-[480px] mb-16">
             Whether you&apos;re building the next big thing or backing it — start here.
           </p>
 
@@ -39,7 +39,7 @@ export default function ApplyVenturesForkPage() {
                 <p className="font-display uppercase text-foreground text-xl tracking-wide mb-2">
                   Founder
                 </p>
-                <p className="font-body text-foreground-muted text-sm leading-relaxed">
+                <p className="font-body text-foreground-muted text-sm leading-body">
                   Show us what you&apos;re building. Apply for portfolio consideration.
                 </p>
               </div>
@@ -56,7 +56,7 @@ export default function ApplyVenturesForkPage() {
                 <p className="font-display uppercase text-foreground text-xl tracking-wide mb-2">
                   Investor
                 </p>
-                <p className="font-body text-foreground-muted text-sm leading-relaxed">
+                <p className="font-body text-foreground-muted text-sm leading-body">
                   Community-sourced deal flow built on trust. Join the network.
                 </p>
               </div>

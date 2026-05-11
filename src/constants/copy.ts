@@ -19,7 +19,7 @@ export const NAV_LINKS = ['Solutions', 'ECO', 'Ventures', 'Events', 'Blog', 'Res
 
 export const HERO = {
   headingLines: [
-    { text: 'A VISION.', colorClass: 'text-dim-decorative' },
+    { text: 'A VISION.', colorClass: 'text-foreground-ghost' },
     { text: 'A MOVEMENT.', colorClass: 'text-foreground-secondary' },
     { text: 'AN ECOSYSTEM.', colorClass: 'text-foreground whitespace-nowrap' },
   ],

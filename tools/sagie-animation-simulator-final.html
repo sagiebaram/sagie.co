@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SAGIE Animation Simulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0C0C0C;--text:#EDECEA;--text2:#B0AFAB;--silver:#C0C0C0;
+  --border-subtle:rgba(255,255,255,0.05);--border-default:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);
+  --eco:#7A9E7E;--eco-bright:#8BAF8E;--eco-dim:#1E3322;--eco-bg:#0F1A12;
+  --sol:#1565C0;--ven:#757575;
+  --glow-intensity:0.55;--glow-radius:18px;
+  --icon-color:#fff;
+  --sidebar-w:360px;
+}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;font-size:13px;line-height:1.4;}
+
+/* Layout */
+.app{display:flex;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:#111;border-right:1px solid var(--border-strong);overflow-y:auto;position:fixed;top:0;left:0;bottom:0;z-index:10;}
+.main{margin-left:var(--sidebar-w);flex:1;padding:24px;display:flex;flex-wrap:wrap;gap:20px;align-content:flex-start;}
+
+/* Sidebar sections */
+.sidebar-header{padding:16px;border-bottom:1px solid var(--border-default);font-size:16px;font-weight:600;letter-spacing:0.04em;}
+.section{padding:14px 16px;border-bottom:1px solid var(--border-subtle);}
+.section-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;}
+
+/* Controls */
+.ctrl{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.ctrl label{flex:0 0 140px;font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ctrl input[type=range]{flex:1;accent-color:var(--eco);height:4px;background:rgba(255,255,255,0.1);border-radius:2px;-webkit-appearance:none;appearance:none;}
+.ctrl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--eco);cursor:pointer;}
+.ctrl .val{flex:0 0 44px;text-align:right;font-size:11px;color:var(--text);font-variant-numeric:tabular-nums;}
+select{background:#1a1a1a;color:var(--text);border:1px solid var(--border-default);border-radius:4px;padding:4px 8px;font-size:12px;width:100%;}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--border-default);}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:11px;letter-spacing:0.06em;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;transition:all 0.15s;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--eco);border-bottom-color:var(--eco);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* Buttons */
+.btn{background:transparent;border:1px solid var(--border-strong);color:var(--text2);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:6px 14px;border-radius:3px;cursor:pointer;transition:all 0.15s;}
+.btn:hover{border-color:var(--eco);color:var(--text);}
+.btn-row{display:flex;gap:8px;margin-top:10px;}
+.btn-primary{background:var(--eco-dim);border-color:var(--eco);color:var(--eco-bright);}
+
+/* Color palette */
+.palette{display:flex;gap:6px;margin-bottom:8px;}
+.swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s;}
+.swatch.active{border-color:var(--eco);}
+.swatch:hover{border-color:var(--text2);}
+
+/* Preset dropdown row */
+.preset-row{margin-bottom:10px;}
+.preset-row select{width:100%;}
+
+/* Icon panels */
+.icon-panel{background:#0a0a0a;border:1px solid var(--border-default);border-radius:8px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:280px;flex:1;max-width:400px;}
+.icon-panel .panel-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);}
+.icon-wrap{display:flex;align-items:center;justify-content:center;width:200px;height:200px;cursor:pointer;transition:filter 0.35s ease;}
+.icon-wrap svg{max-width:100%;max-height:100%;}
+.icon-wrap svg path,.icon-wrap svg g path{fill:var(--icon-color);}
+.icon-panel .btn{font-size:10px;padding:4px 12px;}
+
+/* Mobile */
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;left:0;right:0;bottom:auto;width:100%;min-width:100%;max-height:50vh;border-right:none;border-bottom:1px solid var(--border-strong);transform:translateY(-100%);transition:transform 0.3s ease;}
+  .sidebar.open{transform:translateY(0);}
+  .main{margin-left:0;margin-top:48px;}
+  .mobile-toggle{display:flex!important;}
+}
+.mobile-toggle{display:none;position:fixed;top:0;left:0;right:0;height:48px;background:#111;border-bottom:1px solid var(--border-default);align-items:center;justify-content:center;z-index:20;cursor:pointer;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  .icon-wrap svg path,.icon-wrap svg g path{opacity:1!important;}
+}
+</style>
+</head>
+<body>
+
+<div class="mobile-toggle" id="mobileToggle">Controls</div>
+
+<div class="app">
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">SAGIE Animation Simulator</div>
+
+  <!-- Global Section -->
+  <div class="section">
+    <div class="section-title">Global</div>
+    <div class="preset-row">
+      <select id="preset" onchange="applyPreset(this.value)">
+        <option value="default">Default</option>
+        <option value="slow">Slow &amp; dramatic</option>
+        <option value="fast">Fast &amp; snappy</option>
+        <option value="subtle">Subtle</option>
+      </select>
+    </div>
+    <div class="ctrl">
+      <label>Speed multiplier</label>
+      <input type="range" min="0.25" max="3" step="0.01" value="1" oninput="state.global.speed=+this.value;this.nextElementSibling.textContent=this.value+'x'" />
+      <span class="val">1x</span>
+    </div>
+    <div class="ctrl">
+      <label>Hover glow intensity</label>
+      <input type="range" min="0" max="1" step="0.01" value="0.55" oninput="state.global.glowIntensity=+this.value;this.nextElementSibling.textContent=this.value;updateGlow()" />
+      <span class="val">0.55</span>
+    </div>
+    <div class="ctrl">
+      <label>Hover glow radius</label>
+      <input type="range" min="5" max="60" step="0.01" value="18" oninput="state.global.glowRadius=+this.value;this.nextElementSibling.textContent=this.value+'px';updateGlow()" />
+      <span class="val">18px</span>
+    </div>
+    <div class="section-title" style="margin-top:10px">Icon color</div>
+    <div class="palette" id="palette">
+      <div class="swatch active" style="background:#fff" data-color="#ffffff" onclick="setColor(this)"></div>
+      <div class="swatch" style="background:#7A9E7E" data-color="#7A9E7E" onclick="setColor(this)"></div>
+      <div class="swatch" style="background:#1565C0" data-color="#1565C0" onclick="setColor(this)"></div>
+      <div class="swatch" style="background:#757575" data-color="#757575" onclick="setColor(this)"></div>
+      <div class="swatch" style="background:#C0C0C0" data-color="#C0C0C0" onclick="setColor(this)"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="replayAll()">Replay All</button>
+    </div>
+  </div>
+
+  <!-- Per-icon tabs -->
+  <div class="tabs" id="iconTabs">
+    <div class="tab active" data-tab="community" onclick="switchTab(this)">CM</div>
+    <div class="tab" data-tab="ventures" onclick="switchTab(this)">VN</div>
+    <div class="tab" data-tab="solutions" onclick="switchTab(this)">SL</div>
+    <div class="tab" data-tab="events" onclick="switchTab(this)">EV</div>
+    <div class="tab" data-tab="resources" onclick="switchTab(this)">RS</div>
+  </div>
+
+  <!-- Community Tab -->
+  <div class="tab-content active" id="tab-community">
+    <div class="section">
+      <div class="section-title">Community</div>
+      <div class="ctrl"><label>Node reveal dur</label><input type="range" min="0.2" max="1" step="0.01" value="0.45" oninput="state.community.nodeRevealDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.45s</span></div>
+      <div class="ctrl"><label>Node stagger</label><input type="range" min="0.05" max="0.4" step="0.01" value="0.13" oninput="state.community.nodeStagger=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.13s</span></div>
+      <div class="ctrl"><label>Connector reveal dur</label><input type="range" min="0.1" max="0.6" step="0.01" value="0.3" oninput="state.community.connRevealDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.3s</span></div>
+      <div class="ctrl"><label>Connector stagger</label><input type="range" min="0.02" max="0.2" step="0.01" value="0.08" oninput="state.community.connStagger=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.08s</span></div>
+      <div class="ctrl"><label>Settle scale</label><input type="range" min="1.0" max="1.15" step="0.01" value="1.04" oninput="state.community.settleScale=+this.value;this.nextElementSibling.textContent=this.value" /><span class="val">1.04</span></div>
+      <div class="ctrl"><label>Easing</label><select onchange="state.community.easing=this.value" style="flex:1"><option value="power2.out" selected>power2.out</option><option value="power3.out">power3.out</option><option value="back.out(1.8)">back.out(1.8)</option><option value="back.out(2.5)">back.out(2.5)</option><option value="elastic.out(1,0.5)">elastic.out(1,0.5)</option><option value="sine.inOut">sine.inOut</option><option value="linear">linear</option></select></div>
+      <div class="btn-row">
+        <button class="btn" onclick="playCommunity()">Replay</button>
+        <button class="btn" onclick="copyValues('community')">Copy Values</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ventures Tab -->
+  <div class="tab-content" id="tab-ventures">
+    <div class="section">
+      <div class="section-title">Ventures</div>
+      <div class="ctrl"><label>Left node entrance dur</label><input type="range" min="0.2" max="0.8" step="0.01" value="0.4" oninput="state.ventures.leftNodeDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.4s</span></div>
+      <div class="ctrl"><label>Lines reveal dur</label><input type="range" min="0.3" max="1.2" step="0.01" value="0.7" oninput="state.ventures.linesRevealDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.7s</span></div>
+      <div class="ctrl"><label>Circle reveal dur</label><input type="range" min="0.2" max="1.0" step="0.01" value="0.55" oninput="state.ventures.circleRevealDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.55s</span></div>
+      <div class="ctrl"><label>Gate pause</label><input type="range" min="0.1" max="1.2" step="0.01" value="0.45" oninput="state.ventures.gatePause=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.45s</span></div>
+      <div class="ctrl"><label>Exit nodes stagger</label><input type="range" min="0.05" max="0.4" step="0.01" value="0.12" oninput="state.ventures.exitStagger=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.12s</span></div>
+      <div class="ctrl"><label>Idle brightness min</label><input type="range" min="0.1" max="0.9" step="0.01" value="0.4" oninput="state.ventures.idleBrightnessMin=+this.value;this.nextElementSibling.textContent=this.value" /><span class="val">0.4</span></div>
+      <div class="ctrl"><label>Idle pulse dur</label><input type="range" min="0.5" max="5" step="0.01" value="2.2" oninput="state.ventures.idlePulseDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">2.2s</span></div>
+      <div class="ctrl"><label>Easing</label><select onchange="state.ventures.easing=this.value" style="flex:1"><option value="power2.out" selected>power2.out</option><option value="power3.out">power3.out</option><option value="back.out(1.8)">back.out(1.8)</option><option value="back.out(2.5)">back.out(2.5)</option><option value="elastic.out(1,0.5)">elastic.out(1,0.5)</option><option value="sine.inOut">sine.inOut</option><option value="linear">linear</option></select></div>
+      <div class="btn-row">
+        <button class="btn" onclick="playVentures()">Replay</button>
+        <button class="btn" onclick="copyValues('ventures')">Copy Values</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solutions Tab -->
+  <div class="tab-content" id="tab-solutions">
+    <div class="section">
+      <div class="section-title">Solutions</div>
+      <div class="ctrl"><label>Entrance dur per path</label><input type="range" min="0.3" max="1.2" step="0.01" value="0.65" oninput="state.solutions.entranceDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.65s</span></div>
+      <div class="ctrl"><label>Entrance stagger</label><input type="range" min="0.02" max="0.2" step="0.01" value="0.08" oninput="state.solutions.entranceStagger=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.08s</span></div>
+      <div class="ctrl"><label>Idle brightness min</label><input type="range" min="0.3" max="0.9" step="0.01" value="0.6" oninput="state.solutions.idleBrightnessMin=+this.value;this.nextElementSibling.textContent=this.value" /><span class="val">0.6</span></div>
+      <div class="ctrl"><label>Idle pulse dur</label><input type="range" min="0.5" max="4" step="0.01" value="1.8" oninput="state.solutions.idlePulseDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">1.8s</span></div>
+      <div class="ctrl"><label>Idle stagger</label><input type="range" min="0.02" max="0.3" step="0.01" value="0.1" oninput="state.solutions.idleStagger=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.1s</span></div>
+      <div class="ctrl"><label>Easing</label><select onchange="state.solutions.easing=this.value" style="flex:1"><option value="power2.out" selected>power2.out</option><option value="power3.out">power3.out</option><option value="back.out(1.8)">back.out(1.8)</option><option value="back.out(2.5)">back.out(2.5)</option><option value="elastic.out(1,0.5)">elastic.out(1,0.5)</option><option value="sine.inOut">sine.inOut</option><option value="linear">linear</option></select></div>
+      <div class="btn-row">
+        <button class="btn" onclick="playSolutions()">Replay</button>
+        <button class="btn" onclick="copyValues('solutions')">Copy Values</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events Tab -->
+  <div class="tab-content" id="tab-events">
+    <div class="section">
+      <div class="section-title">Events</div>
+      <div class="ctrl"><label>Entrance dur per group</label><input type="range" min="0.3" max="1.2" step="0.01" value="0.6" oninput="state.events.entranceDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.6s</span></div>
+      <div class="ctrl"><label>Group stagger</label><input type="range" min="0.04" max="0.3" step="0.01" value="0.1" oninput="state.events.groupStagger=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.1s</span></div>
+      <div class="ctrl"><label>Overlap between groups</label><input type="range" min="0" max="0.5" step="0.01" value="0.25" oninput="state.events.overlap=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.25s</span></div>
+      <div class="ctrl"><label>Top node pulse opacity</label><input type="range" min="0.2" max="0.8" step="0.01" value="0.4" oninput="state.events.topNodePulse=+this.value;this.nextElementSibling.textContent=this.value" /><span class="val">0.4</span></div>
+      <div class="ctrl"><label>Idle scale max</label><input type="range" min="1.0" max="1.06" step="0.001" value="1.025" oninput="state.events.idleScaleMax=+this.value;this.nextElementSibling.textContent=this.value" /><span class="val">1.025</span></div>
+      <div class="ctrl"><label>Idle duration</label><input type="range" min="1" max="8" step="0.01" value="3.5" oninput="state.events.idleDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">3.5s</span></div>
+      <div class="ctrl"><label>Easing</label><select onchange="state.events.easing=this.value" style="flex:1"><option value="power2.out" selected>power2.out</option><option value="power3.out">power3.out</option><option value="back.out(1.8)">back.out(1.8)</option><option value="back.out(2.5)">back.out(2.5)</option><option value="elastic.out(1,0.5)">elastic.out(1,0.5)</option><option value="sine.inOut">sine.inOut</option><option value="linear">linear</option></select></div>
+      <div class="btn-row">
+        <button class="btn" onclick="playEvents()">Replay</button>
+        <button class="btn" onclick="copyValues('events')">Copy Values</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resources Tab -->
+  <div class="tab-content" id="tab-resources">
+    <div class="section">
+      <div class="section-title">Resources</div>
+      <div class="ctrl"><label>Spine reveal dur</label><input type="range" min="0.3" max="1.2" step="0.01" value="0.65" oninput="state.resources.spineRevealDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.65s</span></div>
+      <div class="ctrl"><label>Branch reveal dur</label><input type="range" min="0.2" max="0.8" step="0.01" value="0.38" oninput="state.resources.branchRevealDur=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.38s</span></div>
+      <div class="ctrl"><label>Branch stagger</label><input type="range" min="0.05" max="0.4" step="0.01" value="0.13" oninput="state.resources.branchStagger=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">0.13s</span></div>
+      <div class="ctrl"><label>Idle spine opacity min</label><input type="range" min="0.3" max="0.9" step="0.01" value="0.7" oninput="state.resources.idleSpineOpMin=+this.value;this.nextElementSibling.textContent=this.value" /><span class="val">0.7</span></div>
+      <div class="ctrl"><label>Idle branch opacity min</label><input type="range" min="0.2" max="0.8" step="0.01" value="0.45" oninput="state.resources.idleBranchOpMin=+this.value;this.nextElementSibling.textContent=this.value" /><span class="val">0.45</span></div>
+      <div class="ctrl"><label>Idle duration base</label><input type="range" min="0.5" max="5" step="0.01" value="2.5" oninput="state.resources.idleDurBase=+this.value;this.nextElementSibling.textContent=this.value+'s'" /><span class="val">2.5s</span></div>
+      <div class="ctrl"><label>Easing</label><select onchange="state.resources.easing=this.value" style="flex:1"><option value="power2.out" selected>power2.out</option><option value="power3.out">power3.out</option><option value="back.out(1.8)">back.out(1.8)</option><option value="back.out(2.5)">back.out(2.5)</option><option value="elastic.out(1,0.5)">elastic.out(1,0.5)</option><option value="sine.inOut">sine.inOut</option><option value="linear">linear</option></select></div>
+      <div class="btn-row">
+        <button class="btn" onclick="playResources()">Replay</button>
+        <button class="btn" onclick="copyValues('resources')">Copy Values</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main icon grid -->
+<div class="main" id="main">
+
+  <!-- COMMUNITY -->
+  <div class="icon-panel" id="panel-community">
+    <div class="panel-label">Community</div>
+    <div class="icon-wrap" id="cm-wrap"><svg width="210" height="227" viewBox="0 0 623 673" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="cm0" d="M600.845 307.991C598.92 296.413 597.025 285.285 595.101 273.983C599.394 272.091 603.756 270.17 608.874 267.916C622.607 325.212 621.365 381.487 601.475 437.11C626.069 459.871 626.649 489.107 613.937 510.773C601.12 532.618 574.618 545.126 545.467 536.151C531.894 548.846 519.262 561.971 505.296 573.478C464.013 607.491 416.891 629.214 363.981 637.959C361.138 638.429 359.481 639.394 358.19 642.169C348.367 663.283 325.55 674.98 301.576 671.436C279.084 668.111 260.227 649.202 257.054 626.791C252.853 597.11 273.202 569.827 302.635 565.678C332.245 561.503 359.041 581.903 363.237 611.882C363.694 615.146 363.736 618.468 364.022 622.48C430.172 609.933 485.228 578.417 530.013 528.393C504.932 508.816 499.147 475.497 515.086 450.512C528.933 428.808 557.559 415.822 588.155 429.052C601.706 389.722 605.853 349.595 600.845 307.991ZM551.591 520.71C553.034 521.089 554.465 521.533 555.924 521.838C575.1 525.852 595.329 514.961 602.469 496.796C610.091 477.407 602.591 456.33 584.263 445.632C567.277 435.718 544.888 439.808 532.293 454.906C512.066 479.153 525.98 512.896 551.591 520.71ZM342.39 600.796C333.604 586.387 318.994 579.289 303.146 582.614C288.455 585.697 278.438 594.76 274.392 609.279C270.424 623.517 274.644 636.027 285.355 645.903C298.391 657.922 318.778 658.729 332.233 648.257C344.219 638.929 352.912 620.016 342.39 600.796Z" fill="white"/>
+<path id="cm1" d="M92.3286 243.803C75.2923 260.536 55.7372 264.149 32.8856 256.451C16.0681 307.522 15.115 359.123 27.9206 411.355C23.3356 413.64 18.8994 415.851 13.4539 418.566C10.9805 404.691 7.97725 391.212 6.27475 377.571C3.05112 351.741 2.76062 325.758 7.1685 300.065C9.88638 284.222 14.3274 268.663 18.3287 253.062C19.0815 250.127 19.1843 248.326 16.7946 246.169C-2.14931 229.074 -4.74196 200.515 7.37517 180.419C20.6664 158.376 46.0124 149.343 71.1068 157.547C71.4197 157.649 71.7558 157.681 71.0969 157.55C83.8345 144.633 95.6657 131.554 108.631 119.717C134.299 96.2809 163.697 78.5484 195.958 65.6024C198.591 64.5456 200.516 63.5061 201.742 60.3698C204.434 53.4822 212.963 50.8461 219.875 54.0376C227.034 57.3427 230.079 65.6695 226.815 73.0112C224.006 79.3288 215.578 82.7555 209.058 79.7105C206.221 78.3854 204.009 78.3492 201.248 79.541C158.91 97.8183 121.909 123.485 91.6324 158.492C89.6872 160.742 87.9085 163.135 85.894 165.659C98.8352 176.161 105.852 189.668 106.346 206.153C106.772 220.337 102.359 232.994 92.3286 243.803ZM48.0259 243.557C64.7715 245.484 79.1457 238.049 86.0479 223.891C93.3164 208.982 90.6133 193.291 78.7238 181.376C67.8755 170.505 50.6131 168.004 36.2664 175.225C22.6954 182.056 14.5926 197.595 16.8548 212.451C19.2892 228.439 29.9496 239.363 48.0259 243.557Z" fill="white"/>
+<path id="cm2" d="M199.639 621.815C152.991 603.575 113.496 575.798 80.8871 538.312C78.2523 535.284 75.8691 536.242 73.0243 536.973C47.8826 543.429 23.0936 533.834 9.14045 512.273C-11.945 479.691 5.37794 435.32 42.9504 425.671C70.241 418.663 97.9663 431.111 110.15 455.842C122.417 480.744 115.395 509.567 92.1525 528.137C130.608 571.656 177.536 601.37 233.629 616.718C234.163 621.893 234.703 627.129 235.384 633.733C223.354 629.737 211.673 625.856 199.639 621.815ZM97.2754 467.959C96.5121 466.122 95.8604 464.229 94.9684 462.457C86.5266 445.684 66.8532 437.031 47.6394 441.597C29.8191 445.831 15.885 463.111 16.509 481.289C17.1053 498.66 25.0772 511.982 41.287 519.06C57.4263 526.107 72.8315 523.558 85.7819 511.755C98.5028 500.161 102.548 485.483 97.2754 467.959Z" fill="white"/>
+<path id="cm3" d="M428.589 66.0468C476.981 86.6998 517.811 116.683 549.528 158.286C580.961 146.721 608.285 164.335 617.712 186.622C628.512 212.157 618.866 240.608 594.675 254.154C571.339 267.221 540.766 260.3 525.283 238.332C511.385 218.612 511.237 186.462 536.232 165.84C498.78 119.109 451.06 87.7993 393.741 70.1365C393.962 65.2352 394.191 60.1609 394.475 53.8847C405.96 57.9562 417.108 61.9077 428.589 66.0468ZM582.863 173.97C580.807 173.322 578.78 172.559 576.692 172.044C562.575 168.559 546.139 175.329 538.108 187.886C529.913 200.697 530.442 218.047 539.377 229.515C549.027 241.903 564.485 246.853 579.495 242.361C594.121 237.984 604.26 225.111 605.582 209.24C606.745 195.294 597.772 181.079 582.863 173.97Z" fill="white"/>
+<path id="cm4" d="M352.088 15.4555C387.411 48.4102 376.544 105.026 332.099 121.319C294.881 134.963 254.066 109.7 248.75 70.6803C245.472 46.614 258.91 19.1704 280.475 7.80535C304.249 -4.72401 330.819 -2.16551 352.088 15.4555ZM303.294 16.9825C277.881 21.829 261.461 44.3675 265.142 69.3477C268.955 95.2188 294.84 113.257 320.037 107.531C344.437 101.986 358.479 80.4652 356.672 59.4131C354.28 31.5449 332.021 14.1824 303.294 16.9825Z" fill="white"/>
+<path id="cm5" d="M378.059 572.788C383.761 565.95 389.163 565.054 396.742 569.135C397.797 569.703 399.507 569.818 400.626 569.391C424.406 560.3 446.081 547.518 466.133 531.888C468.881 529.747 470.268 527.603 470.259 523.724C470.241 516.042 476.695 510.83 484.202 511.476C491.584 512.112 496.812 518.503 496.073 525.987C495.355 533.258 488.799 538.35 481.436 537.836C479.299 537.686 476.553 538.248 474.958 539.551C453.929 556.725 430.794 570.223 405.557 580.196C404.157 580.748 402.592 582.134 402.089 583.495C399.32 590.986 392.476 594.67 385.045 592.349C378.337 590.254 374.921 583.38 376.907 575.918C377.159 574.968 377.555 574.057 378.059 572.788Z" fill="white"/>
+<path id="cm6" d="M134.421 511.821C145.207 510.294 150.94 515.085 151.922 525.42C152.117 527.477 153.881 529.84 155.597 531.226C173.042 545.321 192.296 556.437 212.819 565.404C214.799 566.269 216.747 567.374 218.826 567.799C220.632 568.169 222.884 568.315 224.453 567.555C231.311 564.235 239.862 567.046 243.067 573.998C246.158 580.703 242.987 588.916 236.307 591.502C228.479 594.533 221.006 590.872 218.361 583.042C217.799 581.381 216.211 579.477 214.63 578.839C190.093 568.933 167.247 556.211 146.901 539.151C145.632 538.087 143.43 537.535 141.74 537.677C134.164 538.311 128.518 535.022 126.59 528.449C124.566 521.554 127.372 515.346 134.421 511.821Z" fill="white"/>
+<path id="cm7" d="M153.742 161.275C150.235 164.07 148.572 166.729 149.158 171.505C150.165 179.72 142.138 186.872 133.541 186.552C125.041 186.236 118.465 179.267 119.144 171.297C119.95 161.851 126.936 156.355 136.257 157.484C138.199 157.719 140.996 157.406 142.209 156.174C166.903 131.106 196.243 113.33 228.755 100.441C230.291 99.8322 231.799 99.1525 233.424 98.4617C235.512 101.872 237.575 105.239 239.938 109.098C207.674 120.637 178.66 137.268 153.742 161.275Z" fill="white"/>
+<path id="cm8" d="M571.072 372.723C570.498 375.864 571.011 377.933 573.061 380.222C578.402 386.188 577.25 394.892 571.009 399.593C564.669 404.368 556.209 402.971 551.786 396.419C547.287 389.754 549.344 381.205 556.227 376.922C557.569 376.087 558.923 374.31 559.154 372.797C562.253 352.49 562.253 332.137 559.364 311.81C559.133 310.184 557.948 308.272 556.617 307.295C550.104 302.517 548.476 293.671 553.24 287.49C557.84 281.522 566.464 280.667 572.337 285.598C578.243 290.556 578.236 299.368 572.679 305.585C571.5 306.904 571.013 309.31 571.07 311.19C571.513 325.94 572.371 340.68 572.649 355.431C572.755 361.037 571.677 366.666 571.072 372.723Z" fill="white"/>
+<path id="cm9" d="M499.417 161.083C505.245 168.086 505.041 175.659 499.161 180.741C493.783 185.389 485.27 185 480.971 179.14C478.991 176.44 478.823 172.434 477.724 169.057C477.074 167.059 476.739 164.582 475.362 163.252C450.063 138.812 420.087 122.127 387.12 110.466C385.252 109.805 383.41 109.068 381.192 108.228C382.251 106.376 383.194 104.721 384.143 103.069C385.036 101.513 385.935 99.96 386.991 98.1307C405.617 104.601 423.466 112.459 440.473 122.289C456.55 131.582 470.959 143.001 484.558 155.559C485.881 156.78 488.189 156.932 490.037 157.587C493.076 158.663 496.113 159.745 499.417 161.083Z" fill="white"/>
+<path id="cm10" d="M62.7092 282.699C74.6054 288.561 75.4686 300.42 65.0264 307.621C63.8229 308.451 62.9513 310.415 62.7568 311.958C59.1083 340.905 60.9426 369.631 66.4804 398.19C66.7297 399.476 66.9447 400.768 67.1968 402.175C63.0384 402.175 59.0829 402.175 54.5302 402.175C53.4208 394.207 51.9309 386.396 51.3259 378.518C50.2849 364.964 49.3688 351.373 49.2241 337.789C49.1274 328.699 50.5383 319.598 51.0672 310.491C51.1589 308.912 50.6693 306.883 49.6741 305.73C44.9886 300.3 43.8593 294.27 46.9075 288.834C49.8681 283.555 55.2742 281.376 62.7092 282.699Z" fill="white"/>
+</svg></div>
+    <button class="btn" onclick="playCommunity()">Replay</button>
+  </div>
+
+  <!-- VENTURES -->
+  <div class="icon-panel" id="panel-ventures">
+    <div class="panel-label">Ventures</div>
+    <div class="icon-wrap" id="vn-wrap"><svg width="240" height="240" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_sim)">
+<path id="vn0" d="M840.992 481.955C821.377 481.855 801.762 481.686 782.147 481.668C738.079 481.628 694.011 481.663 649.141 481.711C648.221 482.17 648.103 482.586 647.985 483.003C647.887 485.655 647.789 488.307 647.441 491.681C647.245 493.594 647.3 494.788 647.354 495.981C647.927 497.363 648.155 499.077 649.121 500.08C684.235 536.537 719.41 572.935 754.632 609.287C755.671 610.36 757.273 611.426 758.679 611.52C770.113 612.293 781.562 612.832 793.461 613.467C797.039 602.939 803.973 595.219 814.503 591.195C822.218 588.246 830.105 588.284 837.98 590.977C853.596 596.317 863.209 612.535 860.918 629.819C858.912 644.951 845.036 657.509 829.011 658.697C811.328 660.008 797.623 649.456 792.123 630.026C779.669 629.366 767.104 628.492 754.524 628.156C750.516 628.049 747.906 626.792 745.166 623.911C712.106 589.163 678.896 554.559 645.72 519.922C645.159 519.335 644.54 518.803 643.571 517.89C633.953 554.928 613.881 584.602 583.308 606.949C552.478 629.482 517.676 638.771 479.818 635.728C411.847 630.265 347.539 576.153 338.193 497.15C336.468 497.15 334.684 497.15 332.899 497.15C288.581 497.145 244.261 497.258 199.945 496.979C194.725 496.946 192.183 498.306 189.909 503.03C184.295 514.697 171.481 521.116 159.407 519.172C145.514 516.936 134.981 507.244 132.995 494.869C130.323 478.222 139.336 463.459 154.698 459.321C170.916 454.953 185.713 463.033 192.887 480.074C193.664 480.235 193.841 480.17 194.018 480.104C204.311 480.197 214.604 480.359 224.897 480.369C261.622 480.404 298.347 480.387 335.841 480.359C336.952 479.891 337.294 479.454 337.636 479.017C338.075 451.649 344.816 425.802 359.355 402.724C393.42 348.655 442.879 321.486 506.735 326.614C560.952 330.968 601.725 359.275 628.766 406.76C629.5 408.049 630.178 409.369 631.265 411.384C638.354 404.187 645.155 397.247 651.995 390.346C676.274 365.852 700.542 341.348 724.924 316.957C726.108 315.772 728.331 315.093 730.076 315.081C748.891 314.949 767.707 314.999 786.463 314.999C794.12 291.475 812.01 285.739 827.564 288.223C843.732 290.804 855.707 305.226 856.073 321.997C856.428 338.242 844.872 353.214 829.264 356.732C810.497 360.963 796.15 352.364 786.62 331.076C770.191 331.076 753.701 331.031 737.212 331.155C735.777 331.165 733.99 331.923 732.971 332.94C702.423 363.409 671.972 393.975 641.424 424.445C639.285 426.578 638.869 428.271 639.711 431.31C642.723 442.177 645.194 453.194 648.006 464.712C712.003 464.712 776.914 464.712 842.055 464.712C845.757 452.618 853.488 443.978 865.905 440.161C883.451 434.767 903.282 444.83 908.85 461.702C915.012 480.376 905.754 500.518 888.137 506.772C869.802 513.28 850.045 504.093 843.318 485.929C843.03 485.149 842.767 484.361 842.277 482.97C841.705 482.227 841.349 482.091 840.992 481.955ZM519.912 611.645C595.958 594.4 641.753 519.946 621.568 446.095C599.772 366.354 508.181 321.195 429.342 364.222C377.457 392.539 349.949 452.323 362.684 509.255C378.346 579.269 448.439 626.671 519.912 611.645ZM838.015 330.226C838.393 328.966 838.846 327.723 839.136 326.443C840.794 319.13 837.811 311.601 831.613 307.351C824.991 302.81 816.628 302.838 810.149 307.424C803.958 311.807 801.072 319.344 802.808 326.598C804.843 335.099 810.809 341.04 819.144 341.757C827.617 342.486 833.734 338.32 838.015 330.226ZM894.212 471.239C892.247 460.575 883.82 453.905 873.84 455.117C863.784 456.337 856.682 465.256 857.62 475.487C858.515 485.258 867.548 493.342 876.791 492.645C887.523 491.836 894.857 483.264 894.212 471.239ZM844.927 620.998C844.292 619.118 843.854 617.143 842.989 615.376C839.002 607.232 829.063 603.264 820.585 606.314C811.806 609.472 806.516 619.003 808.645 627.823C810.946 637.352 819.391 643.619 828.351 642.448C838.692 641.095 845.524 632.666 844.927 620.998ZM151.319 479.971C146.21 488.587 148.135 497.339 156.092 501.675C163.591 505.762 172.498 502.917 176.306 495.22C179.378 489.01 177.238 480.696 171.515 476.607C165.375 472.219 158.28 473.232 151.319 479.971Z" fill="white"/>
+<path id="vn1" d="M647.673 495.867C647.3 494.788 647.245 493.594 647.413 492.12C647.754 493.144 647.873 494.449 647.673 495.867Z" fill="transparent"/>
+<path id="vn2" d="M337.373 479.07C337.294 479.454 336.952 479.891 336.292 480.228C336.353 479.793 336.732 479.458 337.373 479.07Z" fill="transparent"/>
+<path id="vn3" d="M193.93 479.935C193.841 480.17 193.664 480.235 193.242 480.158C193.279 479.932 193.56 479.848 193.93 479.935Z" fill="transparent"/>
+<path id="vn4" d="M648.217 482.872C648.103 482.586 648.221 482.17 648.682 481.807C648.834 482.153 648.642 482.448 648.217 482.872Z" fill="transparent"/>
+<path id="vn5" d="M841.111 482.184C841.349 482.091 841.705 482.227 842.059 482.686C841.78 482.811 841.505 482.612 841.111 482.184Z" fill="transparent"/>
+</g>
+<defs><clipPath id="clip0_sim"><rect width="1024" height="1024" fill="white"/></clipPath></defs>
+</svg></div>
+    <button class="btn" onclick="playVentures()">Replay</button>
+  </div>
+
+  <!-- SOLUTIONS -->
+  <div class="icon-panel" id="panel-solutions">
+    <div class="panel-label">Solutions</div>
+    <div class="icon-wrap" id="sl-wrap"><svg width="240" height="155" viewBox="0 0 773 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="sl0" d="M64.874 129.552C112.577 101.421 175.092 107.675 216.264 144.719C220.69 148.702 224.617 153.256 228.463 158.046C232.289 162.811 236.061 167.844 240.13 172.724C256.725 199.346 261.979 227.687 257.975 257.987C255.332 277.98 246.949 295.579 235.584 311.993C214.006 339.91 185.839 356.839 150.99 362.33C99.8614 370.386 48.3625 348.44 20.2305 304.055C7.75723 284.376 0.50372 263.026 0.5 239.854C0.492187 190.783 23.0506 154.217 64.874 129.552ZM236.827 208.844C219.439 151.428 159.87 118.439 100.588 134.006L100.578 134.008L100.569 134.01C84.9241 138.781 70.6811 146.002 57.9053 156.484C9.04697 196.57 5.38216 269.731 51.0615 313.367C68.5553 330.078 87.6018 340.386 107.942 344.42C128.282 348.453 149.882 346.205 172.475 337.857C224.176 318.754 252.626 261.014 236.827 208.844Z" fill="white" stroke="black"/>
+<path id="sl1" d="M681.542 3.49512C688.513 -0.00456803 696.211 -0.437939 704.745 2.19824C719.247 6.67839 728.323 19.9795 727.285 35.2441C726.322 49.3884 715.527 60.7549 700.628 63.2236C692.2 64.6201 684.641 63.23 678.215 59.2109C671.783 55.1878 666.444 48.5047 662.514 39.249L662.384 38.9443H662.054C643.31 38.9443 624.353 38.9552 605.396 38.9424C557.081 38.9098 508.763 38.8244 460.446 38.96C459.223 38.9634 457.874 39.3365 456.639 39.9131C455.402 40.4905 454.241 41.2897 453.398 42.1807C426.741 70.3629 400.241 98.6946 373.705 126.988C372.679 128.082 371.642 129.127 370.17 130.673L370.158 130.686L370.147 130.699C367.637 133.737 365.538 136.325 363.445 138.908C362.817 139.306 362.166 139.726 361.143 140.558L361.112 140.583L361.085 140.613C358.189 143.872 355.687 146.695 353.186 149.518C350.661 152.1 348.133 154.684 345.208 157.706L345.198 157.718L345.187 157.73C344.098 159.013 343.238 160.04 342.32 161.09L341.371 162.158C337.841 165.855 334.586 169.352 331.334 172.846C328.994 174.19 326.667 175.523 323.552 176.887C300.832 176.982 278.935 177.046 256.752 176.911C254.41 173.429 252.343 170.134 250.272 166.832C249.389 165.351 248.505 163.868 247.345 161.924C248.82 161.924 249.992 161.924 251.164 161.924C272.487 161.918 293.818 161.997 315.145 161.784C316.368 161.772 317.741 161.476 319.005 160.975C320.268 160.474 321.46 159.754 322.295 158.865C348.64 130.842 374.781 102.623 401.03 74.5146C416.03 58.4518 431.041 42.4017 446.342 26.6367C447.276 25.6745 448.649 24.8609 450.167 24.2881C451.681 23.7163 453.304 23.3986 454.711 23.3984C523.518 23.3945 592.325 23.6207 661.133 23.7998C661.502 23.8008 661.911 23.7213 662.181 23.6885L662.429 23.6582L662.554 23.4424C668.244 13.6154 674.556 7.00199 681.542 3.49512ZM706.167 20.3389C699.09 14.0591 689.248 14.4379 682.582 21.2363C679.383 24.4987 677.842 28.3635 678.061 32.4297C678.28 36.4868 680.245 40.6837 683.942 44.6357L683.975 44.6709L684.014 44.6992C692.217 50.6369 702.02 49.7975 707.897 42.5244C713.532 35.5504 712.811 26.2356 706.167 20.3389Z" fill="white" stroke="black"/>
+<path id="sl2" d="M727.167 194.508C734.853 191.68 743.177 191.959 749.89 193.857C764.163 197.894 773.505 211.884 772.285 226.93C771.078 241.81 758.867 253.612 742.501 255.327C731.046 256.527 712.969 250.092 707.689 230.895L707.59 230.534L707.216 230.528L533.773 227.595C515.05 227.259 497.243 226.867 479.435 226.671C476.745 226.641 473.853 226.463 471.084 226.501C468.29 226.539 465.517 226.793 462.945 227.645C460.146 228.572 457.563 230.098 455.067 231.767C452.555 233.448 450.185 235.234 447.684 236.8C446.399 237.353 445.122 237.901 443.436 238.47L442.68 238.717L442.673 238.72C441.27 239.189 440.478 239.631 439.723 240.06C436.378 240.925 433.035 241.789 429.3 242.671L429.282 242.617L429.177 242.527L428.983 242.375C428.538 242.054 428.113 241.952 427.422 241.796L427.369 241.784H427.315C383.78 241.484 340.706 241.212 297.632 241.155C292.948 241.149 289.106 240.67 286.266 236.706C286.202 236.436 286.107 236.213 285.955 236.01C285.806 235.811 285.616 235.65 285.425 235.493C284.635 234.404 284.022 233.698 283.296 232.612C282.035 230.474 280.869 228.662 279.992 226.788C282.938 226.455 285.503 226.094 288.076 226.109C303.171 226.2 318.339 226.474 333.443 226.547C355.549 226.653 377.656 226.641 399.76 226.68V226.681C409.451 226.737 419.143 226.793 429.654 226.851L429.728 226.852L429.8 226.831C431.951 226.189 433.273 225.542 434.57 224.908L434.58 224.903L434.589 224.898C436.553 223.833 438.565 222.881 440.585 221.843C442.589 220.812 444.57 219.71 446.395 218.381C454.662 212.359 463.72 210.748 473.831 211.319C486.633 212.043 499.504 211.829 512.302 212.021C559.403 212.728 606.506 213.509 653.61 214.106C671.561 214.334 689.522 214.143 707.754 214.143H708.093L708.219 213.829C712.434 203.255 719.497 197.33 727.167 194.508ZM750.496 211.253C744.685 206.759 737.141 206.255 730.828 210.038C724.81 213.644 721.923 220.153 723.212 227.17C724.372 233.488 729.771 238.713 736.384 239.974C740.223 240.705 743.755 240.297 746.962 238.655C750.161 237.017 752.997 234.171 755.492 230.099L755.502 230.082L755.511 230.063C759.263 222.668 755.091 214.806 750.496 211.253Z" fill="white" stroke="black"/>
+<path id="sl3" d="M271.29 261.103C271.89 260.717 272.787 260.603 274.182 260.685L274.194 260.686H274.207C275.95 260.702 277.582 260.697 279.211 260.692C280.841 260.688 282.47 260.683 284.213 260.7V260.701C324.968 261.271 365.257 261.755 405.851 262.479V262.48C408.443 262.556 410.733 262.391 413.394 262.248C421.773 262.301 429.742 262.332 437.708 262.365C440.377 263.083 443.027 263.8 446.12 264.949C448.988 267.876 451.402 270.357 453.819 272.837C471.334 290.804 488.849 308.771 506.364 326.738V326.737C515.614 336.522 524.823 346.359 534.196 356.036V356.035C534.76 356.618 535.575 357.01 536.407 357.261C537.246 357.513 538.15 357.636 538.939 357.649C555.42 357.924 571.904 358.133 588.388 358.222C604.856 358.31 621.327 358.241 638.106 358.241H638.457L638.576 357.912C641.478 349.92 646.632 343.712 653.448 340.082C660.262 336.452 668.776 335.379 678.435 337.725C693.841 341.468 703.641 355.167 702.573 369.919C701.527 384.365 690.323 396.55 676.097 398.725C667.441 400.049 659.556 398.495 653.002 394.349C646.446 390.202 641.186 383.438 637.827 374.284L637.707 373.957H637.358C625.967 373.957 614.209 374.068 602.45 373.933C579.972 373.677 557.473 373.18 534.986 373.02C530.24 372.987 526.777 371.441 523.517 368.017C503.778 347.287 483.88 326.706 463.643 305.615L463.619 305.591L463.592 305.569L463.306 305.35C462.738 304.932 462.387 304.778 462.063 304.652C460.613 303.245 459.18 301.848 457.629 299.913C457.024 298.893 456.535 298.441 456.069 298.014C452.973 294.709 449.879 291.404 446.389 287.619L446.37 287.598L446.348 287.579L445.505 286.86C443.606 285.254 441.967 283.965 440.337 282.684L440.321 282.532L440.204 282.41L439.901 282.084C439.598 281.75 439.294 281.394 438.986 281.033C438.578 280.557 438.161 280.07 437.743 279.636C437.325 279.202 436.889 278.803 436.436 278.508C435.983 278.213 435.483 278.002 434.946 277.992C416.233 277.634 397.5 277.652 378.402 277.425H378.403C370.277 277.246 362.515 277.211 354.332 277.061H354.331C340.842 276.843 327.831 276.74 314.436 276.489C313.848 276.454 313.352 276.455 312.868 276.457C312.377 276.459 311.898 276.461 311.32 276.429L311.312 276.428H311.304C310.241 276.4 309.281 276.409 308.331 276.42C307.379 276.43 306.438 276.442 305.398 276.422H305.399C302.647 276.346 299.995 276.303 297.339 276.262C294.683 276.22 292.024 276.179 289.252 276.107H289.248C281.592 275.988 274.362 275.985 266.833 275.985C268.082 271.531 269.483 267.579 270.097 263.544C270.308 262.161 270.72 261.471 271.29 261.103ZM682.061 356.708C677 351.706 670.786 350.16 664.105 352.538C660.648 353.768 657.959 355.695 656.105 358.381C654.253 361.064 653.262 364.466 653.13 368.603L653.127 368.687L653.153 368.768C653.495 369.863 653.731 370.969 654.047 372.134C654.357 373.271 654.733 374.414 655.336 375.441C657.129 378.494 659.412 380.78 662.161 382.222C664.91 383.664 668.095 384.245 671.665 383.934C678.606 383.33 683.561 379.655 686.055 373.179C687.26 370.05 687.431 367.074 686.704 364.298C685.978 361.526 684.367 358.987 682.061 356.708Z" fill="white" stroke="black"/>
+<path id="sl4" d="M260.935 298.584C274.863 298.773 288.798 298.669 302.719 298.668C303.461 298.817 304.23 298.969 305.769 299.135L305.802 299.138L305.833 299.137C309.004 299.072 311.376 298.989 313.742 298.907C315.103 299.017 316.467 299.129 318.599 299.321L318.619 299.323H318.637C328.819 299.474 338.23 299.541 347.635 299.609C348.878 300.297 350.301 300.887 351.538 301.496C352.848 302.141 354.014 302.837 354.86 303.782C398.807 352.874 442.823 401.903 486.167 451.518C488.835 454.573 491.522 455.937 494.288 456.56C497.008 457.173 499.832 457.067 502.657 457.206C520.912 458.101 539.183 458.724 557.27 459.446L557.611 459.46L557.748 459.148C565.487 441.575 580.441 433.255 596.718 436.993C611.911 440.482 622.494 453.647 622.064 468.439C621.634 483.245 610.682 495.753 595.632 498.363C589.203 499.478 581.403 498.85 574.349 495.217C567.309 491.589 560.98 484.951 557.497 473.979L557.386 473.631H557.02C546.429 473.631 535.484 473.763 524.537 473.594C512.569 473.411 500.602 473.212 488.682 472.422C485.875 472.235 482.449 470.461 480.524 468.323C460.712 446.315 441.215 424.031 421.533 401.895C401.106 378.921 380.582 356.033 359.683 332.635C355.232 327.578 351.345 322.746 346.984 318.417C345.256 316.701 342.4 315.291 339.962 315.21C322.899 314.642 305.823 314.427 288.761 314.102H288.758C277.408 313.988 266.057 313.875 253.868 313.749H253.869C251.867 313.667 250.463 313.592 249.001 313.511C251.463 309.37 253.903 305.658 255.812 301.717C256.422 300.459 257.035 299.691 257.793 299.228C258.552 298.765 259.523 298.565 260.935 298.584ZM591.757 451.704C588.336 451.162 584.91 451.789 581.594 453.578C575.631 456.794 572.292 463.321 573.276 469.878C574.282 476.575 579.27 481.782 586.233 483.474C592.45 484.985 599.701 482.194 603.421 476.872C605.491 473.91 606.459 470.87 606.213 467.561C605.967 464.267 604.522 460.76 601.872 456.844L601.835 456.79L601.785 456.747L601.177 456.234C598.126 453.736 594.959 452.211 591.757 451.704Z" fill="white" stroke="black"/>
+<path id="sl5" d="M542.702 97.3873C549.335 93.7499 557.16 92.7691 565.828 94.692C580.616 97.9727 591.108 111.192 590.665 125.944C590.225 140.616 579.457 153.23 565.31 155.683C556.384 157.231 548.455 155.907 541.854 151.911C535.25 147.912 529.929 141.209 526.279 131.916L526.154 131.598H525.813C509.025 131.598 492.026 132.651 475.194 131.278C467.958 130.688 461.594 131.405 455.938 133.805C450.288 136.203 445.381 140.264 441.025 146.304C428.73 158.506 416.879 170.265 405.03 182.023C404.99 182.042 404.941 182.066 404.887 182.096C404.742 182.178 404.553 182.307 404.359 182.499H404.358C396.629 190.189 389.088 197.48 381.823 205.026C379.096 207.859 376.173 208.822 372.265 208.807C338.829 208.678 305.392 208.727 271.958 208.705C270.814 208.704 269.697 208.573 268.679 208.49C267.236 203.602 265.87 198.971 264.316 193.709H300.76L330.741 193.865H330.752C334.695 193.806 337.732 193.744 340.767 193.681C346.122 193.74 351.479 193.799 357.716 193.86H357.731C360.305 193.803 362.018 193.744 363.719 193.684C366.244 194.268 368.418 194.044 370.408 193.211C372.403 192.375 374.185 190.94 375.941 189.168C398.813 166.087 421.917 143.268 444.836 120.225C447.696 117.35 450.714 116.408 454.694 116.43C478.513 116.565 502.334 116.496 526.179 116.496H526.503L526.636 116.199C530.577 107.353 536.065 101.027 542.702 97.3873ZM559.368 108.93C555.531 108.73 552.148 109.493 549.264 111.307C546.382 113.12 544.037 115.956 542.229 119.837L542.206 119.886L542.194 119.939C541.955 121.016 541.585 122.217 541.446 123.397C540.715 129.605 544.584 136.172 550.669 139.328C556.969 142.596 563.924 141.765 569.287 137.104C574.578 132.506 576.508 126.138 574.098 119.954C571.516 113.329 566.542 109.305 559.368 108.93Z" fill="white" stroke="black"/>
+</svg></div>
+    <button class="btn" onclick="playSolutions()">Replay</button>
+  </div>
+
+  <!-- EVENTS -->
+  <div class="icon-panel" id="panel-events">
+    <div class="panel-label">Events</div>
+    <div class="icon-wrap" id="ev-wrap"><svg width="195" height="248" viewBox="0 0 682 518" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="ev0" d="M236.045 483.096C235.88 483.043 235.715 482.99 235.075 482.667C234.096 480.569 233.593 478.74 233.192 476.471C233.235 473.323 233.176 470.617 233.221 467.451C233.244 443.315 233.162 419.636 233.08 395.958C233.15 394.226 233.22 392.494 233.303 389.958C233.26 383.997 233.204 378.84 233.147 373.683C233.206 373.283 233.265 372.883 233.329 371.817C233.26 368.404 233.186 365.658 233.215 362.453C233.241 356.3 233.164 350.605 233.191 344.462C233.235 340.647 233.175 337.279 233.221 333.456C233.252 328.303 233.175 323.607 233.202 318.582C233.239 317.807 233.173 317.359 233.211 316.46C233.241 312.31 233.166 308.61 233.192 304.482C233.225 302.006 233.157 299.958 233.19 297.466C233.221 293.984 233.152 290.947 233.187 287.452C233.225 281.3 233.158 275.606 233.194 269.463C233.238 265.646 233.179 262.278 233.226 258.452C233.331 249.086 233.331 240.178 233.331 231.37C200.195 231.37 167.821 231.37 135.45 231.37C135.323 232.215 135.188 232.697 135.187 233.178C135.114 291.458 135.038 349.738 135.072 408.018C135.073 409.354 136.334 410.688 137.053 412.255C137.248 412.806 137.499 412.973 137.942 413.29C138.689 414.072 139.347 414.551 139.976 415.451C141.98 423.258 140.014 430.815 135.278 433.824C130.14 437.089 123.779 436.335 117.677 431.739C113.134 424.765 113.447 418.112 118.713 411.571C119.611 410.455 119.947 408.602 119.948 407.089C119.99 346.102 119.971 285.115 119.937 224.128C119.933 216.997 120.882 215.975 127.826 215.979C165.152 216 202.477 216.009 239.803 216.023C247.027 216.026 248.187 217.172 248.185 224.381C248.164 303.865 248.138 383.348 248.114 462.831C248.113 464.648 248.114 466.465 248.114 468.972C249.878 468.972 251.462 468.972 253.046 468.972C304.535 468.984 356.024 468.994 407.513 469.01C423.497 469.015 439.481 469.058 455.465 469.04C462.619 469.032 464.145 470.54 463.987 477.804C463.965 478.799 463.804 479.792 463.507 481.36C461.659 482.304 460.02 482.93 458.36 482.994C453.648 483.175 448.927 483.126 443.822 483.079C440.247 483.051 437.06 483.111 433.681 483.098C433.491 483.025 433.115 483.186 432.679 483.101C430.472 483.07 428.7 483.124 426.75 483.098C426.571 483.017 426.207 483.162 425.906 483.074C424.362 483.048 423.117 483.111 421.426 483.089C389.155 483.008 357.329 482.992 325.504 483.019C298.35 483.042 271.196 483.114 243.648 483.079C242.189 483.056 241.123 483.116 239.662 483.095C238.192 483.041 237.119 483.069 236.045 483.096Z" fill="white"/>
+<path id="ev1" d="M301.009 16.1541C300.935 31.965 300.859 47.2977 301.001 62.6283C301.019 64.5645 301.812 66.7383 302.892 68.375C306.493 73.8305 306.096 81.9923 301.746 85.82C296.843 90.1343 289.14 89.9941 284.44 85.5051C279.817 81.0904 279.729 73.2829 284.035 67.7985C284.941 66.644 285.602 64.9462 285.613 63.4927C285.758 45.1633 285.744 26.8328 285.813 8.50267C285.844 0.196243 286.082 0.00228897 294.152 0.00247197C335.148 0.00340297 376.144 0.00125205 417.141 4.54221e-08C424.173 -0.000212955 424.962 0.748444 424.963 7.61922C424.984 156.773 424.999 305.926 425.016 455.079C425.016 456.38 425.016 457.68 425.016 459.823C419.964 459.823 415.263 459.823 410.088 459.823C410.088 311.628 410.088 163.562 410.088 14.9763C408.188 14.9763 406.756 14.9761 405.323 14.9763C372.326 14.9822 339.329 14.9777 306.332 15.023C304.579 15.0254 302.827 15.4481 301.009 16.1541Z" fill="white"/>
+<path id="ev2" d="M562.531 292.025C562.437 295.39 562.343 298.755 562.258 302.941C562.335 305.473 562.403 307.184 562.47 308.894C562.402 317.635 562.334 326.376 562.281 335.928C562.368 338.124 562.441 339.509 562.514 340.894C562.435 347.933 562.356 354.973 562.287 362.921C562.364 367.851 562.433 371.873 562.501 375.894C562.427 377.299 562.352 378.703 562.288 380.955C562.36 385.243 562.42 388.684 562.48 392.125C562.422 397.615 562.146 403.117 562.435 408.589C562.525 410.304 563.991 412.042 565.079 413.593C568.628 418.652 568.977 425.571 565.771 429.995C562.462 434.562 556.259 436.64 550.71 435.041C542.413 432.65 538.947 422.488 544.267 414.692C546.499 411.42 547.128 408.278 547.125 404.55C547.067 339.051 547.076 273.552 547.071 208.053C547.071 206.25 547.071 204.448 547.071 202.349C519.628 202.349 492.555 202.349 464.962 202.349C464.962 214.598 464.911 226.707 465.049 238.813C465.062 239.888 466.211 241.028 467 242.003C471.304 247.321 471.272 255.22 466.87 259.854C462.05 264.928 454.939 265.333 449.296 260.857C444.104 256.738 442.65 249.079 446.868 243.397C449.478 239.881 449.933 236.45 449.891 232.419C449.753 219.421 449.829 206.42 449.847 193.42C449.854 188.314 451.27 186.871 456.292 186.867C489.458 186.841 522.625 186.882 555.79 186.757C560.647 186.739 562.33 188.978 562.276 193.434C562.204 199.266 562.263 205.1 562.297 211.677C562.39 212.614 562.453 212.807 562.515 213C562.444 238.302 562.374 263.605 562.318 289.721C562.4 291.032 562.466 291.528 562.531 292.025Z" fill="white"/>
+<path id="ev3" d="M312.632 241.601C312.538 245.874 312.445 250.148 312.36 255.465C312.437 258.68 312.504 260.853 312.572 263.025C312.504 274.126 312.436 285.227 312.383 297.358C312.47 300.147 312.542 301.906 312.615 303.664C312.536 312.605 312.458 321.545 312.389 331.639C312.466 337.901 312.534 343.008 312.603 348.115C312.528 349.899 312.454 351.683 312.391 354.542C312.462 359.988 312.522 364.358 312.582 368.728C312.524 375.701 312.249 382.688 312.536 389.637C312.626 391.816 314.086 394.023 315.169 395.993C318.701 402.418 319.049 411.205 315.857 416.823C312.563 422.623 306.389 425.263 300.865 423.232C292.606 420.196 289.156 407.29 294.452 397.388C296.674 393.233 297.3 389.242 297.297 384.509C297.239 301.324 297.248 218.14 297.243 134.956C297.243 132.667 297.243 130.378 297.243 127.712C269.927 127.712 242.977 127.712 215.511 127.712C215.511 143.269 215.461 158.646 215.599 174.021C215.611 175.386 216.755 176.835 217.54 178.073C221.825 184.826 221.792 194.859 217.411 200.744C212.614 207.187 205.535 207.703 199.918 202.018C194.749 196.786 193.302 187.059 197.501 179.843C200.098 175.378 200.552 171.021 200.51 165.901C200.373 149.393 200.449 132.882 200.466 116.373C200.473 109.888 201.882 108.055 206.881 108.05C239.895 108.017 272.909 108.07 305.922 107.911C310.757 107.888 312.432 110.731 312.378 116.39C312.307 123.797 312.365 131.206 312.399 139.559C312.492 140.748 312.554 140.994 312.616 141.239C312.546 173.373 312.475 205.507 312.421 238.675C312.501 240.34 312.567 240.97 312.632 241.601Z" fill="white"/>
+<path id="ev4" d="M154.636 467.045C159.254 459.639 165.641 454.689 174.298 452.9C187.851 450.1 202.013 457.79 206.985 470.644C212.04 483.714 206.496 498.867 194.085 505.908C176.835 515.692 156.543 506.888 151.763 487.549C151.449 486.279 151.105 485.017 150.603 483.09C144.286 483.09 137.842 483.091 131.398 483.089C97.4091 483.078 63.4199 483.016 29.4317 483.164C27.1052 483.174 24.4024 484.263 22.533 485.705C16.3668 490.459 8.75309 490.384 3.56661 485.062C-1.22816 480.142 -1.18273 471.804 3.66774 466.502C8.36297 461.37 16.068 461.228 22.2362 465.657C24.2909 467.132 27.1637 468.203 29.6664 468.211C70.4855 468.339 111.305 468.268 152.933 468.158C154.04 467.732 154.338 467.388 154.636 467.045ZM189.109 493.643C190.251 492.446 191.53 491.351 192.51 490.034C196.288 484.956 196.41 477.52 192.912 472.312C189.189 466.768 183.24 464.438 176.477 465.875C169.893 467.274 164.994 472.23 164.176 478.593C163.363 484.916 165.704 490.1 170.835 493.711C176.509 497.705 182.519 497.84 189.109 493.643Z" fill="white"/>
+<path id="ev5" d="M472.922 486.908C472.794 483.895 472.667 480.882 472.692 477.203C472.888 475.662 472.932 474.785 472.975 473.909C477.205 462.054 484.901 454.172 497.869 452.613C506.971 451.519 514.788 454.554 521.963 461.078C525.532 464.444 526.695 468.71 533.02 468.639C573.466 468.18 613.921 468.517 654.373 468.51C655.451 468.51 656.529 467.575 657.607 467.076C667.112 458.998 678.085 461.516 681.164 472.483C682.909 478.695 681.125 483.452 675.691 487.083C670.896 490.287 664.294 490.233 659.986 486.217C657.288 483.702 654.565 483.096 651.102 483.102C613.297 483.169 575.491 483.112 537.685 483.089C535.382 483.087 533.079 483.089 530.952 483.089C525.009 502.004 516.033 509.656 499.071 509.888C496.303 509.601 494.295 509.656 492.498 509.068C481.669 505.53 476.144 497.216 472.922 486.908ZM505.417 496.031C506.904 495.328 508.498 494.789 509.859 493.895C516.797 489.337 518.899 480.564 514.878 473.332C511.031 466.41 502.548 463.54 495.126 466.648C487.394 469.887 483.841 477.444 486.313 485.394C488.726 493.153 496.682 497.808 505.417 496.031Z" fill="white"/>
+<path id="ev6" d="M349.164 497.282C353.462 497.388 357.76 497.494 362.892 497.573C364.533 497.449 365.341 497.351 366.149 497.253C383.217 497.373 400.284 497.516 417.352 497.55C418.318 497.552 419.443 496.833 420.228 496.145C425.835 491.228 431.844 490.239 436.904 493.513C442.311 497.012 443.842 502.859 441.245 510.545C433.877 518.714 428.122 519.075 420.22 512.492C419.131 511.585 417.296 511.201 415.806 511.202C358.048 511.208 300.289 511.294 242.531 511.348C234.875 511.355 227.217 511.142 219.562 511.237C214.917 511.294 213.478 508.982 213.592 504.71C213.725 499.738 215.298 497.638 219.674 497.584C224.833 497.521 229.993 497.578 235.608 497.456C240.067 497.408 244.071 497.486 248.903 497.542C250.536 497.428 251.341 497.336 252.146 497.244C266.11 497.355 280.074 497.466 294.927 497.566C298.268 497.467 300.72 497.378 303.172 497.289C311.793 497.397 320.415 497.504 329.895 497.588C331.889 497.465 333.023 497.365 334.158 497.265C337.462 497.375 340.766 497.484 344.914 497.571C346.893 497.461 348.029 497.372 349.164 497.282Z" fill="white"/>
+</svg></div>
+    <button class="btn" onclick="playEvents()">Replay</button>
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="icon-panel" id="panel-resources">
+    <div class="panel-label">Resources</div>
+    <div class="icon-wrap" id="rs-wrap"><svg width="140" height="175" viewBox="0 0 552 687" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="rs0" d="M273.649 498.754C273.65 353.304 273.65 208.333 273.65 63.3658C262.433 59.3371 254.387 52.5486 250.678 41.1622C246.028 26.8856 252.32 11.0231 265.627 4.04502C280.394 -3.6988 297.088 -0.113348 307.3 12.9954C316.378 24.6492 315.588 42.0316 305.136 52.8816C302.182 55.9481 298.676 58.9296 294.835 60.5729C290.72 62.333 290.211 64.7708 290.217 68.5894C290.306 124.419 290.266 180.249 290.271 236.079C290.28 361.905 290.343 487.731 290.178 613.557C290.17 619.788 291.332 623.346 297.479 626.476C311.253 633.491 316.582 648.182 312.425 663.585C308.798 677.027 296.358 686.561 282.102 686.826C267.502 687.097 254.417 677.487 250.249 663.433C245.638 647.887 252.641 631.751 267.693 625.315C272.685 623.18 273.689 620.527 273.673 615.721C273.543 576.892 273.628 538.062 273.649 498.754ZM282.128 638.756C278.862 639.83 275.238 640.325 272.399 642.086C264.489 646.992 263.203 657.902 269.342 664.573C274.302 669.964 281.618 671.613 287.988 668.777C294.032 666.086 298.062 659.251 297.233 653.096C296.173 645.23 291.412 640.454 282.128 638.756ZM282.071 47.3096C289.607 46.6128 294.211 42.2882 296.319 35.2981C297.864 30.1746 295.117 22.8214 290.637 19.7655C285.058 15.9593 279.165 15.7587 273.242 19.0326C267.626 22.137 264.657 28.5073 265.865 34.6265C267.246 41.6212 272.743 46.1656 282.071 47.3096Z" fill="white"/>
+<path id="rs1" d="M442.65 352.186C456.815 352.12 470.479 352.055 484.143 351.975C484.461 351.973 484.778 351.82 485.094 351.732C492.143 333.8 502.135 326.276 518.577 326.515C537.993 326.797 552.215 342.012 551.053 361.257C549.916 380.072 532.788 394.215 513.926 391.983C501.653 390.53 492.652 384.362 487.791 373.029C486.26 369.459 484.321 369.006 481.076 369.01C424.083 369.087 367.09 369.079 310.097 369.089C309.1 369.089 308.104 369.089 306.784 369.089C306.784 363.538 306.784 358.122 306.784 352.185C351.946 352.185 397.048 352.185 442.65 352.186ZM504.661 349.581C504.214 350.282 503.708 350.953 503.331 351.689C499.876 358.439 501.057 366.065 506.29 370.947C511.656 375.952 520.536 376.887 526.715 373.097C532.956 369.27 535.842 361.601 533.732 354.452C530.123 342.223 515.18 339.367 504.661 349.581Z" fill="white"/>
+<path id="rs2" d="M16.8066 487.777C-3.77465 475.939 -5.16395 448.898 11.0512 434.479C27.8946 419.501 54.4196 425.502 62.9291 446.414C63.4866 447.784 63.9911 449.176 64.6284 450.84C128.406 450.84 192.148 450.84 256.282 450.84C256.282 456.401 256.282 461.642 256.282 467.677C254.382 467.677 252.296 467.677 250.21 467.677C190.084 467.693 129.958 467.736 69.8314 467.654C66.1455 467.649 64.1565 468.324 62.5041 472.189C55.0408 489.644 35.3774 496.277 16.8066 487.777ZM33.122 475.003C40.8895 474.257 46.1724 470.435 47.9514 463.817C49.6565 457.475 48.8953 451.56 43.6595 446.921C38.5414 442.386 31.6049 441.535 25.5161 444.595C19.4268 447.656 15.4972 455.086 16.5354 461.576C17.7531 469.19 23.2146 473.849 33.122 475.003Z" fill="white"/>
+<path id="rs3" d="M478.453 521.346C460.468 521.267 442.483 521.136 424.498 521.121C386.675 521.088 348.853 521.118 311.03 521.111C309.711 521.111 308.392 520.999 306.796 520.926C306.796 515.36 306.796 509.942 306.796 504.231C364.385 504.231 421.809 504.231 477.804 504.231C482.423 497.97 485.752 491.938 490.487 487.36C500.07 478.095 516.587 477.081 528.704 484.051C540.471 490.82 546.879 505.094 544.26 518.701C541.646 532.278 530.357 543.102 516.87 544.961C500.511 547.216 486.844 539.104 480.243 522.666C479.455 521.743 478.954 521.545 478.453 521.346ZM526.936 506.608C523.248 498.887 515.948 495.189 507.799 496.915C500.591 498.441 495.618 504.344 495.321 511.726C495.007 519.544 499.924 526.107 507.74 528.306C519.895 531.726 529.851 521.049 526.936 506.608Z" fill="white"/>
+<path id="rs4" d="M127.65 296.246C170.76 296.246 213.369 296.246 256.339 296.246C256.339 301.977 256.339 307.221 256.339 312.893C197.088 312.893 137.727 312.893 78.3963 312.893C73.0377 327.627 62.9338 336.048 47.5941 337.167C31.6931 338.327 16.9546 326.467 14.1515 310.897C11.1221 294.07 20.2197 278.817 36.2889 273.782C52.3304 268.755 69.0676 275.654 75.597 290.596C77.5796 295.133 79.8425 296.446 84.6831 296.317C98.8293 295.939 112.993 296.222 127.65 296.246ZM34.629 293.405C33.9013 294.306 33.0639 295.14 32.4642 296.119C28.9624 301.836 28.4564 307.633 32.3129 313.406C35.9176 318.802 43.306 322.105 49.1708 320.655C55.9418 318.981 60.7206 315.12 62.1012 307.825C63.3647 301.15 60.9135 294.808 55.5204 291.361C49.2789 287.372 41.9394 287.926 34.629 293.405Z" fill="white"/>
+<path id="rs5" d="M526.668 195.724C528.182 209.284 524.303 220.393 513.26 228.006C502.629 235.334 491.023 236.414 479.108 230.936C471.793 227.572 466.674 221.915 463.824 214.53C462.494 211.082 460.721 210.313 457.292 210.32C408.97 210.421 360.648 210.375 312.325 210.365C310.533 210.365 308.742 210.365 306.705 210.365C306.705 204.652 306.705 199.376 306.705 193.462C358.376 193.462 410.073 193.462 461.531 193.462C467.952 176.087 480.569 167.092 496.271 168.227C511.865 169.354 523.271 179.529 526.668 195.724ZM486.415 186.889C478.481 191.73 475.696 199.268 478.906 207.221C481.827 214.458 490.174 218.886 497.537 217.104C506.929 214.832 512.254 205.719 509.65 196.406C507.075 187.194 495.45 182.087 486.415 186.889Z" fill="white"/>
+<path id="rs6" d="M255.365 149.808C199.775 149.863 144.661 149.863 91.1725 149.863C86.0144 156.415 82.3623 162.951 77.0129 167.485C62.4938 179.789 40.4037 176.016 29.7213 160.183C19.3264 144.777 24.6691 123.091 41.1028 113.986C58.1262 104.555 78.8047 111.06 86.5994 128.56C88.1154 131.964 89.828 133.107 93.5598 133.098C144.685 132.98 195.811 133.041 246.936 133.058C249.915 133.059 252.894 133.059 257.004 133.059C256.6 138.869 256.221 144.311 255.365 149.808ZM55.6307 126.542C54.1977 126.949 52.722 127.245 51.3387 127.78C44.8402 130.295 40.9702 134.976 40.6451 142.002C40.36 148.165 43.1157 153.004 48.5904 155.904C54.8098 159.198 61.0619 159.246 66.9037 154.877C71.9384 151.112 74.2676 144.067 72.1764 137.857C69.6768 130.434 64.1332 126.778 55.6307 126.542Z" fill="white"/>
+</svg></div>
+    <button class="btn" onclick="playResources()">Replay</button>
+  </div>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════ */
+const defaults = {
+  global: { speed: 1, glowIntensity: 0.55, glowRadius: 18, iconColor: '#ffffff' },
+  community: { nodeRevealDur: 0.45, nodeStagger: 0.13, connRevealDur: 0.3, connStagger: 0.08, settleScale: 1.04, easing: 'power2.out' },
+  ventures: { leftNodeDur: 0.4, linesRevealDur: 0.7, circleRevealDur: 0.55, gatePause: 0.45, exitStagger: 0.12, idleBrightnessMin: 0.4, idlePulseDur: 2.2, easing: 'power2.out' },
+  solutions: { entranceDur: 0.65, entranceStagger: 0.08, idleBrightnessMin: 0.6, idlePulseDur: 1.8, idleStagger: 0.1, easing: 'power2.out' },
+  events: { entranceDur: 0.6, groupStagger: 0.1, overlap: 0.25, topNodePulse: 0.4, idleScaleMax: 1.025, idleDur: 3.5, easing: 'power2.out' },
+  resources: { spineRevealDur: 0.65, branchRevealDur: 0.38, branchStagger: 0.13, idleSpineOpMin: 0.7, idleBranchOpMin: 0.45, idleDurBase: 2.5, easing: 'power2.out' }
+};
+
+const state = JSON.parse(JSON.stringify(defaults));
+
+/* ═══════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════ */
+function s(v) { return v / state.global.speed; }
+
+function settle(el) {
+  const sc = state.community.settleScale;
+  gsap.to(el, { scale: sc, duration: s(0.35), ease: 'power1.inOut', transformOrigin: '50% 50%' });
+  gsap.to(el, { scale: 1, duration: s(0.7), delay: s(0.35), ease: 'elastic.out(1,0.55)', transformOrigin: '50% 50%' });
+}
+
+function updateGlow() {
+  document.documentElement.style.setProperty('--glow-intensity', state.global.glowIntensity);
+  document.documentElement.style.setProperty('--glow-radius', state.global.glowRadius + 'px');
+}
+
+function setColor(el) {
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  state.global.iconColor = el.dataset.color;
+  document.documentElement.style.setProperty('--icon-color', el.dataset.color);
+  // update panel borders
+  document.querySelectorAll('.icon-panel').forEach(p => {
+    p.style.borderColor = el.dataset.color === '#ffffff' ? 'rgba(255,255,255,0.08)' : el.dataset.color + '33';
+  });
+}
+
+function switchTab(el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + el.dataset.tab).classList.add('active');
+}
+
+/* Mobile toggle */
+document.getElementById('mobileToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+/* ═══════════════════════════════════════════
+   HOVER GLOW
+   ═══════════════════════════════════════════ */
+document.querySelectorAll('.icon-wrap').forEach(wrap => {
+  wrap.addEventListener('mouseenter', () => {
+    const gi = state.global.glowIntensity;
+    const gr = state.global.glowRadius;
+    wrap.style.filter = 'drop-shadow(0 0 ' + gr + 'px rgba(255,255,255,' + gi + ')) drop-shadow(0 0 ' + (gr * 2.2) + 'px rgba(255,255,255,' + (gi * 0.36) + '))';
+  });
+  wrap.addEventListener('mouseleave', () => {
+    wrap.style.filter = '';
+  });
+});
+
+/* ═══════════════════════════════════════════
+   COMMUNITY
+   ═══════════════════════════════════════════ */
+function playCommunity() {
+  const nodes = Array.from({ length: 5 }, (_, i) => '#cm' + i);
+  const conns = Array.from({ length: 6 }, (_, i) => '#cm' + (i + 5));
+  gsap.set([...nodes, ...conns], { opacity: 0 });
+  const tl = gsap.timeline();
+  tl.to(nodes, { opacity: 1, duration: s(state.community.nodeRevealDur), stagger: s(state.community.nodeStagger), ease: state.community.easing });
+  tl.to(conns, { opacity: 1, duration: s(state.community.connRevealDur), stagger: s(state.community.connStagger), ease: 'power1.out' }, '-=0.1');
+  tl.add(() => settle('#cm-wrap'));
+}
+
+/* ═══════════════════════════════════════════
+   VENTURES
+   ═══════════════════════════════════════════ */
+let vnIdle = [];
+function stopVnIdle() { vnIdle.forEach(t => t.kill()); vnIdle = []; }
+
+function playVentures() {
+  stopVnIdle();
+  const all = ['#vn0', '#vn1', '#vn2', '#vn3', '#vn4', '#vn5'];
+  gsap.set(all, { opacity: 0 });
+  gsap.set(['#vn0', '#vn1'], { filter: 'brightness(1)' });
+  const st = state.ventures;
+  const tl = gsap.timeline({ onComplete: startVnIdle });
+  tl.to('#vn5', { opacity: 1, duration: s(st.leftNodeDur), ease: 'back.out(2)' });
+  tl.to('#vn0', { opacity: 1, duration: s(st.linesRevealDur), ease: st.easing }, '+=0.1');
+  tl.to('#vn1', { opacity: 1, duration: s(st.circleRevealDur), ease: st.easing }, '+=0.1');
+  tl.to({}, { duration: s(st.gatePause) });
+  tl.to('#vn2', { opacity: 1, duration: s(0.4), ease: 'back.out(1.8)' }, '+=0.05');
+  tl.to('#vn3', { opacity: 1, duration: s(0.4), ease: 'back.out(1.8)' }, '+=' + s(st.exitStagger));
+  tl.to('#vn4', { opacity: 1, duration: s(0.4), ease: 'back.out(1.8)' }, '+=' + s(st.exitStagger));
+  tl.add(() => settle('#vn-wrap'));
+}
+
+function startVnIdle() {
+  const st = state.ventures;
+  vnIdle.push(gsap.to('#vn0', {
+    filter: 'brightness(' + st.idleBrightnessMin + ')',
+    duration: s(st.idlePulseDur), yoyo: true, repeat: -1, ease: 'sine.inOut'
+  }));
+  vnIdle.push(gsap.to('#vn1', {
+    filter: 'brightness(' + (st.idleBrightnessMin + 0.1) + ')',
+    duration: s(st.idlePulseDur + 0.4), yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 0.6
+  }));
+}
+
+document.getElementById('vn-wrap').addEventListener('mouseleave', () => {
+  gsap.to(['#vn0', '#vn1'], { filter: 'brightness(1)', duration: 0.3 });
+  setTimeout(startVnIdle, 350);
+});
+document.getElementById('vn-wrap').addEventListener('mouseenter', () => {
+  stopVnIdle();
+  gsap.to(['#vn0', '#vn1'], { filter: 'brightness(1)', duration: 0.2 });
+});
+
+/* ═══════════════════════════════════════════
+   SOLUTIONS
+   ═══════════════════════════════════════════ */
+let slIdle = [];
+function stopSlIdle() { slIdle.forEach(t => t.kill()); slIdle = []; }
+
+function playSolutions() {
+  stopSlIdle();
+  const paths = Array.from(document.querySelectorAll('#sl-wrap [id^="sl"]'));
+  gsap.set(paths, { opacity: 0, filter: 'brightness(1)' });
+  const st = state.solutions;
+  gsap.to(paths, {
+    opacity: 1, duration: s(st.entranceDur), stagger: s(st.entranceStagger), ease: st.easing,
+    onComplete: startSlIdle
+  });
+}
+
+function startSlIdle() {
+  const paths = Array.from(document.querySelectorAll('#sl-wrap [id^="sl"]'));
+  const st = state.solutions;
+  paths.slice(1).forEach((p, i) => {
+    slIdle.push(gsap.to(p, {
+      filter: 'brightness(' + st.idleBrightnessMin + ')',
+      duration: s(st.idlePulseDur + i * 0.06),
+      yoyo: true, repeat: -1, ease: 'sine.inOut',
+      delay: i * st.idleStagger
+    }));
+  });
+}
+
+document.getElementById('sl-wrap').addEventListener('mouseenter', () => {
+  stopSlIdle();
+  gsap.to(document.querySelectorAll('#sl-wrap [id^="sl"]'), { filter: 'brightness(1)', duration: 0.2 });
+});
+document.getElementById('sl-wrap').addEventListener('mouseleave', () => {
+  gsap.to(document.querySelectorAll('#sl-wrap [id^="sl"]'), { filter: 'brightness(1)', duration: 0.2 });
+  setTimeout(startSlIdle, 250);
+});
+
+/* ═══════════════════════════════════════════
+   EVENTS
+   ═══════════════════════════════════════════ */
+let evIdle = [];
+function stopEvIdle() { evIdle.forEach(t => t.kill()); evIdle = []; }
+
+function playEvents() {
+  stopEvIdle();
+  const paths = Array.from(document.querySelectorAll('#ev-wrap [id^="ev"]'));
+  const third = Math.floor(paths.length / 3);
+  gsap.set(paths, { opacity: 0 });
+  const st = state.events;
+  const tl = gsap.timeline({ onComplete: startEvIdle });
+  tl.to(paths.slice(0, third), { opacity: 1, duration: s(st.entranceDur), stagger: s(st.groupStagger), ease: st.easing });
+  tl.to(paths.slice(third, third * 2), { opacity: 1, duration: s(st.entranceDur), stagger: s(st.groupStagger), ease: st.easing }, '-=' + s(st.overlap));
+  tl.to(paths.slice(third * 2), { opacity: 1, duration: s(st.entranceDur), stagger: s(st.groupStagger), ease: st.easing }, '-=' + s(st.overlap));
+  tl.to(paths[paths.length - 1], { opacity: st.topNodePulse, duration: s(0.35), yoyo: true, repeat: 1 });
+  tl.add(() => settle('#ev-wrap'));
+}
+
+function startEvIdle() {
+  const st = state.events;
+  evIdle.push(gsap.to('#ev-wrap', {
+    scale: st.idleScaleMax, duration: s(st.idleDur), yoyo: true, repeat: -1,
+    ease: 'sine.inOut', transformOrigin: '50% 50%'
+  }));
+}
+
+document.getElementById('ev-wrap').addEventListener('mouseenter', () => stopEvIdle());
+document.getElementById('ev-wrap').addEventListener('mouseleave', () => startEvIdle());
+
+/* ═══════════════════════════════════════════
+   RESOURCES
+   ═══════════════════════════════════════════ */
+let rsIdle = [];
+function stopRsIdle() { rsIdle.forEach(t => t.kill()); rsIdle = []; }
+const rsBranches = ['#rs5', '#rs4', '#rs3', '#rs1', '#rs2', '#rs6'];
+
+function playResources() {
+  stopRsIdle();
+  gsap.set(['#rs0', ...rsBranches], { opacity: 0 });
+  const st = state.resources;
+  const tl = gsap.timeline({ onComplete: startRsIdle });
+  tl.to('#rs0', { opacity: 1, duration: s(st.spineRevealDur) }, 0.1);
+  rsBranches.forEach((el, i) => tl.to(el, { opacity: 1, duration: s(st.branchRevealDur), ease: st.easing }, 0.6 + i * s(st.branchStagger)));
+  tl.add(() => settle('#rs-wrap'));
+}
+
+function startRsIdle() {
+  const st = state.resources;
+  rsIdle.push(gsap.to('#rs0', { opacity: st.idleSpineOpMin, duration: s(st.idleDurBase), yoyo: true, repeat: -1, ease: 'sine.inOut' }));
+  rsBranches.forEach((el, i) => {
+    rsIdle.push(gsap.to(el, { opacity: st.idleBranchOpMin, duration: s(1.8 + i * 0.3), yoyo: true, repeat: -1, ease: 'sine.inOut', delay: i * 0.35 }));
+  });
+}
+
+document.getElementById('rs-wrap').addEventListener('mouseenter', () => {
+  stopRsIdle();
+  gsap.to(['#rs0', ...rsBranches], { opacity: 1, duration: 0.2 });
+});
+document.getElementById('rs-wrap').addEventListener('mouseleave', () => {
+  startRsIdle();
+});
+
+/* ═══════════════════════════════════════════
+   REPLAY ALL
+   ═══════════════════════════════════════════ */
+function replayAll() {
+  playCommunity();
+  setTimeout(playVentures, 200);
+  setTimeout(playSolutions, 400);
+  setTimeout(playEvents, 600);
+  setTimeout(playResources, 800);
+}
+
+/* ═══════════════════════════════════════════
+   COPY VALUES
+   ═══════════════════════════════════════════ */
+function copyValues(icon) {
+  let obj = { icon: icon };
+  switch (icon) {
+    case 'community':
+      obj.entrance = { nodeRevealDuration: state.community.nodeRevealDur, nodeStagger: state.community.nodeStagger, connectorRevealDuration: state.community.connRevealDur, connectorStagger: state.community.connStagger, settleScale: state.community.settleScale, easing: state.community.easing };
+      break;
+    case 'ventures':
+      obj.entrance = { leftNodeDuration: state.ventures.leftNodeDur, linesRevealDuration: state.ventures.linesRevealDur, circleRevealDuration: state.ventures.circleRevealDur, gatePause: state.ventures.gatePause, exitNodesStagger: state.ventures.exitStagger, easing: state.ventures.easing };
+      obj.idle = { brightnessMin: state.ventures.idleBrightnessMin, pulseDuration: state.ventures.idlePulseDur };
+      break;
+    case 'solutions':
+      obj.entrance = { durationPerPath: state.solutions.entranceDur, stagger: state.solutions.entranceStagger, easing: state.solutions.easing };
+      obj.idle = { brightnessMin: state.solutions.idleBrightnessMin, pulseDuration: state.solutions.idlePulseDur, staggerBetweenPaths: state.solutions.idleStagger };
+      break;
+    case 'events':
+      obj.entrance = { durationPerGroup: state.events.entranceDur, groupStagger: state.events.groupStagger, overlapBetweenGroups: state.events.overlap, easing: state.events.easing };
+      obj.idle = { topNodePulseOpacity: state.events.topNodePulse, scaleMax: state.events.idleScaleMax, duration: state.events.idleDur };
+      break;
+    case 'resources':
+      obj.entrance = { spineRevealDuration: state.resources.spineRevealDur, branchRevealDuration: state.resources.branchRevealDur, branchStagger: state.resources.branchStagger, easing: state.resources.easing };
+      obj.idle = { spineOpacityMin: state.resources.idleSpineOpMin, branchOpacityMin: state.resources.idleBranchOpMin, durationBase: state.resources.idleDurBase };
+      break;
+  }
+  obj.speedMultiplier = state.global.speed;
+  navigator.clipboard.writeText(JSON.stringify(obj, null, 2)).then(() => {
+    const btn = document.querySelector('#tab-' + icon + ' .btn-row .btn:last-child');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.borderColor = '#7A9E7E';
+    btn.style.color = '#7A9E7E';
+    setTimeout(() => { btn.textContent = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 1500);
+  });
+}
+
+/* ═══════════════════════════════════════════
+   PRESETS
+   ═══════════════════════════════════════════ */
+function applyPreset(name) {
+  const d = JSON.parse(JSON.stringify(defaults));
+  let multiplier = 1;
+  switch (name) {
+    case 'slow':
+      multiplier = 2;
+      Object.keys(d.community).forEach(k => { if (typeof d.community[k] === 'number') d.community[k] *= 2; });
+      Object.keys(d.ventures).forEach(k => { if (typeof d.ventures[k] === 'number' && k !== 'idleBrightnessMin') d.ventures[k] *= 2; });
+      Object.keys(d.solutions).forEach(k => { if (typeof d.solutions[k] === 'number' && k !== 'idleBrightnessMin') d.solutions[k] *= 2; });
+      Object.keys(d.events).forEach(k => { if (typeof d.events[k] === 'number' && k !== 'topNodePulse' && k !== 'idleScaleMax') d.events[k] *= 2; });
+      Object.keys(d.resources).forEach(k => { if (typeof d.resources[k] === 'number' && k !== 'idleSpineOpMin' && k !== 'idleBranchOpMin') d.resources[k] *= 2; });
+      break;
+    case 'fast':
+      multiplier = 0.5;
+      Object.keys(d.community).forEach(k => { if (typeof d.community[k] === 'number') d.community[k] *= 0.5; });
+      Object.keys(d.ventures).forEach(k => { if (typeof d.ventures[k] === 'number' && k !== 'idleBrightnessMin') d.ventures[k] *= 0.5; });
+      Object.keys(d.solutions).forEach(k => { if (typeof d.solutions[k] === 'number' && k !== 'idleBrightnessMin') d.solutions[k] *= 0.5; });
+      Object.keys(d.events).forEach(k => { if (typeof d.events[k] === 'number' && k !== 'topNodePulse' && k !== 'idleScaleMax') d.events[k] *= 0.5; });
+      Object.keys(d.resources).forEach(k => { if (typeof d.resources[k] === 'number' && k !== 'idleSpineOpMin' && k !== 'idleBranchOpMin') d.resources[k] *= 0.5; });
+      break;
+    case 'subtle':
+      d.community.settleScale = 1.01;
+      d.ventures.idleBrightnessMin = 0.7;
+      d.solutions.idleBrightnessMin = 0.8;
+      d.events.topNodePulse = 0.6;
+      d.events.idleScaleMax = 1.01;
+      d.resources.idleSpineOpMin = 0.85;
+      d.resources.idleBranchOpMin = 0.7;
+      break;
+  }
+
+  // Apply to state
+  ['community', 'ventures', 'solutions', 'events', 'resources'].forEach(section => {
+    Object.keys(d[section]).forEach(k => { state[section][k] = d[section][k]; });
+  });
+
+  // Update all sliders to reflect new values
+  syncSlidersFromState();
+  replayAll();
+}
+
+function syncSlidersFromState() {
+  const map = {
+    'tab-community': [
+      ['nodeRevealDur', 's'], ['nodeStagger', 's'], ['connRevealDur', 's'], ['connStagger', 's'], ['settleScale', '']
+    ],
+    'tab-ventures': [
+      ['leftNodeDur', 's'], ['linesRevealDur', 's'], ['circleRevealDur', 's'], ['gatePause', 's'], ['exitStagger', 's'], ['idleBrightnessMin', ''], ['idlePulseDur', 's']
+    ],
+    'tab-solutions': [
+      ['entranceDur', 's'], ['entranceStagger', 's'], ['idleBrightnessMin', ''], ['idlePulseDur', 's'], ['idleStagger', 's']
+    ],
+    'tab-events': [
+      ['entranceDur', 's'], ['groupStagger', 's'], ['overlap', 's'], ['topNodePulse', ''], ['idleScaleMax', ''], ['idleDur', 's']
+    ],
+    'tab-resources': [
+      ['spineRevealDur', 's'], ['branchRevealDur', 's'], ['branchStagger', 's'], ['idleSpineOpMin', ''], ['idleBranchOpMin', ''], ['idleDurBase', 's']
+    ]
+  };
+  const sections = { 'tab-community': 'community', 'tab-ventures': 'ventures', 'tab-solutions': 'solutions', 'tab-events': 'events', 'tab-resources': 'resources' };
+
+  Object.keys(map).forEach(tabId => {
+    const section = sections[tabId];
+    const tab = document.getElementById(tabId);
+    const sliders = tab.querySelectorAll('input[type=range]');
+    map[tabId].forEach((entry, i) => {
+      const [key, suffix] = entry;
+      const val = state[section][key];
+      if (sliders[i]) {
+        sliders[i].value = val;
+        const valSpan = sliders[i].nextElementSibling;
+        if (valSpan) valSpan.textContent = (Math.round(val * 1000) / 1000) + suffix;
+      }
+    });
+    // Also update easing dropdown
+    const sel = tab.querySelector('select');
+    if (sel) sel.value = state[section].easing;
+  });
+}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════ */
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+function handleReducedMotion() {
+  if (prefersReduced.matches) {
+    // Show everything at full opacity, skip animations
+    document.querySelectorAll('.icon-wrap svg path').forEach(p => { p.style.opacity = '1'; });
+  }
+}
+prefersReduced.addEventListener('change', handleReducedMotion);
+
+/* ═══════════════════════════════════════════
+   AUTO-PLAY ON LOAD
+   ═══════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  handleReducedMotion();
+  if (!prefersReduced.matches) {
+    setTimeout(playCommunity, 300);
+    setTimeout(playVentures, 500);
+    setTimeout(playSolutions, 700);
+    setTimeout(playEvents, 900);
+    setTimeout(playResources, 1100);
+  }
+});
+</script>
+</body>
+</html>

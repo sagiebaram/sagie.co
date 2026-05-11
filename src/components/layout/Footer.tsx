@@ -87,14 +87,14 @@ export function Footer() {
           <Logo width={160} height={45} className="sm:-ml-6 -mb-2" />
           <div className="flex flex-col items-start sm:items-end gap-2">
             <div className="flex gap-4">
-              <span className="font-body text-foreground-muted opacity-40 cursor-default text-caption">
+              <span className="font-body text-foreground-muted opacity-40 cursor-default text-label">
                 Privacy Policy
               </span>
-              <span className="font-body text-foreground-muted opacity-40 cursor-default text-caption">
+              <span className="font-body text-foreground-muted opacity-40 cursor-default text-label">
                 Terms of Service
               </span>
             </div>
-            <p className="font-body text-white text-caption tracking-copyright mb-0">
+            <p className="font-body text-white text-label tracking-copyright mb-0">
               {FOOTER.copyright}
             </p>
           </div>

@@ -91,11 +91,11 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
         <PageHeroAnimation>
           <div className="relative z-10 max-w-[880px] mx-auto px-6 md:px-0 pt-32 pb-8 md:pt-40 md:pb-10">
             <Eyebrow>Resources</Eyebrow>
-            <SplitTextReveal as="h1" className="font-display uppercase mb-8 text-hero leading-[0.9]" lines={[
+            <SplitTextReveal as="h1" className="font-display uppercase mb-8 text-hero leading-display" lines={[
               { text: 'TOOLS FOR THE', className: 'text-foreground-secondary' },
               { text: 'ECOSYSTEM.', className: 'text-foreground' },
             ]} />
-            <p className="page-hero-sub font-body italic text-foreground-muted mb-10 text-body-lg font-light leading-[1.7] max-w-[520px]">
+            <p className="page-hero-sub font-body italic text-foreground-muted mb-10 text-body font-light leading-body max-w-[520px]">
               Curated by SAGIE and contributed by the community. Accelerators, incubators, providers and more.
             </p>
             <p
@@ -127,7 +127,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                 >
                   {featured.name}
                 </p>
-                <p className="font-body text-foreground-muted text-body font-light leading-[1.7] mb-5 max-w-[480px]">
+                <p className="font-body text-foreground-muted text-body font-light leading-body mb-5 max-w-[480px]">
                   {featured.description}
                 </p>
                 <div className="flex items-center gap-2">
@@ -137,14 +137,14 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                   >
                     {featured.category}
                   </span>
-                  <span style={{ color: 'var(--text-dim)' }}>·</span>
+                  <span style={{ color: 'var(--text-muted)' }}>·</span>
                   <span
                     className="font-body uppercase"
                     style={{ fontSize: '12px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
                   >
                     {featured.location}
                   </span>
-                  <span style={{ color: 'var(--text-dim)' }}>·</span>
+                  <span style={{ color: 'var(--text-muted)' }}>·</span>
                   <span
                     className="font-body uppercase"
                     style={{ fontSize: '12px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
@@ -230,7 +230,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                       </span>
                     </button>
                     <p
-                      className="font-body font-light leading-[1.7]"
+                      className="font-body font-light leading-body"
                       style={{ fontSize: '14px', color: 'var(--text-muted)' }}
                     >
                       {resource.description}
@@ -307,7 +307,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
                               style={{
                                 fontSize: '13px',
                                 letterSpacing: '0.12em',
-                                color: 'var(--text-dim)',
+                                color: 'var(--text-muted)',
                                 borderBottom: '0.5px solid var(--border-subtle)',
                                 paddingBottom: '2px',
                               }}
@@ -337,7 +337,7 @@ export function ResourcesDirectory({ resources }: { resources: Resource[] }) {
           >
             Know something the ecosystem should know about?
           </h2>
-          <p className="font-body text-foreground-muted text-body-lg font-light leading-[1.7] mb-10 max-w-[520px]">
+          <p className="font-body text-foreground-muted text-body font-light leading-body mb-10 max-w-[520px]">
             Submit a resource to the directory.
           </p>
           <SubmitResourceForm />

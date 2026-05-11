@@ -35,16 +35,16 @@ export default function PrivacyPage() {
       <Section className="pt-28 md:pt-36">
         <PageHeroAnimation id="priv-hero">
           <Eyebrow className="page-hero-eyebrow">Legal</Eyebrow>
-          <h1 className="font-display uppercase text-hero leading-[0.9] tracking-heading mb-8">
+          <h1 className="font-display uppercase text-hero leading-display tracking-heading mb-8">
             <span className="page-hero-line block text-foreground">PRIVACY POLICY</span>
           </h1>
-          <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body-lg leading-[1.7] max-w-[480px] mb-14">
+          <p className="page-hero-sub font-body italic text-foreground-muted font-light text-body leading-body max-w-[480px] mb-14">
             What we collect, how we handle it, and what rights you have.
           </p>
         </PageHeroAnimation>
 
-        <div className="legal-content font-body text-foreground-secondary text-body leading-[1.8] space-y-12">
-          <div className="text-foreground-muted text-caption">
+        <div className="legal-content font-body text-foreground-secondary text-body leading-body space-y-12">
+          <div className="text-foreground-muted text-label">
             <p><strong className="text-foreground-secondary">SAGIE</strong> &middot; sagie.co</p>
             <p>Operated by Sagie Baram &middot; Miami, FL, USA</p>
             <p>Contact: <a href="mailto:contact@sagie.co" className="text-silver hover:text-foreground transition-colors">contact@sagie.co</a></p>

@@ -110,7 +110,7 @@ export function FAQ() {
                     aria-hidden="true"
                     style={{
                       fontSize: '24px',
-                      color: isOpen ? 'var(--text-secondary)' : 'var(--text-dim)',
+                      color: isOpen ? 'var(--text-secondary)' : 'var(--text-muted)',
                       lineHeight: '1.15',
                       marginTop: '0px',
                       transition: 'color 0.2s',

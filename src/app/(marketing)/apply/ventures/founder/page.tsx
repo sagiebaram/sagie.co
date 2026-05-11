@@ -22,11 +22,11 @@ export default function ApplyVenturesFounderPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             SAGIE Ventures — Founders
           </p>
-          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
-            { text: 'SHOW US WHAT', className: 'text-foreground-dim' },
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-display mb-8" lines={[
+            { text: 'SHOW US WHAT', className: 'text-foreground-muted' },
             { text: "YOU'RE BUILDING.", className: 'text-foreground-secondary' },
           ]} />
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
+          <p className="font-body italic text-foreground-muted text-body font-light leading-body max-w-[380px] mb-12">
             Positive impact or innovation? Reach out and see if we&apos;re a match.
           </p>
           <VenturesForm type="founder" />

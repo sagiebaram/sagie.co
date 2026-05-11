@@ -35,7 +35,7 @@ export function ResourceFilter({ resources, active, onChange }: ResourceFilterPr
           }}
         >
           {label}
-          <span style={{ color: 'var(--text-dim)', marginLeft: '2px' }}>({count})</span>
+          <span style={{ color: 'var(--text-muted)', marginLeft: '2px' }}>({count})</span>
         </button>
       ))}
     </div>

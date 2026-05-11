@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sagie.co/contribute — Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: rgb(12,12,12);
+    --silver: #C0C0C0;
+    --white: #FFFFFF;
+    --dim: #6A6A6A;
+    --eco: #7A9E7E;
+    --solutions: #6B9EC0;
+    --ventures: #8A8A8A;
+    --gold: #C9A84C;
+    --gold-dim: rgba(201,168,76,0.12);
+    --gold-glow: rgba(201,168,76,0.25);
+    --card-bg: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.06);
+    --circuit-color: rgba(192,192,192,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--silver);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── CIRCUIT GRID BACKGROUND ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--circuit-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--circuit-color) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* circuit dot nodes */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(192,192,192,0.07) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ─── NAV BAR (minimal reference) ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(12,12,12,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    color: var(--white);
+  }
+
+  .nav-logo span { color: var(--gold); }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--silver); }
+  .nav-links a.active { color: var(--gold); }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 160px 0 100px;
+    position: relative;
+  }
+
+  /* ambient radial glow behind hero */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 9vw, 120px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--gold);
+  }
+
+  .hero-sub {
+    max-width: 560px;
+    color: var(--silver);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0.85;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: rgb(12,12,12);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--silver);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 13px 32px;
+    border: 1px solid var(--card-border);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--silver); color: var(--white); }
+
+  /* ─── SECTION HEADERS ─── */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: 0.03em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    color: var(--silver);
+    opacity: 0.7;
+    max-width: 540px;
+    line-height: 1.7;
+    margin-bottom: 52px;
+  }
+
+  /* ─── HORIZONTAL RULE ─── */
+  .hr-circuit {
+    border: none;
+    border-top: 1px solid var(--card-border);
+    margin: 0 0 80px;
+    position: relative;
+  }
+
+  .hr-circuit::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  /* ─── SECTION: CONTRIBUTION CATEGORIES ─── */
+  .section-contribute {
+    padding: 80px 0;
+  }
+
+  .contrib-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .contrib-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, background 0.3s;
+    cursor: pointer;
+  }
+
+  .contrib-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .contrib-card:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .contrib-card:hover::before { opacity: 1; }
+
+  .contrib-card .card-icon {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: var(--accent);
+    font-size: 18px;
+  }
+
+  .contrib-card .card-tag {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .contrib-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .contrib-card p {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--silver);
+    opacity: 0.75;
+    margin-bottom: 28px;
+  }
+
+  .card-link {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-link::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+
+  .contrib-card:hover .card-link::after { transform: translateX(4px); }
+
+  /* color bindings */
+  .contrib-card.time    { --accent: var(--gold); }
+  .contrib-card.capital { --accent: var(--eco); }
+  .contrib-card.network { --accent: var(--solutions); }
+  .contrib-card.skills  { --accent: var(--gold); }
+  .contrib-card.sponsor { --accent: var(--ventures); }
+  .contrib-card.host    { --accent: var(--eco); }
+
+  /* bottom row */
+  .contrib-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  /* ─── SECTION: HOW IT WORKS ─── */
+  .section-how {
+    padding: 80px 0;
+  }
+
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .step {
+    padding: 36px 28px;
+    border: 1px solid var(--card-border);
+    border-right: none;
+    position: relative;
+    background: var(--card-bg);
+  }
+
+  .step:last-child { border-right: 1px solid var(--card-border); }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    color: rgba(201,168,76,0.12);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .step h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--silver);
+    opacity: 0.65;
+  }
+
+  /* connector dot */
+  .step::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 36px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 1px solid var(--bg);
+    z-index: 2;
+  }
+
+  .step:last-child::after { display: none; }
+
+  /* ─── SECTION: PILLAR ALIGNMENT ─── */
+  .section-pillars {
+    padding: 80px 0;
+  }
+
+  .pillar-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .pillar-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pillar-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--p-color);
+    opacity: 0.4;
+  }
+
+  .pillar-card.eco      { --p-color: var(--eco); }
+  .pillar-card.solutions { --p-color: var(--solutions); }
+  .pillar-card.ventures  { --p-color: var(--ventures); }
+
+  .pillar-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--p-color);
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px var(--p-color);
+  }
+
+  .pillar-card .pillar-name {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--p-color);
+    margin-bottom: 8px;
+  }
+
+  .pillar-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .pillar-card p {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--silver);
+    opacity: 0.65;
+  }
+
+  .pillar-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--dim);
+    border-radius: 1px;
+  }
+
+  /* ─── CTA BANNER ─── */
+  .cta-banner {
+    margin: 80px 0;
+    border: 1px solid rgba(201,168,76,0.2);
+    background: var(--gold-dim);
+    padding: 64px 56px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-banner h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .cta-banner p {
+    color: var(--silver);
+    opacity: 0.7;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .cta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  /* ─── FOOTER STRIP ─── */
+  .footer-strip {
+    border-top: 1px solid var(--card-border);
+    padding: 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ─── TICKER BAR ─── */
+  .ticker {
+    border-top: 1px solid var(--card-border);
+    border-bottom: 1px solid var(--card-border);
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 80px;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 28s linear infinite;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .ticker-inner span { color: var(--gold); margin: 0 8px; }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ─── ICON SVGS ─── */
+  .icon { display: inline-block; line-height: 1; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .contrib-grid, .contrib-grid-2, .pillar-row { grid-template-columns: 1fr; }
+    .steps-row { grid-template-columns: 1fr 1fr; }
+    .cta-banner { grid-template-columns: 1fr; }
+    .cta-group { align-items: flex-start; flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">S<span>.</span>A<span>.</span>G<span>.</span>I<span>.</span>E</div>
+  <ul class="nav-links">
+    <li><a href="#">Ecosystem</a></li>
+    <li><a href="#">Community</a></li>
+    <li><a href="#">Chapters</a></li>
+    <li><a href="#">Solutions</a></li>
+    <li><a href="#" class="active">Contribute</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="hero-label">sagie.co / contribute</span>
+    <h1>BUILD<br>WITH<br><em>US</em></h1>
+    <p class="hero-sub">
+      SAGIE runs on people — their time, capital, networks, and expertise. 
+      Every contribution shapes a stronger ecosystem. Pick your entry point.
+    </p>
+    <div class="hero-ctas">
+      <a href="#ways" class="btn-primary">See All Ways to Contribute</a>
+      <a href="#" class="btn-ghost">Become a Member First</a>
+    </div>
+  </section>
+
+  <hr class="hr-circuit">
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <span class="ticker-inner">
+      Time &nbsp;<span>◆</span>&nbsp; Capital &nbsp;<span>◆</span>&nbsp; Network &nbsp;<span>◆</span>&nbsp; Skills &nbsp;<span>◆</span>&nbsp; Space &nbsp;<span>◆</span>&nbsp; Sponsorship &nbsp;<span>◆</span>&nbsp; Mentorship &nbsp;<span>◆</span>&nbsp; Research &nbsp;<span>◆</span>&nbsp; Ideas &nbsp;<span>◆</span>&nbsp; 
+      Time &nbsp;<span>◆</span>&nbsp; Capital &nbsp;<span>◆</span>&nbsp; Network &nbsp;<span>◆</span>&nbsp; Skills &nbsp;<span>◆</span>&nbsp; Space &nbsp;<span>◆</span>&nbsp; Sponsorship &nbsp;<span>◆</span>&nbsp; Mentorship &nbsp;<span>◆</span>&nbsp; Research &nbsp;<span>◆</span>&nbsp; Ideas &nbsp;<span>◆</span>&nbsp;
+    </span>
+  </div>
+
+  <!-- CONTRIBUTION CATEGORIES -->
+  <section class="section-contribute" id="ways">
+    <div class="section-label">Ways to Contribute</div>
+    <div class="section-title">Your Input.<br>Your Form.</div>
+    <p class="section-desc">
+      No minimum. No gatekeeping. Contribute in the way that fits where you are right now.
+    </p>
+
+    <div class="contrib-grid">
+
+      <div class="contrib-card time">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <span class="card-tag">Time</span>
+        <h3>Volunteer Your Time</h3>
+        <p>Lead a workshop. Help run an event. Moderate a session. Your hours become momentum for the community.</p>
+        <a href="#" class="card-link">Apply to volunteer</a>
+      </div>
+
+      <div class="contrib-card capital">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <span class="card-tag">Capital</span>
+        <h3>Invest in the Ecosystem</h3>
+        <p>Support SAGIE ECO through donations, or co-invest alongside SAGIE Ventures in emerging founders.</p>
+        <a href="#" class="card-link">Explore investment paths</a>
+      </div>
+
+      <div class="contrib-card network">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><path d="m8 12 8-5M8 12l8 5"/></svg>
+        </div>
+        <span class="card-tag">Network</span>
+        <h3>Open Your Network</h3>
+        <p>Make a warm intro. Connect a founder to a funder. Bridge two people who should know each other.</p>
+        <a href="#" class="card-link">Submit an introduction</a>
+      </div>
+
+    </div>
+
+    <div class="contrib-grid-2" style="margin-top:2px">
+
+      <div class="contrib-card skills">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 1-6.23-.693L5 14.5m14.8.8 1.402 1.402c1 1 .03 2.798-1.5 2.798H4.298c-1.528 0-2.498-1.798-1.5-2.798L4.2 15.3"/></svg>
+        </div>
+        <span class="card-tag">Skills</span>
+        <h3>Share Your Expertise</h3>
+        <p>Mentor a builder. Run an AMA. Contribute a resource to the SAGIE knowledge base.</p>
+        <a href="#" class="card-link">Offer your skills</a>
+      </div>
+
+      <div class="contrib-card sponsor">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
+        </div>
+        <span class="card-tag">Sponsorship</span>
+        <h3>Sponsor an Event or Program</h3>
+        <p>Put your brand inside SAGIE activations. Align with community-first events across Miami and beyond.</p>
+        <a href="#" class="card-link">View sponsor packages</a>
+      </div>
+
+      <div class="contrib-card host">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819"/></svg>
+        </div>
+        <span class="card-tag">Space</span>
+        <h3>Host a SAGIE Activation</h3>
+        <p>Have a venue, office, or rooftop? Open it for the community. We handle the programming.</p>
+        <a href="#" class="card-link">Offer your space</a>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="hr-circuit">
+
+  <!-- HOW IT WORKS -->
+  <section class="section-how">
+    <div class="section-label">Process</div>
+    <div class="section-title">How It Works</div>
+    <p class="section-desc">Four steps from intent to impact.</p>
+
+    <div class="steps-row">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h4>Choose Your Form</h4>
+        <p>Pick the contribution type that matches where you are. All forms are welcome.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h4>Submit Intent</h4>
+        <p>Short intake — no lengthy forms. We ask only what we need to route you correctly.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h4>Get Connected</h4>
+        <p>Sagie or a chapter lead follows up within 72 hours to align on fit and scope.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <h4>Create Impact</h4>
+        <p>You're in. Your contribution activates inside the ecosystem in real time.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr-circuit">
+
+  <!-- PILLAR ALIGNMENT -->
+  <section class="section-pillars">
+    <div class="section-label">Where It Goes</div>
+    <div class="section-title">Three Pillars.<br>Every Contribution Feeds One.</div>
+    <p class="section-desc">Your contribution is routed to the pillar where it creates the most leverage.</p>
+
+    <div class="pillar-row">
+      <div class="pillar-card eco">
+        <div class="pillar-indicator"></div>
+        <div class="pillar-name">SAGIE ECO</div>
+        <h3>Community Foundation</h3>
+        <p>NPO infrastructure, events, chapter development, youth programs, and cross-border access initiatives.</p>
+        <div class="pillar-tags">
+          <span class="tag">Events</span>
+          <span class="tag">Chapters</span>
+          <span class="tag">Youth</span>
+          <span class="tag">Mentorship</span>
+        </div>
+      </div>
+
+      <div class="pillar-card solutions">
+        <div class="pillar-indicator"></div>
+        <div class="pillar-name">SAGIE Solutions</div>
+        <h3>ServiceHub</h3>
+        <p>Fractional executive marketplace. Expertise contributes as a provider or client. Capital connects to engagements.</p>
+        <div class="pillar-tags">
+          <span class="tag">Skills</span>
+          <span class="tag">Expertise</span>
+          <span class="tag">Fractional</span>
+        </div>
+      </div>
+
+      <div class="pillar-card ventures">
+        <div class="pillar-indicator"></div>
+        <div class="pillar-name">SAGIE Ventures</div>
+        <h3>Equity Portfolio</h3>
+        <p>Deal flow, co-investment, and network introductions that move capital to underrepresented founders.</p>
+        <div class="pillar-tags">
+          <span class="tag">Capital</span>
+          <span class="tag">Deals</span>
+          <span class="tag">Intros</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <div class="cta-banner">
+    <div>
+      <h2>Ready to Plug In?</h2>
+      <p>No minimum contribution. No gatekeeping. Just show up and tell us how you want to help.</p>
+    </div>
+    <div class="cta-group">
+      <a href="#" class="btn-primary">Start Contributing</a>
+      <a href="#" class="btn-ghost">Learn About Membership</a>
+    </div>
+  </div>
+
+  <!-- FOOTER STRIP -->
+  <div class="footer-strip">
+    <span>SAGIE — Shape a Great Impact Everywhere</span>
+    <span>sagie.co/contribute</span>
+    <span>Miami · Tel Aviv · Coming Soon</span>
+  </div>
+
+</div>
+</body>
+</html>

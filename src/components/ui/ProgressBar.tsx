@@ -59,7 +59,7 @@ export function ProgressBar<TId extends string>({
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[11px] font-body transition-colors duration-150',
                     isCompleted && 'border-silver bg-silver text-background cursor-pointer hover:bg-silver-bright',
                     isCurrent && 'border-silver text-silver bg-background',
-                    isUpcoming && 'border-border-default text-foreground-dim bg-background cursor-not-allowed',
+                    isUpcoming && 'border-border-default text-foreground-muted bg-background cursor-not-allowed',
                   )}
                 >
                   {isCompleted ? (
@@ -99,7 +99,7 @@ export function ProgressBar<TId extends string>({
                   'mt-2 hidden sm:block text-[9px] uppercase tracking-[0.12em] font-body text-center truncate w-full px-1',
                   isCompleted && 'text-foreground-secondary',
                   isCurrent && 'text-silver',
-                  isUpcoming && 'text-foreground-dim',
+                  isUpcoming && 'text-foreground-muted',
                 )}
               >
                 {step.label}

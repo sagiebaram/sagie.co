@@ -1,0 +1,65 @@
+{
+  "projectName": "sagie.co",
+  "projectRoot": "/Users/sagie_root/SAGIE-HQ/sagie.co",
+  "panes": [
+    {
+      "id": "dmux-1775990713197",
+      "slug": "sprint-04-11",
+      "prompt": "Read .planning/SPRINT-04-11-SESSIONS.md — execute TRACK 3: MEMBERSHIP WIZARD BUILD.\n\nPre-flight first:\n  git pull origin main\n  ls src/components/ui/ProgressBar.tsx\n  ls src/components/ui/WizardNav.tsx\n  ls src/components/ui/StepEditModal.tsx\n  grep -l \"MembershipSchema\" src/lib/schemas.ts\n\nIf any are missing, STOP — Track 1 hasn't merged.\n\nIf all present, execute the full session. The ADR at .planning/ADR-MEMBERSHIP-WIZARD.md is the authoritative reference for step schemas, field lists, and UX rules.\n\nRsync planning files first:\n  rsync -a ~/SAGIE-HQ/sagie.co/.planning/ ~/SAGIE-HQ/sagie-feature-membership-wizard/.planning/",
+      "paneId": "%12",
+      "projectRoot": "/Users/sagie_root/SAGIE-HQ/sagie.co",
+      "projectName": "sagie.co",
+      "worktreePath": "/Users/sagie_root/SAGIE-HQ/sagie.co/.dmux/worktrees/sprint-04-11",
+      "agent": "claude",
+      "permissionMode": "bypassPermissions",
+      "autopilot": true,
+      "agentStatus": "working",
+      "needsAttention": false,
+      "hidden": false
+    },
+    {
+      "id": "dmux-1775990725107",
+      "slug": "sprint-04-11",
+      "prompt": "Read .planning/SPRINT-04-11-SESSIONS.md — execute TRACK 4: WIZARD API + NOTION MIGRATION + E2E REWRITE.\n\nPre-flight first:\n  git pull origin main\n  grep -l \"MembershipSchema\" src/lib/schemas.ts\n  grep -l \"workStyle\" src/lib/schemas.ts\n\nIf missing, STOP — Track 1 hasn't merged.\n\nIf present, execute the full session. Start with the migration script (--dry-run first), then API route rewrite, then tests.\n\nRsync planning files first:\n  rsync -a ~/SAGIE-HQ/sagie.co/.planning/ ~/SAGIE-HQ/sagie-feature-wizard-api/.planning/\n\nCritical: Notion Members DB ID is ec753df1-ca8d-46d7-8c74-9b6f64cea2d5. Do NOT run the migration script against production without --dry-run first. Show the dry-run output and wait for the PR review before applying.",
+      "paneId": "%12",
+      "projectRoot": "/Users/sagie_root/SAGIE-HQ/sagie.co",
+      "projectName": "sagie.co",
+      "worktreePath": "/Users/sagie_root/SAGIE-HQ/sagie.co/.dmux/worktrees/sprint-04-11",
+      "agent": "claude",
+      "permissionMode": "bypassPermissions",
+      "autopilot": true,
+      "agentStatus": "working",
+      "needsAttention": false,
+      "hidden": false
+    },
+    {
+      "id": "dmux-1775990725108",
+      "slug": "shell-1775990725108",
+      "prompt": "",
+      "paneId": "%13",
+      "projectRoot": "/Users/sagie_root/SAGIE-HQ/sagie.co",
+      "projectName": "sagie.co",
+      "type": "shell",
+      "shellType": "shell",
+      "hidden": false
+    }
+  ],
+  "sidebarProjects": [
+    {
+      "projectRoot": "/Users/sagie_root/SAGIE-HQ/sagie.co",
+      "projectName": "sagie.co"
+    }
+  ],
+  "settings": {},
+  "lastUpdated": "2026-04-12T19:33:28.131Z",
+  "controlPaneSize": 40,
+  "controlPaneId": "%0",
+  "updateSettings": {
+    "checkIntervalHours": 24,
+    "autoUpdateEnabled": true,
+    "lastCheckTime": 1775989348679,
+    "cachedCurrentVersion": "5.6.3",
+    "cachedLatestVersion": "5.6.3",
+    "cachedHasUpdate": false
+  }
+}

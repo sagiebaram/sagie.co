@@ -51,7 +51,7 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
               {/* Header */}
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-10 h-10 border border-border-default flex items-center justify-center shrink-0">
-                  <span className="font-display text-foreground-muted text-caption leading-none">
+                  <span className="font-display text-foreground-muted text-label leading-none">
                     {provider.initials}
                   </span>
                 </div>
@@ -66,7 +66,7 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
               </div>
 
               {/* Bio */}
-              <p className="font-body text-foreground-muted text-caption font-light leading-[1.75] mb-6 flex-1 line-clamp-3">
+              <p className="font-body text-foreground-muted text-label font-light leading-body mb-6 flex-1 line-clamp-3">
                 {provider.bio}
               </p>
 
@@ -83,7 +83,7 @@ export function SolutionsFilter({ providers }: { providers: SolutionProvider[] }
                 <a
                   href="/apply/solutions"
                   aria-label={`Work with ${provider.name}`}
-                  className="font-body text-foreground-muted text-caption tracking-mid hover:text-silver transition-colors duration-150"
+                  className="font-body text-foreground-muted text-label tracking-mid hover:text-silver transition-colors duration-150"
                 >
                   Work with me →
                 </a>

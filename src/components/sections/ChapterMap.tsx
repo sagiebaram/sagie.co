@@ -26,7 +26,7 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
         <div ref={leftRef}>
           <Eyebrow>{CHAPTER_SECTION.eyebrow}</Eyebrow>
-          <h2 className="font-display uppercase text-foreground mb-6 text-chapter leading-[0.95]">
+          <h2 className="font-display uppercase text-foreground mb-6 text-chapter leading-display">
             {CHAPTER_SECTION.heading.split('\n').map((line, i) => (
               <span key={i}>
                 {line}
@@ -34,10 +34,10 @@ export function ChapterMap({ chapters }: { chapters: Chapter[] }) {
               </span>
             ))}
           </h2>
-          <p className="font-body text-foreground-muted mb-10 text-body-lg font-light leading-[1.75] max-w-[380px]">
+          <p className="font-body text-foreground-muted mb-10 text-body font-light leading-body max-w-[380px]">
             {CHAPTER_SECTION.body}
           </p>
-          <span className="notify-glow inline-block font-body uppercase text-button tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
+          <span className="notify-glow inline-block font-body uppercase text-label tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
             Coming Soon
           </span>
         </div>

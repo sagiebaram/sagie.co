@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             <div className="post-meta flex items-center gap-2 mb-4 font-body text-label tracking-spaced">
               <span className="text-foreground-muted uppercase">{post.category}</span>
-              <span className="text-foreground-dim">·</span>
+              <span className="text-foreground-muted">·</span>
               {post.publishDate ? (
                 <time dateTime={post.publishDate} className="text-foreground-muted">
                   {formatDate(post.publishDate)}
@@ -109,11 +109,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               ) : (
                 <span className="text-foreground-muted" />
               )}
-              <span className="text-foreground-dim">·</span>
+              <span className="text-foreground-muted">·</span>
               <span className="text-foreground-muted">{post.readTime} min read</span>
             </div>
 
-            <h1 className="post-title font-display uppercase text-tier leading-[0.95] tracking-heading text-foreground-secondary mb-4">
+            <h1 className="post-title font-display uppercase text-chapter leading-display tracking-heading text-foreground-secondary mb-4">
               {post.title}
             </h1>
 
@@ -121,7 +121,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <p className="font-body text-foreground-muted text-label uppercase tracking-eyebrow mb-1">
                 {post.author}
               </p>
-              <p className="font-body text-foreground-dim text-label uppercase tracking-eyebrow mb-4">
+              <p className="font-body text-foreground-muted text-label uppercase tracking-eyebrow mb-4">
                 {post.authorType === 'Community Member' ? 'Community Member' : 'Founder · Ecosystem Architect'}
               </p>
 
@@ -141,7 +141,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Related posts */}
         {related.length > 0 && (
           <ScrollReveal selector=".related-card" stagger={0.1} y={16} duration={0.45} className="mt-16">
-            <p className="font-body uppercase text-foreground-dim text-label tracking-eyebrow mb-6">Related</p>
+            <p className="font-body uppercase text-foreground-muted text-label tracking-eyebrow mb-6">Related</p>
             <div className="grid md:grid-cols-3 gap-px">
               {related.map(r => (
                 <Link
@@ -150,7 +150,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   className="related-card group p-6 border border-border-default hover:bg-background-card-featured transition-colors duration-200"
                 >
                   <span className="font-body uppercase text-foreground-muted text-label tracking-spaced block mb-2">{r.category}</span>
-                  <h4 className="font-display uppercase text-caption leading-tight text-foreground-dim group-hover:text-foreground-secondary transition-colors duration-150 mb-3">
+                  <h4 className="font-display uppercase text-label leading-display text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150 mb-3">
                     {r.title}
                   </h4>
                   <span className="font-body text-foreground-secondary text-label tracking-mid group-hover:translate-x-0.5 transition-transform duration-150 inline-block">Read →</span>
@@ -171,7 +171,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   href={`/blog/${prevPost.slug}`}
                   className="group flex-1 min-w-0"
                 >
-                  <span className="font-body uppercase text-foreground-dim text-label tracking-label block mb-1">← Previous</span>
+                  <span className="font-body uppercase text-foreground-muted text-label tracking-label block mb-1">← Previous</span>
                   <span className="font-display uppercase text-subhead text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150 block truncate">
                     {prevPost.title}
                   </span>
@@ -184,7 +184,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   href={`/blog/${nextPost.slug}`}
                   className="group flex-1 min-w-0 text-right"
                 >
-                  <span className="font-body uppercase text-foreground-dim text-label tracking-label block mb-1">Next →</span>
+                  <span className="font-body uppercase text-foreground-muted text-label tracking-label block mb-1">Next →</span>
                   <span className="font-display uppercase text-subhead text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150 block truncate">
                     {nextPost.title}
                   </span>

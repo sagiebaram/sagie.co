@@ -1,0 +1,1624 @@
+[2026-04-12T10:22:27.937Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:22:27.938Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.597Z] [@Detection] Running with: {
+  "prompt": "I",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:22:31.597Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.598Z] [@Detection] Running with: {
+  "prompt": "I",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:22:31.598Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.758Z] [@Detection] Running with: {
+  "prompt": "I ",
+  "currentCursor": 1,
+  "promptLength": 2
+}
+[2026-04-12T10:22:31.758Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.759Z] [@Detection] Running with: {
+  "prompt": "I ",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:22:31.759Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.867Z] [@Detection] Running with: {
+  "prompt": "I w",
+  "currentCursor": 2,
+  "promptLength": 3
+}
+[2026-04-12T10:22:31.867Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.868Z] [@Detection] Running with: {
+  "prompt": "I w",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:22:31.868Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.938Z] [@Detection] Running with: {
+  "prompt": "I wa",
+  "currentCursor": 3,
+  "promptLength": 4
+}
+[2026-04-12T10:22:31.938Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:31.939Z] [@Detection] Running with: {
+  "prompt": "I wa",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:22:31.939Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.057Z] [@Detection] Running with: {
+  "prompt": "I wab",
+  "currentCursor": 4,
+  "promptLength": 5
+}
+[2026-04-12T10:22:32.057Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.058Z] [@Detection] Running with: {
+  "prompt": "I wab",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:22:32.058Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.140Z] [@Detection] Running with: {
+  "prompt": "I wabt",
+  "currentCursor": 5,
+  "promptLength": 6
+}
+[2026-04-12T10:22:32.140Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.141Z] [@Detection] Running with: {
+  "prompt": "I wabt",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:22:32.141Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.244Z] [@Detection] Running with: {
+  "prompt": "I wabt ",
+  "currentCursor": 6,
+  "promptLength": 7
+}
+[2026-04-12T10:22:32.244Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.245Z] [@Detection] Running with: {
+  "prompt": "I wabt ",
+  "currentCursor": 7,
+  "promptLength": 7
+}
+[2026-04-12T10:22:32.245Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.398Z] [@Detection] Running with: {
+  "prompt": "I wabt t",
+  "currentCursor": 7,
+  "promptLength": 8
+}
+[2026-04-12T10:22:32.398Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:32.399Z] [@Detection] Running with: {
+  "prompt": "I wabt t",
+  "currentCursor": 8,
+  "promptLength": 8
+}
+[2026-04-12T10:22:32.399Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.110Z] [@Detection] Running with: {
+  "prompt": "I wabt ",
+  "currentCursor": 8,
+  "promptLength": 7
+}
+[2026-04-12T10:22:33.111Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.112Z] [@Detection] Running with: {
+  "prompt": "I wabt ",
+  "currentCursor": 7,
+  "promptLength": 7
+}
+[2026-04-12T10:22:33.112Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.270Z] [@Detection] Running with: {
+  "prompt": "I wabt",
+  "currentCursor": 7,
+  "promptLength": 6
+}
+[2026-04-12T10:22:33.270Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.271Z] [@Detection] Running with: {
+  "prompt": "I wabt",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:22:33.271Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.413Z] [@Detection] Running with: {
+  "prompt": "I wab",
+  "currentCursor": 6,
+  "promptLength": 5
+}
+[2026-04-12T10:22:33.413Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.414Z] [@Detection] Running with: {
+  "prompt": "I wab",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:22:33.414Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.562Z] [@Detection] Running with: {
+  "prompt": "I wa",
+  "currentCursor": 5,
+  "promptLength": 4
+}
+[2026-04-12T10:22:33.562Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.563Z] [@Detection] Running with: {
+  "prompt": "I wa",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:22:33.563Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.850Z] [@Detection] Running with: {
+  "prompt": "I wan",
+  "currentCursor": 4,
+  "promptLength": 5
+}
+[2026-04-12T10:22:33.850Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.851Z] [@Detection] Running with: {
+  "prompt": "I wan",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:22:33.851Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.942Z] [@Detection] Running with: {
+  "prompt": "I want",
+  "currentCursor": 5,
+  "promptLength": 6
+}
+[2026-04-12T10:22:33.942Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:33.942Z] [@Detection] Running with: {
+  "prompt": "I want",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:22:33.942Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.029Z] [@Detection] Running with: {
+  "prompt": "I want ",
+  "currentCursor": 6,
+  "promptLength": 7
+}
+[2026-04-12T10:22:34.029Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.029Z] [@Detection] Running with: {
+  "prompt": "I want ",
+  "currentCursor": 7,
+  "promptLength": 7
+}
+[2026-04-12T10:22:34.029Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.117Z] [@Detection] Running with: {
+  "prompt": "I want t",
+  "currentCursor": 7,
+  "promptLength": 8
+}
+[2026-04-12T10:22:34.117Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.118Z] [@Detection] Running with: {
+  "prompt": "I want t",
+  "currentCursor": 8,
+  "promptLength": 8
+}
+[2026-04-12T10:22:34.118Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.217Z] [@Detection] Running with: {
+  "prompt": "I want to",
+  "currentCursor": 8,
+  "promptLength": 9
+}
+[2026-04-12T10:22:34.217Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.218Z] [@Detection] Running with: {
+  "prompt": "I want to",
+  "currentCursor": 9,
+  "promptLength": 9
+}
+[2026-04-12T10:22:34.218Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.305Z] [@Detection] Running with: {
+  "prompt": "I want to ",
+  "currentCursor": 9,
+  "promptLength": 10
+}
+[2026-04-12T10:22:34.305Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.306Z] [@Detection] Running with: {
+  "prompt": "I want to ",
+  "currentCursor": 10,
+  "promptLength": 10
+}
+[2026-04-12T10:22:34.306Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.587Z] [@Detection] Running with: {
+  "prompt": "I want to t",
+  "currentCursor": 10,
+  "promptLength": 11
+}
+[2026-04-12T10:22:34.587Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.587Z] [@Detection] Running with: {
+  "prompt": "I want to t",
+  "currentCursor": 11,
+  "promptLength": 11
+}
+[2026-04-12T10:22:34.588Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.738Z] [@Detection] Running with: {
+  "prompt": "I want to te",
+  "currentCursor": 11,
+  "promptLength": 12
+}
+[2026-04-12T10:22:34.738Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.738Z] [@Detection] Running with: {
+  "prompt": "I want to te",
+  "currentCursor": 12,
+  "promptLength": 12
+}
+[2026-04-12T10:22:34.739Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.850Z] [@Detection] Running with: {
+  "prompt": "I want to tes",
+  "currentCursor": 12,
+  "promptLength": 13
+}
+[2026-04-12T10:22:34.850Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.851Z] [@Detection] Running with: {
+  "prompt": "I want to tes",
+  "currentCursor": 13,
+  "promptLength": 13
+}
+[2026-04-12T10:22:34.851Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.945Z] [@Detection] Running with: {
+  "prompt": "I want to test",
+  "currentCursor": 13,
+  "promptLength": 14
+}
+[2026-04-12T10:22:34.945Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:34.946Z] [@Detection] Running with: {
+  "prompt": "I want to test",
+  "currentCursor": 14,
+  "promptLength": 14
+}
+[2026-04-12T10:22:34.946Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.037Z] [@Detection] Running with: {
+  "prompt": "I want to test ",
+  "currentCursor": 14,
+  "promptLength": 15
+}
+[2026-04-12T10:22:35.037Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.038Z] [@Detection] Running with: {
+  "prompt": "I want to test ",
+  "currentCursor": 15,
+  "promptLength": 15
+}
+[2026-04-12T10:22:35.038Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.273Z] [@Detection] Running with: {
+  "prompt": "I want to test i",
+  "currentCursor": 15,
+  "promptLength": 16
+}
+[2026-04-12T10:22:35.273Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.274Z] [@Detection] Running with: {
+  "prompt": "I want to test i",
+  "currentCursor": 16,
+  "promptLength": 16
+}
+[2026-04-12T10:22:35.274Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.329Z] [@Detection] Running with: {
+  "prompt": "I want to test it",
+  "currentCursor": 16,
+  "promptLength": 17
+}
+[2026-04-12T10:22:35.329Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.329Z] [@Detection] Running with: {
+  "prompt": "I want to test it",
+  "currentCursor": 17,
+  "promptLength": 17
+}
+[2026-04-12T10:22:35.330Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.574Z] [@Detection] Running with: {
+  "prompt": "I want to test it ",
+  "currentCursor": 17,
+  "promptLength": 18
+}
+[2026-04-12T10:22:35.574Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.574Z] [@Detection] Running with: {
+  "prompt": "I want to test it ",
+  "currentCursor": 18,
+  "promptLength": 18
+}
+[2026-04-12T10:22:35.574Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.771Z] [@Detection] Running with: {
+  "prompt": "I want to test it o",
+  "currentCursor": 18,
+  "promptLength": 19
+}
+[2026-04-12T10:22:35.771Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.772Z] [@Detection] Running with: {
+  "prompt": "I want to test it o",
+  "currentCursor": 19,
+  "promptLength": 19
+}
+[2026-04-12T10:22:35.772Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.993Z] [@Detection] Running with: {
+  "prompt": "I want to test it ou",
+  "currentCursor": 19,
+  "promptLength": 20
+}
+[2026-04-12T10:22:35.993Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:35.994Z] [@Detection] Running with: {
+  "prompt": "I want to test it ou",
+  "currentCursor": 20,
+  "promptLength": 20
+}
+[2026-04-12T10:22:35.994Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.050Z] [@Detection] Running with: {
+  "prompt": "I want to test it out",
+  "currentCursor": 20,
+  "promptLength": 21
+}
+[2026-04-12T10:22:36.050Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.051Z] [@Detection] Running with: {
+  "prompt": "I want to test it out",
+  "currentCursor": 21,
+  "promptLength": 21
+}
+[2026-04-12T10:22:36.051Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.587Z] [@Detection] Running with: {
+  "prompt": "I want to test it ou",
+  "currentCursor": 21,
+  "promptLength": 20
+}
+[2026-04-12T10:22:36.587Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.588Z] [@Detection] Running with: {
+  "prompt": "I want to test it ou",
+  "currentCursor": 20,
+  "promptLength": 20
+}
+[2026-04-12T10:22:36.588Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.758Z] [@Detection] Running with: {
+  "prompt": "I want to test it o",
+  "currentCursor": 20,
+  "promptLength": 19
+}
+[2026-04-12T10:22:36.758Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.759Z] [@Detection] Running with: {
+  "prompt": "I want to test it o",
+  "currentCursor": 19,
+  "promptLength": 19
+}
+[2026-04-12T10:22:36.759Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.914Z] [@Detection] Running with: {
+  "prompt": "I want to test it ",
+  "currentCursor": 19,
+  "promptLength": 18
+}
+[2026-04-12T10:22:36.914Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:36.915Z] [@Detection] Running with: {
+  "prompt": "I want to test it ",
+  "currentCursor": 18,
+  "promptLength": 18
+}
+[2026-04-12T10:22:36.915Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:37.062Z] [@Detection] Running with: {
+  "prompt": "I want to test it",
+  "currentCursor": 18,
+  "promptLength": 17
+}
+[2026-04-12T10:22:37.062Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:37.063Z] [@Detection] Running with: {
+  "prompt": "I want to test it",
+  "currentCursor": 17,
+  "promptLength": 17
+}
+[2026-04-12T10:22:37.063Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:37.219Z] [@Detection] Running with: {
+  "prompt": "I want to test i",
+  "currentCursor": 17,
+  "promptLength": 16
+}
+[2026-04-12T10:22:37.219Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:37.219Z] [@Detection] Running with: {
+  "prompt": "I want to test i",
+  "currentCursor": 16,
+  "promptLength": 16
+}
+[2026-04-12T10:22:37.220Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:37.368Z] [@Detection] Running with: {
+  "prompt": "I want to test ",
+  "currentCursor": 16,
+  "promptLength": 15
+}
+[2026-04-12T10:22:37.368Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:37.369Z] [@Detection] Running with: {
+  "prompt": "I want to test ",
+  "currentCursor": 15,
+  "promptLength": 15
+}
+[2026-04-12T10:22:37.369Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.391Z] [@Detection] Running with: {
+  "prompt": "I want to test",
+  "currentCursor": 15,
+  "promptLength": 14
+}
+[2026-04-12T10:22:38.392Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.393Z] [@Detection] Running with: {
+  "prompt": "I want to test",
+  "currentCursor": 14,
+  "promptLength": 14
+}
+[2026-04-12T10:22:38.393Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.564Z] [@Detection] Running with: {
+  "prompt": "I want to tes",
+  "currentCursor": 14,
+  "promptLength": 13
+}
+[2026-04-12T10:22:38.564Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.564Z] [@Detection] Running with: {
+  "prompt": "I want to tes",
+  "currentCursor": 13,
+  "promptLength": 13
+}
+[2026-04-12T10:22:38.564Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.736Z] [@Detection] Running with: {
+  "prompt": "I want to te",
+  "currentCursor": 13,
+  "promptLength": 12
+}
+[2026-04-12T10:22:38.736Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.737Z] [@Detection] Running with: {
+  "prompt": "I want to te",
+  "currentCursor": 12,
+  "promptLength": 12
+}
+[2026-04-12T10:22:38.737Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.904Z] [@Detection] Running with: {
+  "prompt": "I want to t",
+  "currentCursor": 12,
+  "promptLength": 11
+}
+[2026-04-12T10:22:38.904Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:38.905Z] [@Detection] Running with: {
+  "prompt": "I want to t",
+  "currentCursor": 11,
+  "promptLength": 11
+}
+[2026-04-12T10:22:38.905Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:39.569Z] [@Detection] Running with: {
+  "prompt": "I want to ",
+  "currentCursor": 11,
+  "promptLength": 10
+}
+[2026-04-12T10:22:39.569Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:39.569Z] [@Detection] Running with: {
+  "prompt": "I want to ",
+  "currentCursor": 10,
+  "promptLength": 10
+}
+[2026-04-12T10:22:39.569Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.070Z] [@Detection] Running with: {
+  "prompt": "I want to",
+  "currentCursor": 10,
+  "promptLength": 9
+}
+[2026-04-12T10:22:40.071Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.071Z] [@Detection] Running with: {
+  "prompt": "I want to",
+  "currentCursor": 9,
+  "promptLength": 9
+}
+[2026-04-12T10:22:40.071Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.154Z] [@Detection] Running with: {
+  "prompt": "I want t",
+  "currentCursor": 9,
+  "promptLength": 8
+}
+[2026-04-12T10:22:40.154Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.155Z] [@Detection] Running with: {
+  "prompt": "I want t",
+  "currentCursor": 8,
+  "promptLength": 8
+}
+[2026-04-12T10:22:40.155Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.239Z] [@Detection] Running with: {
+  "prompt": "I want ",
+  "currentCursor": 8,
+  "promptLength": 7
+}
+[2026-04-12T10:22:40.239Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.240Z] [@Detection] Running with: {
+  "prompt": "I want ",
+  "currentCursor": 7,
+  "promptLength": 7
+}
+[2026-04-12T10:22:40.240Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.322Z] [@Detection] Running with: {
+  "prompt": "I want",
+  "currentCursor": 7,
+  "promptLength": 6
+}
+[2026-04-12T10:22:40.322Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.323Z] [@Detection] Running with: {
+  "prompt": "I want",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:22:40.323Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.406Z] [@Detection] Running with: {
+  "prompt": "I wan",
+  "currentCursor": 6,
+  "promptLength": 5
+}
+[2026-04-12T10:22:40.406Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.407Z] [@Detection] Running with: {
+  "prompt": "I wan",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:22:40.407Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.489Z] [@Detection] Running with: {
+  "prompt": "I wa",
+  "currentCursor": 5,
+  "promptLength": 4
+}
+[2026-04-12T10:22:40.490Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.490Z] [@Detection] Running with: {
+  "prompt": "I wa",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:22:40.490Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.572Z] [@Detection] Running with: {
+  "prompt": "I w",
+  "currentCursor": 4,
+  "promptLength": 3
+}
+[2026-04-12T10:22:40.572Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.572Z] [@Detection] Running with: {
+  "prompt": "I w",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:22:40.572Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.657Z] [@Detection] Running with: {
+  "prompt": "I ",
+  "currentCursor": 3,
+  "promptLength": 2
+}
+[2026-04-12T10:22:40.657Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.658Z] [@Detection] Running with: {
+  "prompt": "I ",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:22:40.658Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.740Z] [@Detection] Running with: {
+  "prompt": "I",
+  "currentCursor": 2,
+  "promptLength": 1
+}
+[2026-04-12T10:22:40.740Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.741Z] [@Detection] Running with: {
+  "prompt": "I",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:22:40.741Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.825Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 1,
+  "promptLength": 0
+}
+[2026-04-12T10:22:40.825Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:40.826Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:22:40.826Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.365Z] [@Detection] Running with: {
+  "prompt": "W",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:22:41.365Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.366Z] [@Detection] Running with: {
+  "prompt": "W",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:22:41.366Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.553Z] [@Detection] Running with: {
+  "prompt": "Wh",
+  "currentCursor": 1,
+  "promptLength": 2
+}
+[2026-04-12T10:22:41.553Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.554Z] [@Detection] Running with: {
+  "prompt": "Wh",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:22:41.554Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.690Z] [@Detection] Running with: {
+  "prompt": "Whi",
+  "currentCursor": 2,
+  "promptLength": 3
+}
+[2026-04-12T10:22:41.690Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.691Z] [@Detection] Running with: {
+  "prompt": "Whi",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:22:41.691Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.815Z] [@Detection] Running with: {
+  "prompt": "Whic",
+  "currentCursor": 3,
+  "promptLength": 4
+}
+[2026-04-12T10:22:41.815Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.815Z] [@Detection] Running with: {
+  "prompt": "Whic",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:22:41.815Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.919Z] [@Detection] Running with: {
+  "prompt": "Which",
+  "currentCursor": 4,
+  "promptLength": 5
+}
+[2026-04-12T10:22:41.919Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:41.920Z] [@Detection] Running with: {
+  "prompt": "Which",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:22:41.920Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.028Z] [@Detection] Running with: {
+  "prompt": "Which ",
+  "currentCursor": 5,
+  "promptLength": 6
+}
+[2026-04-12T10:22:42.028Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.029Z] [@Detection] Running with: {
+  "prompt": "Which ",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:22:42.029Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.177Z] [@Detection] Running with: {
+  "prompt": "Which a",
+  "currentCursor": 6,
+  "promptLength": 7
+}
+[2026-04-12T10:22:42.178Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.178Z] [@Detection] Running with: {
+  "prompt": "Which a",
+  "currentCursor": 7,
+  "promptLength": 7
+}
+[2026-04-12T10:22:42.178Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.314Z] [@Detection] Running with: {
+  "prompt": "Which ag",
+  "currentCursor": 7,
+  "promptLength": 8
+}
+[2026-04-12T10:22:42.314Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.314Z] [@Detection] Running with: {
+  "prompt": "Which ag",
+  "currentCursor": 8,
+  "promptLength": 8
+}
+[2026-04-12T10:22:42.314Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.510Z] [@Detection] Running with: {
+  "prompt": "Which age",
+  "currentCursor": 8,
+  "promptLength": 9
+}
+[2026-04-12T10:22:42.510Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.510Z] [@Detection] Running with: {
+  "prompt": "Which age",
+  "currentCursor": 9,
+  "promptLength": 9
+}
+[2026-04-12T10:22:42.511Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.687Z] [@Detection] Running with: {
+  "prompt": "Which agen",
+  "currentCursor": 9,
+  "promptLength": 10
+}
+[2026-04-12T10:22:42.687Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.688Z] [@Detection] Running with: {
+  "prompt": "Which agen",
+  "currentCursor": 10,
+  "promptLength": 10
+}
+[2026-04-12T10:22:42.688Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.810Z] [@Detection] Running with: {
+  "prompt": "Which agent",
+  "currentCursor": 10,
+  "promptLength": 11
+}
+[2026-04-12T10:22:42.810Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.811Z] [@Detection] Running with: {
+  "prompt": "Which agent",
+  "currentCursor": 11,
+  "promptLength": 11
+}
+[2026-04-12T10:22:42.811Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.863Z] [@Detection] Running with: {
+  "prompt": "Which agent ",
+  "currentCursor": 11,
+  "promptLength": 12
+}
+[2026-04-12T10:22:42.863Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:42.864Z] [@Detection] Running with: {
+  "prompt": "Which agent ",
+  "currentCursor": 12,
+  "promptLength": 12
+}
+[2026-04-12T10:22:42.864Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.012Z] [@Detection] Running with: {
+  "prompt": "Which agent a",
+  "currentCursor": 12,
+  "promptLength": 13
+}
+[2026-04-12T10:22:43.013Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.013Z] [@Detection] Running with: {
+  "prompt": "Which agent a",
+  "currentCursor": 13,
+  "promptLength": 13
+}
+[2026-04-12T10:22:43.014Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.136Z] [@Detection] Running with: {
+  "prompt": "Which agent ar",
+  "currentCursor": 13,
+  "promptLength": 14
+}
+[2026-04-12T10:22:43.136Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.137Z] [@Detection] Running with: {
+  "prompt": "Which agent ar",
+  "currentCursor": 14,
+  "promptLength": 14
+}
+[2026-04-12T10:22:43.137Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.211Z] [@Detection] Running with: {
+  "prompt": "Which agent are",
+  "currentCursor": 14,
+  "promptLength": 15
+}
+[2026-04-12T10:22:43.211Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.211Z] [@Detection] Running with: {
+  "prompt": "Which agent are",
+  "currentCursor": 15,
+  "promptLength": 15
+}
+[2026-04-12T10:22:43.212Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.311Z] [@Detection] Running with: {
+  "prompt": "Which agent are ",
+  "currentCursor": 15,
+  "promptLength": 16
+}
+[2026-04-12T10:22:43.312Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.312Z] [@Detection] Running with: {
+  "prompt": "Which agent are ",
+  "currentCursor": 16,
+  "promptLength": 16
+}
+[2026-04-12T10:22:43.312Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.484Z] [@Detection] Running with: {
+  "prompt": "Which agent are y",
+  "currentCursor": 16,
+  "promptLength": 17
+}
+[2026-04-12T10:22:43.484Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.485Z] [@Detection] Running with: {
+  "prompt": "Which agent are y",
+  "currentCursor": 17,
+  "promptLength": 17
+}
+[2026-04-12T10:22:43.485Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.608Z] [@Detection] Running with: {
+  "prompt": "Which agent are yo",
+  "currentCursor": 17,
+  "promptLength": 18
+}
+[2026-04-12T10:22:43.608Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.608Z] [@Detection] Running with: {
+  "prompt": "Which agent are yo",
+  "currentCursor": 18,
+  "promptLength": 18
+}
+[2026-04-12T10:22:43.608Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.721Z] [@Detection] Running with: {
+  "prompt": "Which agent are you",
+  "currentCursor": 18,
+  "promptLength": 19
+}
+[2026-04-12T10:22:43.721Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.722Z] [@Detection] Running with: {
+  "prompt": "Which agent are you",
+  "currentCursor": 19,
+  "promptLength": 19
+}
+[2026-04-12T10:22:43.722Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.757Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy",
+  "currentCursor": 19,
+  "promptLength": 20
+}
+[2026-04-12T10:22:43.757Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.757Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy",
+  "currentCursor": 20,
+  "promptLength": 20
+}
+[2026-04-12T10:22:43.757Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.788Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy ",
+  "currentCursor": 20,
+  "promptLength": 21
+}
+[2026-04-12T10:22:43.788Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.789Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy ",
+  "currentCursor": 21,
+  "promptLength": 21
+}
+[2026-04-12T10:22:43.789Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.976Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy u",
+  "currentCursor": 21,
+  "promptLength": 22
+}
+[2026-04-12T10:22:43.976Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:43.976Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy u",
+  "currentCursor": 22,
+  "promptLength": 22
+}
+[2026-04-12T10:22:43.976Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.259Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy ",
+  "currentCursor": 22,
+  "promptLength": 21
+}
+[2026-04-12T10:22:44.259Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.260Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy ",
+  "currentCursor": 21,
+  "promptLength": 21
+}
+[2026-04-12T10:22:44.260Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.403Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy",
+  "currentCursor": 21,
+  "promptLength": 20
+}
+[2026-04-12T10:22:44.403Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.403Z] [@Detection] Running with: {
+  "prompt": "Which agent are youy",
+  "currentCursor": 20,
+  "promptLength": 20
+}
+[2026-04-12T10:22:44.403Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.565Z] [@Detection] Running with: {
+  "prompt": "Which agent are you",
+  "currentCursor": 20,
+  "promptLength": 19
+}
+[2026-04-12T10:22:44.565Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.566Z] [@Detection] Running with: {
+  "prompt": "Which agent are you",
+  "currentCursor": 19,
+  "promptLength": 19
+}
+[2026-04-12T10:22:44.566Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.907Z] [@Detection] Running with: {
+  "prompt": "Which agent are you ",
+  "currentCursor": 19,
+  "promptLength": 20
+}
+[2026-04-12T10:22:44.907Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:44.907Z] [@Detection] Running with: {
+  "prompt": "Which agent are you ",
+  "currentCursor": 20,
+  "promptLength": 20
+}
+[2026-04-12T10:22:44.907Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.065Z] [@Detection] Running with: {
+  "prompt": "Which agent are you u",
+  "currentCursor": 20,
+  "promptLength": 21
+}
+[2026-04-12T10:22:45.065Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.066Z] [@Detection] Running with: {
+  "prompt": "Which agent are you u",
+  "currentCursor": 21,
+  "promptLength": 21
+}
+[2026-04-12T10:22:45.066Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.184Z] [@Detection] Running with: {
+  "prompt": "Which agent are you us",
+  "currentCursor": 21,
+  "promptLength": 22
+}
+[2026-04-12T10:22:45.184Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.185Z] [@Detection] Running with: {
+  "prompt": "Which agent are you us",
+  "currentCursor": 22,
+  "promptLength": 22
+}
+[2026-04-12T10:22:45.185Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.352Z] [@Detection] Running with: {
+  "prompt": "Which agent are you usi",
+  "currentCursor": 22,
+  "promptLength": 23
+}
+[2026-04-12T10:22:45.353Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.353Z] [@Detection] Running with: {
+  "prompt": "Which agent are you usi",
+  "currentCursor": 23,
+  "promptLength": 23
+}
+[2026-04-12T10:22:45.353Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.526Z] [@Detection] Running with: {
+  "prompt": "Which agent are you usin",
+  "currentCursor": 23,
+  "promptLength": 24
+}
+[2026-04-12T10:22:45.527Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.527Z] [@Detection] Running with: {
+  "prompt": "Which agent are you usin",
+  "currentCursor": 24,
+  "promptLength": 24
+}
+[2026-04-12T10:22:45.527Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.618Z] [@Detection] Running with: {
+  "prompt": "Which agent are you using",
+  "currentCursor": 24,
+  "promptLength": 25
+}
+[2026-04-12T10:22:45.618Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.619Z] [@Detection] Running with: {
+  "prompt": "Which agent are you using",
+  "currentCursor": 25,
+  "promptLength": 25
+}
+[2026-04-12T10:22:45.619Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.862Z] [@Detection] Running with: {
+  "prompt": "Which agent are you using?",
+  "currentCursor": 25,
+  "promptLength": 26
+}
+[2026-04-12T10:22:45.863Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:22:45.863Z] [@Detection] Running with: {
+  "prompt": "Which agent are you using?",
+  "currentCursor": 26,
+  "promptLength": 26
+}
+[2026-04-12T10:22:45.863Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:06.792Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:24:06.793Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:11.001Z] [@Detection] Running with: {
+  "prompt": "n",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:24:11.001Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:11.002Z] [@Detection] Running with: {
+  "prompt": "n",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:24:11.002Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:11.547Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 1,
+  "promptLength": 0
+}
+[2026-04-12T10:24:11.547Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:11.548Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:24:11.548Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:11.889Z] [shouldAllowCancel] {
+  "isFileListActive": false,
+  "hasPrompt": false
+}
+[2026-04-12T10:24:11.889Z] [shouldAllowCancel] Allowing cancel 
+[2026-04-12T10:24:14.975Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:24:14.975Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:16.911Z] [@Detection] Running with: {
+  "prompt": "T",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:24:16.911Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:16.912Z] [@Detection] Running with: {
+  "prompt": "T",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:24:16.913Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.106Z] [@Detection] Running with: {
+  "prompt": "Th",
+  "currentCursor": 1,
+  "promptLength": 2
+}
+[2026-04-12T10:24:17.106Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.107Z] [@Detection] Running with: {
+  "prompt": "Th",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:24:17.107Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.222Z] [@Detection] Running with: {
+  "prompt": "Thi",
+  "currentCursor": 2,
+  "promptLength": 3
+}
+[2026-04-12T10:24:17.222Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.223Z] [@Detection] Running with: {
+  "prompt": "Thi",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:24:17.223Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.347Z] [@Detection] Running with: {
+  "prompt": "This",
+  "currentCursor": 3,
+  "promptLength": 4
+}
+[2026-04-12T10:24:17.347Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.348Z] [@Detection] Running with: {
+  "prompt": "This",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:24:17.348Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.420Z] [@Detection] Running with: {
+  "prompt": "This ",
+  "currentCursor": 4,
+  "promptLength": 5
+}
+[2026-04-12T10:24:17.421Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.422Z] [@Detection] Running with: {
+  "prompt": "This ",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:24:17.422Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.536Z] [@Detection] Running with: {
+  "prompt": "This i",
+  "currentCursor": 5,
+  "promptLength": 6
+}
+[2026-04-12T10:24:17.537Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.538Z] [@Detection] Running with: {
+  "prompt": "This i",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:24:17.538Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.786Z] [@Detection] Running with: {
+  "prompt": "This is",
+  "currentCursor": 6,
+  "promptLength": 7
+}
+[2026-04-12T10:24:17.786Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:17.787Z] [@Detection] Running with: {
+  "prompt": "This is",
+  "currentCursor": 7,
+  "promptLength": 7
+}
+[2026-04-12T10:24:17.787Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.087Z] [@Detection] Running with: {
+  "prompt": "This i",
+  "currentCursor": 7,
+  "promptLength": 6
+}
+[2026-04-12T10:24:18.087Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.088Z] [@Detection] Running with: {
+  "prompt": "This i",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:24:18.088Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.590Z] [@Detection] Running with: {
+  "prompt": "This ",
+  "currentCursor": 6,
+  "promptLength": 5
+}
+[2026-04-12T10:24:18.591Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.592Z] [@Detection] Running with: {
+  "prompt": "This ",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:24:18.592Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.671Z] [@Detection] Running with: {
+  "prompt": "This",
+  "currentCursor": 5,
+  "promptLength": 4
+}
+[2026-04-12T10:24:18.671Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.672Z] [@Detection] Running with: {
+  "prompt": "This",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:24:18.672Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.756Z] [@Detection] Running with: {
+  "prompt": "Thi",
+  "currentCursor": 4,
+  "promptLength": 3
+}
+[2026-04-12T10:24:18.756Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.756Z] [@Detection] Running with: {
+  "prompt": "Thi",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:24:18.756Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.840Z] [@Detection] Running with: {
+  "prompt": "Th",
+  "currentCursor": 3,
+  "promptLength": 2
+}
+[2026-04-12T10:24:18.840Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.841Z] [@Detection] Running with: {
+  "prompt": "Th",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:24:18.841Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.924Z] [@Detection] Running with: {
+  "prompt": "T",
+  "currentCursor": 2,
+  "promptLength": 1
+}
+[2026-04-12T10:24:18.924Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:18.925Z] [@Detection] Running with: {
+  "prompt": "T",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:24:18.925Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.008Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 1,
+  "promptLength": 0
+}
+[2026-04-12T10:24:19.008Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.009Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:24:19.009Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.435Z] [@Detection] Running with: {
+  "prompt": "s",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:24:19.435Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.436Z] [@Detection] Running with: {
+  "prompt": "s",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:24:19.436Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.580Z] [@Detection] Running with: {
+  "prompt": "su",
+  "currentCursor": 1,
+  "promptLength": 2
+}
+[2026-04-12T10:24:19.580Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.580Z] [@Detection] Running with: {
+  "prompt": "su",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:24:19.580Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.820Z] [@Detection] Running with: {
+  "prompt": "sub",
+  "currentCursor": 2,
+  "promptLength": 3
+}
+[2026-04-12T10:24:19.820Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.821Z] [@Detection] Running with: {
+  "prompt": "sub",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:24:19.821Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.969Z] [@Detection] Running with: {
+  "prompt": "subm",
+  "currentCursor": 3,
+  "promptLength": 4
+}
+[2026-04-12T10:24:19.970Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:19.971Z] [@Detection] Running with: {
+  "prompt": "subm",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:24:19.971Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:20.183Z] [@Detection] Running with: {
+  "prompt": "submi",
+  "currentCursor": 4,
+  "promptLength": 5
+}
+[2026-04-12T10:24:20.183Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:20.184Z] [@Detection] Running with: {
+  "prompt": "submi",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:24:20.184Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:20.258Z] [@Detection] Running with: {
+  "prompt": "submit",
+  "currentCursor": 5,
+  "promptLength": 6
+}
+[2026-04-12T10:24:20.258Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:20.259Z] [@Detection] Running with: {
+  "prompt": "submit",
+  "currentCursor": 6,
+  "promptLength": 6
+}
+[2026-04-12T10:24:20.259Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:20.949Z] [@Detection] Running with: {
+  "prompt": "submi",
+  "currentCursor": 6,
+  "promptLength": 5
+}
+[2026-04-12T10:24:20.949Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:20.950Z] [@Detection] Running with: {
+  "prompt": "submi",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:24:20.950Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.111Z] [@Detection] Running with: {
+  "prompt": "subm",
+  "currentCursor": 5,
+  "promptLength": 4
+}
+[2026-04-12T10:24:21.111Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.112Z] [@Detection] Running with: {
+  "prompt": "subm",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:24:21.112Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.257Z] [@Detection] Running with: {
+  "prompt": "sub",
+  "currentCursor": 4,
+  "promptLength": 3
+}
+[2026-04-12T10:24:21.258Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.258Z] [@Detection] Running with: {
+  "prompt": "sub",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:24:21.259Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.417Z] [@Detection] Running with: {
+  "prompt": "su",
+  "currentCursor": 3,
+  "promptLength": 2
+}
+[2026-04-12T10:24:21.418Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.418Z] [@Detection] Running with: {
+  "prompt": "su",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:24:21.418Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.570Z] [@Detection] Running with: {
+  "prompt": "s",
+  "currentCursor": 2,
+  "promptLength": 1
+}
+[2026-04-12T10:24:21.570Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.570Z] [@Detection] Running with: {
+  "prompt": "s",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:24:21.570Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.717Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 1,
+  "promptLength": 0
+}
+[2026-04-12T10:24:21.717Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:21.717Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:24:21.717Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:25.233Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:24:25.234Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:25.813Z] [@Detection] Running with: {
+  "prompt": "t",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:24:25.814Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:25.815Z] [@Detection] Running with: {
+  "prompt": "t",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:24:25.815Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:26.087Z] [@Detection] Running with: {
+  "prompt": "te",
+  "currentCursor": 1,
+  "promptLength": 2
+}
+[2026-04-12T10:24:26.087Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:26.087Z] [@Detection] Running with: {
+  "prompt": "te",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:24:26.087Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:26.183Z] [@Detection] Running with: {
+  "prompt": "tes",
+  "currentCursor": 2,
+  "promptLength": 3
+}
+[2026-04-12T10:24:26.183Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:26.184Z] [@Detection] Running with: {
+  "prompt": "tes",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:24:26.184Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:26.303Z] [@Detection] Running with: {
+  "prompt": "test",
+  "currentCursor": 3,
+  "promptLength": 4
+}
+[2026-04-12T10:24:26.303Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:24:26.304Z] [@Detection] Running with: {
+  "prompt": "test",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:24:26.304Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:32.095Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:36:32.096Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:36.184Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:36:36.185Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:37.594Z] [@Detection] Running with: {
+  "prompt": "W",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:36:37.594Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:37.595Z] [@Detection] Running with: {
+  "prompt": "W",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:36:37.595Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:37.949Z] [@Detection] Running with: {
+  "prompt": "Wh",
+  "currentCursor": 1,
+  "promptLength": 2
+}
+[2026-04-12T10:36:37.950Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:37.951Z] [@Detection] Running with: {
+  "prompt": "Wh",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:36:37.951Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:38.234Z] [@Detection] Running with: {
+  "prompt": "Wha",
+  "currentCursor": 2,
+  "promptLength": 3
+}
+[2026-04-12T10:36:38.234Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:38.235Z] [@Detection] Running with: {
+  "prompt": "Wha",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:36:38.235Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:38.353Z] [@Detection] Running with: {
+  "prompt": "What",
+  "currentCursor": 3,
+  "promptLength": 4
+}
+[2026-04-12T10:36:38.353Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:38.354Z] [@Detection] Running with: {
+  "prompt": "What",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:36:38.354Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:38.713Z] [@Detection] Running with: {
+  "prompt": "What'",
+  "currentCursor": 4,
+  "promptLength": 5
+}
+[2026-04-12T10:36:38.713Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:38.714Z] [@Detection] Running with: {
+  "prompt": "What'",
+  "currentCursor": 5,
+  "promptLength": 5
+}
+[2026-04-12T10:36:38.715Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:39.182Z] [@Detection] Running with: {
+  "prompt": "What",
+  "currentCursor": 5,
+  "promptLength": 4
+}
+[2026-04-12T10:36:39.182Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:39.183Z] [@Detection] Running with: {
+  "prompt": "What",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:36:39.184Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:39.548Z] [@Detection] Running with: {
+  "prompt": "Wha",
+  "currentCursor": 4,
+  "promptLength": 3
+}
+[2026-04-12T10:36:39.548Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:39.549Z] [@Detection] Running with: {
+  "prompt": "Wha",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:36:39.549Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:40.010Z] [@Detection] Running with: {
+  "prompt": "Wh",
+  "currentCursor": 3,
+  "promptLength": 2
+}
+[2026-04-12T10:36:40.011Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:40.012Z] [@Detection] Running with: {
+  "prompt": "Wh",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:36:40.012Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:40.544Z] [@Detection] Running with: {
+  "prompt": "W",
+  "currentCursor": 2,
+  "promptLength": 1
+}
+[2026-04-12T10:36:40.545Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:40.545Z] [@Detection] Running with: {
+  "prompt": "W",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:36:40.546Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:40.734Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 1,
+  "promptLength": 0
+}
+[2026-04-12T10:36:40.735Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:40.735Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:36:40.735Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:36:44.580Z] [shouldAllowCancel] {
+  "isFileListActive": false,
+  "hasPrompt": false
+}
+[2026-04-12T10:36:44.580Z] [shouldAllowCancel] Allowing cancel 
+[2026-04-12T10:38:45.172Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:38:45.173Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:45.832Z] [@Detection] Running with: {
+  "prompt": "t",
+  "currentCursor": 0,
+  "promptLength": 1
+}
+[2026-04-12T10:38:45.832Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:45.834Z] [@Detection] Running with: {
+  "prompt": "t",
+  "currentCursor": 1,
+  "promptLength": 1
+}
+[2026-04-12T10:38:45.834Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:46.054Z] [@Detection] Running with: {
+  "prompt": "te",
+  "currentCursor": 1,
+  "promptLength": 2
+}
+[2026-04-12T10:38:46.054Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:46.055Z] [@Detection] Running with: {
+  "prompt": "te",
+  "currentCursor": 2,
+  "promptLength": 2
+}
+[2026-04-12T10:38:46.056Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:46.110Z] [@Detection] Running with: {
+  "prompt": "tes",
+  "currentCursor": 2,
+  "promptLength": 3
+}
+[2026-04-12T10:38:46.110Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:46.111Z] [@Detection] Running with: {
+  "prompt": "tes",
+  "currentCursor": 3,
+  "promptLength": 3
+}
+[2026-04-12T10:38:46.111Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:46.230Z] [@Detection] Running with: {
+  "prompt": "test",
+  "currentCursor": 3,
+  "promptLength": 4
+}
+[2026-04-12T10:38:46.230Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:38:46.231Z] [@Detection] Running with: {
+  "prompt": "test",
+  "currentCursor": 4,
+  "promptLength": 4
+}
+[2026-04-12T10:38:46.231Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:44:57.105Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:44:57.106Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:45:01.504Z] [@Detection] Running with: {
+  "prompt": "Read .planning/SPRINT-04-11-SESSIONS.md — execute TRACK 3: MEMBERSHIP WIZARD BUILD.\n\nPre-flight first:\n  git pull origin main\n  ls src/components/ui/ProgressBar.tsx\n  ls src/components/ui/WizardNav.tsx\n  ls src/components/ui/StepEditModal.tsx\n  grep -l \"MembershipSchema\" src/lib/schemas.ts\n\nIf any are missing, STOP — Track 1 hasn't merged.\n\nIf all present, execute the full session. The ADR at .planning/ADR-MEMBERSHIP-WIZARD.md is the authoritative reference for step schemas, field lists, and UX rules.\n\nRsync planning files first:\n  rsync -a ~/SAGIE-HQ/sagie.co/.planning/ ~/SAGIE-HQ/sagie-feature-membership-wizard/.planning/",
+  "currentCursor": 0,
+  "promptLength": 631
+}
+[2026-04-12T10:45:01.505Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:45:01.514Z] [@Detection] Running with: {
+  "prompt": "Read .planning/SPRINT-04-11-SESSIONS.md — execute TRACK 3: MEMBERSHIP WIZARD BUILD.\n\nPre-flight first:\n  git pull origin main\n  ls src/components/ui/ProgressBar.tsx\n  ls src/components/ui/WizardNav.tsx\n  ls src/components/ui/StepEditModal.tsx\n  grep -l \"MembershipSchema\" src/lib/schemas.ts\n\nIf any are missing, STOP — Track 1 hasn't merged.\n\nIf all present, execute the full session. The ADR at .planning/ADR-MEMBERSHIP-WIZARD.md is the authoritative reference for step schemas, field lists, and UX rules.\n\nRsync planning files first:\n  rsync -a ~/SAGIE-HQ/sagie.co/.planning/ ~/SAGIE-HQ/sagie-feature-membership-wizard/.planning/",
+  "currentCursor": 631,
+  "promptLength": 631
+}
+[2026-04-12T10:45:01.515Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:45:16.098Z] [@Detection] Running with: {
+  "prompt": "",
+  "currentCursor": 0,
+  "promptLength": 0
+}
+[2026-04-12T10:45:16.099Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:45:21.340Z] [@Detection] Running with: {
+  "prompt": "Read .planning/SPRINT-04-11-SESSIONS.md — execute TRACK 4: WIZARD API + NOTION MIGRATION + E2E REWRITE.\n\nPre-flight first:\n  git pull origin main\n  grep -l \"MembershipSchema\" src/lib/schemas.ts\n  grep -l \"workStyle\" src/lib/schemas.ts\n\nIf missing, STOP — Track 1 hasn't merged.\n\nIf present, execute the full session. Start with the migration script (--dry-run first), then API route rewrite, then tests.\n\nRsync planning files first:\n  rsync -a ~/SAGIE-HQ/sagie.co/.planning/ ~/SAGIE-HQ/sagie-feature-wizard-api/.planning/\n\nCritical: Notion Members DB ID is ec753df1-ca8d-46d7-8c74-9b6f64cea2d5. Do NOT run the migration script against production without --dry-run first. Show the dry-run output and wait for the PR review before applying.",
+  "currentCursor": 0,
+  "promptLength": 738
+}
+[2026-04-12T10:45:21.340Z] [@Detection] No @ found before cursor 
+[2026-04-12T10:45:21.346Z] [@Detection] Running with: {
+  "prompt": "Read .planning/SPRINT-04-11-SESSIONS.md — execute TRACK 4: WIZARD API + NOTION MIGRATION + E2E REWRITE.\n\nPre-flight first:\n  git pull origin main\n  grep -l \"MembershipSchema\" src/lib/schemas.ts\n  grep -l \"workStyle\" src/lib/schemas.ts\n\nIf missing, STOP — Track 1 hasn't merged.\n\nIf present, execute the full session. Start with the migration script (--dry-run first), then API route rewrite, then tests.\n\nRsync planning files first:\n  rsync -a ~/SAGIE-HQ/sagie.co/.planning/ ~/SAGIE-HQ/sagie-feature-wizard-api/.planning/\n\nCritical: Notion Members DB ID is ec753df1-ca8d-46d7-8c74-9b6f64cea2d5. Do NOT run the migration script against production without --dry-run first. Show the dry-run output and wait for the PR review before applying.",
+  "currentCursor": 738,
+  "promptLength": 738
+}
+[2026-04-12T10:45:21.346Z] [@Detection] No @ found before cursor 

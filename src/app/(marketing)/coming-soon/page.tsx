@@ -14,7 +14,7 @@ export default function ComingSoonPage() {
         <h1 className="font-display uppercase text-silver text-stat mb-4 tracking-heading">
           COMING SOON
         </h1>
-        <p className="font-body text-foreground-secondary text-body-lg mb-10 leading-relaxed">
+        <p className="font-body text-foreground-secondary text-body mb-10 leading-body">
           We&apos;re building something worth the wait.
         </p>
         <Button variant="outline" href="/">

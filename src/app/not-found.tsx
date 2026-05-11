@@ -79,7 +79,7 @@ export default function NotFound() {
         <h1 className="font-display text-silver text-stat mb-4 tracking-heading">
           404
         </h1>
-        <p className="font-body text-foreground-secondary text-body-lg mb-10 leading-relaxed">
+        <p className="font-body text-foreground-secondary text-body mb-10 leading-body">
           This page doesn&apos;t exist, but there&apos;s plenty to explore.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">

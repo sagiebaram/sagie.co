@@ -22,11 +22,11 @@ export default function ApplySolutionsPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             SAGIE Solutions
           </p>
-          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
-            { text: 'OFFER YOUR', className: 'text-foreground-dim' },
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-display mb-8" lines={[
+            { text: 'OFFER YOUR', className: 'text-foreground-muted' },
             { text: 'EXPERTISE.', className: 'text-foreground-secondary' },
           ]} />
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
+          <p className="font-body italic text-foreground-muted text-body font-light leading-body max-w-[380px] mb-12">
             You need to be a Builder member first. Your expertise will be vetted before being offered to the ecosystem.
           </p>
           <SolutionsForm />

@@ -43,25 +43,25 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
           <Link href={`/blog/${featuredPost.slug}`} className="block mb-14 group">
             <div className="grid md:grid-cols-2 gap-10 border border-border-default p-8 hover:bg-background-card-featured transition-colors duration-200">
               <div className="bg-background-card border border-border-subtle aspect-16/10 flex items-center justify-center">
-                <span className="font-body text-foreground-dim text-label tracking-label uppercase">Cover Image</span>
+                <span className="font-body text-foreground-muted text-label tracking-label uppercase">Cover Image</span>
               </div>
               <div className="flex flex-col justify-center py-2">
-                <p className="font-body text-caption tracking-spaced mb-4">
+                <p className="font-body text-label tracking-spaced mb-4">
                   <span className="text-foreground-muted uppercase">{featuredPost.category}</span>
-                  <span className="text-foreground-dim mx-2">·</span>
+                  <span className="text-foreground-muted mx-2">·</span>
                   <span className="text-foreground-muted">{featuredPost.publishDate ? formatDate(featuredPost.publishDate) : ''}</span>
-                  <span className="text-foreground-dim mx-2">·</span>
+                  <span className="text-foreground-muted mx-2">·</span>
                   <span className="text-foreground-muted">{featuredPost.readTime} min read</span>
                 </p>
-                <h3 className="font-display uppercase text-founder leading-none text-foreground-secondary group-hover:text-silver transition-colors duration-150 mb-4">
+                <h3 className="font-display uppercase text-chapter leading-none text-foreground-secondary group-hover:text-silver transition-colors duration-150 mb-4">
                   {featuredPost.title}
                 </h3>
-                <p className="font-body text-foreground-muted font-light text-body leading-[1.75] mb-6">
+                <p className="font-body text-foreground-muted font-light text-body leading-body mb-6">
                   {featuredPost.excerpt}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="font-body text-foreground-dim text-caption tracking-label uppercase">{featuredPost.author}</span>
-                  <span className="font-body text-foreground-secondary text-caption tracking-mid group-hover:translate-x-0.5 transition-transform duration-150">Read →</span>
+                  <span className="font-body text-foreground-muted text-label tracking-label uppercase">{featuredPost.author}</span>
+                  <span className="font-body text-foreground-secondary text-label tracking-mid group-hover:translate-x-0.5 transition-transform duration-150">Read →</span>
                 </div>
               </div>
             </div>
@@ -73,7 +73,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
 
       {/* Filters */}
       <div ref={filterRef} className="mb-14 grid gap-4" style={{ gridTemplateColumns: 'auto 1fr' }}>
-        <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Category</span>
+        <span className="font-body uppercase text-foreground-muted text-label tracking-label pt-1.5">Category</span>
         <div className="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter posts by category">
           {BLOG_CATEGORIES.map(cat => (
             <button
@@ -90,7 +90,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
           ))}
         </div>
 
-        <span className="font-body uppercase text-foreground-dim text-label tracking-label pt-1.5">Author</span>
+        <span className="font-body uppercase text-foreground-muted text-label tracking-label pt-1.5">Author</span>
         <div className="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter posts by author">
           {BLOG_AUTHORS.map(author => {
             const isActive = filters.author === author
@@ -145,16 +145,16 @@ function PostCard({ post }: { post: BlogPost }) {
         )}
       </div>
 
-      <h3 className="font-display uppercase text-quote leading-tight text-foreground-secondary group-hover:text-silver transition-colors duration-150 mb-3">
+      <h3 className="font-display uppercase text-heading leading-display text-foreground-secondary group-hover:text-silver transition-colors duration-150 mb-3">
         {post.title}
       </h3>
 
-      <p className="font-body text-foreground-muted font-light text-caption leading-[1.75] mb-6 flex-1 line-clamp-2">
+      <p className="font-body text-foreground-muted font-light text-label leading-body mb-6 flex-1 line-clamp-2">
         {post.excerpt}
       </p>
 
       <div className="mt-auto pt-3 border-t border-border-subtle">
-        <p className="font-body text-foreground-dim text-label tracking-label mb-1">
+        <p className="font-body text-foreground-muted text-label tracking-label mb-1">
           {post.publishDate ? formatDate(post.publishDate) : ''} · {post.readTime} min
         </p>
         <p className="font-body text-foreground-muted text-label tracking-label mb-3">

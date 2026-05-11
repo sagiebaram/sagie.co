@@ -75,9 +75,9 @@ function ButtonContent({ status, label }: { status: ButtonStatus; label: string 
 
 // ── Button variant class strings (from Button.tsx) ──
 const outlineClasses =
-  'border border-silver text-silver hover:bg-silver hover:text-background text-button tracking-button px-[34px] py-4 font-body uppercase transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed'
+  'border border-silver text-silver hover:bg-silver hover:text-background text-label tracking-button px-[34px] py-4 font-body uppercase transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed'
 const primaryClasses =
-  'bg-button-primary-bg [color:var(--color-button-primary-text)] hover:opacity-85 text-button tracking-button px-[34px] py-4 font-body uppercase transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed inline-block'
+  'bg-button-primary-bg [color:var(--color-button-primary-text)] hover:opacity-85 text-label tracking-button px-[34px] py-4 font-body uppercase transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed inline-block'
 
 export default function RevalidatePage() {
   const [secret, setSecret] = useState('')
@@ -160,7 +160,7 @@ export default function RevalidatePage() {
           {showSecretHint && (
             <p className="text-amber-400 text-xs mb-3">Secret was invalid or has been rotated. Please re-enter.</p>
           )}
-          <label className="block text-foreground-muted font-body text-caption mb-2">Revalidation Secret</label>
+          <label className="block text-foreground-muted font-body text-label mb-2">Revalidation Secret</label>
           <input
             type="password"
             value={secret}

@@ -22,11 +22,11 @@ export default function ApplyChapterPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             Lead a Chapter
           </p>
-          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-[0.9] mb-8" lines={[
-            { text: 'BRING SAGIE', className: 'text-foreground-dim' },
+          <SplitTextReveal as="h1" className="font-display uppercase text-hero leading-display mb-8" lines={[
+            { text: 'BRING SAGIE', className: 'text-foreground-muted' },
             { text: 'TO YOUR CITY.', className: 'text-foreground-secondary' },
           ]} />
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
+          <p className="font-body italic text-foreground-muted text-body font-light leading-body max-w-[380px] mb-12">
             Tell us about your city. We&apos;ll take it from there.
           </p>
           <ChapterForm />

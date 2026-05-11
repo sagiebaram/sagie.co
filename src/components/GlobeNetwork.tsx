@@ -279,7 +279,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
       if (id === activeId) {
         nameEl.style.color = 'var(--text-primary)'
       } else if (activeId) {
-        nameEl.style.color = 'var(--text-dim)'
+        nameEl.style.color = 'var(--text-muted)'
       } else {
         nameEl.style.color = nameEl.getAttribute('data-default-color') || 'var(--text-secondary)'
       }
@@ -447,16 +447,16 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
           >
             {selectedCity.isChapter ? 'Active Chapter' : 'Community Hub'}
           </div>
-          <div className={`font-display ${isMobile ? 'text-body' : 'text-manifesto'}`} style={{ color: 'var(--text-primary)' }}>
+          <div className={`font-display ${isMobile ? 'text-body' : 'text-heading'}`} style={{ color: 'var(--text-primary)' }}>
             {selectedCity.name}
           </div>
-          <div className="text-caption mt-1" style={{ color: 'var(--text-muted)' }}>
+          <div className="text-label mt-1" style={{ color: 'var(--text-muted)' }}>
             {selectedCity.members} Members
           </div>
           <div
             className="text-label mt-3 uppercase tracking-widest"
             style={{
-              color: selectedCity.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
+              color: selectedCity.isChapter ? 'var(--text-primary)' : 'var(--text-muted)',
               borderTop: '0.5px solid var(--border-subtle)',
               paddingTop: '8px',
             }}
@@ -499,7 +499,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
                   width: '5px',
                   height: '5px',
                   borderRadius: '50%',
-                  background: city.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
+                  background: city.isChapter ? 'var(--text-primary)' : 'var(--text-muted)',
                   flexShrink: 0,
                 }}
               />
@@ -553,7 +553,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
                   width: '6px',
                   height: '6px',
                   borderRadius: '50%',
-                  background: city.isChapter ? 'var(--text-primary)' : 'var(--text-dim)',
+                  background: city.isChapter ? 'var(--text-primary)' : 'var(--text-muted)',
                   flexShrink: 0,
                 }}
               />
@@ -576,7 +576,7 @@ export function GlobeNetwork({ cities, chapterPins = [] }: { cities: CityData[];
               <span
                 style={{
                   fontSize: '10px',
-                  color: hoveredCity === city.id ? 'var(--text-secondary)' : 'var(--text-dim)',
+                  color: hoveredCity === city.id ? 'var(--text-secondary)' : 'var(--text-muted)',
                   letterSpacing: '0.06em',
                   marginLeft: 'auto',
                 }}

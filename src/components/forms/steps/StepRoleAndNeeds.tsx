@@ -123,7 +123,7 @@ function TagCheckboxGroup({ label, name, options, helpers, value, onChange, erro
                 <span
                   style={{
                     fontSize: '9px',
-                    color: 'var(--text-dim)',
+                    color: 'var(--text-muted)',
                     fontFamily: 'var(--font-body)',
                     userSelect: 'none',
                     marginTop: '1px',

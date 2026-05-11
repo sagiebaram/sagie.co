@@ -108,7 +108,7 @@ export function SectionNav({ items }: SectionNavProps) {
             <span
               className="font-body text-label uppercase tracking-widest transition-all duration-200 origin-right group-hover:opacity-100 group-focus-visible:opacity-100"
               style={{
-                color: isActive ? 'var(--silver)' : 'var(--text-dim)',
+                color: isActive ? 'var(--silver)' : 'var(--text-muted)',
                 opacity: isActive ? 1 : 0.65,
               }}
             >
@@ -119,7 +119,7 @@ export function SectionNav({ items }: SectionNavProps) {
               style={{
                 width: isActive ? 8 : 6,
                 height: isActive ? 8 : 6,
-                backgroundColor: isActive ? 'var(--silver)' : 'var(--text-dim)',
+                backgroundColor: isActive ? 'var(--silver)' : 'var(--text-muted)',
                 opacity: isActive ? 1 : 0.65,
                 padding: 0,
               }}

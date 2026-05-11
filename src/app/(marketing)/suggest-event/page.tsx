@@ -22,11 +22,11 @@ export default function SuggestEventPage() {
           <p className="font-body uppercase text-foreground-muted mb-4 text-label tracking-eyebrow">
             Suggest an Event
           </p>
-          <h1 className="font-display uppercase text-hero leading-[0.9] mb-8">
-            <span className="block text-foreground-dim">GOT AN IDEA</span>
+          <h1 className="font-display uppercase text-hero leading-display mb-8">
+            <span className="block text-foreground-muted">GOT AN IDEA</span>
             <span className="block text-foreground-secondary">FOR AN EVENT?</span>
           </h1>
-          <p className="font-body italic text-foreground-muted text-body-lg font-light leading-[1.7] max-w-[380px] mb-12">
+          <p className="font-body italic text-foreground-muted text-body font-light leading-body max-w-[380px] mb-12">
             Tell us what you have in mind. SAGIE events are curated — if it fits the ecosystem, we&apos;ll make it happen.
           </p>
           <SuggestEventForm />

@@ -25,7 +25,7 @@ export function Pillars() {
             {/* Desktop 2-col (hidden from screen readers — mobile version is canonical) */}
             <div className="relative z-1 hidden md:grid items-start" aria-hidden="true" style={{ gridTemplateColumns: '260px 1fr' }}>
               <div>
-                <h3 className="font-display uppercase text-pillar leading-none tracking-heading">
+                <h3 className="font-display uppercase text-chapter leading-none tracking-heading">
                   <span className="text-foreground-muted">SAGIE </span>
                   <span className="text-silver group-hover:text-foreground transition-colors duration-150">
                     {pillar.word}
@@ -36,10 +36,10 @@ export function Pillars() {
                 </p>
               </div>
               <div className="px-8">
-                <p className="font-body text-foreground mb-2.5 text-subhead leading-[1.5]">
+                <p className="font-body text-foreground mb-2.5 text-subhead leading-body">
                   {pillar.where}
                 </p>
-                <p className="font-body text-foreground-muted text-body font-light leading-[1.75]">
+                <p className="font-body text-foreground-muted text-body font-light leading-body">
                   {pillar.desc}
                 </p>
               </div>
@@ -47,17 +47,17 @@ export function Pillars() {
 
             {/* Mobile stack */}
             <div className="relative z-1 md:hidden flex flex-col gap-3">
-              <h3 className="font-display uppercase text-founder leading-none">
+              <h3 className="font-display uppercase text-chapter leading-none">
                 <span className="text-foreground-muted">SAGIE </span>
                 <span className="text-silver">{pillar.word}</span>
               </h3>
               <p className="font-body uppercase text-foreground-muted text-label tracking-mid">
                 {pillar.subtitle}
               </p>
-              <p className="font-body text-foreground text-subhead leading-[1.5]">
+              <p className="font-body text-foreground text-subhead leading-body">
                 {pillar.where}
               </p>
-              <p className="font-body text-foreground-muted text-body font-light leading-[1.75]">
+              <p className="font-body text-foreground-muted text-body font-light leading-body">
                 {pillar.desc}
               </p>
             </div>

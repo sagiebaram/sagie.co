@@ -32,7 +32,7 @@ export function SocialProof({ globe }: { globe?: ReactNode }) {
                   stat.value
                 )}
               </p>
-              <p className="font-body uppercase text-foreground-muted mt-3 text-caption tracking-label">
+              <p className="font-body uppercase text-foreground-muted mt-3 text-label tracking-label">
                 {stat.label}
               </p>
             </div>

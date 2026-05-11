@@ -22,13 +22,13 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
             <span className="font-body text-foreground-secondary group-hover:text-foreground transition-colors duration-150 text-subhead font-normal">
               {faq.q}
             </span>
-            <span className="font-body text-foreground-dim shrink-0 mt-0.5 text-subhead">
+            <span className="font-body text-foreground-muted shrink-0 mt-0.5 text-subhead">
               {open === i ? '\u2212' : '+'}
             </span>
           </button>
           {open === i && (
             <div className="pb-6">
-              <p className="font-body text-foreground-muted text-body font-light leading-[1.8] max-w-[640px]">
+              <p className="font-body text-foreground-muted text-body font-light leading-body max-w-[640px]">
                 {faq.a}
               </p>
             </div>

@@ -550,7 +550,7 @@ export default function GlobeTestPage() {
 
         <div className="absolute top-[72px] left-6 z-10 pointer-events-none">
           <div className="text-xl font-bold tracking-wide">{preset?.name}</div>
-          <div className="text-[12px] text-[#6E6D69] max-w-[260px] leading-relaxed">{preset?.desc}</div>
+          <div className="text-[12px] text-[#6E6D69] max-w-[260px] leading-body">{preset?.desc}</div>
         </div>
 
         <div style={{ maskImage: maskStyle, WebkitMaskImage: maskStyle, transition: 'mask-image 0.3s' }}>

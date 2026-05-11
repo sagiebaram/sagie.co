@@ -72,13 +72,13 @@ export function FinalCTA() {
             display: 'block',
             fontFamily: 'var(--font-display)',
             fontSize: 'clamp(60px, 8vw, 90px)',
-            color: 'var(--text-dim)',
+            color: 'var(--text-muted)',
             lineHeight: '0.92',
             letterSpacing: '0.02em',
           }}>AN ECOSYSTEM.</span>
         </div>
 
-        <p ref={taglineRef} className="font-display uppercase mb-6 text-quote tracking-ultra">
+        <p ref={taglineRef} className="font-display uppercase mb-6 text-heading tracking-ultra">
           {FINAL_CTA.acronym.map((part, i) => (
             <span key={i}>
               {part.letter === ' ' ? (
@@ -86,14 +86,14 @@ export function FinalCTA() {
               ) : (
                 <>
                   <span className="tagline-letter-hi text-silver">{part.letter}</span>
-                  <span className="text-foreground-dim">{part.rest}</span>
+                  <span className="text-foreground-muted">{part.rest}</span>
                 </>
               )}
             </span>
           ))}
         </p>
 
-        <p className="font-body text-foreground-muted mb-12 text-subhead font-light leading-[1.7]">
+        <p className="font-body text-foreground-muted mb-12 text-subhead font-light leading-body">
           {FINAL_CTA.subtitle.split('\n').map((line, i) => (
             <span key={i}>
               {line}
@@ -102,7 +102,7 @@ export function FinalCTA() {
           ))}
         </p>
 
-        <span className="notify-glow inline-block font-body uppercase text-button tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
+        <span className="notify-glow inline-block font-body uppercase text-label tracking-button px-[34px] py-4 cursor-default border border-silver/30 text-silver/70 hover:text-foreground hover:border-foreground transition-all duration-200" style={{ animation: 'pulse-glow 3s ease-in-out infinite' }}>
           Coming Soon
         </span>
       </div>
