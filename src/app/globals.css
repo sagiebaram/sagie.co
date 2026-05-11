@@ -137,6 +137,13 @@
   opacity: 1;
 }
 
+/* ── Card flip faces — base state shows front only (SSR safe) ── */
+.face-back {
+  visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+
 /* ── GSAP hero initial state ── */
 .hero-line,
 .hero-body,

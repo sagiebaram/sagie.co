@@ -113,6 +113,9 @@ export function WhoItsFor() {
                 <p className="font-body text-foreground-muted group-hover:text-foreground-secondary transition-colors duration-150 text-body font-light leading-body">
                   {persona.line}
                 </p>
+                <span className="font-body text-label text-foreground-muted group-hover:text-silver transition-colors duration-150 mt-auto pt-2">
+                  More &rarr;
+                </span>
               </div>
 
               {/* Back face */}

@@ -15,54 +15,57 @@ export function Pillars() {
     <Section>
       <Eyebrow>The Pillars</Eyebrow>
 
-      <ScrollReveal selector=".pillar-row" stagger={0.1} y={20} duration={0.5}>
-        {PILLARS.map((pillar) => (
-          <CardTilt
-            key={pillar.word}
-            glowColor={PILLAR_GLOW[pillar.word]}
-            className="pillar-row group py-8 border-b border-border-subtle"
-          >
-            {/* Desktop 2-col (hidden from screen readers — mobile version is canonical) */}
-            <div className="relative z-1 hidden md:grid items-start" aria-hidden="true" style={{ gridTemplateColumns: '260px 1fr' }}>
-              <div>
-                <h3 className="font-display uppercase text-chapter leading-none tracking-heading">
+      <ScrollReveal selector=".pillar-row" stagger={0.1} y={20} duration={0.5} className="grid grid-cols-1 sm:grid-cols-2 gap-px">
+        {PILLARS.map((pillar) => {
+          const isEco = pillar.word === 'ECO'
+          return (
+            <CardTilt
+              key={pillar.word}
+              glowColor={PILLAR_GLOW[pillar.word]}
+              className={`pillar-row group py-8 px-6 border border-border-default cursor-pointer hover:bg-white/[0.02] transition-all duration-200 ${isEco ? 'sm:col-span-2' : ''}`}
+            >
+              {/* Desktop 2-col (hidden from screen readers — mobile version is canonical) */}
+              <div className="relative z-1 hidden md:grid items-start" aria-hidden="true" style={{ gridTemplateColumns: '260px 1fr' }}>
+                <div>
+                  <h3 className="font-display uppercase text-chapter leading-none tracking-heading">
+                    <span className="text-foreground-muted">SAGIE </span>
+                    <span className={`${isEco ? 'text-eco' : 'text-silver'} group-hover:text-foreground transition-colors duration-150`}>
+                      {pillar.word}
+                    </span>
+                  </h3>
+                  <p className="font-body uppercase text-foreground-muted mt-2 text-label tracking-label">
+                    {pillar.subtitle}
+                  </p>
+                </div>
+                <div className="px-8">
+                  <p className="font-body text-foreground mb-2.5 text-subhead leading-body">
+                    {pillar.where}
+                  </p>
+                  <p className="font-body text-foreground-muted text-body font-light leading-body">
+                    {pillar.desc}
+                  </p>
+                </div>
+              </div>
+
+              {/* Mobile stack */}
+              <div className="relative z-1 md:hidden flex flex-col gap-3">
+                <h3 className="font-display uppercase text-chapter leading-none">
                   <span className="text-foreground-muted">SAGIE </span>
-                  <span className="text-silver group-hover:text-foreground transition-colors duration-150">
-                    {pillar.word}
-                  </span>
+                  <span className={isEco ? 'text-eco' : 'text-silver'}>{pillar.word}</span>
                 </h3>
-                <p className="font-body uppercase text-foreground-muted mt-2 text-label tracking-label">
+                <p className="font-body uppercase text-foreground-muted text-label tracking-mid">
                   {pillar.subtitle}
                 </p>
-              </div>
-              <div className="px-8">
-                <p className="font-body text-foreground mb-2.5 text-subhead leading-body">
+                <p className="font-body text-foreground text-subhead leading-body">
                   {pillar.where}
                 </p>
                 <p className="font-body text-foreground-muted text-body font-light leading-body">
                   {pillar.desc}
                 </p>
               </div>
-            </div>
-
-            {/* Mobile stack */}
-            <div className="relative z-1 md:hidden flex flex-col gap-3">
-              <h3 className="font-display uppercase text-chapter leading-none">
-                <span className="text-foreground-muted">SAGIE </span>
-                <span className="text-silver">{pillar.word}</span>
-              </h3>
-              <p className="font-body uppercase text-foreground-muted text-label tracking-mid">
-                {pillar.subtitle}
-              </p>
-              <p className="font-body text-foreground text-subhead leading-body">
-                {pillar.where}
-              </p>
-              <p className="font-body text-foreground-muted text-body font-light leading-body">
-                {pillar.desc}
-              </p>
-            </div>
-          </CardTilt>
-        ))}
+            </CardTilt>
+          )
+        })}
       </ScrollReveal>
     </Section>
   )
