@@ -4,35 +4,50 @@
   /* ── Fonts ── */
   --font-display: var(--font-bebas-neue);
   --font-body: var(--font-dm-sans);
+  --font-serif: var(--font-newsreader);
 
-  /* ── Semantic color tokens (resolved via :root / .dark) ── */
+  /* ── Backwards-compatible color utilities (old names → new vars) ── */
   --color-background: var(--bg);
-  --color-background-subtle: var(--bg-subtle);
+  --color-background-subtle: var(--bg-elev-1);
   --color-background-card: var(--bg-card);
-  --color-background-card-featured: var(--bg-card-featured);
-  --color-background-nav: var(--nav-bg);
-  --color-foreground: var(--text-primary);
-  --color-foreground-secondary: var(--text-secondary);
-  --color-foreground-muted: var(--text-muted);
-  --color-foreground-dim: var(--text-dim);
-  --color-foreground-ghost: var(--text-ghost);
+  --color-background-card-featured: var(--bg-card-hi);
+  --color-background-nav: oklch(0.14 0.004 80 / 0.85);
+  --color-foreground: var(--ink);
+  --color-foreground-secondary: var(--ink-soft);
+  --color-foreground-muted: var(--ink-muted);
+  --color-foreground-dim: var(--ink-dim);
+  --color-foreground-ghost: var(--ink-ghost);
   --color-silver: var(--silver);
-  --color-silver-bright: var(--silver-bright);
-  --color-border-subtle: var(--border-subtle);
-  --color-border-default: var(--border-default);
-  --color-border-strong: var(--border-strong);
+  --color-silver-bright: var(--silver);
+  --color-border-subtle: var(--line);
+  --color-border-default: var(--line);
+  --color-border-strong: var(--line-strong);
 
-  /* ── Pillar accents — fixed in both modes ── */
-  --color-eco: #7A9E7E;
-  --color-eco-bright: #8BAF8E;
-  --color-eco-dim: #1E3322;
-  --color-eco-bg: #0F1A12;
-  --color-eco-glow: #162B1A;
-  --color-solutions: #1565C0;
-  --color-ventures: #757575;
+  /* ── New direct color utilities ── */
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-ghost: var(--ink-ghost);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-bg-elev-1: var(--bg-elev-1);
+  --color-bg-elev-2: var(--bg-elev-2);
+  --color-bg-card-hi: var(--bg-card-hi);
+
+  /* ── Pillar accents (OKLCH unified) ── */
+  --color-eco: var(--eco);
+  --color-eco-dim: var(--eco-dim);
+  --color-eco-bg: var(--eco-bg);
+  --color-solutions: var(--solutions);
+  --color-solutions-dim: var(--solutions-dim);
+  --color-solutions-bg: var(--solutions-bg);
+  --color-ventures: var(--ventures);
+  --color-ventures-dim: var(--ventures-dim);
+  --color-ventures-bg: var(--ventures-bg);
 
   /* ── Button / feedback tokens ── */
-  --color-button-primary-bg: var(--text-primary);
+  --color-button-primary-bg: var(--ink);
   --color-button-primary-text: var(--bg);
   --color-error: #EF4444;
   --color-warning: #F59E0B;
@@ -43,15 +58,20 @@
   --color-globe-blue: #0055ff;
   --color-globe-label: #ccffff;
 
-  /* ── Font sizes ── */
-  --text-label: 15px;
-  --text-caption: 14px;
-  --text-button: 15px;
+  /* ── Type scale ── */
+  --text-micro: 11px;
+  --text-label: 12px;
+  --text-caption: 13px;
   --text-body: 16px;
-  --text-body-lg: 17px;
+  --text-body-lg: 18px;
+  --text-lead: 22px;
+  --text-manifesto: clamp(26px, 2.4vw, 34px);
+  --text-section: clamp(44px, 5.5vw, 72px);
+  --text-display: clamp(80px, 11vw, 168px);
+  /* Legacy aliases (keep existing classes working) */
   --text-subhead: 18px;
+  --text-button: 15px;
   --text-quote: 22px;
-  --text-manifesto: 24px;
   --text-persona: 28px;
   --text-founder: 32px;
   --text-pillar: 36px;
@@ -60,8 +80,10 @@
   --text-stat: 96px;
   --text-hero: clamp(60px, 8vw, 90px);
   --text-hero-cta: clamp(72px, 10vw, 110px);
+  --text-heading: 24px;
 
   /* ── Letter spacing ── */
+  --tracking-micro: 0.28em;
   --tracking-heading: 0.04em;
   --tracking-copyright: 0.1em;
   --tracking-button: 0.12em;
@@ -70,27 +92,59 @@
   --tracking-spaced: 0.2em;
   --tracking-eyebrow: 0.22em;
   --tracking-ultra: 0.3em;
+  --tracking-display: -0.015em;
+  --tracking-serif: -0.01em;
 }
 
-/* ── Dark mode only ── */
+/* ── OKLCH unified palette (dark) ── */
 :root {
-  --bg: #0C0C0C;
-  --bg-subtle: #131313;
-  --bg-card: #111111;
-  --bg-card-featured: #181818;
-  --nav-bg: rgba(12, 12, 12, 0.85);
-  --text-primary: #EDECEA;
-  --text-secondary: #B0AFAB;
-  --text-muted: #8B8A86;
-  --text-dim: #706F6B;
-  --text-dim-decorative: #3E3E3C; /* Original low-contrast value for intentional fade effects */
-  --text-ghost: #242422;
-  --silver: #C0C0C0;
-  --silver-bright: #E0E0DC;
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-default: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --grid-line: rgba(255, 255, 255, 0.025);
+  --bg:          oklch(0.14 0.004 80);
+  --bg-elev-1:   oklch(0.17 0.004 80);
+  --bg-elev-2:   oklch(0.20 0.005 80);
+  --bg-card:     oklch(0.18 0.005 80);
+  --bg-card-hi:  oklch(0.22 0.006 80);
+  --ink:         oklch(0.96 0.004 80);
+  --ink-soft:    oklch(0.80 0.005 80);
+  --ink-muted:   oklch(0.62 0.006 80);
+  --ink-dim:     oklch(0.46 0.006 80);
+  --ink-ghost:   oklch(0.28 0.005 80);
+  --line:        oklch(0.96 0.004 80 / 0.08);
+  --line-strong: oklch(0.96 0.004 80 / 0.16);
+  --grid-line:   oklch(0.96 0.004 80 / 0.035);
+
+  /* Pillar accents — same L+C, vary hue only */
+  --eco:           oklch(0.72 0.085 155);
+  --eco-dim:       oklch(0.30 0.050 155);
+  --eco-bg:        oklch(0.17 0.018 155);
+  --solutions:     oklch(0.72 0.085 240);
+  --solutions-dim: oklch(0.30 0.050 240);
+  --solutions-bg:  oklch(0.17 0.018 240);
+  --ventures:      oklch(0.72 0.045 85);
+  --ventures-dim:  oklch(0.30 0.025 85);
+  --ventures-bg:   oklch(0.17 0.010 85);
+
+  /* Tonal */
+  --silver:       oklch(0.85 0.005 80);
+  --silver-soft:  oklch(0.70 0.005 80);
+  --gold-whisper: oklch(0.82 0.035 85);
+
+  /* Legacy aliases (inline styles referencing old var names) */
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-soft);
+  --text-muted: var(--ink-muted);
+  --text-dim: var(--ink-dim);
+  --text-ghost: var(--ink-ghost);
+  --bg-subtle: var(--bg-elev-1);
+  --bg-card-featured: var(--bg-card-hi);
+  --nav-bg: oklch(0.14 0.004 80 / 0.85);
+  --silver-bright: var(--silver);
+  --border-subtle: var(--line);
+  --border-default: var(--line);
+  --border-strong: var(--line-strong);
+
+  /* Motion */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.8, 0, 0.2, 1);
 }
 
 @layer base {
@@ -146,7 +200,12 @@
 
 /* ── Decorative low-contrast text (intentional fade effect, not for readable content) ── */
 .text-dim-decorative {
-  color: var(--text-dim-decorative);
+  color: var(--ink-ghost);
+}
+
+/* ── Pillar link hover (inherits --pillar-accent from row) ── */
+.pillar-link:hover {
+  border-color: var(--pillar-accent) !important;
 }
 
 /* ── GSAP hero initial state ── */
@@ -258,6 +317,14 @@
   50% { opacity: 0.8; }
 }
 
+@keyframes chapter-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+.chapter-dot-live {
+  animation: chapter-pulse 2.4s ease-in-out infinite;
+}
+
 @keyframes pulse-glow {
   0%, 100% { border-color: rgba(192, 192, 192, 0.2); box-shadow: 0 0 0 0 rgba(192, 192, 192, 0); }
   50% { border-color: rgba(192, 192, 192, 0.6); box-shadow: 0 0 12px 0 rgba(192, 192, 192, 0.15); }
@@ -266,6 +333,7 @@
 @media (prefers-reduced-motion: reduce) {
   .broken-node { animation: none !important; opacity: 0.5; }
   .notify-glow { animation: none !important; }
+  .chapter-dot-live { animation: none !important; }
   .skeleton { animation: none !important; }
 }
 

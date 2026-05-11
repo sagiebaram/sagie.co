@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
-import { Bebas_Neue, DM_Sans } from 'next/font/google'
+import { Bebas_Neue, DM_Sans, Newsreader } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -18,6 +18,14 @@ const bebasNeue = Bebas_Neue({
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
+  display: 'swap',
+})
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--font-newsreader',
   display: 'swap',
 })
 
@@ -86,7 +94,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${bebasNeue.variable} ${dmSans.variable}`}
+      className={`${bebasNeue.variable} ${dmSans.variable} ${newsreader.variable}`}
       suppressHydrationWarning
     >
       <body>
