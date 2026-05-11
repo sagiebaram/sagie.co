@@ -57,7 +57,7 @@ export function WhoItsFor() {
   }, [activeCards])
 
   return (
-    <Section>
+    <Section className="py-10 md:py-16">
       <Eyebrow>Who it&apos;s for</Eyebrow>
 
       <p style={{

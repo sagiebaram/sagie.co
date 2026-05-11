@@ -32,7 +32,7 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState(0)
 
   return (
-    <Section>
+    <Section className="py-10 md:py-16">
       <Eyebrow>{FAQ_EYEBROW}</Eyebrow>
 
       <div style={{ borderTop: '1px solid var(--border-default)' }}>

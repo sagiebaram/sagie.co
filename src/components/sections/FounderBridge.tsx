@@ -78,7 +78,7 @@ export function FounderBridge() {
   }, [])
 
   return (
-    <Section>
+    <Section className="py-16 md:py-24">
       <Eyebrow>{FOUNDER.eyebrow}</Eyebrow>
 
       <div ref={sectionRef}>
